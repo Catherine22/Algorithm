@@ -17,12 +17,14 @@ public class InsertionSort extends BaseSort {
 						temp = input[j];
 						input[j] = input[j - 1];
 						input[j - 1] = temp;
+//						System.out.println(input[j - 1] + " switch " + input[j]);
 					}
 				} else {
 					if (input[j] < input[j - 1]) {
 						temp = input[j];
 						input[j] = input[j - 1];
 						input[j - 1] = temp;
+//						System.out.println(input[j - 1] + " switch " + input[j]);
 					}
 				}
 			}
