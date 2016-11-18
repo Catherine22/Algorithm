@@ -170,32 +170,24 @@ public class MergeSort extends BaseSort {
 					if (SHOW_DEBUG_LOG)
 						System.out.println("拿出右[" + rightPointer + "]"
 								+ array[rightPointer]);
-					result[resultPointer] = array[rightPointer];
-					resultPointer++;
-					rightPointer++;
+					result[resultPointer++] = array[rightPointer++];
 				} else {
 					if (SHOW_DEBUG_LOG)
 						System.out.println("拿出左[" + leftPointer + "]"
 								+ array[leftPointer]);
-					result[resultPointer] = array[leftPointer];
-					resultPointer++;
-					leftPointer++;
+					result[resultPointer++] = array[leftPointer++];
 				}
 			} else {
 				if (array[rightPointer] > array[leftPointer]) {
 					if (SHOW_DEBUG_LOG)
 						System.out.println("拿出右[" + rightPointer + "]"
 								+ array[rightPointer]);
-					result[resultPointer] = array[rightPointer];
-					resultPointer++;
-					rightPointer++;
+					result[resultPointer++] = array[rightPointer++];
 				} else {
 					if (SHOW_DEBUG_LOG)
 						System.out.println("拿出左[" + leftPointer + "]"
 								+ array[leftPointer]);
-					result[resultPointer] = array[leftPointer];
-					resultPointer++;
-					leftPointer++;
+					result[resultPointer++] = array[leftPointer++];
 				}
 			}
 		}
@@ -204,18 +196,14 @@ public class MergeSort extends BaseSort {
 			if (SHOW_DEBUG_LOG)
 				System.out.println("剩右[" + rightPointer + "]"
 						+ array[rightPointer]);
-			result[resultPointer] = array[rightPointer];
-			rightPointer++;
-			resultPointer++;
+			result[resultPointer++] = array[rightPointer++];
 		}
 		// 加入所有左边剩下的数
 		while (leftPointer < halfLength) {
 			if (SHOW_DEBUG_LOG)
 				System.out.println("剩左[" + leftPointer + "]"
 						+ array[leftPointer]);
-			result[resultPointer] = array[leftPointer];
-			leftPointer++;
-			resultPointer++;
+			result[resultPointer++] = array[leftPointer++];
 		}
 		if (SHOW_DEBUG_LOG) {
 			System.out.print("finished sorting");
