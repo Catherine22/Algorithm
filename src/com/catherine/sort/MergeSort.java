@@ -15,7 +15,7 @@ public class MergeSort extends BaseSort {
 		if (input.length == 1)
 			return input;
 
-		int[] A = new int[] {  4, 6, 5, 2, 7, 3, 6, 3  };// 4, 6, 5, 2, 7, 3, 6, 3 
+		int[] A = new int[] { 4, 6, 5, 2, 7, 3, 6, 3, 4, 6, 5, 2, 7, 3, 6, 3 };
 		int[] result = new int[A.length];
 
 		int halfLen = (int) Math.floor((float) A.length / 2.0f);
@@ -31,24 +31,47 @@ public class MergeSort extends BaseSort {
 
 		int setNum = 2;
 
-		List<Integer> tempList = new ArrayList<Integer>();
-		int[] tempArray = new int[setNum];
-		for (int i = 0; i < leftArray.length; i += setNum) {
-			if ((i + 1) < leftArray.length) {
-				System.out.println(leftArray[i] + " vs " + leftArray[i + 1]);
-				tempArray[0] = leftArray[i];
-				tempArray[1] = leftArray[i + 1];
-				tempArray = sort2Parts(tempArray, isAscending);
-				tempList.add(tempArray[0]);
-				tempList.add(tempArray[1]);
-			} else {
-				tempList.add(leftArray[i]);
-			}
-		}
-		System.out.println(tempList.toString());
-
 		Main.printArray(leftArray);
-		Main.printArray(righttArray);
+		/**
+		 * 对半分，找出两两一组再排序。 例如一个集合有8个元素， 4个，4个，再分成2，2，2，2 将每2个比较，再将排序过的2合并，变成4，4，
+		 * 再排序4，4，最后合并
+		 */
+		while (setNum <= leftArray.length) {
+
+			List<Integer> tempList = new ArrayList<Integer>();
+			int[] tempArray = new int[setNum];
+			for (int i = 0; i < leftArray.length; i += setNum) {
+				if ((i + (setNum / 2)) < leftArray.length) {
+					System.out.println(leftArray[i] + " vs "
+							+ leftArray[i + (setNum / 2)]);
+					for (int j = 0; j < tempArray.length; j++) {
+						tempArray[j] = leftArray[i + j];
+					}
+					tempArray = sort2Parts(tempArray, isAscending);
+					for (int j = 0; j < tempArray.length; j++) {
+						tempList.add(tempArray[j]);
+					}
+				} else {
+					tempList.add(leftArray[i]);
+				}
+			}
+
+			for (int j = 0; j < tempList.size(); j++) {
+				leftArray[j] = tempList.get(j);
+			}
+			Main.printArray(leftArray);
+			setNum *= 2;
+		}
+
+		// Main.printArray(leftArray);
+		// Main.printArray(righttArray);
+		//
+		// for (int i = 0; i < leftArray.length; i++) {
+		// A[i] = leftArray[i];
+		// }
+		// for (int i = 0; i < righttArray.length; i++) {
+		// A[i + leftArray.length] = righttArray[i];
+		// }
 
 		result = sort2Parts(A, isAscending);
 		return result;
@@ -120,14 +143,15 @@ public class MergeSort extends BaseSort {
 		int length = array.length;
 
 		// 两两比较排序（模拟最后一层）
-		 for (int i = 0; i < array.length; i += 2) {
-		 if ((i + 1) < array.length)
-		 array = swap2num(array, i, i + 1, isAscending);
-		 }
+		for (int i = 0; i < array.length; i += 2) {
+			if ((i + 1) < array.length)
+				array = swap2num(array, i, i + 1, isAscending);
+		}
 
 		if (array.length == 2)
 			return array;
 
+		System.out.print("sort");
 		Main.printArray(array);
 
 		// 左右两边各挑出一数比较
@@ -180,6 +204,8 @@ public class MergeSort extends BaseSort {
 			resultPointer++;
 		}
 
+		System.out.print("finished sorting");
+		Main.printArray(result);
 		return result;
 	}
 
