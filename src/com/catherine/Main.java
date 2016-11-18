@@ -17,6 +17,12 @@ public class Main {
 		 MergeSort ms = new MergeSort();
 		 printArray(ms.sort(input1, true));
 	}
+	
+//	public static int[] generateRandomArray(int maxLength){
+//		int[] result = new int[];
+//		
+//		return null;
+//	}
 
 	public static void printArray(int[] array) {
 		System.out.println("--------------------------------------------------------");
