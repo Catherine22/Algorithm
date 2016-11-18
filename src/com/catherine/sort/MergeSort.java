@@ -2,7 +2,6 @@ package com.catherine.sort;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.IntPredicate;
 
 import com.catherine.Main;
 
