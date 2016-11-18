@@ -15,7 +15,7 @@ public class Main {
 		// InsertionSort is = new InsertionSort();
 		// printArray(is.sort(input1, true));
 		 MergeSort ms = new MergeSort();
-		 printArray(ms.sort(input1, true));
+		 printArray(ms.sort(input1, false));
 	}
 	
 //	public static int[] generateRandomArray(int maxLength){

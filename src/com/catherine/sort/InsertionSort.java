@@ -1,6 +1,7 @@
 package com.catherine.sort;
 
 public class InsertionSort extends BaseSort {
+	private final boolean SHOW_DEBUG_LOG = false;
 
 	@Override
 	public int[] sort(int[] input, boolean isAscending) {
@@ -17,14 +18,18 @@ public class InsertionSort extends BaseSort {
 						temp = input[j];
 						input[j] = input[j - 1];
 						input[j - 1] = temp;
-//						System.out.println(input[j - 1] + " switch " + input[j]);
+						if (SHOW_DEBUG_LOG)
+							System.out.println(input[j - 1] + " switch "
+									+ input[j]);
 					}
 				} else {
 					if (input[j] < input[j - 1]) {
 						temp = input[j];
 						input[j] = input[j - 1];
 						input[j - 1] = temp;
-//						System.out.println(input[j - 1] + " switch " + input[j]);
+						if (SHOW_DEBUG_LOG)
+							System.out.println(input[j - 1] + " switch "
+									+ input[j]);
 					}
 				}
 			}
