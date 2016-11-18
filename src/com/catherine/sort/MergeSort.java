@@ -6,7 +6,6 @@ import java.util.List;
 import com.catherine.Main;
 
 public class MergeSort extends BaseSort {
-	private final boolean SHOW_DEBUG_LOG = false;
 
 	@Override
 	public int[] sort(int[] input, boolean isAscending) {
@@ -14,8 +13,6 @@ public class MergeSort extends BaseSort {
 			return null;
 		if (input.length == 1)
 			return input;
-
-		int[] result = new int[input.length];
 
 		int halfLen = (int) Math.round((float) input.length / 2.0f);
 		int[] leftArray = new int[halfLen];
@@ -40,8 +37,8 @@ public class MergeSort extends BaseSort {
 
 		if (SHOW_DEBUG_LOG)
 			Main.printArray(input);
-		result = sort2Parts(input, isAscending);
-		return result;
+		
+		return sort2Parts(input, isAscending);
 	}
 
 	/**

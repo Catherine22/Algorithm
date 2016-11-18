@@ -1,7 +1,6 @@
 package com.catherine.sort;
 
 public class InsertionSort extends BaseSort {
-	private final boolean SHOW_DEBUG_LOG = false;
 
 	@Override
 	public int[] sort(int[] input, boolean isAscending) {
