@@ -1,5 +1,8 @@
 package com.catherine.sort;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.catherine.Main;
 
 public class MergeSort extends BaseSort {
@@ -11,67 +14,90 @@ public class MergeSort extends BaseSort {
 		if (input.length == 1)
 			return input;
 
-		// int halfLength = input.length / 2;
+		int halfLen = (int) Math.round((float) input.length / 2.0f);
+		int[] leftArray = new int[halfLen];
+		int[] righttArray = new int[input.length - halfLen];
 
-		int[] A = new int[] { 6, 2, 3};// 1, 4, 6, 2, 5, 7, 1, 4
-		int[] result = new int[A.length];
-		float layer = Math.round((float) A.length / 2.0f);
-		if (layer == 1.0f) {// 代表长度=2，只有两个值
-
-			result = swap2num(A, 0, 1, isAscending);
+		for (int i = 0; i < leftArray.length; i++) {
+			leftArray[i] = input[i];
+		}
+		for (int i = 0; i < righttArray.length; i++) {
+			righttArray[i] = input[i + leftArray.length];
 		}
 
-		while (layer != 1.0f) {// 代表长度>2，对半分
-			System.out.println("对半分");
+		leftArray = sortOneSide(isAscending, leftArray);
+		righttArray = sortOneSide(isAscending, righttArray);
 
-			int halfLength = Math.round((float) A.length / (float) 2);// 2
-			int resultPoint = 0;// 结果列表目前进度
-
-			int leftPoint = 0;// 左半边目前进度
-			int rightPoint = leftPoint + halfLength;// 右半边目前进度
-			int rightStartPoint = 0;// 右半边起始进度
-			int length = result.length;
-
-			for (int i = 0; i < length; i += halfLength) {
-				// 将array分一半，两边各自处理
-				rightStartPoint = halfLength;// 1
-				// 左右两边各挑出一数比较
-				while (leftPoint < rightStartPoint && rightPoint < length) {
-					System.out.println("[" + leftPoint + "," + rightPoint + "]");
-					if (A[rightPoint] < A[leftPoint]) {
-						System.out.println("右" + A[rightPoint]);
-						result[resultPoint] = A[rightPoint];
-						resultPoint++;
-						rightPoint++;
-					} else {
-						System.out.println("左" + A[leftPoint]);
-						result[resultPoint] = A[leftPoint];
-						resultPoint++;
-						leftPoint++;
-					}
-				}
-				// 加入所有右边剩下的数
-				while (rightPoint < length) {
-					System.out.println("剩右" + A[rightPoint]);
-					result[resultPoint] = A[rightPoint];
-					rightPoint++;
-					resultPoint++;
-				}
-				// 加入所有左边剩下的数
-				while (leftPoint < rightStartPoint) {
-					System.out.println("剩左" + A[leftPoint]);
-					result[resultPoint] = A[leftPoint];
-					leftPoint++;
-					resultPoint++;
-				}
-			}
-			Main.printArray(result);
-			layer = Math.round(layer / 2.0f);
+		for (int i = 0; i < input.length; i++) {
+			if (i < leftArray.length)
+				input[i] = leftArray[i];
+			else
+				input[i] = righttArray[i - leftArray.length];
 		}
-		return result;
+
+		if (SHOW_DEBUG_LOG)
+			Main.printArray(input);
+		
+		return sort2Parts(input, isAscending);
 	}
 
-	private int[] swap2num(int[] array, int num1position, int num2position, boolean isAscending) {
+	/**
+	 * 对半分，找出两两一组再排序。 例如一个集合有8个元素， 4个，4个，再分成2，2，2，2 将每2个比较，再将排序过的2合并，变成4，4，
+	 * 再排序4，4，最后合并
+	 */
+	private int[] sortOneSide(boolean isAscending, int[] array) {
+		int setNum = 2;
+		while (setNum <= array.length) {
+			List<Integer> tempList = new ArrayList<Integer>();
+			int[] tempArray = new int[setNum];
+			for (int i = 0; i < array.length; i += setNum) {
+				// 集合里有基数个元素，会在最后一次循环是多出一个，须另外处理
+				if ((i + (setNum / 2)) < array.length) {
+					for (int j = 0; j < tempArray.length; j++) {
+						tempArray[j] = array[i + j];
+					}
+					tempArray = sort2Parts(tempArray, isAscending);
+					for (int j = 0; j < tempArray.length; j++) {
+						tempList.add(tempArray[j]);
+					}
+				} else {
+					// 处理剩一个数的情形（最后三个数排序）
+					int[] biggerArray = new int[3];
+					biggerArray[0] = tempList.get(tempList.size() - 2);
+					biggerArray[1] = tempList.get(tempList.size() - 1);
+					biggerArray[2] = array[i];
+
+					biggerArray = sort2Parts(biggerArray, isAscending);
+
+					tempList.set(tempList.size() - 2, biggerArray[0]);
+					tempList.set(tempList.size() - 1, biggerArray[1]);
+					tempList.add(biggerArray[2]);
+				}
+			}
+
+			for (int j = 0; j < tempList.size(); j++) {
+				array[j] = tempList.get(j);
+			}
+			setNum *= 2;
+		}
+		return array;
+	}
+
+	/**
+	 * 比较两数
+	 * 
+	 * @param array
+	 *            欲排列的array
+	 * @param num1position
+	 *            array[num1position]
+	 * @param num2position
+	 *            array[num2position]
+	 * @param isAscending
+	 *            是否由小到大
+	 * @return 排序结果
+	 */
+	private int[] swap2num(int[] array, int num1position, int num2position,
+			boolean isAscending) {
 		int temp;
 		if ((array[num1position] < array[num2position] && !isAscending)
 				|| (array[num1position] > array[num2position] && isAscending)) {
@@ -81,6 +107,106 @@ public class MergeSort extends BaseSort {
 		}
 		return array;
 
+	}
+
+	/**
+	 * 分成左右两边排序，先把全部都两两比较排序（模拟最后一层），再分一半两边各取一个数做比较 所以最多只能比较四个数
+	 * 
+	 * @param array
+	 *            欲排列的array
+	 * @param isAscending
+	 *            是否由小到大
+	 * @return 排序结果
+	 */
+	private int[] sort2Parts(int[] array, boolean isAscending) {
+		/**
+		 * 回传结果
+		 */
+		int[] result = new int[array.length];
+		/**
+		 * 欲排列的array一半長度
+		 */
+		int halfLength = Math.round((float) array.length / (float) 2);
+		/**
+		 * 结果列表目前进度
+		 */
+		int resultPointer = 0;
+		/**
+		 * 左半边目前进度
+		 */
+		int leftPointer = 0;
+		/**
+		 * 右半边目前进度
+		 */
+		int rightPointer = leftPointer + halfLength;
+		/**
+		 * 右半边起始进度
+		 */
+		int rightStartPointer = halfLength;
+		/**
+		 * 欲排列的array長度
+		 */
+		int length = array.length;
+
+		// 两两比较排序（模拟最后一层）
+		if (array.length == 2)
+			return swap2num(array, 0, 1, isAscending);
+
+		if (SHOW_DEBUG_LOG) {
+			System.out.print("sort");
+			Main.printArray(array);
+		}
+
+		// 左右两边各挑出一数比较
+		while (leftPointer < rightStartPointer && rightPointer < length) {
+			if(SHOW_DEBUG_LOG)
+			System.out
+					.println("比较[" + leftPointer + "],[" + rightPointer + "]");
+			if (isAscending) {
+				if (array[rightPointer] < array[leftPointer]) {
+					if (SHOW_DEBUG_LOG)
+						System.out.println("拿出右[" + rightPointer + "]"
+								+ array[rightPointer]);
+					result[resultPointer++] = array[rightPointer++];
+				} else {
+					if (SHOW_DEBUG_LOG)
+						System.out.println("拿出左[" + leftPointer + "]"
+								+ array[leftPointer]);
+					result[resultPointer++] = array[leftPointer++];
+				}
+			} else {
+				if (array[rightPointer] > array[leftPointer]) {
+					if (SHOW_DEBUG_LOG)
+						System.out.println("拿出右[" + rightPointer + "]"
+								+ array[rightPointer]);
+					result[resultPointer++] = array[rightPointer++];
+				} else {
+					if (SHOW_DEBUG_LOG)
+						System.out.println("拿出左[" + leftPointer + "]"
+								+ array[leftPointer]);
+					result[resultPointer++] = array[leftPointer++];
+				}
+			}
+		}
+		// 加入所有右边剩下的数
+		while (rightPointer < length) {
+			if (SHOW_DEBUG_LOG)
+				System.out.println("剩右[" + rightPointer + "]"
+						+ array[rightPointer]);
+			result[resultPointer++] = array[rightPointer++];
+		}
+		// 加入所有左边剩下的数
+		while (leftPointer < halfLength) {
+			if (SHOW_DEBUG_LOG)
+				System.out.println("剩左[" + leftPointer + "]"
+						+ array[leftPointer]);
+			result[resultPointer++] = array[leftPointer++];
+		}
+		if (SHOW_DEBUG_LOG) {
+			System.out.print("finished sorting");
+			Main.printArray(result);
+		}
+		return result;
 	}
 
 }
