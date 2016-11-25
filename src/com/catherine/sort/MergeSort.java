@@ -6,6 +6,7 @@ import java.util.List;
 import com.catherine.Main;
 
 public class MergeSort extends BaseSort {
+	private static final String TAG = "MergeSort";
 
 	@Override
 	public int[] sort(int[] input, boolean isAscending) {
@@ -36,8 +37,8 @@ public class MergeSort extends BaseSort {
 		}
 
 		if (SHOW_DEBUG_LOG)
-			Main.printArray(input);
-		
+			Main.printArray(TAG, input);
+
 		return sort2Parts(input, isAscending);
 	}
 
@@ -96,8 +97,7 @@ public class MergeSort extends BaseSort {
 	 *            是否由小到大
 	 * @return 排序结果
 	 */
-	private int[] swap2num(int[] array, int num1position, int num2position,
-			boolean isAscending) {
+	private int[] swap2num(int[] array, int num1position, int num2position, boolean isAscending) {
 		int temp;
 		if ((array[num1position] < array[num2position] && !isAscending)
 				|| (array[num1position] > array[num2position] && isAscending)) {
@@ -154,36 +154,31 @@ public class MergeSort extends BaseSort {
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.print("sort");
-			Main.printArray(array);
+			Main.printArray(TAG, array);
 		}
 
 		// 左右两边各挑出一数比较
 		while (leftPointer < rightStartPointer && rightPointer < length) {
-			if(SHOW_DEBUG_LOG)
-			System.out
-					.println("比较[" + leftPointer + "],[" + rightPointer + "]");
+			if (SHOW_DEBUG_LOG)
+				System.out.println("比较[" + leftPointer + "],[" + rightPointer + "]");
 			if (isAscending) {
 				if (array[rightPointer] < array[leftPointer]) {
 					if (SHOW_DEBUG_LOG)
-						System.out.println("拿出右[" + rightPointer + "]"
-								+ array[rightPointer]);
+						System.out.println("拿出右[" + rightPointer + "]" + array[rightPointer]);
 					result[resultPointer++] = array[rightPointer++];
 				} else {
 					if (SHOW_DEBUG_LOG)
-						System.out.println("拿出左[" + leftPointer + "]"
-								+ array[leftPointer]);
+						System.out.println("拿出左[" + leftPointer + "]" + array[leftPointer]);
 					result[resultPointer++] = array[leftPointer++];
 				}
 			} else {
 				if (array[rightPointer] > array[leftPointer]) {
 					if (SHOW_DEBUG_LOG)
-						System.out.println("拿出右[" + rightPointer + "]"
-								+ array[rightPointer]);
+						System.out.println("拿出右[" + rightPointer + "]" + array[rightPointer]);
 					result[resultPointer++] = array[rightPointer++];
 				} else {
 					if (SHOW_DEBUG_LOG)
-						System.out.println("拿出左[" + leftPointer + "]"
-								+ array[leftPointer]);
+						System.out.println("拿出左[" + leftPointer + "]" + array[leftPointer]);
 					result[resultPointer++] = array[leftPointer++];
 				}
 			}
@@ -191,20 +186,18 @@ public class MergeSort extends BaseSort {
 		// 加入所有右边剩下的数
 		while (rightPointer < length) {
 			if (SHOW_DEBUG_LOG)
-				System.out.println("剩右[" + rightPointer + "]"
-						+ array[rightPointer]);
+				System.out.println("剩右[" + rightPointer + "]" + array[rightPointer]);
 			result[resultPointer++] = array[rightPointer++];
 		}
 		// 加入所有左边剩下的数
 		while (leftPointer < halfLength) {
 			if (SHOW_DEBUG_LOG)
-				System.out.println("剩左[" + leftPointer + "]"
-						+ array[leftPointer]);
+				System.out.println("剩左[" + leftPointer + "]" + array[leftPointer]);
 			result[resultPointer++] = array[leftPointer++];
 		}
 		if (SHOW_DEBUG_LOG) {
 			System.out.print("finished sorting");
-			Main.printArray(result);
+			Main.printArray(TAG, result);
 		}
 		return result;
 	}

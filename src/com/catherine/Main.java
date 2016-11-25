@@ -1,5 +1,7 @@
 package com.catherine;
 
+import java.util.List;
+
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 
@@ -12,29 +14,54 @@ public class Main {
 	private static int[] input5 = new int[] { 1 };
 
 	public static void main(String[] args) {
+		// InsertionSort
 		// InsertionSort is = new InsertionSort();
-		// printArray(is.sort(input1, true));
-		 MergeSort ms = new MergeSort();
-		 printArray(ms.sort(input1, false));
-	}
-	
-//	public static int[] generateRandomArray(int maxLength){
-//		int[] result = new int[];
-//		
-//		return null;
-//	}
+		// // printArray("InsertionSort", is.sort(input1, true));
 
-	public static void printArray(int[] array) {
+		// MergeSort
+		// MergeSort ms = new MergeSort();
+		// printArray("MergeSort", ms.sort(input1, false));
+
+		Other other = new Other();
+		printList("Hailstone", other.getHailstone(42));
+
+	}
+
+	// public static int[] generateRandomArray(int maxLength){
+	// int[] result = new int[];
+	//
+	// return null;
+	// }
+
+	public static void printArray(String title, int[] array) {
 		System.out.println("--------------------------------------------------------");
 		if (array == null)
 			System.out.println("null");
 		else {
+			System.out.print(title + " -> [");
 			for (int i = 0; i < array.length; i++) {
 				System.out.print(array[i]);
 				if (i != array.length - 1)
 					System.out.print(",");
 				else
-					System.out.println();
+					System.out.println("]");
+			}
+		}
+		System.out.println("--------------------------------------------------------");
+	}
+	
+	public static void printList(String title, List<Integer> list) {
+		System.out.println("--------------------------------------------------------");
+		if (list == null)
+			System.out.println("null");
+		else {
+			System.out.print(title + " -> [");
+			for (int i = 0; i < list.size(); i++) {
+				System.out.print(list.get(i));
+				if (i != list.size() - 1)
+					System.out.print(",");
+				else
+					System.out.println("]");
 			}
 		}
 		System.out.println("--------------------------------------------------------");
