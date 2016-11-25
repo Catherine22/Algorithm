@@ -1,6 +1,6 @@
 package com.catherine.sort;
 
 public abstract class BaseSort {
-
-	public abstract int[] sort(int[] input);
+	protected final boolean SHOW_DEBUG_LOG = false;
+	public abstract int[] sort(int[] input, boolean isAscending);
 }
