@@ -30,63 +30,67 @@ public class TuringMachine {
 		head++;
 
 		while (!accomplished) {
-			if (head == 0) {
+			if (head <= 0) {
 				// head is out of symbol array and is at the left side of the
 				// tape.
 				direction = DIRECTION.RIGHT.getValue();
-
+				head++;
 				instruction = new Instruction();
 				instruction.headState = headState;
-				instruction.chr = String.valueOf(array[head]);
-				instruction.nextChr = String.valueOf(array[head + 1]);
+				instruction.chr = String.valueOf("*");
+				instruction.nextChr = String.valueOf(array[head]);
 				instruction.direction = direction;
 				instruction.nextHeadState = STATE.TO_RIGHT.getValue();
 				record(instruction);
 				headState = instruction.nextHeadState;
-				head++;
-				accomplished = true;
-			} else if (head == array.length - 1) {
+			} else if (head > array.length - 1) {
 				// head is out of symbol array and is at the right side of the
 				// tape.
+				// out of border
 				direction = DIRECTION.LEFT.getValue();
-
+				head--;
 				instruction = new Instruction();
 				instruction.headState = headState;
-				instruction.chr = String.valueOf(array[head]);
-				instruction.nextChr = String.valueOf(array[head - 1]);
+				instruction.chr = String.valueOf("*");
+				instruction.nextChr = String.valueOf(array[head]);
 				instruction.direction = direction;
 				instruction.nextHeadState = STATE.TO_LEFT.getValue();
 				record(instruction);
 				headState = instruction.nextHeadState;
-				head--;
 			} else {
 				if (direction == DIRECTION.RIGHT.getValue()) {
 					instruction = new Instruction();
 					instruction.headState = headState;
 					instruction.chr = String.valueOf(array[head]);
-					instruction.nextChr = String.valueOf(array[head + 1]);
+					if (head == array.length - 1)
+						instruction.nextChr = String.valueOf("*");
+					else
+						instruction.nextChr = String.valueOf(array[head + 1]);
 					instruction.direction = direction;
 					instruction.nextHeadState = STATE.TO_RIGHT.getValue();
 					record(instruction);
 					headState = instruction.nextHeadState;
 					head++;
 				} else {
-//					if (!hasIncreased) {
-//						/**
-//						 * a^b means a XOR b <br>
-//						 * It always returns 0 while a equals b
-//						 * 
-//						 */
-//						array[head] = array[head] ^ 1;
-//
-//						if (array[head] == 1)
-//							hasIncreased = true;
-//					}
+					// if (!hasIncreased) {
+					// /**
+					// * a^b means a XOR b <br>
+					// * It always returns 0 while a equals b
+					// *
+					// */
+					// array[head] = array[head] ^ 1;
+					//
+					// if (array[head] == 1)
+					// hasIncreased = true;
+					// }
 
 					instruction = new Instruction();
 					instruction.headState = headState;
 					instruction.chr = String.valueOf(array[head]);
-					instruction.nextChr = String.valueOf(array[head - 1]);
+					if (head == 0)
+						instruction.nextChr = String.valueOf("*");
+					else
+						instruction.nextChr = String.valueOf(array[head - 1]);
 					instruction.direction = direction;
 					instruction.nextHeadState = STATE.TO_LEFT.getValue();
 					record(instruction);
