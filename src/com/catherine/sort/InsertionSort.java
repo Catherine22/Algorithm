@@ -1,5 +1,14 @@
 package com.catherine.sort;
 
+/**
+ * best: n
+ * average: n^2
+ * worst: n^2
+ * 
+ * memory: 1
+ * @author Catherine
+ *
+ */
 public class InsertionSort extends BaseSort {
 
 	@Override

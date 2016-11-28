@@ -2,6 +2,7 @@ package com.catherine;
 
 import java.util.List;
 
+import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 import com.catherine.turing_machine.TuringMachine;
@@ -23,13 +24,17 @@ public class Main {
 		// MergeSort ms = new MergeSort();
 		// printArray("MergeSort", ms.sort(input1, false));
 
+		// BubbleSort
+		 BubbleSort bs = new BubbleSort();
+		 printArray("BubbleSort", bs.sort(input3, false));
+
 		// Hailstone
 		// Other other = new Other();
 		// printList("Hailstone", other.getHailstone(42));
 
 		// increase on Turing Machine
-		TuringMachine tMachine = new TuringMachine();
-		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
+//		TuringMachine tMachine = new TuringMachine();
+//		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
 
 	}
 

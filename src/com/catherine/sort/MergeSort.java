@@ -5,6 +5,15 @@ import java.util.List;
 
 import com.catherine.Main;
 
+/**
+ * best: n log n
+ * average: n log n
+ * worst: n log n
+ * 
+ * memory: worst case is n
+ * @author Catherine
+ *
+ */
 public class MergeSort extends BaseSort {
 	private static final String TAG = "MergeSort";
 
