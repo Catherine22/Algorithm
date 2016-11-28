@@ -4,8 +4,14 @@ import java.util.Stack;
 
 public class TuringMachine {
 	protected final boolean SHOW_DEBUG_LOG = true;
+
 	/**
-	 * 1. move head to the character at the end
+	 * 1. move head to the last character from index 0. 2. move head to the left
+	 * index and update the value.
+	 * 
+	 * In this function, head keep moving until the flag 'accomplished' become
+	 * to true, if take away the flag and the increase codes, the user-input
+	 * array would be scanned without a break.
 	 * 
 	 * @param array
 	 * @return
@@ -77,6 +83,8 @@ public class TuringMachine {
 					record(instruction);
 					headState = instruction.nextHeadState;
 				} else {
+
+					// Increase--------------------------------------------
 					if (!hasIncreased) {
 						/**
 						 * a^b means a XOR b <br>
@@ -88,6 +96,7 @@ public class TuringMachine {
 						if (array[head] == 1)
 							hasIncreased = true;
 					}
+					// Increase--------------------------------------------
 
 					instruction = new Instruction();
 					instruction.headState = headState;
