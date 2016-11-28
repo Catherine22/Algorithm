@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
+import com.catherine.turing_machine.TuringMachine;
 
 public class Main {
 
@@ -22,8 +23,13 @@ public class Main {
 		// MergeSort ms = new MergeSort();
 		// printArray("MergeSort", ms.sort(input1, false));
 
-		Other other = new Other();
-		printList("Hailstone", other.getHailstone(42));
+		// Hailstone
+		// Other other = new Other();
+		// printList("Hailstone", other.getHailstone(42));
+
+		//increase on Turing Machine
+		TuringMachine tMachine = new TuringMachine();
+		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
 
 	}
 
@@ -49,7 +55,7 @@ public class Main {
 		}
 		System.out.println("--------------------------------------------------------");
 	}
-	
+
 	public static void printList(String title, List<Integer> list) {
 		System.out.println("--------------------------------------------------------");
 		if (list == null)
