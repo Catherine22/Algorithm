@@ -1,5 +1,6 @@
 package com.catherine.turing_machine;
 
+import java.util.Iterator;
 import java.util.Stack;
 
 public class TuringMachine {
@@ -28,11 +29,11 @@ public class TuringMachine {
 		record(instruction);
 		headState = instruction.nextHeadState;
 		head++;
-
 		while (!accomplished) {
-			if (head <= 0) {
+			if (head < 0) {
 				// head is out of symbol array and is at the left side of the
 				// tape.
+				// out of border
 				direction = DIRECTION.RIGHT.getValue();
 				head++;
 				instruction = new Instruction();
@@ -43,6 +44,7 @@ public class TuringMachine {
 				instruction.nextHeadState = STATE.TO_RIGHT.getValue();
 				record(instruction);
 				headState = instruction.nextHeadState;
+				accomplished = true;
 			} else if (head > array.length - 1) {
 				// head is out of symbol array and is at the right side of the
 				// tape.
@@ -62,7 +64,7 @@ public class TuringMachine {
 					instruction = new Instruction();
 					instruction.headState = headState;
 					instruction.chr = String.valueOf(array[head]);
-					if (head == array.length - 1)
+					if (head == array.length - 1)// at the last position
 						instruction.nextChr = String.valueOf("*");
 					else
 						instruction.nextChr = String.valueOf(array[head + 1]);
@@ -72,22 +74,22 @@ public class TuringMachine {
 					headState = instruction.nextHeadState;
 					head++;
 				} else {
-					// if (!hasIncreased) {
-					// /**
-					// * a^b means a XOR b <br>
-					// * It always returns 0 while a equals b
-					// *
-					// */
-					// array[head] = array[head] ^ 1;
-					//
-					// if (array[head] == 1)
-					// hasIncreased = true;
-					// }
+					if (!hasIncreased) {
+						/**
+						 * a^b means a XOR b <br>
+						 * It always returns 0 while a equals b
+						 *
+						 */
+						array[head] = array[head] ^ 1;
+
+						if (array[head] == 1)
+							hasIncreased = true;
+					}
 
 					instruction = new Instruction();
 					instruction.headState = headState;
 					instruction.chr = String.valueOf(array[head]);
-					if (head == 0)
+					if (head == 0)// at the first position
 						instruction.nextChr = String.valueOf("*");
 					else
 						instruction.nextChr = String.valueOf(array[head - 1]);
@@ -100,9 +102,10 @@ public class TuringMachine {
 				}
 			}
 		}
-
 		return result;
 	}
+
+	private Stack<Instruction> history = new Stack<>();
 
 	/**
 	 * Instructions stack
@@ -112,12 +115,14 @@ public class TuringMachine {
 	 * @param nextChr
 	 * @param direction
 	 * @param nextHeadState
-	 * @return
 	 */
-	private Stack record(Instruction instruction) {
-
+	private void record(Instruction instruction) {
 		System.out.println(instruction.toString());
-		return null;
+		history.push(instruction);
+	}
+
+	private Stack<Instruction> getRecord() {
+		return history;
 	}
 
 	private enum STATE {
