@@ -1,9 +1,9 @@
 package com.catherine.turing_machine;
 
-import java.util.Iterator;
 import java.util.Stack;
 
 public class TuringMachine {
+	protected final boolean SHOW_DEBUG_LOG = true;
 	/**
 	 * 1. move head to the character at the end
 	 * 
@@ -12,7 +12,6 @@ public class TuringMachine {
 	 */
 	public int[] increase(int[] array) {
 		// It looks like [x x array[0] array[1]... array[length-1] x x]
-		int[] result = new int[array.length];
 		boolean accomplished = false;
 		boolean hasIncreased = false;
 		int head = 0;
@@ -21,6 +20,7 @@ public class TuringMachine {
 
 		// stage1 - turn right
 		Instruction instruction = new Instruction();
+		instruction.head = head;
 		instruction.headState = headState;
 		instruction.chr = String.valueOf(array[head]);
 		instruction.nextChr = String.valueOf(array[head + 1]);
@@ -35,8 +35,9 @@ public class TuringMachine {
 				// tape.
 				// out of border
 				direction = DIRECTION.RIGHT.getValue();
-				head++;
 				instruction = new Instruction();
+				instruction.head = head;
+				head++;
 				instruction.headState = headState;
 				instruction.chr = String.valueOf("*");
 				instruction.nextChr = String.valueOf(array[head]);
@@ -50,8 +51,9 @@ public class TuringMachine {
 				// tape.
 				// out of border
 				direction = DIRECTION.LEFT.getValue();
-				head--;
 				instruction = new Instruction();
+				instruction.head = head;
+				head--;
 				instruction.headState = headState;
 				instruction.chr = String.valueOf("*");
 				instruction.nextChr = String.valueOf(array[head]);
@@ -70,9 +72,10 @@ public class TuringMachine {
 						instruction.nextChr = String.valueOf(array[head + 1]);
 					instruction.direction = direction;
 					instruction.nextHeadState = STATE.TO_RIGHT.getValue();
+					instruction.head = head;
+					head++;
 					record(instruction);
 					headState = instruction.nextHeadState;
-					head++;
 				} else {
 					if (!hasIncreased) {
 						/**
@@ -95,14 +98,26 @@ public class TuringMachine {
 						instruction.nextChr = String.valueOf(array[head - 1]);
 					instruction.direction = direction;
 					instruction.nextHeadState = STATE.TO_LEFT.getValue();
+					instruction.head = head;
+					head--;
 					record(instruction);
 					headState = instruction.nextHeadState;
-					head--;
-
 				}
 			}
 		}
-		return result;
+
+		// back to origin
+		instruction = new Instruction();
+		instruction.head = head;
+		instruction.headState = headState;
+		instruction.chr = String.valueOf(array[0]);
+		instruction.nextChr = String.valueOf(array[1]);
+		instruction.direction = direction;
+		instruction.nextHeadState = STATE.TO_RIGHT.getValue();
+		record(instruction);
+		headState = instruction.nextHeadState;
+
+		return array;
 	}
 
 	private Stack<Instruction> history = new Stack<>();
@@ -117,12 +132,9 @@ public class TuringMachine {
 	 * @param nextHeadState
 	 */
 	private void record(Instruction instruction) {
-		System.out.println(instruction.toString());
+		if (SHOW_DEBUG_LOG)
+			System.out.println(instruction.toString());
 		history.push(instruction);
-	}
-
-	private Stack<Instruction> getRecord() {
-		return history;
 	}
 
 	private enum STATE {
@@ -174,6 +186,7 @@ public class TuringMachine {
 	}
 
 	private class Instruction {
+		private int head;
 		public int headState;
 		public String chr;
 		public String nextChr;
@@ -182,9 +195,10 @@ public class TuringMachine {
 
 		@Override
 		public String toString() {
-			return "Instruction{" + "chr='" + chr + '\'' + ", headState=" + STATE.fromInteger(headState).name()
-					+ ", nextChr='" + nextChr + '\'' + ", direction=" + DIRECTION.fromInteger(direction).name()
-					+ ", nextHeadState=" + STATE.fromInteger(nextHeadState).name() + '}';
+			return "Instruction{" + "head='" + head + '\'' + ", chr='" + chr + '\'' + ", headState="
+					+ STATE.fromInteger(headState).name() + ", nextChr='" + nextChr + '\'' + ", direction="
+					+ DIRECTION.fromInteger(direction).name() + ", nextHeadState="
+					+ STATE.fromInteger(nextHeadState).name() + '}';
 		}
 
 	}
