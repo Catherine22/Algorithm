@@ -118,11 +118,11 @@ public class TuringMachine {
 		// back to origin
 		instruction = new Instruction();
 		instruction.head = head;
-		instruction.headState = headState;
+		instruction.headState = STATE.STOP.getValue();
 		instruction.chr = String.valueOf(array[0]);
 		instruction.nextChr = String.valueOf(array[1]);
 		instruction.direction = direction;
-		instruction.nextHeadState = STATE.TO_RIGHT.getValue();
+		instruction.nextHeadState = STATE.STOP.getValue();
 		record(instruction);
 		headState = instruction.nextHeadState;
 

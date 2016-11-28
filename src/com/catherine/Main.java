@@ -27,17 +27,11 @@ public class Main {
 		// Other other = new Other();
 		// printList("Hailstone", other.getHailstone(42));
 
-		//increase on Turing Machine
+		// increase on Turing Machine
 		TuringMachine tMachine = new TuringMachine();
 		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
 
 	}
-
-	// public static int[] generateRandomArray(int maxLength){
-	// int[] result = new int[];
-	//
-	// return null;
-	// }
 
 	public static void printArray(String title, int[] array) {
 		System.out.println("--------------------------------------------------------");
