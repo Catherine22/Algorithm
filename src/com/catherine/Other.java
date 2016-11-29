@@ -18,14 +18,27 @@ public class Other {
 	public List<Integer> getHailstone(int num) {
 		List<Integer> result = new ArrayList<>();
 		int calculate = num;
-		
+
 		if (calculate <= 1)
 			result.add(1);
-		
+
 		while (calculate > 1) {
 			calculate = (calculate % 2 == 1) ? (3 * calculate + 1) : (calculate / 2);
 			result.add(calculate);
 		}
 		return result;
+	}
+
+	/**
+	 * Recursion
+	 * @param num
+	 * @return
+	 */
+	public int fibonacci(int num) {
+		if (num == 1 || num == 2) {
+			return 1;
+		} else {
+			return fibonacci(num - 1) + fibonacci(num - 2);
+		}
 	}
 }
