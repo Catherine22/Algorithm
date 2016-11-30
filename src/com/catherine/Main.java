@@ -43,10 +43,11 @@ public class Main {
 		// sequence.increaseArray();
 		// sequence.doubleArray();
 
-		// do insert and remove
 		// printArray("insert", sequence.insert(input1, 5, 9));
-		 printArray("remove", sequence.remove(input1, 1, 7));
-		sequence.find(input1, -10);
+		// printArray("remove", sequence.remove(input1, 1, 7));
+
+//		System.out.println("find " + sequence.find(input1, -10));
+		sequence.removeDuplicates(input1);
 	}
 
 	public static void printArray(String title, int[] array) {

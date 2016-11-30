@@ -121,14 +121,16 @@ public class Sequence {
 
 	/**
 	 * 移除一个，可以直接当成一种移除区间
+	 * 
 	 * @param array
 	 * @param pos
 	 * @return
 	 */
 	public int[] remove(int[] array, int pos) {
 		array = remove(array, pos, pos);
+		if (SHOW_DEBUG_LOG)
+			Main.printArray("remove", array);
 		return array;
-
 	}
 
 	/**
@@ -145,8 +147,30 @@ public class Sequence {
 		while ((0 < pointer--) && (array[pointer] != value))
 			;
 		if (SHOW_DEBUG_LOG)
-			System.out.println(pointer);
+			System.out.println("found " + value + " in [" + pointer + "]");
 		return pointer;
+	}
+
+	/**
+	 * 移除重复元素 <br>
+	 *  <br>
+	 * 将array分为3部分，前缀、比较元素、后缀。 <br>
+	 * 比较元素初始值=1，将前缀元素与比较元素进行比较，若出现重复则移除。 <br>
+	 * 待前缀区间中都没有重复元素时，比较元素后移一位，进行下一轮比较。
+	 * 
+	 * @param array
+	 * @return
+	 */
+	public int[] removeDuplicates(int[] array) {
+		int comparePos = 1;
+		while (comparePos < array.length) {
+			// 要找到0～pointer的前一位
+			int prefixPos = find(array, 0, comparePos - 1, array[comparePos]);
+			if (prefixPos == array[comparePos])
+				array = remove(array, prefixPos);
+			comparePos++;
+		}
+		return array;
 	}
 
 	/**
@@ -186,5 +210,26 @@ public class Sequence {
 		if (nullNum >= (temp.length / 2))
 			return shrink(temp);
 		return temp;
+	}
+
+	/**
+	 * 逆向查找，检查数组[fromPos,toPos]中是否包含value，没有则返回非法位置-1
+	 * 
+	 * @param array
+	 * @param fromPos
+	 * @param toPos
+	 * @param value
+	 * @return
+	 */
+	private int find(int[] array, int fromPos, int toPos, int value) {
+		int pointer = toPos + 1;
+		// 停止条件 1. 扫描范围超出合法位置（由后往前检查） 2. 找到value
+		while ((fromPos < pointer--) && (array[pointer] != value))
+			;
+		if (pointer < fromPos)
+			pointer = -1;
+		if (SHOW_DEBUG_LOG)
+			System.out.println("found " + value + " in [" + pointer + "]");
+		return pointer;
 	}
 }
