@@ -1,6 +1,10 @@
 package com.catherine.data_type;
 
+import java.util.Arrays;
+import java.util.Vector;
+
 import com.catherine.Main;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
  * 看的数组A[n]直觉连续的内存位置<br>
@@ -163,24 +167,91 @@ public class Sequence {
 
 	/**
 	 * 移除重复元素 <br>
+	 * 复杂度O(n^2) <br>
 	 * <br>
 	 * 将array分为3部分，前缀、比较元素、后缀。 <br>
 	 * 比较元素初始值=1，将前缀元素与比较元素进行比较，若出现重复则移除。 <br>
-	 * 待前缀区间中都没有重复元素时，比较元素后移一位，进行下一轮比较。
+	 * 待前缀区间中都没有重复元素时，比较元素后移一位，进行下一轮比较。 <br>
+	 * <br>
+	 * 1. 元素顺序不变 <br>
+	 * 2. 发生重复时，移除前面的元素 <br>
 	 * 
 	 * @param array
 	 *            selected array
 	 * @return new array
 	 */
 	public int[] removeDuplicates(int[] array) {
+		long start = System.currentTimeMillis();
+		// int[] newArray = null;
 		int comparePos = 1;
 		while (comparePos < array.length) {
 			// 要找到0～pointer的前一位
 			int prefixPos = find(array, 0, comparePos - 1, array[comparePos]);
-			if (prefixPos == array[comparePos])
+			System.out.println(comparePos + ":" + array[comparePos]);
+			if (prefixPos != -1 && array[prefixPos] == array[comparePos] && array[comparePos] != 0)
 				array = remove(array, prefixPos);
-			comparePos++;
+			else
+				comparePos++;
 		}
+		array = shrink(array);
+
+		long end = System.currentTimeMillis();
+		if (SHOW_DEBUG_LOG)
+			System.out.println("removeDuplicatesOld() took " + (end - start) + " ms");
+		return array;
+	}
+
+	/**
+	 * 移除重复元素 <br>
+	 * 复杂度O(n log n) <br>
+	 * <br>
+	 * 先排序arrayO(n log n)，接着比较相邻元素中是否有重复，移除重复元素 <br>
+	 * <br>
+	 * <br>
+	 * 1. 元素会被重新排列过 <br>
+	 * 2.是目前已知最快移除重复元素方法 <br>
+	 * 
+	 * @param array
+	 *            selected array
+	 * @return new array
+	 */
+	public int[] removeDuplicatesAndSort(int[] array) {
+		long start = System.currentTimeMillis();
+		Arrays.sort(array);// O(n log n)
+		int[] newArray;
+		int newArraySize = 1;
+		for (int i = 1; i < array.length; i++) {
+			if (array[i] != array[i - 1]) {
+				newArraySize++;
+			}
+		}
+
+		newArray = new int[newArraySize];
+		int newArrayPtr = 0;
+		newArray[newArrayPtr++] = array[0];
+		for (int i = 1; i < array.length; i++) {
+			if (array[i] != array[i - 1]) {
+				newArray[newArrayPtr++] = array[i];
+			}
+		}
+		long end = System.currentTimeMillis();
+		if (SHOW_DEBUG_LOG)
+			System.out.println("removeDuplicates() took " + (end - start) + " ms");
+		return newArray;
+	}
+
+	/**
+	 * 遍历
+	 * 
+	 * @param array
+	 *            selected array
+	 * @param operator
+	 *            针对每个元素做自定义操作，例如全部+1
+	 * @return new array
+	 */
+	public int[] iterator(int[] array, Operator operator) {
+		for (int i = 0; i < array.length; i++)
+			array[i] = operator.doSomethine(array[i]);
 		return array;
 	}
 

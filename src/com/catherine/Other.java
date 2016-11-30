@@ -6,7 +6,7 @@ import java.util.List;
 public class Other {
 
 	/**
-	 * n<=1 print 1 <br>
+	 * n&lt;=1 print 1 <br>
 	 * n%2==0 print n/2 <br>
 	 * n%2==1 print 3n + 1 <br>
 	 * <br>
