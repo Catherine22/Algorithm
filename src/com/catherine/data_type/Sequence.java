@@ -187,7 +187,6 @@ public class Sequence {
 		while (comparePos < array.length) {
 			// 要找到0～pointer的前一位
 			int prefixPos = find(array, 0, comparePos - 1, array[comparePos]);
-			System.out.println(comparePos + ":" + array[comparePos]);
 			if (prefixPos != -1 && array[prefixPos] == array[comparePos] && array[comparePos] != 0)
 				array = remove(array, prefixPos);
 			else
