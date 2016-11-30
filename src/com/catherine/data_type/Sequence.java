@@ -27,6 +27,7 @@ import com.catherine.Main;
  *
  */
 public class Sequence {
+	protected final boolean SHOW_DEBUG_LOG = true;
 	private int[] array = new int[10];
 	private int[] temp;
 
@@ -46,7 +47,8 @@ public class Sequence {
 			}
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("increaseArray() took " + (end - start) + " ms");
+		if (SHOW_DEBUG_LOG)
+			System.out.println("increaseArray() took " + (end - start) + " ms");
 	}
 
 	/**
@@ -68,46 +70,8 @@ public class Sequence {
 			}
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("doubleArray() took " + (end - start) + " ms");
-	}
-
-	/**
-	 * 加倍式扩容
-	 * 
-	 * @param array
-	 * @return
-	 */
-	private int[] doubleArray(int[] array) {
-		temp = array;
-		array = new int[temp.length * 2];
-
-		for (int j = 0; j < temp.length; j++)
-			array[j] = temp[j];
-		return array;
-	}
-
-	/**
-	 * 加倍式缩容 把0当成空值，重复缩容
-	 * 
-	 * @param array
-	 * @return
-	 */
-	private int[] shrink(int[] array) {
-		int nullNum = 0;
-		// 用Math.ceil无条件进位，用（float）保证运算结果不会被去小数点
-		temp = new int[(int) Math.ceil((float) array.length / 2)];
-		for (int j = 0; j < temp.length; j++) {
-			temp[j] = array[j];
-
-			// 把0当成空值，重复缩容
-			if (temp[j] == 0) {
-				nullNum++;
-			}
-		}
-		// 把0当成空值，重复缩容
-		if (nullNum >= (temp.length / 2))
-			return shrink(temp);
-		return temp;
+		if (SHOW_DEBUG_LOG)
+			System.out.println("doubleArray() took " + (end - start) + " ms");
 	}
 
 	/**
@@ -153,5 +117,61 @@ public class Sequence {
 			array = shrink(array);
 		return array;
 
+	}
+
+	/**
+	 * 检查数组中是否包含value，没有则返回非法位置-1
+	 * 
+	 * @param array
+	 * @param value
+	 * @return
+	 */
+	public int find(int[] array, int value) {
+		int pointer = array.length;
+		// 停止条件 1. 扫描范围超出合法位置（由后往前检查） 2. 找到value
+		while ((0 < pointer--) && (array[pointer] != value))
+			;
+		if (SHOW_DEBUG_LOG)
+			System.out.println(pointer);
+		return pointer;
+	}
+
+	/**
+	 * 加倍式扩容
+	 * 
+	 * @param array
+	 * @return
+	 */
+	private int[] doubleArray(int[] array) {
+		temp = array;
+		array = new int[temp.length * 2];
+
+		for (int j = 0; j < temp.length; j++)
+			array[j] = temp[j];
+		return array;
+	}
+
+	/**
+	 * 加倍式缩容 把0当成空值，重复缩容
+	 * 
+	 * @param array
+	 * @return
+	 */
+	private int[] shrink(int[] array) {
+		int nullNum = 0;
+		// 用Math.ceil无条件进位，用（float）保证运算结果不会被去小数点
+		temp = new int[(int) Math.ceil((float) array.length / 2)];
+		for (int j = 0; j < temp.length; j++) {
+			temp[j] = array[j];
+
+			// 把0当成空值，重复缩容
+			if (temp[j] == 0) {
+				nullNum++;
+			}
+		}
+		// 把0当成空值，重复缩容
+		if (nullNum >= (temp.length / 2))
+			return shrink(temp);
+		return temp;
 	}
 }

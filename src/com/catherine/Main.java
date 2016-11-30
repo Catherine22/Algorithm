@@ -39,11 +39,14 @@ public class Main {
 		// 1, 1 }));
 
 		Sequence sequence = new Sequence();
-		//测试效率
-		sequence.increaseArray();
-		sequence.doubleArray();
-		printArray("insert", sequence.insert(input1, 5, 9));
-		printArray("remove", sequence.remove(input1, 1, 7));
+		// 2 ways to increase the capacity
+		// sequence.increaseArray();
+		// sequence.doubleArray();
+
+		// do insert and remove
+		// printArray("insert", sequence.insert(input1, 5, 9));
+		// printArray("remove", sequence.remove(input1, 1, 7));
+		sequence.find(input1, -10);
 	}
 
 	public static void printArray(String title, int[] array) {
