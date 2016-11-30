@@ -45,7 +45,7 @@ public class Main {
 
 		// do insert and remove
 		// printArray("insert", sequence.insert(input1, 5, 9));
-		// printArray("remove", sequence.remove(input1, 1, 7));
+		 printArray("remove", sequence.remove(input1, 1, 7));
 		sequence.find(input1, -10);
 	}
 

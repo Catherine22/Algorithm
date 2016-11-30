@@ -120,7 +120,20 @@ public class Sequence {
 	}
 
 	/**
-	 * 检查数组中是否包含value，没有则返回非法位置-1
+	 * 移除一个，可以直接当成一种移除区间
+	 * @param array
+	 * @param pos
+	 * @return
+	 */
+	public int[] remove(int[] array, int pos) {
+		array = remove(array, pos, pos);
+		return array;
+
+	}
+
+	/**
+	 * 逆向查找，检查数组中是否包含value，没有则返回非法位置-1 <br>
+	 * 复杂度O(1)~O(n)
 	 * 
 	 * @param array
 	 * @param value
