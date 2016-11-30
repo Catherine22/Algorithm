@@ -6,11 +6,12 @@ import java.util.List;
 import com.catherine.Main;
 
 /**
- * best: n log n
- * average: n log n
- * worst: n log n
- * 
+ * best: n log n <br>
+ * average: n log n <br>
+ * worst: n log n <br>
+ * <br>
  * memory: worst case is n
+ * 
  * @author Catherine
  *
  */
