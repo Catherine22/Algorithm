@@ -4,23 +4,23 @@ import com.catherine.Main;
 
 /**
  * 看的数组A[n]直觉连续的内存位置<br>
- * 物理地址 = A[0]的位置 + i*s，s为一元素占用的空间量 所以又称作Linear array。
- * 
+ * 物理地址 = A[0]的位置 + i*s，s为一元素占用的空间量 所以又称作Linear array。<br>
+ * <br>
  * 向量是将数组做抽象和泛化，按线性次序封装而成。<br>
- * 例如定义的ADT接口有size(), get(r), insert(r,e)...
- * 
- * 
- * 
+ * 例如定义的ADT接口有size(), get(r), insert(r,e)...<br>
+ * <br>
+ * <br>
+ * <br>
  * Abstract Data Type(ADT) is a data type, where only behavior is defined but
- * not implementation.T.
- * 
+ * not implementation.T.<br>
+ * <br>
  * Opposite of ADT is Concrete Data Type (CDT), where it contains an
- * implementation of ADT.
- * 
+ * implementation of ADT.<br>
+ * <br>
  * Examples: Array, List, Map, Queue, Set, Stack, Table, Tree, and Vector are
  * ADTs. Each of these ADTs have many implementations i.e. CDT. Container is a
- * high-level ADT of above all ADTs.
- * 
+ * high-level ADT of above all ADTs.<br>
+ * <br>
  * Real life example: Book is Abstract (Telephone Book is an implementation)
  * 
  * @author Catherine
@@ -54,7 +54,7 @@ public class Sequence {
 	/**
 	 * 在空间不足时，使用加倍空间扩展优于逐渐空间扩展increaseArray()，<br>
 	 * 加倍式扩容虽然牺牲内存空间，但在运行速度上远超越递增式扩容。<br>
-	 * 递增式扩容须耗时O(1)，空间利用率(已使用／全部空间)>50%<br>
+	 * 递增式扩容须耗时O(1)，空间利用率(已使用/全部空间)至少大于50% <br>
 	 * 结论：加倍式扩容优于递增式扩容
 	 * 
 	 */
@@ -78,9 +78,12 @@ public class Sequence {
 	 * 在array的position位置插入value，position后面的元素全右移一位，必要时扩容。
 	 * 
 	 * @param array
+	 *            selected array
 	 * @param position
+	 *            where to insert
 	 * @param value
-	 * @return
+	 *            what to insert
+	 * @return new array
 	 */
 	public int[] insert(int[] array, int position, int value) {
 		int[] result = doubleArray(array);
@@ -98,9 +101,12 @@ public class Sequence {
 	 * 移除array中第fromPos到第toPos位置的所有元素，toPos后的元素自动向左移动，视情况加倍式缩小array
 	 * 
 	 * @param array
+	 *            selected array
 	 * @param fromPos
+	 *            from
 	 * @param toPos
-	 * @return
+	 *            to
+	 * @return new array
 	 */
 	public int[] remove(int[] array, int fromPos, int toPos) {
 		int pointer = fromPos;
@@ -123,8 +129,10 @@ public class Sequence {
 	 * 移除一个，可以直接当成一种移除区间
 	 * 
 	 * @param array
+	 *            selected array
 	 * @param pos
-	 * @return
+	 *            remove value in [pos]
+	 * @return new array
 	 */
 	public int[] remove(int[] array, int pos) {
 		array = remove(array, pos, pos);
@@ -138,8 +146,10 @@ public class Sequence {
 	 * 复杂度O(1)~O(n)
 	 * 
 	 * @param array
+	 *            selected array
 	 * @param value
-	 * @return
+	 *            check if value is included in array
+	 * @return position
 	 */
 	public int find(int[] array, int value) {
 		int pointer = array.length;
@@ -153,13 +163,14 @@ public class Sequence {
 
 	/**
 	 * 移除重复元素 <br>
-	 *  <br>
+	 * <br>
 	 * 将array分为3部分，前缀、比较元素、后缀。 <br>
 	 * 比较元素初始值=1，将前缀元素与比较元素进行比较，若出现重复则移除。 <br>
 	 * 待前缀区间中都没有重复元素时，比较元素后移一位，进行下一轮比较。
 	 * 
 	 * @param array
-	 * @return
+	 *            selected array
+	 * @return new array
 	 */
 	public int[] removeDuplicates(int[] array) {
 		int comparePos = 1;
@@ -177,7 +188,8 @@ public class Sequence {
 	 * 加倍式扩容
 	 * 
 	 * @param array
-	 * @return
+	 *            selected array
+	 * @return new array
 	 */
 	private int[] doubleArray(int[] array) {
 		temp = array;
@@ -192,7 +204,8 @@ public class Sequence {
 	 * 加倍式缩容 把0当成空值，重复缩容
 	 * 
 	 * @param array
-	 * @return
+	 *            selected array
+	 * @return new array
 	 */
 	private int[] shrink(int[] array) {
 		int nullNum = 0;
@@ -216,9 +229,13 @@ public class Sequence {
 	 * 逆向查找，检查数组[fromPos,toPos]中是否包含value，没有则返回非法位置-1
 	 * 
 	 * @param array
+	 *            selected array
 	 * @param fromPos
+	 *            from
 	 * @param toPos
+	 *            to
 	 * @param value
+	 *            check if value is included in array
 	 * @return
 	 */
 	private int find(int[] array, int fromPos, int toPos, int value) {
