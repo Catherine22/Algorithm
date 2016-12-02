@@ -206,7 +206,7 @@ public class MergeSort extends BaseSort {
 			result[resultPointer++] = array[leftPointer++];
 		}
 		if (SHOW_DEBUG_LOG) {
-			System.out.print("finished sorting");
+			System.out.print("sorting accomplished");
 			Main.printArray(TAG, result);
 		}
 		return result;

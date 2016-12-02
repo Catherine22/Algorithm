@@ -2,6 +2,8 @@ package com.catherine;
 
 import java.util.List;
 
+import com.catherine.data_type.Operator;
+import com.catherine.data_type.Sequence;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -9,11 +11,13 @@ import com.catherine.turing_machine.TuringMachine;
 
 public class Main {
 
-	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10 };
+	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
+			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
 	private static int[] input2 = new int[] { 38, 29, 28, 15, 13, 11, 5 };
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
+	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 7, 7 };
 
 	public static void main(String[] args) {
 		// InsertionSort
@@ -25,16 +29,38 @@ public class Main {
 		// printArray("MergeSort", ms.sort(input1, false));
 
 		// BubbleSort
-		 BubbleSort bs = new BubbleSort();
-		 printArray("BubbleSort", bs.sort(input3, false));
+		// BubbleSort bs = new BubbleSort();
+		// printArray("BubbleSort", bs.sort(input3, false));
 
 		// Hailstone
 		// Other other = new Other();
 		// printList("Hailstone", other.getHailstone(42));
 
-		// increase on Turing Machine
-//		TuringMachine tMachine = new TuringMachine();
-//		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
+		// Increment on Turing Machine
+		// TuringMachine tMachine = new TuringMachine();
+		// printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1,
+		// 1, 1 }));
+
+		Sequence sequence = new Sequence();
+		// 2 ways to increase the capacity
+		// sequence.increaseArray();
+		// sequence.doubleArray();
+
+		// System.out.println("find " + sequence.find(input1, -10));
+		// printArray("insert", sequence.insert(input1, 5, 9));
+		// printArray("remove", sequence.remove(input1, 1, 7));
+		// printArray("shift", sequence.shift(input2, 2, 5, 7));
+		// printArray("iterator", sequence.iterator(input1, new Operator() {
+		//
+		// @Override
+		// public int doSomethine(int input) {
+		// return ++input;
+		// }
+		// }));
+
+		// printArray("removeDuplicates", sequence.removeDuplicates(input1));
+		printArray("removeDuplicatesAndSort", sequence.removeDuplicatesAndSort(input1));
+		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input1));
 
 	}
 
