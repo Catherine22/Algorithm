@@ -298,7 +298,7 @@ public class Sequence {
 	 *            new position for [rangeFromPos,rangeToPos]
 	 * @return selected array
 	 */
-	private int[] shift(int[] array, int rangeFromPos, int rangeToPos, int moveToPos) {
+	public int[] shift(int[] array, int rangeFromPos, int rangeToPos, int moveToPos) {
 		if ((rangeToPos - rangeFromPos) < 0)
 			return array;
 		// Index out of bound
