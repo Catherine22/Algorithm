@@ -24,7 +24,19 @@ Algorithms
 > - Double the capacity is more efficient. In general, it's better.
 
   - Insert/remove/find a element
+  - Shift continued-elements(It's also a high level method to remove continued-elements)
+  - Update each element by Interface
+  - Remove duplicates with/without sorting
 
+  > **Note:**
+  > - removeDuplicates()
+  >  - O(n^2)
+  >  - remove duplicates without sorting.
+  > - removeDuplicatesAndSort(), removeDuplicatesAndSort2()
+  >  - O(n log n)
+  >  - remove duplicates after sorting.
+  >  - It's just like using sort()+unique() in vector by C++.
+  > - Using removeDuplicatesAndSort() or removeDuplicatesAndSort2() if you don't need to return unsorted array.
 
 ## Reference
   - [Algorithms, 4th Edition]

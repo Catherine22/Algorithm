@@ -7,14 +7,15 @@ public class TuringMachine {
 
 	/**
 	 * 1. move head to the last character from index 0. 2. move head to the left
-	 * index and update the value.
-	 * 
+	 * index and update the value. <br>
+	 * <br>
 	 * In this function, head keep moving until the flag 'accomplished' become
 	 * to true, if take away the flag and the increase codes, the user-input
-	 * array would be scanned without a break.
+	 * array would be scanned without a break. <br>
 	 * 
 	 * @param array
-	 * @return
+	 *            selected array
+	 * @return new array
 	 */
 	public int[] increase(int[] array) {
 		// It looks like [x x array[0] array[1]... array[length-1] x x]
