@@ -1,5 +1,15 @@
 package com.catherine.sort;
 
+/**
+ * best: n <br>
+ * average: n^2 <br>
+ * worst: n^2 <br>
+ * <br>
+ * memory: 1
+ * 
+ * @author Catherine
+ *
+ */
 public class InsertionSort extends BaseSort {
 
 	@Override
@@ -18,8 +28,7 @@ public class InsertionSort extends BaseSort {
 						input[j] = input[j - 1];
 						input[j - 1] = temp;
 						if (SHOW_DEBUG_LOG)
-							System.out.println(input[j - 1] + " switch "
-									+ input[j]);
+							System.out.println(input[j - 1] + " switch " + input[j]);
 					}
 				} else {
 					if (input[j] < input[j - 1]) {
@@ -27,8 +36,7 @@ public class InsertionSort extends BaseSort {
 						input[j] = input[j - 1];
 						input[j - 1] = temp;
 						if (SHOW_DEBUG_LOG)
-							System.out.println(input[j - 1] + " switch "
-									+ input[j]);
+							System.out.println(input[j - 1] + " switch " + input[j]);
 					}
 				}
 			}

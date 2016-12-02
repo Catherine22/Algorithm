@@ -1,8 +1,9 @@
 package com.catherine.sort;
 
 /**
- * best: n average: n^2 worst: n^2
- * 
+ * best: n <br>
+ * average: n^2 worst: n^2 <br>
+ * <br>
  * memory: 1
  * 
  * @author Catherine
@@ -25,7 +26,7 @@ public class BubbleSort extends BaseSort {
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 					}
-				}else{
+				} else {
 					if (input[j] < input[j + 1]) {
 						temp = input[j];
 						input[j] = input[j + 1];
