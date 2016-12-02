@@ -240,6 +240,96 @@ public class Sequence {
 	}
 
 	/**
+	 * 移除重复元素 <br>
+	 * 复杂度O(n log n) <br>
+	 * <br>
+	 * 先排序arrayO(n log n)，接着比较相邻元素中是否有重复，移除重复元素 <br>
+	 * <br>
+	 * <br>
+	 * 此方法同removeDuplicatesAndSort()，唯一的差别是使用取代的方式移除元素，达到不new新的array而移除重复元素
+	 * 
+	 * @param array
+	 *            selected array
+	 * @return new array
+	 */
+	public int[] removeDuplicatesAndSort2(int[] array) {
+		long start = System.currentTimeMillis();
+		Arrays.sort(array);// O(n log n)
+
+		int scanningHead = 1;
+		int recordHead = 0;
+
+		while (scanningHead < array.length) {
+			if (array[scanningHead] == array[recordHead] && scanningHead != array.length - 1) {
+				scanningHead++;
+			} else {
+				if (scanningHead - recordHead > 0) {// 代表出现重复数值
+					if (scanningHead != array.length - 1)
+						array = shift(array, scanningHead, array.length - 1, recordHead + 1);
+					else
+						array = shift(array, scanningHead, array.length - 1, recordHead);
+					scanningHead = recordHead + 1;
+				}
+				recordHead++;
+				scanningHead++;
+			}
+		}
+		long end = System.currentTimeMillis();
+		if (SHOW_DEBUG_LOG)
+			System.out.println("removeDuplicatesAndSort2() took " + (end - start) + " ms");
+		return array;
+	}
+
+	/**
+	 * 批量移动（可以当成一种移除array元素的方法） <br>
+	 * <br>
+	 * 调整array元素的位置，将[rangeFromPos]~[rangeToPos]区间的元素移动到[moveToPos]，
+	 * 直接取代该位置原来的元素，超出原本array长度则扩容，缩小则截断多余部分 <br>
+	 * <br>
+	 * 特别适用一次移除大量连续元素时，取代一次移除一个元素。
+	 * 
+	 * @param array
+	 *            selected array
+	 * @param rangeFromPos
+	 *            position of the first element
+	 * @param rangeToPos
+	 *            position of the last element
+	 * @param moveToPos
+	 *            new position for [rangeFromPos,rangeToPos]
+	 * @return selected array
+	 */
+	private int[] shift(int[] array, int rangeFromPos, int rangeToPos, int moveToPos) {
+		if ((rangeToPos - rangeFromPos) < 0)
+			return array;
+		// Index out of bound
+		if (rangeFromPos < 0 || rangeToPos < 0 || rangeToPos >= array.length)
+			return array;
+
+		int copyArrayPointer = rangeFromPos;
+		int newSize = moveToPos + (rangeToPos - rangeFromPos + 1);
+		if (newSize > array.length) {// 超出边界，须扩容
+			int[] newArray = new int[newSize];
+
+			for (int i = 0; i < newSize; i++) {
+				if (i < moveToPos)
+					newArray[i] = array[i];
+				else
+					newArray[i] = array[copyArrayPointer++];
+			}
+			return newArray;
+		} else {
+			// 为了不new新的array，特别把缩容的情形另外处理，而非直接new一个新尺寸的array添加数据
+			for (int i = moveToPos; i < newSize; i++) {
+				array[i] = array[copyArrayPointer++];
+			}
+			// 缩容，直接截去尾部的array
+			array = Arrays.copyOfRange(array, 0, newSize);
+		}
+
+		return array;
+	}
+
+	/**
 	 * 遍历
 	 * 
 	 * @param array

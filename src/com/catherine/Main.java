@@ -49,8 +49,9 @@ public class Main {
 		// System.out.println("find " + sequence.find(input1, -10));
 		// printArray("insert", sequence.insert(input1, 5, 9));
 		// printArray("remove", sequence.remove(input1, 1, 7));
-		printArray("removeDuplicates", sequence.removeDuplicates(input1));
+//		printArray("removeDuplicates", sequence.removeDuplicates(input1));
 		printArray("removeDuplicatesAndSort", sequence.removeDuplicatesAndSort(input1));
+		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input1));
 		// printArray("iterator", sequence.iterator(input1, new Operator() {
 		//
 		// @Override
