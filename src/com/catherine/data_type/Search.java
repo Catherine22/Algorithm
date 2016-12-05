@@ -27,6 +27,12 @@ public class Search {
 	 * 若查找元素&gt;中间元素，将fromPos改成原中间元素，查找范围变成fromPos（原middlePos）～toPos，
 	 * 产生新的middlePos <br>
 	 * 若查找元素=中间元素，代表找到了。 <br>
+	 * <br>
+	 * <br>
+	 * 平均查找时间约O(1.5logn)。 <br>
+	 * 延伸出一个不公平的情形，比较时先比较左边再比较右边，所以如果查找元素&lt;中间元素只需比较1次，如果查找元素&gt;中间元素，必须比较两次。
+	 * <br>
+	 * 使用fibonacci Searching提高效能
 	 * 
 	 * @param array
 	 *            selected-array
@@ -36,12 +42,12 @@ public class Search {
 	 *            search range from fromPos to toPos
 	 * @param toPos
 	 *            search range from fromPos to toPos
-	 * @return position 0, 1, 1, 1, 3, 3, 7, 7, 64
+	 * @return position
 	 */
 	public int binSearch(int[] array, int element, int fromPos, int toPos) {
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
-		//此方法只能用于有序数组
+		// 此方法只能用于有序数组
 		Arrays.sort(array);
 
 		int midPos = 0;
@@ -52,30 +58,33 @@ public class Search {
 			if (SHOW_DEBUG_LOG)
 				System.out.println("mid=" + midPos);
 			if (midPos == fromPos) {// 剩两个数做比较
-				count++;
 				if (element < array[toPos] && array[midPos] < element) {
+					count += 2;
 					// 表示数值介于array[midPos]～array[toPos]之间
 				} else if (element < array[toPos] && element < array[midPos]) {
+					count++;
 					midPos--;// 表示数值<array[midPos]
 				} else if (element == array[toPos]) {
+					count += 2;
 					midPos++;// 表示数值==array[toPos]
 				} else if (array[toPos] < element) {
+					count += 2;
 					midPos++;// 表示数值>array[toPos]
 				}
 				stop = true;
 			} else {
-				count++;
-				if (element < array[midPos])
+				if (element < array[midPos]) {
+					count++;
 					toPos = midPos;
-				else if (array[midPos] < element)
+				} else if (array[midPos] < element) {
+					count += 2;
 					fromPos = midPos;
-				else {
-					count--;
+				} else {
 					// 检查是否有重复
 					while (!stop) {
 						if (SHOW_DEBUG_LOG)
 							System.out.printf("检查array[%d,%d]是否重复\n", midPos, midPos + 1);
-						count++;
+						// count++;
 						if (array[midPos] != array[midPos + 1]) {
 							stop = true;
 						} else
@@ -89,8 +98,59 @@ public class Search {
 		return midPos;
 	}
 
+	/**
+	 * 
+	 * 延续binary searching的逻辑，解决左右两边比较成本不同的问题（左+1、右+2），将左边的元素增加，进而达到补偿。 <br>
+	 * 
+	 * Fibonacci searching在常系数的意义上优于Binary searching
+	 * 
+	 * @param array
+	 *            selected-array
+	 * @param element
+	 *            search the integer in selected-array
+	 * @param fromPos
+	 *            search range from fromPos to toPos
+	 * @param toPos
+	 *            search range from fromPos to toPos
+	 * @return position
+	 */
 	public int fibSearch(int[] array, int element, int fromPos, int toPos) {
-
+		includedInFib(1);
+		includedInFib(3);
+		includedInFib(5);
+		includedInFib(8);
+		includedInFib(7);
+		includedInFib(4);
 		return 0;
+	}
+
+	/**
+	 * Return the position of input num in Fibonacci Sequence. <br>
+	 * F(n) = (1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5)) /(1/2)), n) -
+	 * Math.pow(((1 - Math.sqrt(5)) /(1/2)), n)) <br>
+	 * <br>
+	 * <br>
+	 * To arise whether a positive integer x is a Fibonacci number. <br>
+	 * This is true if and only if one or both of 5*Math.pow(x,2)+4 or
+	 * 5*Math.pow(x,2)-4 is a perfect square.
+	 * 
+	 * @param num
+	 *            a positive number
+	 * @return fibIndex (-1 as not found)
+	 */
+	private int includedInFib(int num) {
+		int fibIndex = -1;
+		int temp = 1;
+		// 1, 1, 2, 3, 5, 8, 13...
+		int calValue = (int) (5 * Math.pow(num, 2));
+		while (Math.pow(temp, 2) <= (calValue - 4)) {
+			// 先检查是不是Fibonacci数列
+			if ((calValue + 4 == Math.pow(temp, 2)) || (calValue - 4 == Math.pow(temp, 2))) {
+				// num是Fibonacci数列，找出位置
+
+			}
+			temp++;
+		}
+		return fibIndex;
 	}
 }
