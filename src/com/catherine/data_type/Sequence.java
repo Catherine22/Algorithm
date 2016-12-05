@@ -153,7 +153,7 @@ public class Sequence {
 	 *            selected array
 	 * @param value
 	 *            check if value is included in array
-	 * @return position
+	 * @return position (-1 as not found)
 	 */
 	public int find(int[] array, int value) {
 		int pointer = array.length;
@@ -392,7 +392,7 @@ public class Sequence {
 	 *            to
 	 * @param value
 	 *            check if value is included in array
-	 * @return
+	 * @return position (-1 as not found)
 	 */
 	private int find(int[] array, int fromPos, int toPos, int value) {
 		int pointer = toPos + 1;

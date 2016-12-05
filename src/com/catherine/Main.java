@@ -3,6 +3,7 @@ package com.catherine;
 import java.util.List;
 
 import com.catherine.data_type.Operator;
+import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
@@ -41,7 +42,7 @@ public class Main {
 		// printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1,
 		// 1, 1 }));
 
-		Sequence sequence = new Sequence();
+		// Sequence sequence = new Sequence();
 		// 2 ways to increase the capacity
 		// sequence.increaseArray();
 		// sequence.doubleArray();
@@ -59,9 +60,12 @@ public class Main {
 		// }));
 
 		// printArray("removeDuplicates", sequence.removeDuplicates(input1));
-		printArray("removeDuplicatesAndSort1", sequence.removeDuplicatesAndSort1(input6));
-		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input6));
+		// printArray("removeDuplicatesAndSort1",sequence.removeDuplicatesAndSort1(input6));
+		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
 
+		Search search = new Search();
+		System.out.println("binSearch:" + search.binSearch(input6, 1, 0, input6.length - 1));
+		
 	}
 
 	public static void printArray(String title, int[] array) {

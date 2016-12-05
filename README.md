@@ -39,6 +39,12 @@ Algorithms
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array.
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to using replace method to remove duplicates.
 
+  - [Sequence Searching] is used to **search a sorted-array to find a element.** If the array contains the element, it'll return where the element is in the array and also return the latest position if there're duplicated elements.
+  - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
+      - binary Searching
+      -
+
+
 ## Reference
   - [Algorithms, 4th Edition]
 
@@ -47,5 +53,6 @@ Algorithms
    [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
    [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
+   [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
