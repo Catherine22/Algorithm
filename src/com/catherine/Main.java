@@ -59,8 +59,8 @@ public class Main {
 		// }));
 
 		// printArray("removeDuplicates", sequence.removeDuplicates(input1));
-		printArray("removeDuplicatesAndSort", sequence.removeDuplicatesAndSort(input1));
-		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input1));
+		printArray("removeDuplicatesAndSort1", sequence.removeDuplicatesAndSort1(input6));
+		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input6));
 
 	}
 

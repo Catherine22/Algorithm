@@ -32,11 +32,12 @@ Algorithms
   > - removeDuplicates()
   >  - O(n^2)
   >  - remove duplicates without sorting.
-  > - removeDuplicatesAndSort(), removeDuplicatesAndSort2()
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2()
   >  - O(n log n)
   >  - remove duplicates after sorting.
   >  - It's just like using sort()+unique() in vector by C++.
-  > - Using removeDuplicatesAndSort() or removeDuplicatesAndSort2() if you don't need to return unsorted array.
+  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array.
+  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to using replace method to remove duplicates.
 
 ## Reference
   - [Algorithms, 4th Edition]
