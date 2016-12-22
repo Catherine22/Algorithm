@@ -242,18 +242,39 @@ public class Search {
 			boolean stopCheckingDup = false;
 
 			midPos = getFibNum(fibIndex - 1) - 1;
-			while (!stop && fromPos < toPos && count < 8) {
+			while (!stop && count < 8) {
 				if (SHOW_DEBUG_LOG)
 					System.out.println("mid[" + midPos + "]:" + array[midPos]);
-				if (element > array[midPos]) {
-
-				} else if (element < array[midPos]) {
-
-				} else {
+				if (toPos - fromPos == 1) {
+					if (element == array[fromPos]) {
+						count += 1;
+						midPos = fromPos;
+					} else if (element == array[toPos]) {
+						count += 2;
+						midPos = toPos;
+					} else {
+						count += 2;
+						midPos = fromPos;
+					}
 					stop = true;
 				}
-				
-				
+
+				if (element == array[midPos])
+					stop = true;
+				else if (element < array[midPos]) {
+					count += 1;
+					toPos = midPos - 1;
+					fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
+					// 新中点 = 原中点-新右半边-1
+					midPos -= (getFibNum(fibIndex - 1) - 1);
+				} else if (element > array[midPos]) {
+					count += 2;
+					fromPos = midPos + 1;
+					fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
+					// 新中点 = 原中点+新左半边+1
+					midPos += (getFibNum(fibIndex - 2) + 1);
+				}
+
 				// 检查是否有重复
 				while (stop && !stopCheckingDup) {
 					if (SHOW_DEBUG_LOG)

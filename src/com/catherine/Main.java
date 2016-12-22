@@ -64,9 +64,9 @@ public class Main {
 		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
 
 		Search search = new Search();
-//		System.out.println("binSearch:" + search.binSearch(input6, 11, 0, input6.length - 1));
-//		System.out.println("binSearch2:" + search.binSearch2(input6, 14, 0, input6.length - 1));
-		System.out.println("fibSearch:" + search.fibSearch(input6, 11, 0, input6.length - 1));
+		System.out.println("binSearch:" + search.binSearch(input6, 14, 0, input6.length - 1));
+		System.out.println("binSearch2:" + search.binSearch2(input6, 14, 0, input6.length - 1));
+		System.out.println("fibSearch:" + search.fibSearch(input6, 14, 0, input6.length - 1));
 
 	}
 
