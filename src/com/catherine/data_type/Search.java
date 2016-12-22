@@ -115,7 +115,7 @@ public class Search {
 	/**
 	 * 比起binSearch(), binSearch2()只分成两部分查找 <br>
 	 * 在最好及最坏情况下都逊于binSearch()，但整体来说可减少比较次数。 <br>
-	 * 
+	 *  <br>
 	 * 将array对切，分成左、右兩部分，每次比较查找元素是位于那个区间 <br>
 	 * 若查找元素&lt;中间元素，将toPos改成原中间元素，查找范围变成fromPos～toPos（原middlePos），产生新的middlePos
 	 * <br>
