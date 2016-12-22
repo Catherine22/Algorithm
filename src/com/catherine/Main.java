@@ -18,7 +18,7 @@ public class Main {
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
-	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64};//, 7, 7, 0, 13, 13 
+	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 11, 14, 10};
 
 	public static void main(String[] args) {
 		// InsertionSort
@@ -64,8 +64,8 @@ public class Main {
 		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
 
 		Search search = new Search();
-		System.out.println("binSearch:" + search.binSearch(input6, 64, 0, input6.length - 1));
-		System.out.println("fibSearch:" + search.fibSearch(input6, 64, 0, input6.length - 1));
+		System.out.println("binSearch:" + search.binSearch(input6, 25, 0, input6.length - 1));
+		System.out.println("fibSearch:" + search.fibSearch(input6, 25, 0, input6.length - 1));
 
 	}
 

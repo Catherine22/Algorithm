@@ -2,6 +2,8 @@ package com.catherine.data_type;
 
 import java.util.Arrays;
 
+import com.catherine.Main;
+
 /**
  * 这边的search应含多功能，而非仅仅寻找的功能而已。 <br>
  * 例如在插入新元素时，通过search的调用，找到一个适合插入的位置（这样能让插入新元素后仍保持排序）。 <br>
@@ -45,10 +47,14 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch(int[] array, int element, int fromPos, int toPos) {
+		long start = System.currentTimeMillis();
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
 		Arrays.sort(array);
+
+		if (SHOW_DEBUG_LOG)
+			Main.printArray("sorted:", array);
 
 		int midPos = 0;
 		int count = 0;
@@ -56,29 +62,32 @@ public class Search {
 		while (!stop && fromPos < toPos) {
 			midPos = (fromPos + toPos) / 2;
 			if (SHOW_DEBUG_LOG)
-				System.out.println("mid=" + midPos);
+				System.out.println("mid[" + midPos + "]:" + array[midPos]);
 			if (midPos == fromPos) {// 剩两个数做比较
 				if (element < array[toPos] && array[midPos] < element) {
+					// 表示数值介于array[midPos]～array[toPos]之间，也就是两个都不是
 					count += 2;
-					// 表示数值介于array[midPos]～array[toPos]之间
 				} else if (element < array[toPos] && element < array[midPos]) {
+					// 表示数值<array[midPos]
 					count++;
-					midPos--;// 表示数值<array[midPos]
+					midPos--;
 				} else if (element == array[toPos]) {
+					// 表示数值==array[toPos]
 					count += 2;
-					midPos++;// 表示数值==array[toPos]
-				} else if (array[toPos] < element) {
+					midPos++;
+				} else if (element > array[toPos]) {
+					// 表示数值>array[toPos]
 					count += 2;
-					midPos++;// 表示数值>array[toPos]
+					midPos++;
 				}
 				stop = true;
 			} else {
 				if (element < array[midPos]) {
 					count++;
-					toPos = midPos;
-				} else if (array[midPos] < element) {
+					toPos = midPos - 1;
+				} else if (element > array[midPos]) {
 					count += 2;
-					fromPos = midPos;
+					fromPos = midPos + 1;
 				} else {
 					// 检查是否有重复
 					while (!stop) {
@@ -95,6 +104,9 @@ public class Search {
 		}
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
+		long end = System.currentTimeMillis();
+		if (SHOW_DEBUG_LOG)
+			System.out.println("binSearch() took " + (end - start) + " ms");
 		return midPos;
 	}
 
@@ -102,7 +114,8 @@ public class Search {
 	 * 
 	 * 延续binary searching的逻辑，解决左右两边比较成本不同的问题（左+1、右+2），将左边的元素增加，进而达到补偿。 <br>
 	 * 
-	 * Fibonacci searching在常系数的意义上优于Binary searching
+	 * Fibonacci searching在常系数的意义上优于Binary searching<br>
+	 * If fib(k)-1 is equal to the size of array, split array at fib(k-1)-1.
 	 * 
 	 * @param array
 	 *            selected-array
@@ -115,42 +128,147 @@ public class Search {
 	 * @return position
 	 */
 	public int fibSearch(int[] array, int element, int fromPos, int toPos) {
-		includedInFib(1);
-		includedInFib(3);
-		includedInFib(5);
-		includedInFib(8);
-		includedInFib(7);
-		includedInFib(4);
-		return 0;
+		long start = System.currentTimeMillis();
+		int fibIndex = isFibNumMinusOne(array.length);
+		if (fibIndex == -1){// array个数不是fib(k)-1，直接用一般二元搜寻
+			System.out.println("array个数不是fib(k)-1，直接用一般二元搜寻");
+			return binSearch(array, element, fromPos, toPos);
+		}
+		else {
+			if (array.length == 0 || toPos <= fromPos)
+				throw new ArrayIndexOutOfBoundsException();
+			// 此方法只能用于有序数组
+			Arrays.sort(array);
+
+			if (SHOW_DEBUG_LOG)
+				Main.printArray("sorted:", array);
+
+			int midPos = 0;
+			int count = 0;
+			boolean stop = false;
+			midPos = getFibNum(fibIndex - 1) - 1;
+			while (!stop && fromPos < toPos) {
+				if (SHOW_DEBUG_LOG)
+					System.out.println("mid[" + midPos + "]:" + array[midPos]);
+				// 剩两个数做比较
+				if (midPos == fromPos) {
+					if (element < array[toPos] && array[midPos] < element) {
+						// 表示数值介于array[midPos]～array[toPos]之间
+						count += 2;
+					} else if (element < array[toPos] && element < array[midPos]) {
+						// 表示数值<array[midPos]
+						count++;
+						midPos--;
+					} else if (element == array[toPos]) {
+						// 表示数值==array[toPos]
+						count += 2;
+						midPos++;
+					} else if (element > array[toPos]) {
+						// 表示数值>array[toPos]
+						count += 2;
+						midPos++;
+					}
+					stop = true;
+				} else {
+					if (element < array[midPos]) {
+						count++;
+						toPos = midPos - 1;
+						fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
+						midPos = fromPos + getFibNum(fibIndex - 1) - 1;
+					} else if (element > array[midPos]) {
+						count += 2;
+						fromPos = midPos + 1;
+						fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
+						midPos = fromPos + getFibNum(fibIndex - 1) - 1;
+					} else {
+						// 检查是否有重复
+						while (!stop) {
+							if (SHOW_DEBUG_LOG)
+								System.out.printf("检查array[%d,%d]是否重复\n", midPos, midPos + 1);
+							// count++;
+							if (array[midPos] != array[midPos + 1]) {
+								stop = true;
+							} else
+								midPos++;
+						}
+					}
+
+				}
+			}
+			if (SHOW_DEBUG_LOG)
+				System.out.printf("比较了%d次\n", count);
+			long end = System.currentTimeMillis();
+			if (SHOW_DEBUG_LOG)
+				System.out.println("fibSearch() took " + (end - start) + " ms");
+			return midPos;
+		}
 	}
 
 	/**
+	 * 
+	 * Recognizing Fibonacci numbers (1, 1, 2, 3, 5, 8, 13...) <br>
+	 * <br>
 	 * Return the position of input num in Fibonacci Sequence. <br>
-	 * F(n) = (1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5)) /(1/2)), n) -
-	 * Math.pow(((1 - Math.sqrt(5)) /(1/2)), n)) <br>
+	 * F(n) = (1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -
+	 * Math.pow(((1 - Math.sqrt(5))/2), n)) <br>
 	 * <br>
 	 * <br>
 	 * To arise whether a positive integer x is a Fibonacci number. <br>
-	 * This is true if and only if one or both of 5*Math.pow(x,2)+4 or
-	 * 5*Math.pow(x,2)-4 is a perfect square.
+	 * <br>
+	 * <br>
+	 * 
+	 * @param num
+	 *            a positive number
+	 * @return fibIndex (-1 as not found and 1 as the first num)
+	 */
+	public int isFibNum(int num) {
+		// 在Fibonacci里的顺序，从1开始
+		int fibIndex = 1;
+		// 在Fibonacci里第fibIndex个值是什么
+		int fibValue = 1;
+
+		while (fibValue < num) {
+			fibIndex++;
+			fibValue = (int) ((1 / Math.sqrt(5))
+					* (Math.pow(((1 + Math.sqrt(5)) / 2), fibIndex) - Math.pow(((1 - Math.sqrt(5)) / 2), fibIndex)));
+		}
+		if (fibValue == num)
+			return fibIndex;
+		else
+			return -1;
+	}
+
+	/**
+	 * Get fib(index)
+	 * 
+	 * @param index
+	 *            position
+	 * @return Fibonacci number
+	 */
+	private int getFibNum(int index) {
+		return (int) ((1 / Math.sqrt(5))
+				* (Math.pow(((1 + Math.sqrt(5)) / 2), index) - Math.pow(((1 - Math.sqrt(5)) / 2), index)));
+	}
+
+	/**
+	 * Check if num is equal to fib(k)-1
 	 * 
 	 * @param num
 	 *            a positive number
 	 * @return fibIndex (-1 as not found)
 	 */
-	private int includedInFib(int num) {
-		int fibIndex = -1;
-		int temp = 1;
-		// 1, 1, 2, 3, 5, 8, 13...
-		int calValue = (int) (5 * Math.pow(num, 2));
-		while (Math.pow(temp, 2) <= (calValue - 4)) {
-			// 先检查是不是Fibonacci数列
-			if ((calValue + 4 == Math.pow(temp, 2)) || (calValue - 4 == Math.pow(temp, 2))) {
-				// num是Fibonacci数列，找出位置
+	private int isFibNumMinusOne(int num) {
+		int fibIndex = 1;
+		int fibValue = 1;
 
-			}
-			temp++;
+		while (fibValue < num) {
+			fibIndex++;
+			fibValue = (int) ((1 / Math.sqrt(5))
+					* (Math.pow(((1 + Math.sqrt(5)) / 2), fibIndex) - Math.pow(((1 - Math.sqrt(5)) / 2), fibIndex)));
 		}
-		return fibIndex;
+		if (fibValue - 1 == num)
+			return fibIndex;
+		else
+			return -1;
 	}
 }
