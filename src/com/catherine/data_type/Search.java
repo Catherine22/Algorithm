@@ -107,9 +107,9 @@ public class Search {
 					stopCheckingDup = true;
 			}
 		}
-		// 代表新中点<第一位，一律返回第一位
+		// 代表新中点<第一位，一律返回-1
 		if (midPos < 0) {
-			midPos = 0;
+			midPos = -1;
 		}
 
 		// 代表新中点>=最后一位，一律返回最后一位
@@ -206,9 +206,9 @@ public class Search {
 					stopCheckingDup = true;
 			}
 		}
-		// 代表新中点<第一位，一律返回第一位
+		// 代表新中点<第一位，一律返回-1
 		if (midPos < 0) {
-			midPos = 0;
+			midPos = -1;
 		}
 
 		// 代表新中点>=最后一位，一律返回最后一位
@@ -272,30 +272,34 @@ public class Search {
 					if (element == array[fromPos]) {
 						count += 1;
 						midPos = fromPos;
-					} else if (element == array[toPos]) {
+					} else if (element < array[fromPos]) {
+						count += 1;
+						midPos = fromPos - 1;
+						stopCheckingDup = true;
+					} else if (element >= array[toPos]) {
 						count += 2;
 						midPos = toPos;
-					} else {
+					} else if ((element > array[fromPos]) && (element < array[toPos])) {
 						count += 2;
 						midPos = fromPos;
 					}
 					stop = true;
-				}
-
-				if (element == array[midPos])
-					stop = true;
-				else if (element < array[midPos]) {
-					count += 1;
-					toPos = midPos - 1;
-					fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
-					// 新中点 = 原中点-新右半边-1
-					midPos -= (getFibNum(fibIndex - 1) - 1);
-				} else if (element > array[midPos]) {
-					count += 2;
-					fromPos = midPos + 1;
-					fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
-					// 新中点 = 原中点+新左半边+1
-					midPos += (getFibNum(fibIndex - 2) + 1);
+				} else {
+					if (element == array[midPos])
+						stop = true;
+					else if (element < array[midPos]) {
+						count += 1;
+						toPos = midPos - 1;
+						fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
+						// 新中点 = 原中点-新右半边-1
+						midPos -= (getFibNum(fibIndex - 1) - 1);
+					} else if (element > array[midPos]) {
+						count += 2;
+						fromPos = midPos + 1;
+						fibIndex = isFibNumMinusOne(toPos - fromPos + 1);
+						// 新中点 = 原中点+新左半边+1
+						midPos += (getFibNum(fibIndex - 2) + 1);
+					}
 				}
 
 				// 检查是否有重复
@@ -309,9 +313,9 @@ public class Search {
 						stopCheckingDup = true;
 				}
 			}
-			// 代表新中点<第一位，一律返回第一位
+			// 代表新中点<第一位，一律返回-1
 			if (midPos < 0) {
-				midPos = 0;
+				midPos = -1;
 			}
 
 			// 代表新中点>=最后一位，一律返回最后一位
@@ -325,6 +329,7 @@ public class Search {
 			Analysis.printTrace(tLog);
 			return midPos;
 		}
+
 	}
 
 	/**
