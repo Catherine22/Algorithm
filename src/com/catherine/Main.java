@@ -3,6 +3,7 @@ package com.catherine;
 import java.util.List;
 
 import com.catherine.data_type.Operator;
+import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
@@ -17,7 +18,7 @@ public class Main {
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
-	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 7, 7 };
+	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10};
 
 	public static void main(String[] args) {
 		// InsertionSort
@@ -41,7 +42,7 @@ public class Main {
 		// printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1,
 		// 1, 1 }));
 
-		Sequence sequence = new Sequence();
+		// Sequence sequence = new Sequence();
 		// 2 ways to increase the capacity
 		// sequence.increaseArray();
 		// sequence.doubleArray();
@@ -59,8 +60,13 @@ public class Main {
 		// }));
 
 		// printArray("removeDuplicates", sequence.removeDuplicates(input1));
-		printArray("removeDuplicatesAndSort", sequence.removeDuplicatesAndSort(input1));
-		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input1));
+		// printArray("removeDuplicatesAndSort1",sequence.removeDuplicatesAndSort1(input6));
+		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
+
+		Search search = new Search();
+		System.out.println("binSearch:" + search.binSearch(input6, 1, 0, input6.length - 1));
+		System.out.println("binSearch2:" + search.binSearch2(input6, 1, 0, input6.length - 1));
+		System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0, input6.length - 1));
 
 	}
 

@@ -8,12 +8,27 @@ package com.catherine.utils;
  *
  */
 public class Analysis {
+	
+	public static void startTracing(TraceLog tLog){
+		tLog.setStartTime(System.currentTimeMillis());
+		
+		Runtime runtime = Runtime.getRuntime();
+	    long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+		tLog.setStartMem(usedMemory);
+	}
+	
+	public static void endTracing(TraceLog tLog){
+		tLog.setEndTime(System.currentTimeMillis());
+		
+		Runtime runtime = Runtime.getRuntime();
+	    long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+		tLog.setEndMem(usedMemory);
+	}
 
-	/**
-	 * 运行时间 Depends on input, input size
-	 */
-	public void getRunningTime() {
-
+	public static void printTrace(TraceLog tLog){
+		System.out.println("LOG-----------");
+		System.out.println(tLog.toString());
+		System.out.println("LOG-----------");
 	}
 
 	/**

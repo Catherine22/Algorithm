@@ -153,7 +153,7 @@ public class Sequence {
 	 *            selected array
 	 * @param value
 	 *            check if value is included in array
-	 * @return position
+	 * @return position (-1 as not found)
 	 */
 	public int find(int[] array, int value) {
 		int pointer = array.length;
@@ -208,13 +208,13 @@ public class Sequence {
 	 * <br>
 	 * <br>
 	 * 1. 元素会被重新排列过 <br>
-	 * 2.是目前已知最快移除重复元素方法 <br>
+	 * 2. 是目前已知最快移除重复元素方法 <br>
 	 * 
 	 * @param array
 	 *            selected array
 	 * @return new array
 	 */
-	public int[] removeDuplicatesAndSort(int[] array) {
+	public int[] removeDuplicatesAndSort1(int[] array) {
 		long start = System.currentTimeMillis();
 		Arrays.sort(array);// O(n log n)
 		int[] newArray;
@@ -235,7 +235,7 @@ public class Sequence {
 		}
 		long end = System.currentTimeMillis();
 		if (SHOW_DEBUG_LOG)
-			System.out.println("removeDuplicates() took " + (end - start) + " ms");
+			System.out.println("removeDuplicatesAndSort1() took " + (end - start) + " ms");
 		return newArray;
 	}
 
@@ -246,7 +246,10 @@ public class Sequence {
 	 * 先排序arrayO(n log n)，接着比较相邻元素中是否有重复，移除重复元素 <br>
 	 * <br>
 	 * <br>
-	 * 此方法同removeDuplicatesAndSort()，唯一的差别是使用取代的方式移除元素，达到不new新的array而移除重复元素
+	 * 此方法类似removeDuplicatesAndSort1()，用取代的方式移除重复元素，只移动重复的值而不移动整个区间。 <br>
+	 * 1. 元素会被重新排列过 <br>
+	 * 2. 是目前已知最快移除重复元素方法 <br>
+	 * 3. 不用new新的array
 	 * 
 	 * @param array
 	 *            selected array
@@ -255,25 +258,18 @@ public class Sequence {
 	public int[] removeDuplicatesAndSort2(int[] array) {
 		long start = System.currentTimeMillis();
 		Arrays.sort(array);// O(n log n)
-
-		int scanningHead = 1;
+		int scanHead = 1;
 		int recordHead = 0;
-
-		while (scanningHead < array.length) {
-			if (array[scanningHead] == array[recordHead] && scanningHead != array.length - 1) {
-				scanningHead++;
+		while (scanHead < array.length) {
+			if (array[scanHead] == array[recordHead]) {
+				scanHead++;
 			} else {
-				if (scanningHead - recordHead > 0) {// 代表出现重复数值
-					if (scanningHead != array.length - 1)
-						array = shift(array, scanningHead, array.length - 1, recordHead + 1);
-					else
-						array = shift(array, scanningHead, array.length - 1, recordHead);
-					scanningHead = recordHead + 1;
-				}
-				recordHead++;
-				scanningHead++;
+				array[++recordHead] = array[scanHead++];
 			}
 		}
+		// 把后面不用的全部截掉
+		array = Arrays.copyOfRange(array, 0, recordHead + 1);
+
 		long end = System.currentTimeMillis();
 		if (SHOW_DEBUG_LOG)
 			System.out.println("removeDuplicatesAndSort2() took " + (end - start) + " ms");
@@ -396,7 +392,7 @@ public class Sequence {
 	 *            to
 	 * @param value
 	 *            check if value is included in array
-	 * @return
+	 * @return position (-1 as not found)
 	 */
 	private int find(int[] array, int fromPos, int toPos, int value) {
 		int pointer = toPos + 1;
