@@ -6,6 +6,7 @@ Algorithms
 - [Bubble Sort]    
 - [Insertion Sort]
 - [Merge Sort]
+- Heap sort
 - Quick sort
 - Selection sort
 

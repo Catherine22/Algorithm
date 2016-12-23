@@ -14,7 +14,7 @@ public class Main {
 
 	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
 			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
-	private static int[] input2 = new int[] { 38, 29, 28, 15, 13, 11, 5 };
+	private static int[] input2 = new int[] { 38, 29, 28, 11, 4, 2, 5 };
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
@@ -30,8 +30,9 @@ public class Main {
 		// printArray("MergeSort", ms.sort(input1, false));
 
 		// BubbleSort
-		// BubbleSort bs = new BubbleSort();
-		// printArray("BubbleSort", bs.sort(input3, false));
+		 BubbleSort bs = new BubbleSort();
+		 printArray("BubbleSort", bs.sort(input2, false));
+		 printArray("BubbleSort2", bs.sort2(input2, false));
 
 		// Hailstone
 		// Other other = new Other();
@@ -64,9 +65,9 @@ public class Main {
 		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
 
 		Search search = new Search();
-		System.out.println("binSearch:" + search.binSearch(input6, 1, 0, input6.length - 1));
-		System.out.println("binSearch2:" + search.binSearch2(input6, 1, 0, input6.length - 1));
-		System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0, input6.length - 1));
+//		System.out.println("binSearch:" + search.binSearch(input6, 1, 0, input6.length - 1));
+//		System.out.println("binSearch2:" + search.binSearch2(input6, 1, 0, input6.length - 1));
+//		System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0, input6.length - 1));
 
 	}
 
