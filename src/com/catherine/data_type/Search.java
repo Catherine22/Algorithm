@@ -3,6 +3,8 @@ package com.catherine.data_type;
 import java.util.Arrays;
 
 import com.catherine.Main;
+import com.catherine.utils.Analysis;
+import com.catherine.utils.TraceLog;
 
 /**
  * 这边的search应含多功能，而非仅仅寻找的功能而已。 <br>
@@ -20,7 +22,7 @@ import com.catherine.Main;
  *
  */
 public class Search {
-	protected final boolean SHOW_DEBUG_LOG = true;
+	protected final boolean SHOW_DEBUG_LOG = false;
 
 	/**
 	 * 将array对切，分成左、中、右三部分，每次比较查找元素是位于那个区间 <br>
@@ -47,7 +49,8 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch(int[] array, int element, int fromPos, int toPos) {
-		long start = System.currentTimeMillis();
+		TraceLog tLog = new TraceLog("binSearch");
+		Analysis.startTracing(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
@@ -60,7 +63,7 @@ public class Search {
 		int count = 0;
 		boolean stop = false;
 		boolean stopCheckingDup = false;
-		while (!stop && !stopCheckingDup) {
+		while (!stop && !stopCheckingDup && (midPos >= 0) && (midPos < array.length)) {
 			midPos = (fromPos + toPos) / 2;
 			if (SHOW_DEBUG_LOG)
 				System.out.println("mid[" + midPos + "]:" + array[midPos]);
@@ -94,7 +97,7 @@ public class Search {
 			}
 
 			// 检查是否有重复
-			while (stop && !stopCheckingDup) {
+			while (stop && !stopCheckingDup && (midPos >= 0) && (midPos < array.length)) {
 				if (SHOW_DEBUG_LOG)
 					System.out.printf("检查array[%d,%d]是否重复\n", midPos, midPos + 1);
 				// count++;
@@ -104,18 +107,27 @@ public class Search {
 					stopCheckingDup = true;
 			}
 		}
+		// 代表新中点<第一位，一律返回第一位
+		if (midPos < 0) {
+			midPos = 0;
+		}
+
+		// 代表新中点>=最后一位，一律返回最后一位
+		if (midPos >= array.length) {
+			midPos = array.length - 1;
+		}
+
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
-		long end = System.currentTimeMillis();
-		if (SHOW_DEBUG_LOG)
-			System.out.println("binSearch() took " + (end - start) + " ms");
+		Analysis.endTracing(tLog);
+		Analysis.printTrace(tLog);
 		return midPos;
 	}
 
 	/**
 	 * 比起binSearch(), binSearch2()只分成两部分查找 <br>
 	 * 在最好及最坏情况下都逊于binSearch()，但整体来说可减少比较次数。 <br>
-	 *  <br>
+	 * <br>
 	 * 将array对切，分成左、右兩部分，每次比较查找元素是位于那个区间 <br>
 	 * 若查找元素&lt;中间元素，将toPos改成原中间元素，查找范围变成fromPos～toPos（原middlePos），产生新的middlePos
 	 * <br>
@@ -139,7 +151,8 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch2(int[] array, int element, int fromPos, int toPos) {
-		long start = System.currentTimeMillis();
+		TraceLog tLog = new TraceLog("binSearch2");
+		Analysis.startTracing(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
@@ -152,7 +165,7 @@ public class Search {
 		int count = 0;
 		boolean stop = false;
 		boolean stopCheckingDup = false;
-		while (!stop && !stopCheckingDup) {
+		while (!stop && !stopCheckingDup && (midPos >= 0) && (midPos < array.length)) {
 			midPos = (fromPos + toPos) / 2;
 			if (SHOW_DEBUG_LOG)
 				System.out.println("mid[" + midPos + "]:" + array[midPos]);
@@ -183,7 +196,7 @@ public class Search {
 			}
 
 			// 检查是否有重复
-			while (stop && !stopCheckingDup) {
+			while (stop && !stopCheckingDup && (midPos >= 0) && (midPos < array.length)) {
 				if (SHOW_DEBUG_LOG)
 					System.out.printf("检查array[%d,%d]是否重复\n", midPos, midPos + 1);
 				// count++;
@@ -193,12 +206,20 @@ public class Search {
 					stopCheckingDup = true;
 			}
 		}
+		// 代表新中点<第一位，一律返回第一位
+		if (midPos < 0) {
+			midPos = 0;
+		}
+
+		// 代表新中点>=最后一位，一律返回最后一位
+		if (midPos >= array.length) {
+			midPos = array.length - 1;
+		}
 
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
-		long end = System.currentTimeMillis();
-		if (SHOW_DEBUG_LOG)
-			System.out.println("binSearch2() took " + (end - start) + " ms");
+		Analysis.endTracing(tLog);
+		Analysis.printTrace(tLog);
 		return midPos;
 	}
 
@@ -222,11 +243,12 @@ public class Search {
 	 * @return position
 	 */
 	public int fibSearch(int[] array, int element, int fromPos, int toPos) {
-		long start = System.currentTimeMillis();
+		TraceLog tLog = new TraceLog("fibSearch");
+		Analysis.startTracing(tLog);
 		int fibIndex = isFibNumMinusOne(array.length);
-		if (fibIndex == -1) {// array个数不是fib(k)-1，直接用一般二元搜寻
-			System.out.println("array个数不是fib(k)-1，直接用一般二元搜寻");
-			return binSearch(array, element, fromPos, toPos);
+		if (fibIndex == -1) {// array个数不是fib(k)-1，直接用一般二元搜寻2
+			System.out.println("array个数不是fib(k)-1，直接用一般二元搜寻2");
+			return binSearch2(array, element, fromPos, toPos);
 		} else {
 			if (array.length == 0 || toPos <= fromPos)
 				throw new ArrayIndexOutOfBoundsException();
@@ -242,7 +264,8 @@ public class Search {
 			boolean stopCheckingDup = false;
 
 			midPos = getFibNum(fibIndex - 1) - 1;
-			while (!stop && count < 8) {
+			while (!stop && !stopCheckingDup && (midPos >= 0) && (midPos < array.length)) {
+
 				if (SHOW_DEBUG_LOG)
 					System.out.println("mid[" + midPos + "]:" + array[midPos]);
 				if (toPos - fromPos == 1) {
@@ -286,12 +309,20 @@ public class Search {
 						stopCheckingDup = true;
 				}
 			}
+			// 代表新中点<第一位，一律返回第一位
+			if (midPos < 0) {
+				midPos = 0;
+			}
+
+			// 代表新中点>=最后一位，一律返回最后一位
+			if (midPos >= array.length) {
+				midPos = array.length - 1;
+			}
 
 			if (SHOW_DEBUG_LOG)
 				System.out.printf("比较了%d次\n", count);
-			long end = System.currentTimeMillis();
-			if (SHOW_DEBUG_LOG)
-				System.out.println("fibSearch() took " + (end - start) + " ms");
+			Analysis.endTracing(tLog);
+			Analysis.printTrace(tLog);
 			return midPos;
 		}
 	}
