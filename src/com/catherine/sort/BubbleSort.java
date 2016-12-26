@@ -117,10 +117,10 @@ public class BubbleSort extends BaseSort {
 		if (input.length == 1)
 			return input;
 
-		int path = input.length;
-		int preExchangePos = path - 1;
+		int path = input.length - 1;
+		int preExchangePos = path;
 		int temp;
-		while (path-- > 0) {
+		for (int i = path; i > 0; i--) {
 			for (int j = 0; j < path - 1; j++) {
 				if (SHOW_DEBUG_LOG)
 					System.out.print(j);
@@ -140,7 +140,11 @@ public class BubbleSort extends BaseSort {
 					}
 				}
 			}
-			// path = preExchangePos;
+			//提前终止
+			if (path == 1)
+				break;
+
+			path = preExchangePos + 1;
 			if (SHOW_DEBUG_LOG)
 				System.out.print("\t" + preExchangePos + "\t" + path + "\n");
 		}

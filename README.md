@@ -3,7 +3,7 @@ Algorithms
 
 
 ## Sorting
-- [Bubble Sort]    
+- [Bubble Sort]    normal version, v2, v3
 - [Insertion Sort]
 - [Merge Sort]
 - Heap sort
@@ -42,7 +42,7 @@ Algorithms
 
   - [Sequence Searching] is used to **search a sorted array to find an element.** If an array contains an element, it'll return where the element is in the array and also return the latest position if there're duplicated elements.
   - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
-      - two way to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
+      - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
 
