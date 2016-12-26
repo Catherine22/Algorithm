@@ -50,7 +50,7 @@ public class Search {
 	 */
 	public int binSearch(int[] array, int element, int fromPos, int toPos) {
 		TrackLog tLog = new TrackLog("binSearch");
-		Analysis.startTracing(tLog);
+		Analysis.startTracking(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
@@ -119,8 +119,8 @@ public class Search {
 
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
-		Analysis.endTracing(tLog);
-		Analysis.printTrace(tLog);
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 		return midPos;
 	}
 
@@ -152,7 +152,7 @@ public class Search {
 	 */
 	public int binSearch2(int[] array, int element, int fromPos, int toPos) {
 		TrackLog tLog = new TrackLog("binSearch2");
-		Analysis.startTracing(tLog);
+		Analysis.startTracking(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
@@ -218,8 +218,8 @@ public class Search {
 
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
-		Analysis.endTracing(tLog);
-		Analysis.printTrace(tLog);
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 		return midPos;
 	}
 
@@ -244,7 +244,7 @@ public class Search {
 	 */
 	public int fibSearch(int[] array, int element, int fromPos, int toPos) {
 		TrackLog tLog = new TrackLog("fibSearch");
-		Analysis.startTracing(tLog);
+		Analysis.startTracking(tLog);
 		int fibIndex = isFibNumMinusOne(array.length);
 		if (fibIndex == -1) {// array个数不是fib(k)-1，直接用一般二元搜寻2
 			System.out.println("array个数不是fib(k)-1，直接用一般二元搜寻2");
@@ -325,8 +325,8 @@ public class Search {
 
 			if (SHOW_DEBUG_LOG)
 				System.out.printf("比较了%d次\n", count);
-			Analysis.endTracing(tLog);
-			Analysis.printTrace(tLog);
+			Analysis.endTracking(tLog);
+			Analysis.printTrack(tLog);
 			return midPos;
 		}
 
