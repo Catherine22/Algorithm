@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.catherine.Main;
 import com.catherine.utils.Analysis;
-import com.catherine.utils.TraceLog;
+import com.catherine.utils.TrackLog;
 
 /**
  * 这边的search应含多功能，而非仅仅寻找的功能而已。 <br>
@@ -49,8 +49,8 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch(int[] array, int element, int fromPos, int toPos) {
-		TraceLog tLog = new TraceLog("binSearch");
-		Analysis.startTracing(tLog);
+		TrackLog tLog = new TrackLog("binSearch");
+		Analysis.startTracking(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
@@ -119,8 +119,8 @@ public class Search {
 
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
-		Analysis.endTracing(tLog);
-		Analysis.printTrace(tLog);
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 		return midPos;
 	}
 
@@ -151,8 +151,8 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch2(int[] array, int element, int fromPos, int toPos) {
-		TraceLog tLog = new TraceLog("binSearch2");
-		Analysis.startTracing(tLog);
+		TrackLog tLog = new TrackLog("binSearch2");
+		Analysis.startTracking(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
 		// 此方法只能用于有序数组
@@ -218,8 +218,8 @@ public class Search {
 
 		if (SHOW_DEBUG_LOG)
 			System.out.printf("比较了%d次\n", count);
-		Analysis.endTracing(tLog);
-		Analysis.printTrace(tLog);
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 		return midPos;
 	}
 
@@ -243,8 +243,8 @@ public class Search {
 	 * @return position
 	 */
 	public int fibSearch(int[] array, int element, int fromPos, int toPos) {
-		TraceLog tLog = new TraceLog("fibSearch");
-		Analysis.startTracing(tLog);
+		TrackLog tLog = new TrackLog("fibSearch");
+		Analysis.startTracking(tLog);
 		int fibIndex = isFibNumMinusOne(array.length);
 		if (fibIndex == -1) {// array个数不是fib(k)-1，直接用一般二元搜寻2
 			System.out.println("array个数不是fib(k)-1，直接用一般二元搜寻2");
@@ -325,8 +325,8 @@ public class Search {
 
 			if (SHOW_DEBUG_LOG)
 				System.out.printf("比较了%d次\n", count);
-			Analysis.endTracing(tLog);
-			Analysis.printTrace(tLog);
+			Analysis.endTracking(tLog);
+			Analysis.printTrack(tLog);
 			return midPos;
 		}
 

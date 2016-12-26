@@ -1,11 +1,13 @@
 package com.catherine.sort;
 
 import com.catherine.utils.Analysis;
-import com.catherine.utils.TraceLog;
+import com.catherine.utils.TrackLog;
 
 /**
  * best: n <br>
- * average: n^2 worst: n^2 <br>
+ * worst: n^2 <br>
+ * average: n^2 <br>
+ * stability: stable <br>
  * <br>
  * memory: 1
  * 
@@ -16,8 +18,8 @@ public class BubbleSort extends BaseSort {
 
 	@Override
 	public int[] sort(int[] input, boolean isAscending) {
-		TraceLog tLog = new TraceLog("BubbleSort");
-		Analysis.startTracing(tLog);
+		TrackLog tLog = new TrackLog("BubbleSort");
+		Analysis.startTracking(tLog);
 		if (input == null)
 			return null;
 		if (input.length == 1)
@@ -40,9 +42,9 @@ public class BubbleSort extends BaseSort {
 				}
 			}
 		}
-		Analysis.endTracing(tLog);
+		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
-			Analysis.printTrace(tLog);
+			Analysis.printTrack(tLog);
 		return input;
 	}
 
@@ -56,8 +58,8 @@ public class BubbleSort extends BaseSort {
 	 * @return
 	 */
 	public int[] sort2(int[] input, boolean isAscending) {
-		TraceLog tLog = new TraceLog("BubbleSort2");
-		Analysis.startTracing(tLog);
+		TrackLog tLog = new TrackLog("BubbleSort2");
+		Analysis.startTracking(tLog);
 		if (input == null)
 			return null;
 		if (input.length == 1)
@@ -94,9 +96,9 @@ public class BubbleSort extends BaseSort {
 			path--;
 			exchangeCount = 0;
 		}
-		Analysis.endTracing(tLog);
+		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
-			Analysis.printTrace(tLog);
+			Analysis.printTrack(tLog);
 		return input;
 	}
 
@@ -110,8 +112,8 @@ public class BubbleSort extends BaseSort {
 	 * @return
 	 */
 	public int[] sort3(int[] input, boolean isAscending) {
-		TraceLog tLog = new TraceLog("BubbleSort3");
-		Analysis.startTracing(tLog);
+		TrackLog tLog = new TrackLog("BubbleSort3");
+		Analysis.startTracking(tLog);
 		if (input == null)
 			return null;
 		if (input.length == 1)
@@ -140,7 +142,7 @@ public class BubbleSort extends BaseSort {
 					}
 				}
 			}
-			//提前终止
+			// 提前终止
 			if (path == 1)
 				break;
 
@@ -149,9 +151,9 @@ public class BubbleSort extends BaseSort {
 				System.out.print("\t" + preExchangePos + "\t" + path + "\n");
 		}
 
-		Analysis.endTracing(tLog);
+		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
-			Analysis.printTrace(tLog);
+			Analysis.printTrack(tLog);
 		return input;
 	}
 
