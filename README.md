@@ -3,7 +3,7 @@ Algorithms
 
 
 ## Sorting
-- [Bubble Sort]    normal version, v2, v3
+- [Bubble Sort] (normal version, v2, v3)
 - [Insertion Sort]
 - [Merge Sort]
 - Heap sort
@@ -44,6 +44,9 @@ Algorithms
   - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
+
+## [List]
+  - MyArrayList
 
 
 ## Reference

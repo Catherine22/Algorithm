@@ -29,20 +29,20 @@ public class Main {
 		// // printArray("InsertionSort", is.sort(input1, true));
 
 		// MergeSort
-		MergeSort ms = new MergeSort();
-		TrackLog tLog = new TrackLog("MergeSort");			//track
-		Analysis.startTracking(tLog);						//track
-		printArray("MergeSort", ms.sort(input1, false));
-		Analysis.endTracking(tLog);							//track
-		Analysis.printTrack(tLog);							//track
-		
+		// MergeSort ms = new MergeSort();
+		// TrackLog tLog = new TrackLog("MergeSort"); //track
+		// Analysis.startTracking(tLog); //track
+		// printArray("MergeSort", ms.sort(input1, false));
+		// Analysis.endTracking(tLog); //track
+		// Analysis.printTrack(tLog); //track
+
 		// BubbleSort
-		BubbleSort bs = new BubbleSort();
-		TrackLog tLog1 = new TrackLog("BubbleSort");		//track
-		Analysis.startTracking(tLog1);						//track
-		printArray("BubbleSort", bs.sort(input1, false));
-		Analysis.endTracking(tLog1);						//track
-		Analysis.printTrack(tLog1);							//track
+		// BubbleSort bs = new BubbleSort();
+		// TrackLog tLog1 = new TrackLog("BubbleSort"); //track
+		// Analysis.startTracking(tLog1); //track
+		// printArray("BubbleSort", bs.sort(input1, false));
+		// Analysis.endTracking(tLog1); //track
+		// Analysis.printTrack(tLog1); //track
 		// printArray("BubbleSort2", bs.sort2(input3, false));
 		// printArray("BubbleSort3", bs.sort3(input7, false));
 
@@ -76,7 +76,7 @@ public class Main {
 		// printArray("removeDuplicatesAndSort1",sequence.removeDuplicatesAndSort1(input6));
 		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
 
-		Search search = new Search();
+		// Search search = new Search();
 		// System.out.println("binSearch:" + search.binSearch(input6, 1, 0,
 		// input6.length - 1));
 		// System.out.println("binSearch2:" + search.binSearch2(input6, 1, 0,
