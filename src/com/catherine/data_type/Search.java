@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.catherine.Main;
 import com.catherine.utils.Analysis;
-import com.catherine.utils.TraceLog;
+import com.catherine.utils.TrackLog;
 
 /**
  * 这边的search应含多功能，而非仅仅寻找的功能而已。 <br>
@@ -49,7 +49,7 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch(int[] array, int element, int fromPos, int toPos) {
-		TraceLog tLog = new TraceLog("binSearch");
+		TrackLog tLog = new TrackLog("binSearch");
 		Analysis.startTracing(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
@@ -151,7 +151,7 @@ public class Search {
 	 * @return position
 	 */
 	public int binSearch2(int[] array, int element, int fromPos, int toPos) {
-		TraceLog tLog = new TraceLog("binSearch2");
+		TrackLog tLog = new TrackLog("binSearch2");
 		Analysis.startTracing(tLog);
 		if (array.length == 0 || toPos <= fromPos)
 			throw new ArrayIndexOutOfBoundsException();
@@ -243,7 +243,7 @@ public class Search {
 	 * @return position
 	 */
 	public int fibSearch(int[] array, int element, int fromPos, int toPos) {
-		TraceLog tLog = new TraceLog("fibSearch");
+		TrackLog tLog = new TrackLog("fibSearch");
 		Analysis.startTracing(tLog);
 		int fibIndex = isFibNumMinusOne(array.length);
 		if (fibIndex == -1) {// array个数不是fib(k)-1，直接用一般二元搜寻2

@@ -1,6 +1,6 @@
 package com.catherine.utils;
 
-public class TraceLog {
+public class TrackLog {
 
 	private String tag = "NO TAG";
 	private long startTime;
@@ -10,7 +10,7 @@ public class TraceLog {
 	private long endMem;
 	private int memUsage;
 	
-	public TraceLog(String tag){
+	public TrackLog(String tag){
 		this.tag = tag;
 	}
 

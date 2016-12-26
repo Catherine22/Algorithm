@@ -9,7 +9,7 @@ package com.catherine.utils;
  */
 public class Analysis {
 	
-	public static void startTracing(TraceLog tLog){
+	public static void startTracking(TrackLog tLog){
 		tLog.setStartTime(System.currentTimeMillis());
 		
 		Runtime runtime = Runtime.getRuntime();
@@ -17,7 +17,7 @@ public class Analysis {
 		tLog.setStartMem(usedMemory);
 	}
 	
-	public static void endTracing(TraceLog tLog){
+	public static void endTracking(TrackLog tLog){
 		tLog.setEndTime(System.currentTimeMillis());
 		
 		Runtime runtime = Runtime.getRuntime();
@@ -25,7 +25,7 @@ public class Analysis {
 		tLog.setEndMem(usedMemory);
 	}
 
-	public static void printTrace(TraceLog tLog){
+	public static void printTrack(TrackLog tLog){
 		System.out.println("LOG-----------");
 		System.out.println(tLog.toString());
 		System.out.println("LOG-----------");
