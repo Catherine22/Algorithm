@@ -440,7 +440,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 	}
 
 	/**
-	 * 移除部分元素（指定集合或非指定集合）
+	 * 批量移除元素（指定集合或非指定集合）
 	 * 
 	 * @param c
 	 *            指定集合
@@ -450,6 +450,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 	 */
 	private boolean batchRemove(Collection<?> c, boolean complement) {
 
+		return false;
 	}
 
 	@Override
