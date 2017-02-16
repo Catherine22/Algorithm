@@ -14,7 +14,7 @@ import java.util.RandomAccess;
 //import java.util.ArrayList.ListItr;
 //import java.util.ArrayList.SubList;
 
-public class MyArrayList<E> extends AbstractList<E> implements List<E> {
+public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable {
 
 	private Object[] elementData;
 	private int size;
@@ -167,6 +167,24 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 			}
 		}
 		return -1;
+	}
+
+	/**
+	 * 拷贝此数组并回传副本
+	 * 
+	 * @return 副本
+	 */
+	public Object clone() {
+		try {
+			MyArrayList<?> clone = (MyArrayList<?>) super.clone();
+			clone.elementData = Arrays.copyOf(elementData, size);
+			clone.modCount = 0;
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			// this shouldn't happen, since we are Cloneable
+			throw new InternalError(e);
+		}
+
 	}
 
 	/**
@@ -508,128 +526,128 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 		return "Index: " + index + ", Size: " + size;
 	}
 
-//	@Override
-//	public Iterator<E> iterator() {
-//		return new Itr();
-//	}
-//
-//	@Override
-//	public ListIterator<E> listIterator() {
-//		return new ListItr(0);
-//	}
-//
-//	@Override
-//	public ListIterator<E> listIterator(int index) {
-//		if (index >= size || index < 0)
-//			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-//		return new ListItr(index);
-//	}
-//
-//	@Override
-//	public List<E> subList(int fromIndex, int toIndex) {
-//		if (fromIndex < 0)
-//			throw new IndexOutOfBoundsException(outOfBoundsMsg(fromIndex));
-//		if (toIndex > size)
-//			throw new IndexOutOfBoundsException(outOfBoundsMsg(toIndex));
-//		return new SubList(this, 0, fromIndex, toIndex);
-//	}
+	// @Override
+	// public Iterator<E> iterator() {
+	// return new Itr();
+	// }
+	//
+	// @Override
+	// public ListIterator<E> listIterator() {
+	// return new ListItr(0);
+	// }
+	//
+	// @Override
+	// public ListIterator<E> listIterator(int index) {
+	// if (index >= size || index < 0)
+	// throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+	// return new ListItr(index);
+	// }
+	//
+	// @Override
+	// public List<E> subList(int fromIndex, int toIndex) {
+	// if (fromIndex < 0)
+	// throw new IndexOutOfBoundsException(outOfBoundsMsg(fromIndex));
+	// if (toIndex > size)
+	// throw new IndexOutOfBoundsException(outOfBoundsMsg(toIndex));
+	// return new SubList(this, 0, fromIndex, toIndex);
+	// }
 
 	// 内部类
-//	private class Itr implements Iterator<E> {
-//
-//		@Override
-//		public boolean hasNext() {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//
-//		@Override
-//		public E next() {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//	}
-//
-//	private class ListItr implements ListIterator<E> {
-//
-//		ListItr(int index) {
-//			super();
-//		}
-//
-//		@Override
-//		public boolean hasNext() {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//
-//		@Override
-//		public E next() {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		@Override
-//		public boolean hasPrevious() {
-//			// TODO Auto-generated method stub
-//			return false;
-//		}
-//
-//		@Override
-//		public E previous() {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		@Override
-//		public int nextIndex() {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//
-//		@Override
-//		public int previousIndex() {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//
-//		@Override
-//		public void remove() {
-//			// TODO Auto-generated method stub
-//
-//		}
-//
-//		@Override
-//		public void set(E e) {
-//			// TODO Auto-generated method stub
-//
-//		}
-//
-//		@Override
-//		public void add(E e) {
-//			// TODO Auto-generated method stub
-//
-//		}
-//
-//	}
-//
-//	private class SubList extends AbstractList<E> implements RandomAccess {
-//
-//		SubList(AbstractList<E> parent, int offset, int fromIndex, int toIndex) {
-//		}
-//
-//		@Override
-//		public E get(int index) {
-//			// TODO Auto-generated method stub
-//			return null;
-//		}
-//
-//		@Override
-//		public int size() {
-//			// TODO Auto-generated method stub
-//			return 0;
-//		}
-//
-//	}
+	// private class Itr implements Iterator<E> {
+	//
+	// @Override
+	// public boolean hasNext() {
+	// // TODO Auto-generated method stub
+	// return false;
+	// }
+	//
+	// @Override
+	// public E next() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// }
+	//
+	// private class ListItr implements ListIterator<E> {
+	//
+	// ListItr(int index) {
+	// super();
+	// }
+	//
+	// @Override
+	// public boolean hasNext() {
+	// // TODO Auto-generated method stub
+	// return false;
+	// }
+	//
+	// @Override
+	// public E next() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public boolean hasPrevious() {
+	// // TODO Auto-generated method stub
+	// return false;
+	// }
+	//
+	// @Override
+	// public E previous() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public int nextIndex() {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
+	//
+	// @Override
+	// public int previousIndex() {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
+	//
+	// @Override
+	// public void remove() {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void set(E e) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void add(E e) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// }
+	//
+	// private class SubList extends AbstractList<E> implements RandomAccess {
+	//
+	// SubList(AbstractList<E> parent, int offset, int fromIndex, int toIndex) {
+	// }
+	//
+	// @Override
+	// public E get(int index) {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public int size() {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
+	//
+	// }
 
 }
