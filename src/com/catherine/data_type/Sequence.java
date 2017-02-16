@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import com.catherine.Main;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
  * 看的数组A[n]直觉连续的内存位置<br>

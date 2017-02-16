@@ -20,7 +20,7 @@ public class Main {
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
-	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
+	private static int[] input6 = new int[] {1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
@@ -29,12 +29,12 @@ public class Main {
 		// // printArray("InsertionSort", is.sort(input1, true));
 
 		// MergeSort
-		// MergeSort ms = new MergeSort();
-		// TrackLog tLog = new TrackLog("MergeSort"); //track
-		// Analysis.startTracking(tLog); //track
-		// printArray("MergeSort", ms.sort(input1, false));
-		// Analysis.endTracking(tLog); //track
-		// Analysis.printTrack(tLog); //track
+		 MergeSort ms = new MergeSort();
+//		 TrackLog tLog = new TrackLog("MergeSort"); //track
+//		 Analysis.startTracking(tLog); //track
+		 printArray("MergeSort", ms.sort(input6, false));
+//		 Analysis.endTracking(tLog); //track
+//		 Analysis.printTrack(tLog); //track
 
 		// BubbleSort
 		// BubbleSort bs = new BubbleSort();
