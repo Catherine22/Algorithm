@@ -1,9 +1,11 @@
 package com.catherine.data_type;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -14,9 +16,12 @@ import java.util.RandomAccess;
 //import java.util.ArrayList.ListItr;
 //import java.util.ArrayList.SubList;
 
-public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable {
+public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable, Serializable {
 
-	private Object[] elementData;
+	// 序列版本号
+	private static final long serialVersionUID = 8683452581122892189L;
+	// transient 短暂的，宣告后如有做序列化的动作时，加入此关键字就不会被序列化。
+	private transient Object[] elementData;
 	private int size;
 
 	public MyArrayList(int capacity) {
@@ -515,6 +520,51 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneabl
 
 		return modified;
 
+	}
+
+	/**
+	 * 储存MyArrayList的实例到输出流（也就是持久化），要保证储存过程中数据没被修改。<br>
+	 * 其实就是保存size和每个元素。
+	 * 
+	 * @param s
+	 *            输出流
+	 * @throws java.io.IOException
+	 */
+	private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
+
+		// 开始前先记录目前修改次数
+		int expectedModCount = modCount;
+
+		s.defaultWriteObject();
+
+		s.writeInt(size);
+		for (int i = 0; i < size; i++) {
+			s.writeObject(elementData[i]);
+		}
+
+		if (expectedModCount != modCount) {
+			// 表示此数组刚才有做其他操作，已更动
+			throw new ConcurrentModificationException();
+		}
+	}
+
+	/**
+	 * 还原被持久化的MyArrayList（要先做过writeObject()）。
+	 * 
+	 * @param s
+	 *            输入流
+	 * @throws java.io.IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
+		s.defaultReadObject();
+
+		int len = s.readInt();
+		Object[] a = elementData = new Object[len];
+
+		for (int i = 0; i < size; i++) {
+			a[i] = s.readObject();
+		}
 	}
 
 	/**
