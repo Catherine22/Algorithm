@@ -87,26 +87,22 @@ public class Main {
 		// input6.length - 1));
 
 		// ArrayList
-		List<String> a1 = new ArrayList<>();
-		List<String> a2 = new ArrayList<>();
-		a2 = a1;// 两者指向相同地址，所以其实是一样的
-		a1.add("hello");
-		a1.add("I'm a1!");
-		a2.add("I'm a2!");
-		System.out.println(a1);
-		System.out.println(a2);
-
-		MyArrayList<String> myA1 = new MyArrayList<>();
-		List<String> myA2 = new MyArrayList<>();
-		myA2 = (List<String>) myA1.clone(); // 用clone()就是返回一份拷贝，两者互不相干
-		myA1.add("hello");
-		myA1.add("I'm myA1!");
-		myA2.add("I'm myA2!");
-		System.out.println(myA1);
-		System.out.println(myA2);
-		
-		
-
+		// List<String> a1 = new ArrayList<>();
+		// List<String> a2 = new ArrayList<>();
+		// a2 = a1;// 两者指向相同地址，所以其实是一样的
+		// a1.add("hello");
+		// a1.add("I'm a1!");
+		// a2.add("I'm a2!");
+		// System.out.println(a1);
+		// System.out.println(a2);
+		// MyArrayList<String> myA1 = new MyArrayList<>();
+		// List<String> myA2 = new MyArrayList<>();
+		// myA2 = (List<String>) myA1.clone(); // 用clone()就是返回一份拷贝，两者互不相干
+		// myA1.add("hello");
+		// myA1.add("I'm myA1!");
+		// myA2.add("I'm myA2!");
+		// System.out.println(myA1);
+		// System.out.println(myA2);
 	}
 
 	public static void printArray(String title, int[] array) {
