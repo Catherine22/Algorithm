@@ -1,21 +1,39 @@
 package com.catherine.data_type;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.RandomAccess;
 
-public class MyArrayList<E> extends AbstractList<E> implements List<E> {
+//隐藏，不可见
+//import java.util.ArrayList.Itr;
+//import java.util.ArrayList.ListItr;
+//import java.util.ArrayList.SubList;
+/**
+ * 因为有索引的概念，查找比linkedList快非常多，不用遍历。<br>
+ * 当数据多、须大量随机查找时用ArrayList。<br>
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
+public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable, Serializable {
 
-	private Object[] elementData;
+	// 序列版本号
+	private static final long serialVersionUID = 8683452581122892189L;
+	// transient 短暂的，宣告后如有做序列化的动作时，加入此关键字就不会被序列化。
+	private transient Object[] elementData;
 	private int size;
 
 	public MyArrayList(int capacity) {
 		super();
-		if (capacity < 0)
+		if (capacity <= 0)
 			throw new IllegalArgumentException(
 					"Capacity should be filled in more than 0! Illegal capacity: " + capacity);
 		else
@@ -42,9 +60,9 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 	/**
 	 * 确保此ArrayList的最小容量能容纳下参数minCapacity指定的容量，<br>
 	 * 当minCapacity大于原容量时须扩容，首先增加原本的一半，<br>
-	 * 万一增加后还是小于minCapacity就直接那minCapacity当新容量。<br>
+	 * 万一增加后还是小于minCapacity就直接用minCapacity当新容量。<br>
 	 * <br>
-	 * 之所以阔一半是因为加0.5倍式扩容虽然牺牲内存空间，空间利用率(已使用/全部空间)至少大于75%，但在运行速度上远超越递增式扩容。<br>
+	 * 之所以扩一半是因为加0.5倍式扩容虽然牺牲内存空间，空间利用率(已使用/全部空间)至少大于75%，但在运行速度上远超越递增式扩容。<br>
 	 * 
 	 * @param minCapacity
 	 *            指定的最小所需容量
@@ -107,6 +125,16 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 		return indexOf(o) >= 0;
 	}
 
+	/** 如果此列表中包含指定集合所有元素，则返回 true。 */
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		for (Object o : c) {
+			if (!c.contains(o))
+				return false;
+		}
+		return true;
+	}
+
 	/**
 	 * 返回指定对象在ArrayList中第一个位置， 找不到指定对象返回-1。<br>
 	 * 传入null会返回ArrayList中第一个null的位置。<br>
@@ -154,9 +182,28 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 	}
 
 	/**
+	 * 拷贝此数组并回传副本
+	 * 
+	 * @return 副本
+	 */
+	public Object clone() {
+		try {
+			MyArrayList<?> clone = (MyArrayList<?>) super.clone();
+			clone.elementData = Arrays.copyOf(elementData, size);
+			clone.modCount = 0;
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			// this shouldn't happen, since we are Cloneable
+			throw new InternalError(e);
+		}
+
+	}
+
+	/**
 	 * 回传一个array，包含此ArrayList的元素并且正确的被排列。
 	 * 
-	 * @return 全新的array(In other words, this method must allocate a new array)
+	 * @return A new array (In other words, this method must allocate a new
+	 *         array)
 	 */
 	public Object[] toArray() {
 		return Arrays.copyOf(elementData, size);
@@ -440,47 +487,91 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 	}
 
 	/**
-	 * 批量移除元素（指定集合或非指定集合）
+	 * 批量移除元素（指定集合或指定集合除外）
 	 * 
 	 * @param c
 	 *            指定集合
 	 * @param complement
-	 *            是否保留
-	 * @return 结果
+	 *            including or excluding
+	 * @return ArrayList的长度有没有变化
 	 */
 	private boolean batchRemove(Collection<?> c, boolean complement) {
+		Object[] elementData = this.elementData;
+		boolean modified = false;
+		int newP = 0;
+		int oriP = 0;
+		try {
+			for (; oriP < size; oriP++) {
+				if (c.contains(elementData[oriP]) == complement) // 留下要的
+					elementData[newP++] = elementData[oriP];
+			}
+		} finally {
+			// Collection.contains() 可能抛出异常
 
-		return false;
+			if (oriP != size) {
+				// 表示有异常造成检查中断，把发生异常处后面的元素全往前搬
+				System.arraycopy(elementData, oriP, elementData, newP, size - oriP);
+				newP += (size - oriP);
+			}
+
+			// 如果总长度有变化（表示有移除元素），照惯例，把新长度到原长度之间的元素都设为null，让GC回收。
+			if (newP != size) {
+				for (int i = newP; i < size; i++)
+					elementData[i] = null;
+
+				modCount += size - newP;
+				size = newP;
+				modified = true;
+			}
+		}
+
+		return modified;
+
 	}
 
-	@Override
-	public Iterator<E> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 储存MyArrayList的实例到输出流（也就是持久化），要保证储存过程中数据没被修改。<br>
+	 * 其实就是保存size和每个元素。
+	 * 
+	 * @param s
+	 *            输出流
+	 * @throws java.io.IOException
+	 */
+	private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
+
+		// 开始前先记录目前修改次数
+		final int expectedModCount = modCount;
+
+		s.defaultWriteObject();
+
+		s.writeInt(size);
+		for (int i = 0; i < size; i++) {
+			s.writeObject(elementData[i]);
+		}
+
+		if (expectedModCount != modCount) {
+			// 表示此数组刚才有做其他操作，已更动
+			throw new ConcurrentModificationException();
+		}
 	}
 
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	/**
+	 * 还原被持久化的MyArrayList（要先做过writeObject()）。
+	 * 
+	 * @param s
+	 *            输入流
+	 * @throws java.io.IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
+		s.defaultReadObject();
 
-	@Override
-	public ListIterator<E> listIterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		int len = s.readInt();
+		Object[] a = elementData = new Object[len];
 
-	@Override
-	public ListIterator<E> listIterator(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<E> subList(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		for (int i = 0; i < size; i++) {
+			a[i] = s.readObject();
+		}
 	}
 
 	/**
@@ -491,4 +582,129 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E> {
 	private String outOfBoundsMsg(int index) {
 		return "Index: " + index + ", Size: " + size;
 	}
+
+	// @Override
+	// public Iterator<E> iterator() {
+	// return new Itr();
+	// }
+	//
+	// @Override
+	// public ListIterator<E> listIterator() {
+	// return new ListItr(0);
+	// }
+	//
+	// @Override
+	// public ListIterator<E> listIterator(int index) {
+	// if (index >= size || index < 0)
+	// throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+	// return new ListItr(index);
+	// }
+	//
+	// @Override
+	// public List<E> subList(int fromIndex, int toIndex) {
+	// if (fromIndex < 0)
+	// throw new IndexOutOfBoundsException(outOfBoundsMsg(fromIndex));
+	// if (toIndex > size)
+	// throw new IndexOutOfBoundsException(outOfBoundsMsg(toIndex));
+	// return new SubList(this, 0, fromIndex, toIndex);
+	// }
+
+	// 内部类
+	// private class Itr implements Iterator<E> {
+	//
+	// @Override
+	// public boolean hasNext() {
+	// // TODO Auto-generated method stub
+	// return false;
+	// }
+	//
+	// @Override
+	// public E next() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// }
+	//
+	// private class ListItr implements ListIterator<E> {
+	//
+	// ListItr(int index) {
+	// super();
+	// }
+	//
+	// @Override
+	// public boolean hasNext() {
+	// // TODO Auto-generated method stub
+	// return false;
+	// }
+	//
+	// @Override
+	// public E next() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public boolean hasPrevious() {
+	// // TODO Auto-generated method stub
+	// return false;
+	// }
+	//
+	// @Override
+	// public E previous() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public int nextIndex() {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
+	//
+	// @Override
+	// public int previousIndex() {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
+	//
+	// @Override
+	// public void remove() {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void set(E e) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// @Override
+	// public void add(E e) {
+	// // TODO Auto-generated method stub
+	//
+	// }
+	//
+	// }
+	//
+	// private class SubList extends AbstractList<E> implements RandomAccess {
+	//
+	// SubList(AbstractList<E> parent, int offset, int fromIndex, int toIndex) {
+	// }
+	//
+	// @Override
+	// public E get(int index) {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+	//
+	// @Override
+	// public int size() {
+	// // TODO Auto-generated method stub
+	// return 0;
+	// }
+	//
+	// }
+
 }

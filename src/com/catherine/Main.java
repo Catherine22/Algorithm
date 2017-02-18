@@ -1,7 +1,9 @@
 package com.catherine;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
@@ -20,7 +22,7 @@ public class Main {
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
-	private static int[] input6 = new int[] {1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
+	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
@@ -29,12 +31,12 @@ public class Main {
 		// // printArray("InsertionSort", is.sort(input1, true));
 
 		// MergeSort
-		 MergeSort ms = new MergeSort();
-//		 TrackLog tLog = new TrackLog("MergeSort"); //track
-//		 Analysis.startTracking(tLog); //track
-		 printArray("MergeSort", ms.sort(input6, false));
-//		 Analysis.endTracking(tLog); //track
-//		 Analysis.printTrack(tLog); //track
+		MergeSort ms = new MergeSort();
+		// TrackLog tLog = new TrackLog("MergeSort"); //track
+		// Analysis.startTracking(tLog); //track
+		printArray("MergeSort", ms.sort(input6, false));
+		// Analysis.endTracking(tLog); //track
+		// Analysis.printTrack(tLog); //track
 
 		// BubbleSort
 		// BubbleSort bs = new BubbleSort();
@@ -84,6 +86,23 @@ public class Main {
 		// System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0,
 		// input6.length - 1));
 
+		// ArrayList
+		// List<String> a1 = new ArrayList<>();
+		// List<String> a2 = new ArrayList<>();
+		// a2 = a1;// 两者指向相同地址，所以其实是一样的
+		// a1.add("hello");
+		// a1.add("I'm a1!");
+		// a2.add("I'm a2!");
+		// System.out.println(a1);
+		// System.out.println(a2);
+		// MyArrayList<String> myA1 = new MyArrayList<>();
+		// List<String> myA2 = new MyArrayList<>();
+		// myA2 = (List<String>) myA1.clone(); // 用clone()就是返回一份拷贝，两者互不相干
+		// myA1.add("hello");
+		// myA1.add("I'm myA1!");
+		// myA2.add("I'm myA2!");
+		// System.out.println(myA1);
+		// System.out.println(myA2);
 	}
 
 	public static void printArray(String title, int[] array) {
