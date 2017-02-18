@@ -15,7 +15,14 @@ import java.util.RandomAccess;
 //import java.util.ArrayList.Itr;
 //import java.util.ArrayList.ListItr;
 //import java.util.ArrayList.SubList;
-
+/**
+ * 因为有索引的概念，查找比linkedList快非常多，不用遍历。<br>
+ * 当数据多、须大量随机查找时用ArrayList。<br>
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
 public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable, Serializable {
 
 	// 序列版本号
@@ -533,7 +540,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneabl
 	private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
 
 		// 开始前先记录目前修改次数
-		int expectedModCount = modCount;
+		final int expectedModCount = modCount;
 
 		s.defaultWriteObject();
 

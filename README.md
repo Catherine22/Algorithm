@@ -45,8 +45,9 @@ Algorithms
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
-## [List]
+## List
   - [MyArrayList]
+  - [MyLinkedList]
 
 
 ## Reference
@@ -77,4 +78,5 @@ Algorithms
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
+   [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
