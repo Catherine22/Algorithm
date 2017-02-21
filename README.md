@@ -3,7 +3,7 @@ Algorithms
 
 
 ## Sorting
-- [Bubble Sort]    normal version, v2, v3
+- [Bubble Sort] (normal version, v2, v3)
 - [Insertion Sort]
 - [Merge Sort]
 - Heap sort
@@ -18,7 +18,7 @@ Algorithms
 
 > **Note:**
 > - increaseArray()
->  - However, in the worst cast, It takes O(n) to increase the capacity of a vector by one.
+>  - However, in the worst case, It takes O(n) to increase the capacity of a vector by one.
 >Space utilization is always 100%.
 > - doubleArray()
 >  - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1).
@@ -26,7 +26,7 @@ Algorithms
 
   - Insert/remove/find a element
   - Shift continued-elements(It's also a high level method to remove continued-elements)
-  - Update each element by Interface
+  - Update each element with an interface
   - Remove duplicates with/without sorting
 
   > **Note:**
@@ -36,7 +36,7 @@ Algorithms
   > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2()
   >  - O(n log n)
   >  - remove duplicates after sorting.
-  >  - It's just like using sort()+unique() in vector by C++.
+  >  - It's a little like using sort()+unique() in vector on C++.
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array.
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to using replace method to remove duplicates.
 
@@ -45,10 +45,31 @@ Algorithms
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
+## List
+  - [MyArrayList]
+  - [MyLinkedList]
+
 
 ## Reference
   - [Algorithms, 4th Edition]
 
+## License
+
+  ```
+  Copyright 2017 Catherine Chen (https://github.com/Catherine22)
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+  ```
 
    [Merge Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/MergeSort.java>
    [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
@@ -56,4 +77,6 @@ Algorithms
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
+   [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
+   [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
