@@ -66,9 +66,9 @@ public class MergeSort extends BaseSort {
 	}
 
 	private void merge(int[] a, int lStart, int center, int rEnd, boolean isAscending) {
-		int rStart = center + 1;// 右边起始位置//2
-		int lEnd = center;// 左边结束位置//1
-		int header = lStart;// 填入回传数组的指针//0
+		int rStart = center + 1;// 右边起始位置
+		int lEnd = center;// 左边结束位置
+		int header = lStart;// 填入回传数组的指针
 
 		if (SHOW_DEBUG_LOG)
 			System.out.println("l from " + lStart + " to " + lEnd + ", r from " + rStart + " to " + rEnd);
@@ -111,7 +111,6 @@ public class MergeSort extends BaseSort {
 
 		if (SHOW_DEBUG_LOG)
 			Main.printArray("STEP3", tmp);
-
 	}
 
 }
