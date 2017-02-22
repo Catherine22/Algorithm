@@ -32,11 +32,11 @@ public class Main {
 
 		// MergeSort
 		MergeSort ms = new MergeSort();
-		// TrackLog tLog = new TrackLog("MergeSort"); //track
-		// Analysis.startTracking(tLog); //track
-		printArray("MergeSort", ms.sort(input6, false));
-		// Analysis.endTracking(tLog); //track
-		// Analysis.printTrack(tLog); //track
+		 TrackLog tLog = new TrackLog("MergeSort"); //track
+		 Analysis.startTracking(tLog); //track
+		printArray("MergeSort", ms.sort(input3, false));
+		 Analysis.endTracking(tLog); //track
+		 Analysis.printTrack(tLog); //track
 
 		// BubbleSort
 		// BubbleSort bs = new BubbleSort();
