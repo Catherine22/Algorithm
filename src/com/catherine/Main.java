@@ -11,6 +11,7 @@ import com.catherine.data_type.Sequence;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
+import com.catherine.sort.SelectionSort;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
@@ -48,6 +49,14 @@ public class Main {
 		// Analysis.printTrack(tLog1); //track
 		// printArray("BubbleSort2", bs.sort2(input3, false));
 		// printArray("BubbleSort3", bs.sort3(input7, false));
+		
+		//SelectionSort
+		 SelectionSort ms = new SelectionSort();
+		 TrackLog tLog = new TrackLog("SelectionSort"); //track
+		 Analysis.startTracking(tLog); //track
+		 printArray("SelectionSort", ms.sort(input1, true));
+		 Analysis.endTracking(tLog); //track
+		 Analysis.printTrack(tLog); //track
 
 		// Hailstone
 		// Other other = new Other();
@@ -106,20 +115,20 @@ public class Main {
 		// System.out.println(myA2);
 
 		// LinkedList
-		MyLinkedList<Integer> list = new MyLinkedList<>();
-		list.add(1);
-		list.add(1);
-		list.add(1);
-		list.add(1);
-		list.add(3);
-		list.add(3);
-		list.add(3);
-		list.add(5);
-		list.add(5);
-		list.add(7);
-		printList("MyLinkedList", list);
-		list.removeDuplicates();
-		printList("MyLinkedList", list);
+//		MyLinkedList<Integer> list = new MyLinkedList<>();
+//		list.add(1);
+//		list.add(1);
+//		list.add(1);
+//		list.add(1);
+//		list.add(3);
+//		list.add(3);
+//		list.add(3);
+//		list.add(5);
+//		list.add(5);
+//		list.add(7);
+//		printList("MyLinkedList", list);
+//		list.removeDuplicates();
+//		printList("MyLinkedList", list);
 	}
 
 	public static void printArray(String title, int[] array) {
