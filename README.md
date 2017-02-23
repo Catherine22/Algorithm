@@ -45,9 +45,10 @@ Algorithms
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
-## List
+## How does list works
   - [MyArrayList]
   - [MyLinkedList]
+        - Remove duplicates
 
 
 ## Reference

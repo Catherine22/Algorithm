@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.catherine.data_type.MyArrayList;
+import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
@@ -31,12 +32,12 @@ public class Main {
 		// // printArray("InsertionSort", is.sort(input1, true));
 
 		// MergeSort
-		MergeSort ms = new MergeSort();
-		 TrackLog tLog = new TrackLog("MergeSort"); //track
-		 Analysis.startTracking(tLog); //track
-		printArray("MergeSort", ms.sort(input3, false));
-		 Analysis.endTracking(tLog); //track
-		 Analysis.printTrack(tLog); //track
+		// MergeSort ms = new MergeSort();
+		// TrackLog tLog = new TrackLog("MergeSort"); //track
+		// Analysis.startTracking(tLog); //track
+		// printArray("MergeSort", ms.sort(input3, false));
+		// Analysis.endTracking(tLog); //track
+		// Analysis.printTrack(tLog); //track
 
 		// BubbleSort
 		// BubbleSort bs = new BubbleSort();
@@ -103,6 +104,22 @@ public class Main {
 		// myA2.add("I'm myA2!");
 		// System.out.println(myA1);
 		// System.out.println(myA2);
+
+		// LinkedList
+		MyLinkedList<Integer> list = new MyLinkedList<>();
+		list.add(1);
+		list.add(1);
+		list.add(1);
+		list.add(1);
+		list.add(3);
+		list.add(3);
+		list.add(3);
+		list.add(5);
+		list.add(5);
+		list.add(7);
+		printList("MyLinkedList", list);
+		list.removeDuplicates();
+		printList("MyLinkedList", list);
 	}
 
 	public static void printArray(String title, int[] array) {

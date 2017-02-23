@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 public class MyLinkedList<E> extends AbstractSequentialList<E>
 		implements List<E>, Deque<E>, Cloneable, java.io.Serializable {
 
+	private final static boolean SHOW_LOG = false;
 	private static final long serialVersionUID = 876323262645176354L;
 	transient int size = 0;
 	/**
@@ -41,6 +42,7 @@ public class MyLinkedList<E> extends AbstractSequentialList<E>
 	transient Node<E> last;
 
 	public MyLinkedList() {
+		super();
 	}
 
 	public MyLinkedList(Collection<? extends E> c) {
@@ -771,6 +773,85 @@ public class MyLinkedList<E> extends AbstractSequentialList<E>
 		modCount++;
 	}
 
+	// -------------------自定义方法-------------------
+	/**
+	 * 排序后移除链表所有重复元素。 <br>
+	 * <br>
+	 * 1(a)-1(b)-1(c)-2-2-4 <br>
+	 * 1(a)-1(c)-2-2-4 <br>
+	 * 1(a)-2-2-4 <br>
+	 * 1(a)-2-4
+	 */
+	public void removeDuplicates() {
+		// sort()
+
+		compareAndMerge(first, first.next);
+
+		int count = size;
+		for (Node<E> node = first; node != null; node = node.next)
+			if (--count == 0)
+				last = node;
+	}
+
+	/**
+	 * 传入两节点，若相同值则链接，不同则找下个节点，利用递归合并。
+	 * 
+	 * @param fNode
+	 *            较前面的节点
+	 * @param sNode
+	 *            下一个节点或之后的其他节点
+	 */
+
+	private void compareAndMerge(Node<E> fNode, Node<E> sNode) {
+		final Node<E> node1 = fNode;
+		final Node<E> node2 = sNode;
+
+		if (fNode == null)
+			return;
+		if (SHOW_LOG) {
+			System.out.println("size:" + size);
+			if (sNode != null)
+				System.out.println(fNode.item + " compare to " + sNode.item);
+
+			for (Node<E> node = first; node != null; node = node.next)
+				System.out.print(node.item + " ");
+			System.out.print("\n");
+		}
+
+		if (sNode != null) {
+			if (node1.item == node2.item) {
+				size--;
+				compareAndMerge(node1, node2.next);
+			} else {
+				if (fNode.next == sNode)
+					compareAndMerge(node2, node2.next);
+				else
+					link(node1, node2);
+
+			}
+		}
+	}
+
+	/**
+	 * 链接传入的两节点。
+	 * 
+	 * @param fNode
+	 *            前节点
+	 * @param sNode
+	 *            后节点
+	 */
+	private void link(Node<E> fNode, Node<E> sNode) {
+		if (fNode.next == sNode)
+			return;
+
+		if (sNode != null) // null表示
+			sNode.prev = fNode;
+
+		fNode.next = sNode;
+		compareAndMerge(sNode, sNode.next);
+	}
+	// -------------------自定义方法-------------------
+
 	/**
 	 * 回传一个array，包含此链表的元素并且正确的被排列。
 	 * 
@@ -784,7 +865,7 @@ public class MyLinkedList<E> extends AbstractSequentialList<E>
 			array[index++] = node.item;
 		return array;
 	}
-	
+
 	/**
 	 * 将当前链表转换成与传入的T类型相同的数组<br>
 	 * 当传入的a的length小于链表的size的时候、方法内部会生成一个新的T[ ]返回<br>
@@ -802,14 +883,13 @@ public class MyLinkedList<E> extends AbstractSequentialList<E>
 	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
 		if (a.length < size)
-            a = (T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+			a = (T[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
 
 		int index = 0;
 		Object[] array = a;
 		for (Node<E> node = first; node != null; node = node.next)
 			array[index++] = node.item;
-		
-		
+
 		if (a.length > size)
 			a[size] = null;
 		return a;
@@ -863,15 +943,15 @@ public class MyLinkedList<E> extends AbstractSequentialList<E>
 		}
 	}
 
-	 @Override
-	 public Iterator<E> descendingIterator() {
-	 return null;
-	 }
-	
-	 @Override
-	 public ListIterator<E> listIterator(int index) {
-	 return null;
-	 }
+	@Override
+	public Iterator<E> descendingIterator() {
+		return null;
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return null;
+	}
 
 	/**
 	 * 检查位置是否合法并扔出Exception
