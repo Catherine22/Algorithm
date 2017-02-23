@@ -783,6 +783,8 @@ public class MyLinkedList<E> extends AbstractSequentialList<E>
 	 * 1(a)-2-4
 	 */
 	public void removeDuplicates() {
+		if (first == null || first == last)
+			return;
 		// sort()
 
 		compareAndMerge(first, first.next);
