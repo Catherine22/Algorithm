@@ -8,7 +8,7 @@ Algorithms
 - [Merge Sort]
 - Heap sort
 - Quick sort
-- Selection sort
+- [Selection sort]
 
 ## Simulate Turing Machine
   - [1 + a positive integer]
@@ -45,9 +45,10 @@ Algorithms
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
-## List
+## How does list works
   - [MyArrayList]
   - [MyLinkedList]
+        - Remove duplicates
 
 
 ## Reference
@@ -74,6 +75,7 @@ Algorithms
    [Merge Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/MergeSort.java>
    [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
    [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
+   [Selection sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SelectionSort.java>
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
