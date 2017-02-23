@@ -45,12 +45,12 @@ public class SelectionSort extends BaseSort {
 		while (header >= 0) {
 			for (int i = 0; i <= header; i++) {
 				if (isAscending) {
-					if (minOrMax > outputs.get(i)){
+					if (minOrMax < outputs.get(i)){
 						minOrMax = outputs.get(i);
 						tag = i;
 					}
 				}else{
-					if (minOrMax < outputs.get(i)){
+					if (minOrMax > outputs.get(i)){
 						minOrMax = outputs.get(i);
 						tag = i;
 					}

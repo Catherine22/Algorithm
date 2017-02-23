@@ -48,7 +48,7 @@ Algorithms
 ## How does list works
   - [MyArrayList]
   - [MyLinkedList]
-        - Remove duplicates
+    - > Remove duplicates
 
 
 ## Reference
