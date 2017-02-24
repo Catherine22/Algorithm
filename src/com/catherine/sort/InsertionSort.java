@@ -5,7 +5,7 @@ package com.catherine.sort;
  * average: n^2 <br>
  * worst: n^2 <br>
  * <br>
- * memory: 1
+ * memory: 1（就地算法 in-place）
  * 
  * @author Catherine
  *

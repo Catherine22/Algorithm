@@ -50,6 +50,14 @@ Algorithms
   - [MyLinkedList]
     - > Remove duplicates
 
+## Stack
+>  You would push the top object with push(), and use peek() to get the top object without removing it.
+>  Add an object on the top with pop().
+>  So, it takes O(1) to add and remove an object.
+>  But if you'd like to put or delete an element at the bottom, it takes O(n) so that the stack could move every object following the first (bottom) object.
+
+## Queue
+  -
 
 ## Reference
   - [Algorithms, 4th Edition]

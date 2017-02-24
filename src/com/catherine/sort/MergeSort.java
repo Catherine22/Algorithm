@@ -15,7 +15,6 @@ import com.catherine.utils.TrackLog;
  *
  */
 public class MergeSort extends BaseSort {
-	private static final String TAG = MergeSort.class.getSimpleName();
 	int[] tmp;
 
 	@Override
