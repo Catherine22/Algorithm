@@ -56,7 +56,9 @@ Algorithms
 >  So, it takes O(1) to add and remove an object. <br>
 >  But if you'd like to put or delete an element at the bottom, it takes O(n) so that the stack could move every object following the first (bottom) object.
 
-  - samples: [NumberSystem] convertDecimalToOthers(),  [Others] isBracketsCorrect()
+  - [NumberSystem] convertDecimalToOthers()
+  - [Others] isBracketsCorrect()
+  - [Stack-sortable permutation]
 
 ## Queue
   -
@@ -86,6 +88,7 @@ Algorithms
    [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
    [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
    [Selection sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SelectionSort.java>
+   [Stack-sortable permutation]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SortableStackPermutation.java>
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
