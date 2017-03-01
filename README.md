@@ -55,7 +55,8 @@ Algorithms
 >  Add an object on the top with pop(). <br>
 >  So, it takes O(1) to add and remove an object. <br>
 >  But if you'd like to put or delete an element at the bottom, it takes O(n) so that the stack could move every object following the first (bottom) object.
-  - [NumberSystem]
+
+  - samples: [NumberSystem] convertDecimalToOthers(),  [Others] isBracketsCorrect()
 
 ## Queue
   -
@@ -91,4 +92,5 @@ Algorithms
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
+   [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>

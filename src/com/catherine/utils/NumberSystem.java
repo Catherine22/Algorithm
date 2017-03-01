@@ -22,7 +22,7 @@ public class NumberSystem {
 	 * @param base
 	 * @return
 	 */
-	public String decimalConvertToOthers(int number, int base) {
+	public String convertDecimalToOthers(int number, int base) {
 		String result = "";
 		Stack<Integer> history = new Stack<>();
 

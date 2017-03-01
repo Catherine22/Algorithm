@@ -15,6 +15,7 @@ import com.catherine.sort.SelectionSort;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.NumberSystem;
+import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
 
 public class Main {
@@ -50,8 +51,8 @@ public class Main {
 		// Analysis.printTrack(tLog1); //track
 		// printArray("BubbleSort2", bs.sort2(input3, false));
 		// printArray("BubbleSort3", bs.sort3(input7, false));
-		
-		//SelectionSort
+
+		// SelectionSort
 		// SelectionSort ms = new SelectionSort();
 		// TrackLog tLog = new TrackLog("SelectionSort"); //track
 		// Analysis.startTracking(tLog); //track
@@ -60,7 +61,7 @@ public class Main {
 		// Analysis.printTrack(tLog); //track
 
 		// Hailstone
-		// Other other = new Other();
+		// Others other = new Others();
 		// printList("Hailstone", other.getHailstone(42));
 
 		// Increment on Turing Machine
@@ -116,25 +117,30 @@ public class Main {
 		// System.out.println(myA2);
 
 		// LinkedList
-//		MyLinkedList<Integer> list = new MyLinkedList<>();
-//		list.add(1);
-//		list.add(1);
-//		list.add(1);
-//		list.add(1);
-//		list.add(3);
-//		list.add(3);
-//		list.add(3);
-//		list.add(5);
-//		list.add(5);
-//		list.add(7);
-//		printList("MyLinkedList", list);
-//		list.removeDuplicates();
-//		printList("MyLinkedList", list);
-		 
-		 
-		 NumberSystem ns = new NumberSystem();
-		 System.out.println(ns.decimalConvertToOthers(33646, 35));
-		 System.out.println(Integer.toString(33646, 35));
+		// MyLinkedList<Integer> list = new MyLinkedList<>();
+		// list.add(1);
+		// list.add(1);
+		// list.add(1);
+		// list.add(1);
+		// list.add(3);
+		// list.add(3);
+		// list.add(3);
+		// list.add(5);
+		// list.add(5);
+		// list.add(7);
+		// printList("MyLinkedList", list);
+		// list.removeDuplicates();
+		// printList("MyLinkedList", list);
+
+		// Stack
+//		NumberSystem ns = new NumberSystem();
+//		System.out.println(ns.convertDecimalToOthers(33646, 35));
+//		System.out.println(Integer.toString(33646, 35));
+
+		Others other = new Others();
+		boolean b = other.isBracketsCorrect(
+				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) - Math.pow(((1 - Math.sqrt(5))/2), n))");
+		System.out.println(b + "");
 	}
 
 	public static void printArray(String title, int[] array) {
