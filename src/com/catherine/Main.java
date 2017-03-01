@@ -2,6 +2,7 @@ package com.catherine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
@@ -12,8 +13,11 @@ import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 import com.catherine.sort.SelectionSort;
+import com.catherine.sort.SortableStackPermutation;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
+import com.catherine.utils.NumberSystem;
+import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
 
 public class Main {
@@ -49,17 +53,17 @@ public class Main {
 		// Analysis.printTrack(tLog1); //track
 		// printArray("BubbleSort2", bs.sort2(input3, false));
 		// printArray("BubbleSort3", bs.sort3(input7, false));
-		
-		//SelectionSort
-		 SelectionSort ms = new SelectionSort();
-		 TrackLog tLog = new TrackLog("SelectionSort"); //track
-		 Analysis.startTracking(tLog); //track
-		 printArray("SelectionSort", ms.sort(input1, true));
-		 Analysis.endTracking(tLog); //track
-		 Analysis.printTrack(tLog); //track
+
+		// SelectionSort
+		// SelectionSort ms = new SelectionSort();
+		// TrackLog tLog = new TrackLog("SelectionSort"); //track
+		// Analysis.startTracking(tLog); //track
+		// printArray("SelectionSort", ms.sort(input1, true));
+		// Analysis.endTracking(tLog); //track
+		// Analysis.printTrack(tLog); //track
 
 		// Hailstone
-		// Other other = new Other();
+		// Others other = new Others();
 		// printList("Hailstone", other.getHailstone(42));
 
 		// Increment on Turing Machine
@@ -115,20 +119,46 @@ public class Main {
 		// System.out.println(myA2);
 
 		// LinkedList
-//		MyLinkedList<Integer> list = new MyLinkedList<>();
-//		list.add(1);
-//		list.add(1);
-//		list.add(1);
-//		list.add(1);
-//		list.add(3);
-//		list.add(3);
-//		list.add(3);
-//		list.add(5);
-//		list.add(5);
-//		list.add(7);
-//		printList("MyLinkedList", list);
-//		list.removeDuplicates();
-//		printList("MyLinkedList", list);
+		// MyLinkedList<Integer> list = new MyLinkedList<>();
+		// list.add(1);
+		// list.add(1);
+		// list.add(1);
+		// list.add(1);
+		// list.add(3);
+		// list.add(3);
+		// list.add(3);
+		// list.add(5);
+		// list.add(5);
+		// list.add(7);
+		// printList("MyLinkedList", list);
+		// list.removeDuplicates();
+		// printList("MyLinkedList", list);
+
+		// Stack
+//		NumberSystem ns = new NumberSystem();
+//		System.out.println(ns.convertDecimalToOthers(33646, 35));
+//		System.out.println(Integer.toString(33646, 35));
+
+//		Others other = new Others();
+//		boolean b = other.isBracketsCorrect(
+//				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) - Math.pow(((1 - Math.sqrt(5))/2), n))");
+//		System.out.println(b + "");
+		
+		SortableStackPermutation ssp = new SortableStackPermutation();
+		Stack<Integer> oriS = new Stack<>();
+		oriS.push(1);
+		oriS.push(2);
+		oriS.push(3);
+		oriS.push(4);
+		oriS.push(5);
+		Stack<Integer> sortedS = new Stack<>();
+		sortedS.push(1);
+		sortedS.push(2);
+		sortedS.push(5);
+		sortedS.push(3);
+		sortedS.push(4);
+		boolean b1 = ssp.isSortableStack(oriS,sortedS);
+		System.out.println(b1 + "");
 	}
 
 	public static void printArray(String title, int[] array) {

@@ -48,13 +48,17 @@ Algorithms
 ## How does list works
   - [MyArrayList]
   - [MyLinkedList]
-    - > Remove duplicates
+    - Remove duplicates
 
 ## Stack
->  You would push the top object with push(), and use peek() to get the top object without removing it.
->  Add an object on the top with pop().
->  So, it takes O(1) to add and remove an object.
+>  You would push the top object with push(), and use peek() to get the top object without removing it. <br>
+>  Add an object on the top with pop(). <br>
+>  So, it takes O(1) to add and remove an object. <br>
 >  But if you'd like to put or delete an element at the bottom, it takes O(n) so that the stack could move every object following the first (bottom) object.
+
+  - [NumberSystem] convertDecimalToOthers()
+  - [Others] isBracketsCorrect()
+  - [Stack-sortable permutation]
 
 ## Queue
   -
@@ -84,9 +88,12 @@ Algorithms
    [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
    [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
    [Selection sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SelectionSort.java>
+   [Stack-sortable permutation]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SortableStackPermutation.java>
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
+   [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
+   [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
