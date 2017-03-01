@@ -14,6 +14,7 @@ import com.catherine.sort.MergeSort;
 import com.catherine.sort.SelectionSort;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
+import com.catherine.utils.NumberSystem;
 import com.catherine.utils.TrackLog;
 
 public class Main {
@@ -51,12 +52,12 @@ public class Main {
 		// printArray("BubbleSort3", bs.sort3(input7, false));
 		
 		//SelectionSort
-		 SelectionSort ms = new SelectionSort();
-		 TrackLog tLog = new TrackLog("SelectionSort"); //track
-		 Analysis.startTracking(tLog); //track
-		 printArray("SelectionSort", ms.sort(input1, true));
-		 Analysis.endTracking(tLog); //track
-		 Analysis.printTrack(tLog); //track
+		// SelectionSort ms = new SelectionSort();
+		// TrackLog tLog = new TrackLog("SelectionSort"); //track
+		// Analysis.startTracking(tLog); //track
+		// printArray("SelectionSort", ms.sort(input1, true));
+		// Analysis.endTracking(tLog); //track
+		// Analysis.printTrack(tLog); //track
 
 		// Hailstone
 		// Other other = new Other();
@@ -129,6 +130,11 @@ public class Main {
 //		printList("MyLinkedList", list);
 //		list.removeDuplicates();
 //		printList("MyLinkedList", list);
+		 
+		 
+		 NumberSystem ns = new NumberSystem();
+		 System.out.println(ns.decimalConvertToOthers(33646, 35));
+		 System.out.println(Integer.toString(33646, 35));
 	}
 
 	public static void printArray(String title, int[] array) {

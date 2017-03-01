@@ -1,4 +1,4 @@
-package com.catherine;
+package com.catherine.utils;
 
 import java.util.ArrayList;
 import java.util.List;
