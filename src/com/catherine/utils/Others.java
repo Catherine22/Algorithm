@@ -80,6 +80,5 @@ public class Others {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return false;
 		}
-
 	}
 }

@@ -6,7 +6,9 @@ public class SortableStackPermutation {
 
 	
 	/**
-	 * 栈混洗
+	 * 栈混洗<br>
+	 * 三个栈：oriStack、cacheStack、sortedStack，<br>
+	 * 栈混洗只能做两件事oriStack.pop()传到cacheStack、cacheStack.pop()传到sortedStack
 	 * @param oriStack 原始栈
 	 * @param sortedStack 排序后的栈
 	 * @return 排序后的栈是否为原始栈经过合法混洗所得

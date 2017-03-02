@@ -144,21 +144,21 @@ public class Main {
 //				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) - Math.pow(((1 - Math.sqrt(5))/2), n))");
 //		System.out.println(b + "");
 		
-		SortableStackPermutation ssp = new SortableStackPermutation();
-		Stack<Integer> oriS = new Stack<>();
-		oriS.push(1);
-		oriS.push(2);
-		oriS.push(3);
-		oriS.push(4);
-		oriS.push(5);
-		Stack<Integer> sortedS = new Stack<>();
-		sortedS.push(1);
-		sortedS.push(2);
-		sortedS.push(5);
-		sortedS.push(3);
-		sortedS.push(4);
-		boolean b1 = ssp.isSortableStack(oriS,sortedS);
-		System.out.println(b1 + "");
+//		SortableStackPermutation ssp = new SortableStackPermutation();
+//		Stack<Integer> oriS = new Stack<>();
+//		oriS.push(1);
+//		oriS.push(2);
+//		oriS.push(3);
+//		oriS.push(4);
+//		oriS.push(5);
+//		Stack<Integer> sortedS = new Stack<>();
+//		sortedS.push(1);
+//		sortedS.push(2);
+//		sortedS.push(5);
+//		sortedS.push(3);
+//		sortedS.push(4);
+//		boolean b1 = ssp.isSortableStack(oriS,sortedS);
+//		System.out.println(b1 + "");
 	}
 
 	public static void printArray(String title, int[] array) {
