@@ -45,9 +45,11 @@ Algorithms
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
-## How does list works
+## List
   - [MyArrayList]
+    - Base on array
   - [MyLinkedList]
+    - Base on Node, a user-defined Object including a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
@@ -62,6 +64,16 @@ Algorithms
 
 ## Queue
   -
+
+## Tree
+  - Performance
+
+|  | vector | list | tree |
+| -- | -- | -- | -- |
+| search | O | X | O |
+| insert / remove | X | O | O |
+  - Imaginary Tree is sort of List<List>
+
 
 ## Reference
   - [Algorithms, 4th Edition]

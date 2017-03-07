@@ -26,7 +26,7 @@ import java.util.RandomAccess;
 public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable, Serializable {
 
 	// 序列版本号
-	private static final long serialVersionUID = 8683452581122892189L;
+	private static final long serialVersionUID = -973019176608242355L;
 	// transient 短暂的，宣告后如有做序列化的动作时，加入此关键字就不会被序列化。
 	private transient Object[] elementData;
 	private int size;
