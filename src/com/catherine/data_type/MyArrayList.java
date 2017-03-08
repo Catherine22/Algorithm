@@ -124,17 +124,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneabl
 	public boolean contains(Object o) {
 		return indexOf(o) >= 0;
 	}
-
-	/** 如果此列表中包含指定集合所有元素，则返回 true。 */
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (Object o : c) {
-			if (!c.contains(o))
-				return false;
-		}
-		return true;
-	}
-
+	
 	/**
 	 * 返回指定对象在ArrayList中第一个位置， 找不到指定对象返回-1。<br>
 	 * 传入null会返回ArrayList中第一个null的位置。<br>

@@ -1,5 +1,7 @@
 package com.catherine.data_type.trees;
 
+import java.util.AbstractList;
+
 public abstract class AbstractTree<E> {
 	protected final boolean SHOW_DEBUG_LOG = false;
 
