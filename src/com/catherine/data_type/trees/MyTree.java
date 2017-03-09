@@ -294,7 +294,8 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 			throw new IndexOutOfBoundsException(outOfBoundsMsg(size));
 		else if (size == 1)
 			throw new IllegalArgumentException("You can't insert siblings at root.");
-		linkLastSib(element);
+		else
+			linkSib((size - 1), element);
 	}
 
 	/**
@@ -310,13 +311,8 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
 		else if (index == 1)
 			throw new IllegalArgumentException("You can't insert siblings at root.");
-		else {
-			ensureCapacity(size + 1);// Increments modCount
-			System.arraycopy(elementData, index, elementData, index + 1, size - index);
-			elementData[index].item = element;
-			elementData[index].children = null;
-			size++;
-		}
+		else
+			linkSib((size - 1), element);
 	}
 
 	/**
@@ -367,10 +363,10 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 	 * 
 	 * @param element
 	 */
-	private void linkLastSib(E element) {
+	private void linkSib(int index, E element) {
 		Node<E> newlast = new Node<>(null, element, null);// while size==0
 		if (size > 0) {
-			Node<E> preLast = elementData[size - 1];
+			Node<E> preLast = elementData[index];
 			newlast = new Node<>(preLast.parent, element, null);
 
 			Node<E> parentNode = preLast.parent;
@@ -378,9 +374,8 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 				parentNode.children = new Node[1];
 			else
 				parentNode.children = ensureSubtreeCapacity(parentNode.children, (parentNode.children.length + 1));// Increments
-																								// modCount
+			// modCount
 			parentNode.children[parentNode.children.length - 1] = newlast;// 父节点链接子节点
-			System.out.println("s:" + parentNode.children.length);
 		}
 		ensureCapacity(size + 1);// Increments modCount
 		elementData[size++] = newlast;// 整棵树加入一节点
@@ -407,7 +402,7 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 				parentNode.children = new Node[1];
 			else
 				parentNode.children = ensureSubtreeCapacity(parentNode.children, (parentNode.children.length + 1));// Increments
-																								// modCount
+			// modCount
 			Node<E> leaf = new Node<>(parentNode, element, null);
 			parentNode.children[parentNode.children.length - 1] = leaf;// 父节点链接子节点
 			elementData[size++] = leaf; // 整棵树加入一节点
