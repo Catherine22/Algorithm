@@ -68,10 +68,12 @@ Algorithms
 ## Tree
   - Performance
 
-|  | vector | list | tree |
-| -- | -- | -- | -- |
+
+|    | vector | list | tree |
+| ---- | ---- | ---- | ---- |
 | search | O | X | O |
 | insert / remove | X | O | O |
+
 
   - Imaginary Tree is sort of List<List>
   - [MyTree]

@@ -95,10 +95,12 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 	 * @param minCapacity
 	 *            指定的最小所需容量
 	 */
-	private void ensureSubtreeCapacity(Node<E>[] subtree, int minCapacity) {
+	private Node<E>[] ensureSubtreeCapacity(Node<E>[] subtree, int minCapacity) {
 		modCount++;
 		if (minCapacity - subtree.length > 0)
-			growSubtree(subtree, minCapacity);
+			return growSubtree(subtree, minCapacity);
+		else
+			return subtree;
 	}
 
 	/**
@@ -121,7 +123,7 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 			newCapacity = minCapacity;
 		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
 			newCapacity = hugeCapacity(minCapacity);
-		elementData = Arrays.copyOf(elementData, minCapacity);
+		elementData = Arrays.copyOf(elementData, newCapacity);
 	}
 
 	/**
@@ -132,14 +134,14 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 	 * @param minCapacity
 	 *            指定的最小所需容量
 	 */
-	private void growSubtree(Node<E>[] subtree, int minCapacity) {
+	private Node<E>[] growSubtree(Node<E>[] subtree, int minCapacity) {
 		int oldCapacity = subtree.length;
 		int newCapacity = oldCapacity + oldCapacity >> 1;
 		if (newCapacity - minCapacity < 0)// 扩容后还是不够
 			newCapacity = minCapacity;
 		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
 			newCapacity = hugeCapacity(minCapacity);
-		subtree = Arrays.copyOf(subtree, minCapacity);
+		return Arrays.copyOf(subtree, newCapacity);
 	}
 
 	/**
@@ -339,11 +341,11 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 		if (size < 0)
 			throw new IndexOutOfBoundsException(outOfBoundsMsg(size));
 		else
-			linkLastLeaf(element);
+			linkLeaf((size - 1), element);
 	}
 
 	/**
-	 * 加入指定元素成為成为指定节点的子节点
+	 * 加入指定元素成為成为指定节点的子节点，并且成为其兄弟节点中最后一个。
 	 * 
 	 * @param index
 	 *            父节点索引
@@ -354,15 +356,14 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 	public void addLeaf(int index, E element) {
 		if (index >= size || index < 0)
 			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-		else {
-
-		}
+		else
+			linkLeaf(index, element);
 	}
 
 	/**
 	 * 
-	 * 原本最后Node (data; parent(x); children(Node<E>[] args...)) 后加入新Node(data;
-	 * parent(x); children(null))。
+	 * 1. 整棵树加入一节点<br>
+	 * 2. 当父节点不为空时，父节点链接子节点<br>
 	 * 
 	 * @param element
 	 */
@@ -371,28 +372,45 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 		if (size > 0) {
 			Node<E> preLast = elementData[size - 1];
 			newlast = new Node<>(preLast.parent, element, null);
+
+			Node<E> parentNode = preLast.parent;
+			if (parentNode.children == null)
+				parentNode.children = new Node[1];
+			else
+				parentNode.children = ensureSubtreeCapacity(parentNode.children, (parentNode.children.length + 1));// Increments
+																								// modCount
+			parentNode.children[parentNode.children.length - 1] = newlast;// 父节点链接子节点
+			System.out.println("s:" + parentNode.children.length);
 		}
 		ensureCapacity(size + 1);// Increments modCount
-		elementData[size++] = newlast;
+		elementData[size++] = newlast;// 整棵树加入一节点
 	}
 
-	private void linkLastLeaf(E element) {
+	/**
+	 * 
+	 * 1. 整棵树加入一节点<br>
+	 * 2. 当父节点不为空时，父节点链接子节点
+	 * 
+	 * @param parentIndex
+	 *            父节点索引，若键入最后则带入size-1
+	 * @param element
+	 */
+	private void linkLeaf(int parentIndex, E element) {
 		ensureCapacity(size + 1);// Increments modCount
 		if (size == 0) {
 			Node<E> root = new Node<>(null, element, null);
 			elementData[size++] = root;
 		} else {
-			Node<E> parentNode = elementData[size - 1];
-			Node<E>[] cNode = parentNode.children;
+			Node<E> parentNode = elementData[parentIndex];
 
-			if (cNode == null)
-				cNode = new Node[1];
+			if (parentNode.children == null)
+				parentNode.children = new Node[1];
 			else
-				ensureSubtreeCapacity(cNode, (cNode.length + 1));// Increments
-																	// modCount
+				parentNode.children = ensureSubtreeCapacity(parentNode.children, (parentNode.children.length + 1));// Increments
+																								// modCount
 			Node<E> leaf = new Node<>(parentNode, element, null);
-			cNode[cNode.length - 1] = leaf;
-			elementData[size++] = leaf;
+			parentNode.children[parentNode.children.length - 1] = leaf;// 父节点链接子节点
+			elementData[size++] = leaf; // 整棵树加入一节点
 		}
 	}
 
@@ -459,6 +477,8 @@ public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializabl
 				sbBuilder.append("\t[");
 				for (Node<E> n : node.children)
 					sbBuilder.append(n.item + ", ");
+
+				sbBuilder.setLength(sbBuilder.length() - 2);
 				sbBuilder.append("]");
 			}
 			sbBuilder.append("\n");

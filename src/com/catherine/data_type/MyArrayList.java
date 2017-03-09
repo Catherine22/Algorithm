@@ -93,7 +93,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneabl
 			newCapacity = minCapacity;
 		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
 			newCapacity = hugeCapacity(minCapacity);
-		elementData = Arrays.copyOf(elementData, minCapacity);
+		elementData = Arrays.copyOf(elementData, newCapacity);
 	}
 
 	/**

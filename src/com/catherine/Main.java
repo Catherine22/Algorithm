@@ -166,9 +166,9 @@ public class Main {
 		simpleTree.addLeaf("A");
 		simpleTree.addSib("B");
 		simpleTree.addSib("C");
-		simpleTree.addSib("D");
-		simpleTree.addSib("E");
-		simpleTree.addLeaf(1, "F");
+		simpleTree.addLeaf(1, "D");
+		simpleTree.addLeaf(1, "E");
+		simpleTree.addLeaf(3, "F");
 		System.out.println("size=" + simpleTree.size());
 		System.out.println("height=" + "0");
 		System.out.println(simpleTree.toString());
