@@ -9,6 +9,7 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
+import com.catherine.data_type.trees.SimpleTree;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -135,30 +136,43 @@ public class Main {
 		// printList("MyLinkedList", list);
 
 		// Stack
-//		NumberSystem ns = new NumberSystem();
-//		System.out.println(ns.convertDecimalToOthers(33646, 35));
-//		System.out.println(Integer.toString(33646, 35));
+		// NumberSystem ns = new NumberSystem();
+		// System.out.println(ns.convertDecimalToOthers(33646, 35));
+		// System.out.println(Integer.toString(33646, 35));
+		// Others other = new Others();
+		// boolean b = other.isBracketsCorrect(
+		// "(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -
+		// Math.pow(((1 - Math.sqrt(5))/2), n))");
+		// System.out.println(b + "");
+		// SortableStackPermutation ssp = new SortableStackPermutation();
+		// Stack<Integer> oriS = new Stack<>();
+		// oriS.push(1);
+		// oriS.push(2);
+		// oriS.push(3);
+		// oriS.push(4);
+		// oriS.push(5);
+		// Stack<Integer> sortedS = new Stack<>();
+		// sortedS.push(1);
+		// sortedS.push(2);
+		// sortedS.push(5);
+		// sortedS.push(3);
+		// sortedS.push(4);
+		// boolean b1 = ssp.isSortableStack(oriS,sortedS);
+		// System.out.println(b1 + "");
 
-//		Others other = new Others();
-//		boolean b = other.isBracketsCorrect(
-//				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) - Math.pow(((1 - Math.sqrt(5))/2), n))");
-//		System.out.println(b + "");
-		
-//		SortableStackPermutation ssp = new SortableStackPermutation();
-//		Stack<Integer> oriS = new Stack<>();
-//		oriS.push(1);
-//		oriS.push(2);
-//		oriS.push(3);
-//		oriS.push(4);
-//		oriS.push(5);
-//		Stack<Integer> sortedS = new Stack<>();
-//		sortedS.push(1);
-//		sortedS.push(2);
-//		sortedS.push(5);
-//		sortedS.push(3);
-//		sortedS.push(4);
-//		boolean b1 = ssp.isSortableStack(oriS,sortedS);
-//		System.out.println(b1 + "");
+		//Tree
+		SimpleTree<String> simpleTree = new SimpleTree<>("r");
+		simpleTree.setRoot("R");
+		simpleTree.addLeaf("A");
+		simpleTree.addSib("B");
+		simpleTree.addSib("C");
+		simpleTree.addSib("D");
+		simpleTree.addSib("E");
+		simpleTree.addLeaf(1, "F");
+		System.out.println("size=" + simpleTree.size());
+		System.out.println("height=" + "0");
+		System.out.println(simpleTree.toString());
+
 	}
 
 	public static void printArray(String title, int[] array) {

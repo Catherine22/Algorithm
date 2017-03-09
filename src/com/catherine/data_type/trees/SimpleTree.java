@@ -2,10 +2,6 @@ package com.catherine.data_type.trees;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.concurrent.BlockingDeque;
-
-import com.catherine.data_type.MyArrayList;
 
 /**
  * 定义tree的节点时包含了三个元素（索引、值、父节点的索引）。<br>
@@ -30,12 +26,27 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 		this(10);
 	}
 
+	public SimpleTree(E root) {
+		this(10);
+		setRoot(root);
+	}
+
 	public SimpleTree(int capacity) {
 		if (capacity <= 0)
 			throw new IllegalArgumentException(
 					"Capacity should be filled in more than 0! Illegal capacity: " + capacity);
 		else
 			elementData = new Node[capacity];
+	}
+
+	public SimpleTree(int capacity, E root) {
+		if (capacity <= 0)
+			throw new IllegalArgumentException(
+					"Capacity should be filled in more than 0! Illegal capacity: " + capacity);
+		else {
+			elementData = new Node[capacity];
+			setRoot(root);
+		}
 	}
 
 	private static class Node<E> {
@@ -77,6 +88,20 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 	}
 
 	/**
+	 * 逻辑同{@link #ensureCapacity}，给子树专用。
+	 * 
+	 * @param subtree
+	 *            指定的树
+	 * @param minCapacity
+	 *            指定的最小所需容量
+	 */
+	private void ensureSubtreeCapacity(Node<E>[] subtree, int minCapacity) {
+		modCount++;
+		if (minCapacity - subtree.length > 0)
+			growSubtree(subtree, minCapacity);
+	}
+
+	/**
 	 * 有些虚拟机会保留head words在array中，所以须取最大整数扣除标头，否则造成OutOfMemoryError
 	 */
 	private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
@@ -97,6 +122,24 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
 			newCapacity = hugeCapacity(minCapacity);
 		elementData = Arrays.copyOf(elementData, minCapacity);
+	}
+
+	/**
+	 * 逻辑同{@link #grow}，给子树专用。
+	 * 
+	 * @param subtree
+	 *            指定的树
+	 * @param minCapacity
+	 *            指定的最小所需容量
+	 */
+	private void growSubtree(Node<E>[] subtree, int minCapacity) {
+		int oldCapacity = subtree.length;
+		int newCapacity = oldCapacity + oldCapacity >> 1;
+		if (newCapacity - minCapacity < 0)// 扩容后还是不够
+			newCapacity = minCapacity;
+		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
+			newCapacity = hugeCapacity(minCapacity);
+		subtree = Arrays.copyOf(subtree, minCapacity);
 	}
 
 	/**
@@ -189,7 +232,6 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 	 * @return A new array (In other words, this method must allocate a new
 	 *         array)
 	 */
-	@SuppressWarnings("unchecked")
 	public Object[] toArray() {
 		Object[] array = new Object[size];
 		for (int i = 0; i < size; i++) {
@@ -230,65 +272,91 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 	 * @param index
 	 *            索引
 	 * @return 元素
+	 * @throws IndexOutOfBoundsException
 	 */
-	@SuppressWarnings("unchecked")
 	public E get(int index) {
 		if (index >= size || index < 0)
 			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-		return (E) elementData[index].item;
+		return elementData[index].item;
 	}
 
 	/**
-	 * 加入指定元素到树最后（成为上一个节点的兄弟）
+	 * 加入指定元素到树最后（成为上一个节点的兄弟）<br>
+	 * 若树为空则成为根节点，若树仅有根节点则抛出异常（根节点没有兄弟）
 	 * 
 	 * @param element
 	 *            指定元素
 	 */
 	public void addSib(E element) {
+		if (size < 0)
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(size));
+		else if (size == 1)
+			throw new IllegalArgumentException("You can't insert siblings at root.");
 		linkLastSib(element);
-	}	
-	
-	/**
-	 * 插入指定元素到指定位置（成为原节点的兄弟）
-	 * 
-	 * @param element
-	 *            指定元素
-	 */
-	public void addSib(int index,E element) {
 	}
 
 	/**
-	 * 加入指定元素成為成为最后节点的子节点
+	 * 插入指定元素到指定位置（成为原节点的兄弟）<br>
+	 * 输入0则抛出异常（根节点没有兄弟）
+	 * 
+	 * @param element
+	 *            指定元素
+	 * @throws IndexOutOfBoundsException
+	 */
+	public void addSib(int index, E element) {
+		if (index >= size || index < 0)
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+		else if (index == 1)
+			throw new IllegalArgumentException("You can't insert siblings at root.");
+		else {
+			ensureCapacity(size + 1);// Increments modCount
+			System.arraycopy(elementData, index, elementData, index + 1, size - index);
+			elementData[index].item = element;
+			elementData[index].children = null;
+			size++;
+		}
+	}
+
+	/**
+	 * 设置根节点
+	 * 
+	 * @param element
+	 */
+	public void setRoot(E element) {
+		if (size == 0)
+			addLeaf(element);
+		else
+			elementData[0].item = element;
+	}
+
+	/**
+	 * 加入指定元素成為成为最后节点的子节点，若树为空则创建root。
 	 * 
 	 * @param element
 	 *            指定元素
 	 */
-	public void addChild(E element) {
-		linkLastChild(element);
+	public void addLeaf(E element) {
+		if (size < 0)
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(size));
+		else
+			linkLastLeaf(element);
 	}
 
 	/**
 	 * 加入指定元素成為成为指定节点的子节点
 	 * 
-	 * @param parentIndex
+	 * @param index
 	 *            父节点索引
 	 * @param element
 	 *            指定元素
+	 * @throws IndexOutOfBoundsException
 	 */
-	public void addChild(int parentIndex, E element) {
-	}
+	public void addLeaf(int index, E element) {
+		if (index >= size || index < 0)
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+		else {
 
-	public boolean add(E e) {
-		linkLastSib(e);
-		return true;
-	}
-
-	@Override
-	public void add(int index, E value) {
-		checkPositionIndex(index);
-
-		size++;
-		modCount++;
+		}
 	}
 
 	/**
@@ -299,21 +367,33 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 	 * @param element
 	 */
 	private void linkLastSib(E element) {
-		if (size < 0)
-			throw new IndexOutOfBoundsException(outOfBoundsMsg(size));
-		else {
-			Node<E> newlast = new Node<>(null, element, null);
-			if (size > 0){
-				Node<E> preLast = elementData[size - 1];
-				newlast = new Node<>(preLast.parent, element, null);
-			}
-			ensureCapacity(size + 1);// Increments modCount
-			elementData[size++] = newlast;
+		Node<E> newlast = new Node<>(null, element, null);// while size==0
+		if (size > 0) {
+			Node<E> preLast = elementData[size - 1];
+			newlast = new Node<>(preLast.parent, element, null);
 		}
+		ensureCapacity(size + 1);// Increments modCount
+		elementData[size++] = newlast;
 	}
-	
-	private void linkLastChild(E element){
-		
+
+	private void linkLastLeaf(E element) {
+		ensureCapacity(size + 1);// Increments modCount
+		if (size == 0) {
+			Node<E> root = new Node<>(null, element, null);
+			elementData[size++] = root;
+		} else {
+			Node<E> parentNode = elementData[size - 1];
+			Node<E>[] cNode = parentNode.children;
+
+			if (cNode == null)
+				cNode = new Node[1];
+			else
+				ensureSubtreeCapacity(cNode, (cNode.length + 1));// Increments
+																	// modCount
+			Node<E> leaf = new Node<>(parentNode, element, null);
+			cNode[cNode.length - 1] = leaf;
+			elementData[size++] = leaf;
+		}
 	}
 
 	@Override
@@ -334,12 +414,47 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 		return 0;
 	}
 
+	@Override
+	public boolean isRoot(int key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLeaf(int key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public E getParent(int key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public E[] getChildren(int key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getLevel(int key) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	public String toString() {
 		StringBuilder sbBuilder = new StringBuilder();
+		sbBuilder.append("index\titem\tparent\tchildren\n");
 		for (int i = 0; i < size; i++) {
 			Node<E> node = elementData[i];
 
 			sbBuilder.append(i + ":\t" + node.item);
+			if (node.parent == null)
+				sbBuilder.append("\tnull");
+			else
+				sbBuilder.append("\t" + node.parent.item);
 			if (node.children != null) {
 				sbBuilder.append("\t[");
 				for (Node<E> n : node.children)
