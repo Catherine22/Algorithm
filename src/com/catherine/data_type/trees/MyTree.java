@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * @param <E>
  */
-public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Serializable {
+public class MyTree<E> extends AbstractTree<E> implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 5469151515081509859L;
 	private transient Node<E>[] elementData;
@@ -22,16 +22,16 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 	/**
 	 * Default capacity = 10
 	 */
-	public SimpleTree() {
+	public MyTree() {
 		this(10);
 	}
 
-	public SimpleTree(E root) {
+	public MyTree(E root) {
 		this(10);
 		setRoot(root);
 	}
 
-	public SimpleTree(int capacity) {
+	public MyTree(int capacity) {
 		if (capacity <= 0)
 			throw new IllegalArgumentException(
 					"Capacity should be filled in more than 0! Illegal capacity: " + capacity);
@@ -39,7 +39,7 @@ public class SimpleTree<E> extends AbstractTree<E> implements Cloneable, Seriali
 			elementData = new Node[capacity];
 	}
 
-	public SimpleTree(int capacity, E root) {
+	public MyTree(int capacity, E root) {
 		if (capacity <= 0)
 			throw new IllegalArgumentException(
 					"Capacity should be filled in more than 0! Illegal capacity: " + capacity);
