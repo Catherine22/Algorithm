@@ -1,5 +1,7 @@
 package com.catherine.data_type.trees;
 
+import com.sun.javafx.sg.prism.NGShape.Mode;
+
 /**
  * 
  * @author Catherine
@@ -9,7 +11,7 @@ package com.catherine.data_type.trees;
 public class MyBinarySearchTree<E> implements java.io.Serializable {
 
 	private static final long serialVersionUID = 551109471535675044L;
-	private final static boolean SHOW_LOG = false;
+	private final static boolean SHOW_LOG = true;
 	transient int size = 0;
 	private Node<E> root;
 
@@ -25,15 +27,31 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 */
 	public Node<E> setRoot(E data) {
 		size++;
-		root.data = data;
-		root.parent = null;
+		Node<E> n;
+		if (root == null)
+			n = new Node<>(data, null, null, null, 0);
+		else
+			n = new Node<>(data, null, root.lChild, root.rChild, root.height);
+		root = n;
+		return root;
+	}
+
+	/**
+	 * 返回根节点
+	 * 
+	 * @return 根节点
+	 */
+	public Node<E> getRoot() {
 		return root;
 	}
 
 	public static class Node<E> {
 
-		E data;
+		/**
+		 * 节点到叶子的最长长度
+		 */
 		int height;
+		E data;
 		Node<E> parent;
 		Node<E> lChild;
 		Node<E> rChild;
@@ -82,30 +100,46 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
-	 * 每加入一子节点，父节点及其父节点等高度都会变动。 <br>
-	 * <br>
+	 * 每加入或移除一子节点，父节点及其父节点等高度都会变动。 <br>
+	 * 二叉树须检查是否已被兄弟节点修改过。 <br>
 	 * 节点高度定义：<br>
 	 * 1. 只有单一节点：0<br>
-	 * 2. 无节点，也就是空树：1<br>
+	 * 2. 无节点，也就是空树：-1<br>
 	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
+	 * <br>
+	 * 只有两种可能，parent的高度大于等于2，表示为移除节点<br>
+	 * parent的高度和自身一样，表示为新增节点<br>
+	 * 
+	 * <br>
+	 * parent的高度=自身+1为正常情况。
 	 * 
 	 * @return 高度
 	 */
 	private void updateAboveHeight(Node<E> node) {
+		if (node.parent == null)
+			return;
 
+		if (node.height == node.parent.height) {
+			node.parent.height++;
+			updateAboveHeight(node.parent);
+		} else if (node.parent.height - node.height >= 2) {
+			node.parent.height = node.height + 1;
+			updateAboveHeight(node.parent);
+		} else
+			return;
 	}
 
 	/**
 	 * 节点高度定义：<br>
 	 * 1. 只有单一节点：0<br>
-	 * 2. 无节点，也就是空树：1<br>
+	 * 2. 无节点，也就是空树：-1<br>
 	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
 	 * 
 	 * @return 高度
 	 */
 	public int getHeight() {
 		if (root == null)
-			return 1;
+			return -1;
 
 		if (root.lChild == null && root.rChild == null)
 			return 0;
@@ -113,20 +147,34 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		return getHighestChild(root);
 	}
 
+	/**
+	 * 使用递归计算高度
+	 * 
+	 * @param node
+	 * @return
+	 */
 	private int getHighestChild(Node<E> node) {
 		int l = 0;
 		int r = 0;
 
-		if (node.lChild != null && node.rChild == null)
+		if (node == null)
+			return -1;// 若为叶子，上一次判断时会直达else判断式，因此l和r都多加一次，在此处扣除
+
+		if (node.lChild != null && node.rChild == null) {
 			l += getHighestChild(node.lChild);
-		else if (node.lChild == null && node.rChild != null)
+			l++;
+		} else if (node.lChild == null && node.rChild != null) {
 			r += getHighestChild(node.rChild);
-		else {
-			l += getHighestChild(node.lChild);
-			r += getHighestChild(node.rChild);
+			r++;
+		} else {
+			l += getHighestChild(node.lChild);// 若为叶子得-1
+			r += getHighestChild(node.rChild);// 若为叶子得-1
+			l++;
+			r++;
 		}
 
-		System.out.println("l:" + l + "\tr:" + r);
+		if (SHOW_LOG)
+			System.out.println(node.data + "\tl:" + l + "\tr:" + r + "\th:" + node.height);
 		return (l > r) ? l : r;
 	}
 
@@ -150,8 +198,9 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 * @return 新节点
 	 */
 	public Node<E> insertLC(Node<E> parent, E data) {
-		Node<E> child = new Node<>(data, parent, null, null, parent.height + 1);
+		Node<E> child = new Node<>(data, parent, null, null, 0);
 		parent.lChild = child;
+		updateAboveHeight(child);
 		return child;
 	}
 
@@ -165,8 +214,9 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 * @return 新节点
 	 */
 	public Node<E> insertRC(Node<E> parent, E data) {
-		Node<E> child = new Node<>(data, parent, null, null, parent.height + 1);
+		Node<E> child = new Node<>(data, parent, null, null, 0);
 		parent.rChild = child;
+		updateAboveHeight(child);
 		return child;
 	}
 
@@ -205,10 +255,5 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 */
 	public void traversePast() {
 
-	}
-
-	public String toString() {
-		if (root == null)
-			return "null tree";
 	}
 }

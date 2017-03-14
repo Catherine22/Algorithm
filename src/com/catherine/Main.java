@@ -9,6 +9,8 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
+import com.catherine.data_type.trees.MyBinarySearchTree;
+import com.catherine.data_type.trees.MyBinarySearchTree.Node;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -159,8 +161,16 @@ public class Main {
 		// boolean b1 = ssp.isSortableStack(oriS,sortedS);
 		// System.out.println(b1 + "");
 
-		//Tree
+		// Tree
+		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<String>("R");
+		Node<String> lc = mBST.insertLC(mBST.getRoot(), "A");
+		mBST.insertRC(lc, "C");
+		Node<String> rc = mBST.insertRC(mBST.getRoot(), "B");
+		Node<String> rclc = mBST.insertLC(rc, "D");
+		mBST.insertRC(rc, "E");
+		mBST.insertLC(rclc, "F");
 
+		System.out.println("H:" + mBST.getHeight());
 
 	}
 
