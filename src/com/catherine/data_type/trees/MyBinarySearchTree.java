@@ -1,5 +1,11 @@
 package com.catherine.data_type.trees;
 
+/**
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
 public class MyBinarySearchTree<E> implements java.io.Serializable {
 
 	private static final long serialVersionUID = 551109471535675044L;
@@ -20,7 +26,6 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	public Node<E> setRoot(E data) {
 		size++;
 		root.data = data;
-		root.height = 1;
 		root.parent = null;
 		return root;
 	}
@@ -35,15 +40,16 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 
 		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height) {
 			this.data = data;
+			this.height = height;
 			this.parent = parent;
 			this.lChild = lChild;
 			this.rChild = rChild;
-			this.height = height;
 		}
 	}
 
 	/**
 	 * 是否为空树（没有节点）
+	 * 
 	 * @return boolean
 	 */
 	public boolean isEmpty() {
@@ -76,6 +82,55 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
+	 * 每加入一子节点，父节点及其父节点等高度都会变动。 <br>
+	 * <br>
+	 * 节点高度定义：<br>
+	 * 1. 只有单一节点：0<br>
+	 * 2. 无节点，也就是空树：1<br>
+	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
+	 * 
+	 * @return 高度
+	 */
+	private void updateAboveHeight(Node<E> node) {
+
+	}
+
+	/**
+	 * 节点高度定义：<br>
+	 * 1. 只有单一节点：0<br>
+	 * 2. 无节点，也就是空树：1<br>
+	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
+	 * 
+	 * @return 高度
+	 */
+	public int getHeight() {
+		if (root == null)
+			return 1;
+
+		if (root.lChild == null && root.rChild == null)
+			return 0;
+
+		return getHighestChild(root);
+	}
+
+	private int getHighestChild(Node<E> node) {
+		int l = 0;
+		int r = 0;
+
+		if (node.lChild != null && node.rChild == null)
+			l += getHighestChild(node.lChild);
+		else if (node.lChild == null && node.rChild != null)
+			r += getHighestChild(node.rChild);
+		else {
+			l += getHighestChild(node.lChild);
+			r += getHighestChild(node.rChild);
+		}
+
+		System.out.println("l:" + l + "\tr:" + r);
+		return (l > r) ? l : r;
+	}
+
+	/**
 	 * 满二叉树（full binary tree）、真二叉树（proper binary tree）又称为严格二叉树（strictly binary
 	 * tree），每个节点都只有0或2个节点。
 	 * 
@@ -84,32 +139,6 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	public boolean isFull() {
 		return false;
 	};
-
-	/**
-	 * 插入子节点于左边
-	 * 
-	 * @param index
-	 *            父节点索引
-	 * @param data
-	 *            数值
-	 * @return 新节点
-	 */
-	public Node<E> insertLC(int index, E data) {
-		return null;
-	}
-
-	/**
-	 * 插入子节点于右边
-	 * 
-	 * @param index
-	 *            父节点索引
-	 * @param data
-	 *            数值
-	 * @return 新节点
-	 */
-	public Node<E> insertRC(int index, E data) {
-		return null;
-	}
 
 	/**
 	 * 插入子节点于左边
@@ -151,7 +180,7 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
-	 * 遍历
+	 * 以阶层遍历
 	 */
 	public void traverseLevel() {
 
@@ -176,5 +205,10 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 */
 	public void traversePast() {
 
+	}
+
+	public String toString() {
+		if (root == null)
+			return "null tree";
 	}
 }

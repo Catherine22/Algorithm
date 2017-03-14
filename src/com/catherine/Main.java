@@ -9,7 +9,6 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
-import com.catherine.data_type.trees.MyTree;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -161,17 +160,7 @@ public class Main {
 		// System.out.println(b1 + "");
 
 		//Tree
-		MyTree<String> simpleTree = new MyTree<>("r");
-		simpleTree.setRoot("R");
-		simpleTree.addLeaf("A");
-		simpleTree.addSib("B");
-		simpleTree.addSib("C");
-		simpleTree.addLeaf(1, "D");
-		simpleTree.addLeaf(1, "E");
-		simpleTree.addLeaf(3, "F");
-		System.out.println("size=" + simpleTree.size());
-		System.out.println("height=" + "0");
-		System.out.println(simpleTree.toString());
+
 
 	}
 
