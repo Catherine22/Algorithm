@@ -168,7 +168,8 @@ public class Main {
 		Node<String> rc = mBST.insertRC(mBST.getRoot(), "B");
 		Node<String> rclc = mBST.insertLC(rc, "D");
 		mBST.insertRC(rc, "E");
-		mBST.insertLC(rclc, "F");
+		mBST.setLC(rclc, "F");
+//		mBST.removeRCCompletely(mBST.getRoot());
 
 		System.out.println("H:" + mBST.getHeight());
 

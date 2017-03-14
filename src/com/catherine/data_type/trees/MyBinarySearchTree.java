@@ -189,7 +189,7 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	};
 
 	/**
-	 * 插入子节点于左边
+	 * 插入子节点于左边，若已有节点则成为该节点的父节点
 	 * 
 	 * @param parent
 	 *            父节点
@@ -198,14 +198,23 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 * @return 新节点
 	 */
 	public Node<E> insertLC(Node<E> parent, E data) {
-		Node<E> child = new Node<>(data, parent, null, null, 0);
+		Node<E> child;
+		if (parent.lChild != null) {
+			final Node<E> cNode = parent.lChild;
+			final Node<E> lChild = cNode.lChild;
+			final Node<E> rChild = cNode.rChild;
+			final int h = cNode.height;
+			child = new Node<>(data, parent, lChild, rChild, h + 1);
+		} else
+			child = new Node<>(data, parent, null, null, 0);
+
 		parent.lChild = child;
 		updateAboveHeight(child);
 		return child;
 	}
 
 	/**
-	 * 插入子节点于右边
+	 * 插入子节点于右边，若已有节点则成为该节点的父节点
 	 * 
 	 * @param parent
 	 *            父节点
@@ -214,10 +223,83 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 * @return 新节点
 	 */
 	public Node<E> insertRC(Node<E> parent, E data) {
-		Node<E> child = new Node<>(data, parent, null, null, 0);
+		Node<E> child;
+		if (parent.rChild != null) {
+			final Node<E> cNode = parent.rChild;
+			final Node<E> lChild = cNode.lChild;
+			final Node<E> rChild = cNode.rChild;
+			final int h = cNode.height;
+			child = new Node<>(data, parent, lChild, rChild, h + 1);
+		} else
+			child = new Node<>(data, parent, null, null, 0);
+
 		parent.rChild = child;
 		updateAboveHeight(child);
 		return child;
+	}
+
+	/**
+	 * 移除整个右子树
+	 * 
+	 * @param parent
+	 *            父节点
+	 */
+	public void removeRCCompletely(Node<E> parent) {
+		parent.rChild = null;
+		parent.height = 0;
+		updateAboveHeight(parent);
+	}
+
+	/**
+	 * 移除整个左子树
+	 * 
+	 * @param parent
+	 *            父节点
+	 */
+	public void removeLCCompletely(Node<E> parent) {
+		parent.lChild = null;
+		parent.height = 0;
+		updateAboveHeight(parent);
+	}
+
+	/**
+	 * 修改左子树的值，如果没有就创建一个
+	 * 
+	 * @param parent
+	 *            父节点
+	 * @param data
+	 *            数值
+	 * @return 原数值
+	 */
+	public E setLC(Node<E> parent, E data) {
+		if (parent.lChild == null) {
+			insertLC(parent, data);
+			return null;
+		}
+
+		final E o = parent.lChild.data;
+		parent.lChild.data = data;
+		return o;
+	}
+
+	/**
+	 * 修改右子树的值，如果没有就创建一个
+	 * 
+	 * @param parent
+	 *            父节点
+	 * @param data
+	 *            数值
+	 * @return 原数值
+	 */
+	public E setRC(Node<E> parent, E data) {
+		if (parent.rChild == null) {
+			insertRC(parent, data);
+			return null;
+		}
+
+		final E o = parent.rChild.data;
+		parent.rChild.data = data;
+		return o;
 	}
 
 	/**
