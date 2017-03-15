@@ -25,7 +25,7 @@ Algorithms
 > - Double the capacity is more efficient. In general, it's better.
 
   - Insert/remove/find a element
-  - Shift continued-elements(It's also a high level method to remove continued-elements)
+  - Shift continued-elements (It's also a high level method to remove continued-elements)
   - Update each element with an interface
   - Remove duplicates with/without sorting
 
@@ -49,7 +49,7 @@ Algorithms
   - [MyArrayList]
     - Base on array
   - [MyLinkedList]
-    - Base on Node, a user-defined Object including a predecessor, a value, and a successor.
+    - Base on nodes, a user-defined Object including a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
@@ -75,8 +75,8 @@ Algorithms
 | insert / remove | X | O | O |
 
 
-  - Imaginary Tree is sort of List<List>
-  - [MyTree]
+  - Imaginary Tree is sort of a List<List>
+  - [MyBinarySearchTree]
 
 
 ## Reference
@@ -110,7 +110,7 @@ Algorithms
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
-   [MyTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyTree.java>
+   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyBinarySearchTree.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>

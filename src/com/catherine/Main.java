@@ -169,9 +169,12 @@ public class Main {
 		Node<String> rclc = mBST.insertLC(rc, "D");
 		mBST.insertRC(rc, "E");
 		mBST.setLC(rclc, "F");
-//		mBST.removeRCCompletely(mBST.getRoot());
+		// mBST.removeRCCompletely(mBST.getRoot());
 
 		System.out.println("H:" + mBST.getHeight());
+		mBST.traversePre();
+		mBST.traverseIn();
+		mBST.traversePost();
 
 	}
 

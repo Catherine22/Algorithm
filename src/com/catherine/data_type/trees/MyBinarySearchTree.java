@@ -1,10 +1,10 @@
 package com.catherine.data_type.trees;
 
-import com.sun.javafx.sg.prism.NGShape.Mode;
-
 /**
  * 
  * @author Catherine
+ *
+ *         每个节点都有0～2个子节点
  *
  * @param <E>
  */
@@ -319,23 +319,77 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
-	 * 先序遍历
+	 * 递归<br>
+	 * 先序遍历（中-左-右）
 	 */
 	public void traversePre() {
-
+		System.out.println("pre-order traversal:");
+		traversePre(root);
+		System.out.println("\n");
 	}
 
 	/**
-	 * 中序遍历
+	 * 递归<br>
+	 * 从任一节点先序遍历（中-左-右）
+	 */
+	public void traversePre(Node<E> node) {
+		if (node.data == null)
+			System.out.print("null ");
+		else
+			System.out.print(node.data + " ");
+		if (node.lChild != null)
+			traversePre(node.lChild);
+		if (node.rChild != null)
+			traversePre(node.rChild);
+	}
+
+	/**
+	 * 递归<br>
+	 * 中序遍历（左-中-右）
 	 */
 	public void traverseIn() {
-
+		System.out.println("in-order traversal:");
+		traverseIn(root);
+		System.out.println("\n");
 	}
 
 	/**
-	 * 后序遍历
+	 * 递归<br>
+	 * 从任一节点中序遍历（左-中-右）
 	 */
-	public void traversePast() {
+	public void traverseIn(Node<E> node) {
+		if (node.lChild != null)
+			traverseIn(node.lChild);
+		if (node.data == null)
+			System.out.print("null ");
+		else
+			System.out.print(node.data + " ");
+		if (node.rChild != null)
+			traverseIn(node.rChild);
+	}
 
+	/**
+	 * 递归<br>
+	 * 后序遍历（左-右-中）
+	 */
+	public void traversePost() {
+		System.out.println("post-order traversal:");
+		traversePost(root);
+		System.out.println("\n");
+	}
+
+	/**
+	 * 递归<br>
+	 * 从任一节点后序遍历（左-右-中）
+	 */
+	public void traversePost(Node<E> node) {
+		if (node.lChild != null)
+			traversePost(node.lChild);
+		if (node.rChild != null)
+			traversePost(node.rChild);
+		if (node.data == null)
+			System.out.print("null ");
+		else
+			System.out.print(node.data + " ");
 	}
 }
