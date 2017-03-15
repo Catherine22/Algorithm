@@ -169,15 +169,22 @@ public class Main {
 		Node<String> rclc = mBST.insertLC(rc, "D");
 		mBST.insertRC(rc, "E");
 		mBST.setLC(rclc, "F");
+
+		// for (int i = 0; i < 500; i++) {
+		// Node<String> node = mBST.insertRC(rclc, "G");
+		// rclc = node;
+		// }
+
 		// mBST.removeRCCompletely(mBST.getRoot());
 
-		System.out.println("H:" + mBST.getHeight());
-		mBST.traversePre();
-		mBST.traversePreNR1();
-		mBST.traversePreNR2();
-//		mBST.traverseIn();
-//		mBST.traverseInNR();
-//		mBST.traversePost();
+		// System.out.println("H:" + mBST.getHeight());
+		// mBST.traversePre();
+		// mBST.traversePreNR1();
+		// mBST.traversePreNR2();
+		// mBST.traverseIn();
+		// mBST.traverseInNR();
+		mBST.traversePost();
+		mBST.traversePostNR();
 
 	}
 

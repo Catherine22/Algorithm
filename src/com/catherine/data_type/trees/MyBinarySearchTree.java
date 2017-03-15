@@ -2,6 +2,9 @@ package com.catherine.data_type.trees;
 
 import java.util.Stack;
 
+import com.catherine.utils.Analysis;
+import com.catherine.utils.TrackLog;
+
 /**
  * 
  * @author Catherine
@@ -328,6 +331,9 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		if (root == null)
 			throw new NullPointerException("null root!");
 
+		TrackLog tLog = new TrackLog("traversePreNR1");
+		Analysis.startTracking(tLog);
+
 		System.out.println("non-recursively pre-order traverse:");
 		Stack<Node<E>> bin = new Stack<>();
 		bin.push(root);
@@ -345,16 +351,25 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 				bin.push(node.lChild);
 		}
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
 	 * 使用迭代而非递归<br>
 	 * 先序遍历（中-左-右）<br>
-	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。
+	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。<br>
+	 * <br>
+	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
 	 */
 	public void traversePreNR2() {
 		if (root == null)
 			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePreNR2");
+		Analysis.startTracking(tLog);
+
 		System.out.println("non-recursively pre-order traverse:");
 		Stack<Node<E>> bin = new Stack<>();
 		Node<E> node = root;
@@ -362,7 +377,10 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		while (node != null || bin.size() > 0) {
 			// 遍历一排的所有左节点
 			while (node != null) {
-				System.out.print(node.data + " ");// 打印父节点
+				if (node.data == null)
+					System.out.print("null ");
+				else
+					System.out.print(node.data + " ");
 				bin.push(node);// 弹出打印过的没用节点
 				node = node.lChild;
 			}
@@ -374,6 +392,9 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 			}
 		}
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
@@ -384,9 +405,15 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		if (root == null)
 			throw new NullPointerException("null root!");
 
+		TrackLog tLog = new TrackLog("traversePre");
+		Analysis.startTracking(tLog);
+
 		System.out.println("recursively pre-order traverse:");
 		traversePre(root);
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
@@ -406,15 +433,42 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 
 	/**
 	 * 使用迭代而非递归<br>
-	 * 中序遍历（左-中-右）
+	 * 中序遍历（左-中-右）<br>
+	 * 每个左侧节点就是一条链，由最左下的节点开始遍历右子树。 <br>
+	 * <br>
+	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
+	 * 
 	 */
 	public void traverseInNR() {
 		if (root == null)
 			throw new NullPointerException("null root!");
 
+		TrackLog tLog = new TrackLog("traverseInNR");
+		Analysis.startTracking(tLog);
+
 		System.out.println("non-recursively in-order traverse:");
 
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+
+		while (node != null || bin.size() > 0) {
+			while (node != null) {
+				bin.push(node);
+				node = node.lChild;
+			}
+			if (bin.size() > 0) {
+				node = bin.pop();
+				if (node.data == null)
+					System.out.print("null ");
+				else
+					System.out.print(node.data + " ");
+				node = node.rChild;
+			}
+		}
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
@@ -425,9 +479,15 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		if (root == null)
 			throw new NullPointerException("null root!");
 
+		TrackLog tLog = new TrackLog("traverseIn");
+		Analysis.startTracking(tLog);
+
 		System.out.println("recursively in-order traverse:");
 		traverseIn(root);
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
@@ -454,7 +514,9 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 			throw new NullPointerException("null root!");
 
 		System.out.println("non-recursively post-order traverse:");
-
+		
+		
+		
 		System.out.println("\n");
 	}
 

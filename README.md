@@ -2,7 +2,7 @@ Algorithms
 ===================
 
 
-## Sorting
+## Sort
 - [Bubble Sort] (normal version, v2, v3)
 - [Insertion Sort]
 - [Merge Sort]
@@ -71,9 +71,11 @@ Algorithms
   - Imaginary Tree is sort of a List<List>
   - [MyBinarySearchTree]
 
-  > - Insert / remove a node or a subtree <br>
-  > - Calculate the height <br>
-  > - depth-first search (DFS) via recursion or non-recursion <br>
+  > - Insert / remove nodes or subtrees <br>
+  > - Calculate the height of subtrees <br>
+  > - Depth-first search (DFS) via recursion or non-recursion <br>
+  > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
+  > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
 ## Reference
   - [Algorithms, 4th Edition]
