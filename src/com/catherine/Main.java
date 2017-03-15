@@ -173,8 +173,11 @@ public class Main {
 
 		System.out.println("H:" + mBST.getHeight());
 		mBST.traversePre();
-		mBST.traverseIn();
-		mBST.traversePost();
+		mBST.traversePreNR1();
+		mBST.traversePreNR2();
+//		mBST.traverseIn();
+//		mBST.traverseInNR();
+//		mBST.traversePost();
 
 	}
 

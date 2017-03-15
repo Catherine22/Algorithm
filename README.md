@@ -49,7 +49,7 @@ Algorithms
   - [MyArrayList]
     - Base on array
   - [MyLinkedList]
-    - Base on nodes, a user-defined Object including a predecessor, a value, and a successor.
+    - Base on node, a user-defined Object including a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
@@ -78,6 +78,9 @@ Algorithms
   - Imaginary Tree is sort of a List<List>
   - [MyBinarySearchTree]
 
+  > - Insert / remove a node or a subtree
+  > - Calculate the height
+  > - depth-first search (DFS) via recursion or non-recursion
 
 ## Reference
   - [Algorithms, 4th Edition]

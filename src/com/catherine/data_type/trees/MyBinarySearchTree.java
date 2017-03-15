@@ -1,5 +1,7 @@
 package com.catherine.data_type.trees;
 
+import java.util.Stack;
+
 /**
  * 
  * @author Catherine
@@ -319,11 +321,70 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
+	 * 使用迭代而非递归<br>
+	 * 先序遍历（中-左-右）
+	 */
+	public void traversePreNR1() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		System.out.println("non-recursively pre-order traverse:");
+		Stack<Node<E>> bin = new Stack<>();
+		bin.push(root);
+		while (!bin.isEmpty()) {
+			Node<E> node = bin.pop();
+			if (node.data == null)
+				System.out.print("null ");
+			else
+				System.out.print(node.data + " ");
+
+			if (node.rChild != null)
+				bin.push(node.rChild);
+
+			if (node.lChild != null)
+				bin.push(node.lChild);
+		}
+		System.out.println("\n");
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 先序遍历（中-左-右）<br>
+	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。
+	 */
+	public void traversePreNR2() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+		System.out.println("non-recursively pre-order traverse:");
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+
+		while (node != null || bin.size() > 0) {
+			// 遍历一排的所有左节点
+			while (node != null) {
+				System.out.print(node.data + " ");// 打印父节点
+				bin.push(node);// 弹出打印过的没用节点
+				node = node.lChild;
+			}
+
+			// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
+			if (bin.size() > 0) {
+				node = bin.pop();
+				node = node.rChild;
+			}
+		}
+		System.out.println("\n");
+	}
+
+	/**
 	 * 递归<br>
 	 * 先序遍历（中-左-右）
 	 */
 	public void traversePre() {
-		System.out.println("pre-order traversal:");
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		System.out.println("recursively pre-order traverse:");
 		traversePre(root);
 		System.out.println("\n");
 	}
@@ -344,11 +405,27 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
+	 * 使用迭代而非递归<br>
+	 * 中序遍历（左-中-右）
+	 */
+	public void traverseInNR() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		System.out.println("non-recursively in-order traverse:");
+
+		System.out.println("\n");
+	}
+
+	/**
 	 * 递归<br>
 	 * 中序遍历（左-中-右）
 	 */
 	public void traverseIn() {
-		System.out.println("in-order traversal:");
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		System.out.println("recursively in-order traverse:");
 		traverseIn(root);
 		System.out.println("\n");
 	}
@@ -369,11 +446,27 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	}
 
 	/**
+	 * 使用迭代而非递归<br>
+	 * 后序遍历（左-右-中）
+	 */
+	public void traversePostNR() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		System.out.println("non-recursively post-order traverse:");
+
+		System.out.println("\n");
+	}
+
+	/**
 	 * 递归<br>
 	 * 后序遍历（左-右-中）
 	 */
 	public void traversePost() {
-		System.out.println("post-order traversal:");
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		System.out.println("post-order traverse:");
 		traversePost(root);
 		System.out.println("\n");
 	}
