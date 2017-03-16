@@ -15,14 +15,14 @@ import com.catherine.utils.TrackLog;
  *
  * @param <E>
  */
-public class MyBinarySearchTree<E> implements java.io.Serializable {
+public class MyBinaryTree<E> implements java.io.Serializable {
 
 	private static final long serialVersionUID = 551109471535675044L;
 	private final static boolean SHOW_LOG = true;
 	transient int size = 0;
 	private Node<E> root;
 
-	public MyBinarySearchTree(E root) {
+	public MyBinaryTree(E root) {
 		setRoot(root);
 	}
 
