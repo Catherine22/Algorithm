@@ -183,8 +183,10 @@ public class Main {
 		// mBST.traversePreNR2();
 		// mBST.traverseIn();
 		// mBST.traverseInNR();
-		mBST.traversePost();
-		mBST.traversePostNR();
+		// mBST.traversePost();
+		// mBST.traversePostNR1();
+		// mBST.traversePostNR2();
+		mBST.traverseLevel();
 
 	}
 

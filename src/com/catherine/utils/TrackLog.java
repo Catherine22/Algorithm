@@ -39,7 +39,7 @@ public class TrackLog {
 	}
 
 	public String toString() {
-		return tag + " took " + getDuration() + " ms and increased " + getMemUsage() + " bytes of memory";
+		return tag + " took " + getDuration() + " ms and increased " + getMemUsage() + " bytes";
 	}
 
 }

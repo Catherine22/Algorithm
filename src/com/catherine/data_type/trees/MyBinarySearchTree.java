@@ -1,5 +1,7 @@
 package com.catherine.data_type.trees;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 import com.catherine.utils.Analysis;
@@ -320,6 +322,41 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 * 以阶层遍历
 	 */
 	public void traverseLevel() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		Queue<Node<E>> parent = new LinkedList<>();
+		Queue<Node<E>> siblings = new LinkedList<>();
+		Node<E> node = root;
+		parent.offer(node);
+		int level = 0;
+
+		while (node != null || !parent.isEmpty()) {
+			System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				node = parent.poll();
+				if (node.data == null)
+					System.out.print("null ");
+				else
+					System.out.print(node.data + " ");
+
+				if (node.lChild != null)
+					siblings.offer(node.lChild);
+
+				if (node.rChild != null)
+					siblings.offer(node.rChild);
+			}
+
+			for (Node<E> n : siblings)
+				parent.offer(n);
+
+			siblings.clear();
+			node = null;
+
+			System.out.print("\n");
+
+		}
 
 	}
 
@@ -374,7 +411,7 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		Stack<Node<E>> bin = new Stack<>();
 		Node<E> node = root;
 
-		while (node != null || bin.size() > 0) {
+		while (node != null || !bin.isEmpty()) {
 			// 遍历一排的所有左节点
 			while (node != null) {
 				if (node.data == null)
@@ -456,7 +493,7 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 				bin.push(node);
 				node = node.lChild;
 			}
-			if (bin.size() > 0) {
+			if (!bin.isEmpty()) {
 				node = bin.pop();
 				if (node.data == null)
 					System.out.print("null ");
@@ -510,9 +547,12 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 	 * 后序遍历（左-右-中）<br>
 	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
 	 */
-	public void traversePostNR() {
+	public void traversePostNR1() {
 		if (root == null)
 			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePostNR1");
+		Analysis.startTracking(tLog);
 
 		System.out.println("non-recursively post-order traverse:");
 		Stack<Node<E>> bin = new Stack<>();
@@ -540,6 +580,52 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 				node = node.rChild;
 		}
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 后序遍历（左-右-中）<br>
+	 * 双栈法
+	 */
+	public void traversePostNR2() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePostNR2");
+		Analysis.startTracking(tLog);
+
+		System.out.println("non-recursively post-order traverse:");
+		Stack<Node<E>> lBin = new Stack<>();
+		Stack<Node<E>> rBin = new Stack<>();
+		Node<E> node = root;
+		lBin.push(node);
+
+		while (!lBin.isEmpty()) {
+			node = lBin.pop();
+			rBin.push(node);
+
+			if (node.lChild != null)
+				lBin.push(node.lChild);
+
+			if (node.rChild != null)
+				lBin.push(node.rChild);
+		}
+
+		while (!rBin.isEmpty()) {
+			if (rBin.peek().data == null)
+				System.out.print("null ");
+			else
+				System.out.print(rBin.peek().data + " ");
+			rBin.pop();
+		}
+
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
@@ -550,9 +636,15 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 		if (root == null)
 			throw new NullPointerException("null root!");
 
+		TrackLog tLog = new TrackLog("traversePost");
+		Analysis.startTracking(tLog);
+
 		System.out.println("post-order traverse:");
 		traversePost(root);
 		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**

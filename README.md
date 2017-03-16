@@ -28,10 +28,10 @@ Algorithms
 
   > **Tips**
   > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
-  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort before removing duplicates.It's a little like using sort()+unique() in vector on C++. <br>
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort before removing duplicates. It's a little like using sort()+unique() in vector on C++. <br>
   >  <br>
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
-  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to using replace method to remove duplicates.
+  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
 
   - [Sequence Searching] is used to **search a sorted array to find an element.** If an array contains an element, it'll return where the element is in the array and also return the latest position if there're duplicated elements.
   - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
@@ -73,7 +73,7 @@ Algorithms
 
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>
-  > - Depth-first search (DFS) via recursion or non-recursion <br>
+  > - Depth-first search (DFS) in recursion and non-recursion ways<br>
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
