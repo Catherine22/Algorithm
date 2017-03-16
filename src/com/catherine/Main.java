@@ -9,8 +9,8 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
-import com.catherine.data_type.trees.MyBinarySearchTree;
-import com.catherine.data_type.trees.MyBinarySearchTree.Node;
+import com.catherine.data_type.trees.MyBinaryTree;
+import com.catherine.data_type.trees.MyBinaryTree.Node;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -162,31 +162,31 @@ public class Main {
 		// System.out.println(b1 + "");
 
 		// Tree
-		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<String>("R");
-		Node<String> lc = mBST.insertLC(mBST.getRoot(), "A");
-		mBST.insertRC(lc, "C");
-		Node<String> rc = mBST.insertRC(mBST.getRoot(), "B");
-		Node<String> rclc = mBST.insertLC(rc, "D");
-		mBST.insertRC(rc, "E");
-		mBST.setLC(rclc, "F");
+		MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
+		Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
+		mBT.insertRC(lc, "C");
+		Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
+		Node<String> rclc = mBT.insertLC(rc, "D");
+		mBT.insertRC(rc, "E");
+		mBT.setLC(rclc, "F");
 
 		// for (int i = 0; i < 500; i++) {
-		// Node<String> node = mBST.insertRC(rclc, "G");
+		// Node<String> node = mBT.insertRC(rclc, "G");
 		// rclc = node;
 		// }
 
-		// mBST.removeRCCompletely(mBST.getRoot());
+		// mBT.removeRCCompletely(mBT.getRoot());
 
-		// System.out.println("H:" + mBST.getHeight());
-		// mBST.traversePre();
-		// mBST.traversePreNR1();
-		// mBST.traversePreNR2();
-		// mBST.traverseIn();
-		// mBST.traverseInNR();
-		// mBST.traversePost();
-		// mBST.traversePostNR1();
-		// mBST.traversePostNR2();
-		mBST.traverseLevel();
+		// System.out.println("H:" + mBT.getHeight());
+		// mBT.traversePre();
+		// mBT.traversePreNR1();
+		// mBT.traversePreNR2();
+		// mBT.traverseIn();
+		// mBT.traverseInNR();
+		// mBT.traversePost();
+		// mBT.traversePostNR1();
+		// mBT.traversePostNR2();
+		mBT.traverseLevel();
 
 	}
 
