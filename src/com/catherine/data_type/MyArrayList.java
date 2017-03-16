@@ -26,7 +26,7 @@ import java.util.RandomAccess;
 public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneable, Serializable {
 
 	// 序列版本号
-	private static final long serialVersionUID = 8683452581122892189L;
+	private static final long serialVersionUID = -973019176608242355L;
 	// transient 短暂的，宣告后如有做序列化的动作时，加入此关键字就不会被序列化。
 	private transient Object[] elementData;
 	private int size;
@@ -93,7 +93,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneabl
 			newCapacity = minCapacity;
 		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
 			newCapacity = hugeCapacity(minCapacity);
-		elementData = Arrays.copyOf(elementData, minCapacity);
+		elementData = Arrays.copyOf(elementData, newCapacity);
 	}
 
 	/**
@@ -124,17 +124,7 @@ public class MyArrayList<E> extends AbstractList<E> implements List<E>, Cloneabl
 	public boolean contains(Object o) {
 		return indexOf(o) >= 0;
 	}
-
-	/** 如果此列表中包含指定集合所有元素，则返回 true。 */
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (Object o : c) {
-			if (!c.contains(o))
-				return false;
-		}
-		return true;
-	}
-
+	
 	/**
 	 * 返回指定对象在ArrayList中第一个位置， 找不到指定对象返回-1。<br>
 	 * 传入null会返回ArrayList中第一个null的位置。<br>

@@ -23,8 +23,8 @@ import java.util.NoSuchElementException;
 public class MyLinkedList<E> extends AbstractSequentialList<E>
 		implements List<E>, Deque<E>, Cloneable, java.io.Serializable {
 
+	private static final long serialVersionUID = 8487180734174364151L;
 	private final static boolean SHOW_LOG = false;
-	private static final long serialVersionUID = 876323262645176354L;
 	transient int size = 0;
 	/**
 	 * 链表的第一个元素<br>

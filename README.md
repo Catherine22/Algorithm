@@ -2,7 +2,7 @@ Algorithms
 ===================
 
 
-## Sorting
+## Sort
 - [Bubble Sort] (normal version, v2, v3)
 - [Insertion Sort]
 - [Merge Sort]
@@ -16,38 +16,33 @@ Algorithms
 ## [Sequence]
   - 2 ways to increase the capacity.
 
-> **Note:**
-> - increaseArray()
->  - However, in the worst case, It takes O(n) to increase the capacity of a vector by one.
->Space utilization is always 100%.
-> - doubleArray()
->  - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1).
-> - Double the capacity is more efficient. In general, it's better.
+> **Tips**
+> - increaseArray() - In the worst case, It takes O(n) to increase the capacity of a vector by one, but it's space utilization is always 100%. <br>
+> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1). <br>
+> While you need a bigger array, double the capacity of your array is more efficient. In general, it's better.
 
   - Insert/remove/find a element
-  - Shift continued-elements(It's also a high level method to remove continued-elements)
+  - Shift continued-elements (It's also a high level method to remove continued-elements)
   - Update each element with an interface
   - Remove duplicates with/without sorting
 
-  > **Note:**
-  > - removeDuplicates()
-  >  - O(n^2)
-  >  - remove duplicates without sorting.
-  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2()
-  >  - O(n log n)
-  >  - remove duplicates after sorting.
-  >  - It's a little like using sort()+unique() in vector on C++.
-  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array.
-  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to using replace method to remove duplicates.
+  > **Tips**
+  > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort before removing duplicates. It's a little like using sort()+unique() in vector on C++. <br>
+  >  <br>
+  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
+  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
 
   - [Sequence Searching] is used to **search a sorted array to find an element.** If an array contains an element, it'll return where the element is in the array and also return the latest position if there're duplicated elements.
   - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
       - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
       - Fibonacci Searching
 
-## How does list works
+## List
   - [MyArrayList]
+    - Base on array
   - [MyLinkedList]
+    - Base on node, a user-defined Object including a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
@@ -62,6 +57,25 @@ Algorithms
 
 ## Queue
   -
+
+## Tree
+  - Performance
+
+
+|    | vector | list | tree |
+| ---- | ---- | ---- | ---- |
+| search | O | X | O |
+| insert / remove | X | O | O |
+
+
+  - Imaginary Tree is sort of a List<List>
+  - [MyBinarySearchTree]
+
+  > - Insert / remove nodes or subtrees <br>
+  > - Calculate the height of subtrees <br>
+  > - Depth-first search (DFS) in recursion and non-recursion ways<br>
+  > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
+  > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
 ## Reference
   - [Algorithms, 4th Edition]
@@ -94,6 +108,7 @@ Algorithms
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
+   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyBinarySearchTree.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>

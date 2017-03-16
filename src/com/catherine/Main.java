@@ -9,6 +9,8 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
+import com.catherine.data_type.trees.MyBinarySearchTree;
+import com.catherine.data_type.trees.MyBinarySearchTree.Node;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -135,30 +137,57 @@ public class Main {
 		// printList("MyLinkedList", list);
 
 		// Stack
-//		NumberSystem ns = new NumberSystem();
-//		System.out.println(ns.convertDecimalToOthers(33646, 35));
-//		System.out.println(Integer.toString(33646, 35));
+		// NumberSystem ns = new NumberSystem();
+		// System.out.println(ns.convertDecimalToOthers(33646, 35));
+		// System.out.println(Integer.toString(33646, 35));
+		// Others other = new Others();
+		// boolean b = other.isBracketsCorrect(
+		// "(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -
+		// Math.pow(((1 - Math.sqrt(5))/2), n))");
+		// System.out.println(b + "");
+		// SortableStackPermutation ssp = new SortableStackPermutation();
+		// Stack<Integer> oriS = new Stack<>();
+		// oriS.push(1);
+		// oriS.push(2);
+		// oriS.push(3);
+		// oriS.push(4);
+		// oriS.push(5);
+		// Stack<Integer> sortedS = new Stack<>();
+		// sortedS.push(1);
+		// sortedS.push(2);
+		// sortedS.push(5);
+		// sortedS.push(3);
+		// sortedS.push(4);
+		// boolean b1 = ssp.isSortableStack(oriS,sortedS);
+		// System.out.println(b1 + "");
 
-//		Others other = new Others();
-//		boolean b = other.isBracketsCorrect(
-//				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) - Math.pow(((1 - Math.sqrt(5))/2), n))");
-//		System.out.println(b + "");
-		
-//		SortableStackPermutation ssp = new SortableStackPermutation();
-//		Stack<Integer> oriS = new Stack<>();
-//		oriS.push(1);
-//		oriS.push(2);
-//		oriS.push(3);
-//		oriS.push(4);
-//		oriS.push(5);
-//		Stack<Integer> sortedS = new Stack<>();
-//		sortedS.push(1);
-//		sortedS.push(2);
-//		sortedS.push(5);
-//		sortedS.push(3);
-//		sortedS.push(4);
-//		boolean b1 = ssp.isSortableStack(oriS,sortedS);
-//		System.out.println(b1 + "");
+		// Tree
+		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<String>("R");
+		Node<String> lc = mBST.insertLC(mBST.getRoot(), "A");
+		mBST.insertRC(lc, "C");
+		Node<String> rc = mBST.insertRC(mBST.getRoot(), "B");
+		Node<String> rclc = mBST.insertLC(rc, "D");
+		mBST.insertRC(rc, "E");
+		mBST.setLC(rclc, "F");
+
+		// for (int i = 0; i < 500; i++) {
+		// Node<String> node = mBST.insertRC(rclc, "G");
+		// rclc = node;
+		// }
+
+		// mBST.removeRCCompletely(mBST.getRoot());
+
+		// System.out.println("H:" + mBST.getHeight());
+		// mBST.traversePre();
+		// mBST.traversePreNR1();
+		// mBST.traversePreNR2();
+		// mBST.traverseIn();
+		// mBST.traverseInNR();
+		// mBST.traversePost();
+		// mBST.traversePostNR1();
+		// mBST.traversePostNR2();
+		mBST.traverseLevel();
+
 	}
 
 	public static void printArray(String title, int[] array) {

@@ -9,8 +9,8 @@ public class TrackLog {
 	private long startMem;
 	private long endMem;
 	private int memUsage;
-	
-	public TrackLog(String tag){
+
+	public TrackLog(String tag) {
 		this.tag = tag;
 	}
 
@@ -39,7 +39,7 @@ public class TrackLog {
 	}
 
 	public String toString() {
-		return tag + " tooks " + getDuration() + "ms and increased memory " + getMemUsage();
+		return tag + " took " + getDuration() + " ms and increased " + getMemUsage() + " bytes";
 	}
 
 }
