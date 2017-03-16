@@ -507,16 +507,38 @@ public class MyBinarySearchTree<E> implements java.io.Serializable {
 
 	/**
 	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）
+	 * 后序遍历（左-右-中）<br>
+	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
 	 */
 	public void traversePostNR() {
 		if (root == null)
 			throw new NullPointerException("null root!");
 
 		System.out.println("non-recursively post-order traverse:");
-		
-		
-		
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+		Node<E> lastLC = null;// 如果该节点有右子树，遍历其右子树之前先暂存该节点。
+
+		while (node != null || bin.size() > 0) {
+			while (node != null) {
+				bin.push(node);
+				node = node.lChild;
+			}
+
+			node = bin.peek();
+
+			// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
+			if (node.rChild == null || node.rChild == lastLC) {
+				if (node.data == null)
+					System.out.print("null ");
+				else
+					System.out.print(node.data + " ");
+				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.rChild == lastLC
+				bin.pop();// 打印过就从栈里弹出
+				node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
+			} else
+				node = node.rChild;
+		}
 		System.out.println("\n");
 	}
 
