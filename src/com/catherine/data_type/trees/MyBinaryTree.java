@@ -355,9 +355,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			node = null;
 
 			System.out.print("\n");
-
 		}
-
 	}
 
 	/**
