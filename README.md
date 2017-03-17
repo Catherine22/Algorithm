@@ -77,6 +77,14 @@ Algorithms
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
+
+## Graph
+
+### Undirected Graph
+
+### Directed Graph
+
+
 ## Reference
   - [Algorithms, 4th Edition]
 

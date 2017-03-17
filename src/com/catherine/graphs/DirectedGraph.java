@@ -55,4 +55,7 @@ public class DirectedGraph {
 			this.weight = weight;
 		}
 	}
+
+	public void show() {
+	}
 }
