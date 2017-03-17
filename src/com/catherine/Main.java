@@ -11,6 +11,8 @@ import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.data_type.trees.MyBinaryTree;
 import com.catherine.data_type.trees.MyBinaryTree.Node;
+import com.catherine.graphs.DirectedGraph;
+import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -162,20 +164,18 @@ public class Main {
 		// System.out.println(b1 + "");
 
 		// Tree
-		MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
-		Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
-		mBT.insertRC(lc, "C");
-		Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
-		Node<String> rclc = mBT.insertLC(rc, "D");
-		mBT.insertRC(rc, "E");
-		mBT.setLC(rclc, "F");
+		// MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
+		// Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
+		// mBT.insertRC(lc, "C");
+		// Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
+		// Node<String> rclc = mBT.insertLC(rc, "D");
+		// mBT.insertRC(rc, "E");
+		// mBT.setLC(rclc, "F");
 
 		// for (int i = 0; i < 500; i++) {
 		// Node<String> node = mBT.insertRC(rclc, "G");
 		// rclc = node;
 		// }
-
-		// mBT.removeRCCompletely(mBT.getRoot());
 
 		// System.out.println("H:" + mBT.getHeight());
 		// mBT.traversePre();
@@ -186,8 +186,22 @@ public class Main {
 		// mBT.traversePost();
 		// mBT.traversePostNR1();
 		// mBT.traversePostNR2();
-		mBT.traverseLevel();
+		// mBT.traverseLevel();
 
+		// Graph
+		DirectedGraph<String> dGraph = new DirectedGraph<>();
+		Vertex<String> va = dGraph.addVertex("A");
+		Vertex<String> vb = dGraph.addVertex("B");
+		Vertex<String> vc = dGraph.addVertex("C");
+
+		dGraph.addEdge(va, vb);
+		dGraph.addEdge(vb, vc);
+		dGraph.addEdge(va, vc);
+		
+		dGraph.setVertex(0, "a");
+		dGraph.setVertex(1, "b");
+		dGraph.setVertex(2, "c");
+		System.out.println(dGraph.toString());
 	}
 
 	public static void printArray(String title, int[] array) {
