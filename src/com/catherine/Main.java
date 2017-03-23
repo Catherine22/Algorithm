@@ -191,17 +191,19 @@ public class Main {
 		// Graph
 		DirectedGraph<String> dGraph = new DirectedGraph<>();
 		Vertex<String> va = dGraph.addVertex("A");
-		Vertex<String> vb = dGraph.addVertex("B");
 		Vertex<String> vc = dGraph.addVertex("C");
+		Vertex<String> vb = dGraph.addVertex(1, "B");
 
 		dGraph.addEdge(va, vb);
 		dGraph.addEdge(vb, vc);
 		dGraph.addEdge(va, vc);
-		
+
 		dGraph.setVertex(0, "a");
 		dGraph.setVertex(1, "b");
 		dGraph.setVertex(2, "c");
 		System.out.println(dGraph.toString());
+		System.out.println("size:" + dGraph.size());
+		System.out.println(dGraph.nextNbr(vb).toString());
 	}
 
 	public static void printArray(String title, int[] array) {

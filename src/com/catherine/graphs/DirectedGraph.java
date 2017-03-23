@@ -16,7 +16,7 @@ public class DirectedGraph<E> {
 	/**
 	 * 顶点集合
 	 */
-	private Vertex<E>[] vertexs;
+	private Vertex<E>[] vertexes;
 	/**
 	 * 邻接关系矩阵
 	 */
@@ -32,7 +32,7 @@ public class DirectedGraph<E> {
 		if (vertexNum <= 0)
 			throw new IllegalArgumentException("Vertex number should be more than 0! Illegal capacity: " + vertexNum);
 		else {
-			vertexs = new Vertex[vertexNum];
+			vertexes = new Vertex[vertexNum];
 			adjMatrix = new boolean[vertexNum][vertexNum];
 		}
 	}
@@ -63,6 +63,13 @@ public class DirectedGraph<E> {
 			fTime = -1;
 			parent = null;
 			priority = Integer.MAX_VALUE;
+		}
+
+		public String toString() {
+			if (data == null)
+				return String.format("{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d}", "Null data", indegree,
+						outdegree);
+			return String.format("{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d}", data, indegree, outdegree);
 		}
 	}
 
@@ -98,7 +105,7 @@ public class DirectedGraph<E> {
 	public Vertex<E> addVertex(E data) {
 		Vertex<E> v = new Vertex<>(data);
 		ensureCapacity(size + 1);// Increments modCount
-		vertexs[size++] = v;
+		vertexes[size++] = v;
 		return v;
 	}
 
@@ -114,9 +121,12 @@ public class DirectedGraph<E> {
 	public Vertex<E> addVertex(int index, E data) {
 		if (!isPositionIndex(index))
 			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-
-
-		return null;
+		ensureCapacity(size + 1);// Increments modCount
+		System.arraycopy(vertexes, index, vertexes, index + 1, size - index);
+		Vertex<E> v = new Vertex<>(data);
+		vertexes[index] = v;
+		size++;
+		return v;
 	}
 
 	/**
@@ -135,11 +145,11 @@ public class DirectedGraph<E> {
 		if (index == size) {
 			Vertex<E> v = new Vertex<>(data);
 			ensureCapacity(++size);// Increments modCount
-			vertexs[index] = v;
+			vertexes[index] = v;
 		} else
-			vertexs[index].data = data;
+			vertexes[index].data = data;
 
-		return vertexs[index];
+		return vertexes[index];
 	}
 
 	/**
@@ -167,7 +177,7 @@ public class DirectedGraph<E> {
 
 	public int indexOf(Vertex<E> v) {
 		for (int i = 0; i < size; i++) {
-			if (vertexs[i] == v)
+			if (vertexes[i] == v)
 				return i;
 		}
 		return -1;
@@ -184,7 +194,7 @@ public class DirectedGraph<E> {
 	 *            指定的最小所需容量
 	 */
 	public void ensureCapacity(int minCapacity) {
-		if (minCapacity - vertexs.length > 0)
+		if (minCapacity - vertexes.length > 0)
 			grow(minCapacity);
 	}
 
@@ -202,13 +212,13 @@ public class DirectedGraph<E> {
 	 *            最小所需容量
 	 */
 	private void grow(int minCapacity) {
-		int oldCapacity = vertexs.length;
+		int oldCapacity = vertexes.length;
 		int newCapacity = oldCapacity + oldCapacity >> 1;
 		if (newCapacity - minCapacity < 0)// 扩容后还是不够
 			newCapacity = minCapacity;
 		if (newCapacity - MAX_ARRAY_SIZE > 0)// 扩容后超越整数上限，设置长度为上限
 			newCapacity = hugeCapacity(minCapacity);
-		vertexs = Arrays.copyOf(vertexs, newCapacity);
+		vertexes = Arrays.copyOf(vertexes, newCapacity);
 		adjMatrix = Arrays.copyOf(adjMatrix, newCapacity);
 	}
 
@@ -259,23 +269,30 @@ public class DirectedGraph<E> {
 		return (size == 0);
 	}
 
-	public Vertex nextNbr() {
+	/**
+	 * 取得邻边
+	 * 
+	 * @param v
+	 *            被检查的节点
+	 * @return 邻边或是null表示没有邻边
+	 */
+	public Vertex<?> nextNbr(Vertex<E> v) {
+		for (int i = 0; i < size; i++) {
+			if (adjMatrix[indexOf(v)][i] == true)
+				return vertexes[i];
+		}
 		return null;
-	}
-
-	public Vertex getFirstNbr() {
-		return nextNbr();
 	}
 
 	public String toString() {
 		StringBuilder sBuilder = new StringBuilder();
 		sBuilder.append("*\t");
 		for (int i = 0; i < size; i++) {
-			sBuilder.append(vertexs[i].data + "\t");
+			sBuilder.append(vertexes[i].data + "\t");
 		}
 		sBuilder.append("\n");
 		for (int i = 0; i < size; i++) {
-			sBuilder.append(vertexs[i].data + "\t");
+			sBuilder.append(vertexes[i].data + "\t");
 			for (int j = 0; j < size; j++) {
 				sBuilder.append(adjMatrix[i][j] + "\t");
 			}

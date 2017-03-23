@@ -83,7 +83,8 @@ Algorithms
 ### Undirected Graph
 
 ### Directed Graph
-
+  - [DirectedGraph]
+  There are two arrays, I collect all vertexes in vertexes[] and adjMatrix[][], a two-dimensional boolean array is using to copy down the edge. For example, if adjMatrix[i][j] is true, it means there's an edge from i to j.
 
 ## Reference
   - [Algorithms, 4th Edition]
@@ -119,4 +120,5 @@ Algorithms
    [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/trees/MyBinaryTree.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
+   [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
