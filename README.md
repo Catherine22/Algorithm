@@ -29,20 +29,19 @@ Algorithms
   > **Tips**
   > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
   > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort before removing duplicates. It's a little like using sort()+unique() in vector on C++. <br>
-  >  <br>
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array to find an element.** If an array contains an element, it'll return where the element is in the array and also return the latest position if there're duplicated elements.
-  - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
-      - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
+  - [Sequence Searching] is used to **search a sorted array to find an element.** If the array contains the element, it'll return where the element is in the array or the latest position if there're duplicated elements.
+  - As I was saying, if the element've never been found, this algorithm would return the index referring to a value(array[index] < element < array[index+1]).
+      - two ways to do binary searching (Usually, binSearch2() which is more efficient than binSearch() is better)
       - Fibonacci Searching
 
 ## List
   - [MyArrayList]
     - Base on array
   - [MyLinkedList]
-    - Base on node, a user-defined Object including a predecessor, a value, and a successor.
+    - Base on the node, a user-defined Object including a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
@@ -60,7 +59,6 @@ Algorithms
 
 ## Tree
   - Performance
-
 
 |    | vector | list | tree |
 | ---- | ---- | ---- | ---- |
@@ -84,10 +82,11 @@ Algorithms
 
 ### Directed Graph
   - [DirectedGraph]
-  There are two arrays, I collect all vertexes in vertexes[] and adjMatrix[][], a two-dimensional boolean array is using to copy down the edge. For example, if adjMatrix[i][j] is true, it means there's an edge from i to j.
+  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional boolean array. For example, if adjMatrix[i][j] is true, it means there's an edge from i to j.
 
 ## Reference
   - [Algorithms, 4th Edition]
+  - [数据结构学习网]
 
 ## License
 
@@ -122,3 +121,4 @@ Algorithms
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
+   [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>

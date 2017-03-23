@@ -165,6 +165,8 @@ public class DirectedGraph<E> {
 			throw new NullPointerException("null begin vertex!");
 		if (isVertexNull(target))
 			throw new NullPointerException("null target vertex!");
+		if (begin == target)
+			throw new IllegalArgumentException("You can't make a vertex point to itself.");
 
 		// 如果已经建立链接则忽略
 		if (adjMatrix[indexOf(begin)][indexOf(target)] != true) {
