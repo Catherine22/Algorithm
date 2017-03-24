@@ -1,6 +1,14 @@
 package com.catherine.graphs;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.TimeZone;
+
+import com.catherine.data_type.trees.MyBinaryTree.Node;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 /**
  * 图包含两要素：顶点+边<br>
@@ -66,10 +74,20 @@ public class DirectedGraph<E> {
 		}
 
 		public String toString() {
+			String statusString = "UNDISCOVERED";
+			if (status == Status.DISCOVERED)
+				statusString = "DISCOVERED";
+			else if (status == Status.VISITED)
+				statusString = "VISITED";
+
 			if (data == null)
-				return String.format("{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d}", "Null data", indegree,
-						outdegree);
-			return String.format("{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d}", data, indegree, outdegree);
+				return String.format(
+						"{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d, \"status\": \"%s\", \"dTime\": %d, \"fTime\": %d, \"priority\": %d}",
+						"Null data", indegree, outdegree, statusString, dTime, fTime, priority);
+
+			return String.format(
+					"{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d, \"status\": \"%s\", \"dTime\": %d, \"fTime\": %d, \"priority\": %d}",
+					data, indegree, outdegree, statusString, dTime, fTime, priority);
 		}
 	}
 
@@ -177,6 +195,158 @@ public class DirectedGraph<E> {
 		}
 	}
 
+	/**
+	 * 取得第n个邻边
+	 * 
+	 * @param v
+	 *            被检查的节点
+	 * @param number
+	 *            第n个
+	 * @return 邻边或是null表示没有邻边
+	 */
+	public Vertex<E> nextNbr(Vertex<E> v, int number) {
+		// if (isVertexNull(v))
+		// throw new NullPointerException("null begin vertex!");
+		//
+		// if (number < 1 || number > size - 1)
+		// throw new IndexOutOfBoundsException("number should be less then
+		// size-1 and more then 0.");
+
+		for (int i = 0; i < size; i++) {
+			if (adjMatrix[indexOf(v)][i] == true) {
+				number--;
+				if (number == 0)
+					return vertexes[i];
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 取得邻边
+	 * 
+	 * @param v
+	 *            被检查的节点
+	 * @return 邻边或是null表示没有邻边
+	 */
+	public Vertex<E> firstNbr(Vertex<E> v) {
+		return nextNbr(v, 1);
+	}
+
+	/**
+	 * 广度优先搜索，做法类似二叉树的阶层走访<br>
+	 * 当一顶点所有对外链接的顶点都找出来后，状态变成VISITED<br>
+	 * 
+	 * @param begin
+	 */
+	public void bfs(Vertex<E> begin) {
+		if (isVertexNull(begin))
+			throw new NullPointerException("null begin vertex!");
+
+		System.out.println("started at " + unixToDataString(getUnixtime()));
+
+		Queue<Vertex<E>> parent = new LinkedList<>();
+		Queue<Vertex<E>> siblings = new LinkedList<>();
+		Vertex<E> vertex = begin;
+
+		int level = 0;
+		parent.offer(vertex);
+		while (vertex != null || !parent.isEmpty()) {
+			System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				vertex = parent.poll();
+				if (vertex.status != Vertex.Status.VISITED) {
+					vertex.dTime = getUnixtime();
+					vertex.status = Vertex.Status.DISCOVERED;
+
+					System.out.print(vertex.data + " ");
+
+					if (vertex.outdegree > 0) {
+						int sibHeader = 1;
+						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
+						while (sibV != null) {
+							siblings.offer(sibV);
+							sibV = nextNbr(vertex, sibHeader++);
+						}
+					}
+					vertex.status = Vertex.Status.VISITED;
+					vertex.fTime = getUnixtime();
+				}
+			}
+
+			for (Vertex<E> v : siblings)
+				parent.offer(v);
+			siblings.clear();
+			vertex = null;
+			System.out.print("\n");
+		}
+
+		System.out.println("finished at " + unixToDataString(getUnixtime()));
+	}
+
+	/**
+	 * 清除bfs过后的数值<br>
+	 * 其实就是再做一次bfs，但是把status回归UNDISCOVERED，dTime和fTime回复-1（预设值）
+	 * 
+	 * 
+	 * @param begin
+	 */
+	public void deBfs(Vertex<E> begin) {
+		if (isVertexNull(begin))
+			throw new NullPointerException("null begin vertex!");
+
+//		System.out.println("started at " + unixToDataString(getUnixtime()));
+
+		Queue<Vertex<E>> parent = new LinkedList<>();
+		Queue<Vertex<E>> siblings = new LinkedList<>();
+		Vertex<E> vertex = begin;
+
+//		int level = 0;
+		parent.offer(vertex);
+		while (vertex != null || !parent.isEmpty()) {
+//			System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				vertex = parent.poll();
+				if (vertex.status != Vertex.Status.UNDISCOVERED) {
+					vertex.dTime = -1;
+					vertex.status = Vertex.Status.DISCOVERED;
+					System.out.print(vertex.data + " ");
+					if (vertex.outdegree > 0) {
+						int sibHeader = 1;
+						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
+						while (sibV != null) {
+							siblings.offer(sibV);
+							sibV = nextNbr(vertex, sibHeader++);
+						}
+					}
+					vertex.status = Vertex.Status.UNDISCOVERED;
+					vertex.fTime = -1;
+				}
+			}
+
+			for (Vertex<E> v : siblings)
+				parent.offer(v);
+			siblings.clear();
+			vertex = null;
+//			System.out.print("\n");
+		}
+
+//		System.out.println("finished at " + unixToDataString(getUnixtime()));
+	}
+
+	private int getUnixtime() {
+		return (int) (System.currentTimeMillis() / 1000L);
+	}
+
+	private String unixToDataString(int unixtime) {
+		Date date = new Date(unixtime * 1000L);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+		return sdf.format(date);
+	}
+
 	public int indexOf(Vertex<E> v) {
 		for (int i = 0; i < size; i++) {
 			if (vertexes[i] == v)
@@ -269,21 +439,6 @@ public class DirectedGraph<E> {
 
 	public boolean isEmpty() {
 		return (size == 0);
-	}
-
-	/**
-	 * 取得邻边
-	 * 
-	 * @param v
-	 *            被检查的节点
-	 * @return 邻边或是null表示没有邻边
-	 */
-	public Vertex<?> nextNbr(Vertex<E> v) {
-		for (int i = 0; i < size; i++) {
-			if (adjMatrix[indexOf(v)][i] == true)
-				return vertexes[i];
-		}
-		return null;
 	}
 
 	public String toString() {

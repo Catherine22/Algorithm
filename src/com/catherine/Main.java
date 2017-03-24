@@ -193,17 +193,26 @@ public class Main {
 		Vertex<String> va = dGraph.addVertex("A");
 		Vertex<String> vc = dGraph.addVertex("C");
 		Vertex<String> vb = dGraph.addVertex(1, "B");
+		Vertex<String> vd = dGraph.addVertex("D");
+		Vertex<String> ve = dGraph.addVertex("E");
 
 		dGraph.addEdge(va, vb);
 		dGraph.addEdge(vb, vc);
+		dGraph.addEdge(vb, ve);
 		dGraph.addEdge(va, vc);
+		dGraph.addEdge(vc, vd);
+		dGraph.addEdge(vd, ve);
+		dGraph.addEdge(vc, ve);
 
-		dGraph.setVertex(0, "a");
-		dGraph.setVertex(1, "b");
-		dGraph.setVertex(2, "c");
+//		dGraph.setVertex(0, "a");
+//		dGraph.setVertex(1, "b");
+//		dGraph.setVertex(2, "c");
 		System.out.println(dGraph.toString());
-		System.out.println("size:" + dGraph.size());
-		System.out.println(dGraph.nextNbr(vb).toString());
+		dGraph.bfs(va);
+		dGraph.deBfs(va);
+		dGraph.bfs(va);
+//		System.out.println("size:" + dGraph.size());
+//		System.out.println(dGraph.nextNbr(va, 2).toString());
 	}
 
 	public static void printArray(String title, int[] array) {

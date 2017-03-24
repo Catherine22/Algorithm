@@ -10,7 +10,7 @@ Algorithms
 - Quick sort
 - [Selection sort]
 
-## Simulate Turing Machine
+## Simulating Turing Machine
   - [1 + a positive integer]
 
 ## [Sequence]
@@ -57,7 +57,14 @@ Algorithms
 ## Queue
   -
 
-## Tree
+## Graph
+
+Traversal - to simplify a graph data structure and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
+
+
+### Tree
+
+  - It's a special case of graphs.
   - Performance
 
 |    | vector | list | tree |
@@ -76,12 +83,14 @@ Algorithms
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
 
-## Graph
 
 ### Undirected Graph
+  - [UndirectedGraph]
 
 ### Directed Graph
+  - Breadth-first search (BFS) - Choose a vertex being the first and start to visit each vertex in a graph. It's just like level order traversal of the Tree.
   - [DirectedGraph]
+  
   > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional boolean array. For example, if adjMatrix[i][j] is true, it means there's an edge from i to j.
 
 ## Reference
@@ -120,5 +129,6 @@ Algorithms
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
+   [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>
