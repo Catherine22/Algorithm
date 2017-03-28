@@ -26,10 +26,11 @@ public class DirectedGraph<E> {
 	 */
 	private Vertex<E>[] vertexes;
 	/**
-	 * 邻接关系矩阵
+	 * 邻接关系矩阵，只要不是null代表有边
 	 */
-	private boolean[][] adjMatrix;
+	private Edge<E>[][] adjMatrix;
 	private int size;
+	private int edgeCount;
 
 	public DirectedGraph() {
 		this(10);
@@ -41,7 +42,7 @@ public class DirectedGraph<E> {
 			throw new IllegalArgumentException("Vertex number should be more than 0! Illegal capacity: " + vertexNum);
 		else {
 			vertexes = new Vertex[vertexNum];
-			adjMatrix = new boolean[vertexNum][vertexNum];
+			adjMatrix = new Edge[vertexNum][vertexNum];
 		}
 	}
 
@@ -111,6 +112,24 @@ public class DirectedGraph<E> {
 			this.weight = weight;
 			this.status = Status.UNDETERMINED;
 		}
+
+		public String toString() {
+			String statusString = "UNDETERMINED";
+			if (status == Status.TREE)
+				statusString = "TREE";
+			else if (status == Status.CROSS)
+				statusString = "CROSS";
+			else if (status == Status.FORWARD)
+				statusString = "FORWARD";
+			else if (status == Status.BACKWARD)
+				statusString = "BACKWARD";
+
+			if (data == null)
+				return String.format("{\"data\": \"%s\", \"weight\": %d, \"status\": \"%s\"}", "Null data", weight,
+						statusString);
+
+			return String.format("{\"data\": \"%s\", \"weight\": %d, \"status\": \"%s\"}", data, weight, statusString);
+		}
 	}
 
 	/**
@@ -179,6 +198,20 @@ public class DirectedGraph<E> {
 	 *            结束顶点
 	 */
 	public void addEdge(Vertex<E> begin, Vertex<E> target) {
+		addEdge(begin, target, null);
+	}
+
+	/**
+	 * 邻接两顶点
+	 * 
+	 * @param begin
+	 *            起始顶点
+	 * @param target
+	 *            结束顶点
+	 * @param data
+	 *            边的数据
+	 */
+	public void addEdge(Vertex<E> begin, Vertex<E> target, E data) {
 		if (isVertexNull(begin))
 			throw new NullPointerException("null begin vertex!");
 		if (isVertexNull(target))
@@ -187,12 +220,80 @@ public class DirectedGraph<E> {
 			throw new IllegalArgumentException("You can't make a vertex point to itself.");
 
 		// 如果已经建立链接则忽略
-		if (adjMatrix[indexOf(begin)][indexOf(target)] != true) {
-			adjMatrix[indexOf(begin)][indexOf(target)] = true;
+		if (adjMatrix[indexOf(begin)][indexOf(target)] == null) {
+			Edge<E> edge = new Edge<>(data);
+			adjMatrix[indexOf(begin)][indexOf(target)] = edge;
+			edgeCount++;
 
 			begin.outdegree++;
 			target.indegree++;
 		}
+	}
+	
+	/**
+	 * 移除边
+	 * @param begin
+	 *            起始顶点
+	 * @param target
+	 *            结束顶点
+	 */
+	public void removeEdge(Vertex<E> begin, Vertex<E> target){
+		if (isVertexNull(begin))
+			throw new NullPointerException("null begin vertex!");
+		if (isVertexNull(target))
+			throw new NullPointerException("null target vertex!");
+		if (begin == target)
+			throw new IllegalArgumentException("You can't make a vertex point to itself.");
+		
+		// 如果已经建立链接则忽略
+		if (adjMatrix[indexOf(begin)][indexOf(target)] != null) {
+			adjMatrix[indexOf(begin)][indexOf(target)] = null;
+			edgeCount--;
+
+			begin.outdegree--;
+			target.indegree--;
+		}
+		
+	}
+
+	/**
+	 * 检查两顶点间是否有边存在
+	 * 
+	 * @param begin
+	 *            起始顶点
+	 * @param target
+	 *            结束顶点
+	 * @return 是／否
+	 */
+	public boolean existEage(Vertex<E> begin, Vertex<E> target) {
+		if (isVertexNull(begin))
+			throw new NullPointerException("null begin vertex!");
+		if (isVertexNull(target))
+			throw new NullPointerException("null target vertex!");
+		if (begin == target)
+			throw new IllegalArgumentException("You can't make a vertex point to itself.");
+
+		return adjMatrix[indexOf(begin)][indexOf(target)] != null;
+	}
+
+	/**
+	 * 检查两顶点间是否有边存在
+	 * 
+	 * @param begin
+	 *            起始顶点
+	 * @param target
+	 *            结束顶点
+	 * @return 边／null
+	 */
+	public Edge<E> getEage(Vertex<E> begin, Vertex<E> target) {
+		if (isVertexNull(begin))
+			throw new NullPointerException("null begin vertex!");
+		if (isVertexNull(target))
+			throw new NullPointerException("null target vertex!");
+		if (begin == target)
+			throw new IllegalArgumentException("You can't make a vertex point to itself.");
+
+		return adjMatrix[indexOf(begin)][indexOf(target)];
 	}
 
 	/**
@@ -213,7 +314,7 @@ public class DirectedGraph<E> {
 		// size-1 and more then 0.");
 
 		for (int i = 0; i < size; i++) {
-			if (adjMatrix[indexOf(v)][i] == true) {
+			if (adjMatrix[indexOf(v)][i] != null) {
 				number--;
 				if (number == 0)
 					return vertexes[i];
@@ -235,7 +336,8 @@ public class DirectedGraph<E> {
 
 	/**
 	 * 广度优先搜索，做法类似二叉树的阶层走访<br>
-	 * 当一顶点所有对外链接的顶点都找出来后，状态变成VISITED<br>
+	 * 当一顶点所有对外链接的顶点（邻居）都找出来后，状态变成VISITED<br>
+	 * 访问过的边要变成TREE的状态。
 	 * 
 	 * @param begin
 	 */
@@ -287,7 +389,8 @@ public class DirectedGraph<E> {
 
 	/**
 	 * 清除bfs过后的数值<br>
-	 * 其实就是再做一次bfs，但是把status回归UNDISCOVERED，dTime和fTime回复-1（预设值）
+	 * 其实就是再做一次bfs，但是把status回归UNDISCOVERED，dTime和fTime回复-1（预设值）<br>
+	 * 访问过的边要变成UNDETERMINED的状态。
 	 * 
 	 * 
 	 * @param begin
@@ -296,16 +399,16 @@ public class DirectedGraph<E> {
 		if (isVertexNull(begin))
 			throw new NullPointerException("null begin vertex!");
 
-//		System.out.println("started at " + unixToDataString(getUnixtime()));
+		// System.out.println("started at " + unixToDataString(getUnixtime()));
 
 		Queue<Vertex<E>> parent = new LinkedList<>();
 		Queue<Vertex<E>> siblings = new LinkedList<>();
 		Vertex<E> vertex = begin;
 
-//		int level = 0;
+		// int level = 0;
 		parent.offer(vertex);
 		while (vertex != null || !parent.isEmpty()) {
-//			System.out.print("level " + level++ + ",\t");
+			// System.out.print("level " + level++ + ",\t");
 
 			while (!parent.isEmpty()) {
 				vertex = parent.poll();
@@ -330,10 +433,10 @@ public class DirectedGraph<E> {
 				parent.offer(v);
 			siblings.clear();
 			vertex = null;
-//			System.out.print("\n");
+			// System.out.print("\n");
 		}
 
-//		System.out.println("finished at " + unixToDataString(getUnixtime()));
+		// System.out.println("finished at " + unixToDataString(getUnixtime()));
 	}
 
 	private int getUnixtime() {
@@ -437,13 +540,18 @@ public class DirectedGraph<E> {
 		return size;
 	}
 
+	/** 返回此列表中的边的个数 */
+	public int edgeCount() {
+		return edgeCount;
+	}
+
 	public boolean isEmpty() {
 		return (size == 0);
 	}
 
 	public String toString() {
 		StringBuilder sBuilder = new StringBuilder();
-		sBuilder.append("*\t");
+		sBuilder.append("Edges\t");
 		for (int i = 0; i < size; i++) {
 			sBuilder.append(vertexes[i].data + "\t");
 		}
@@ -451,7 +559,10 @@ public class DirectedGraph<E> {
 		for (int i = 0; i < size; i++) {
 			sBuilder.append(vertexes[i].data + "\t");
 			for (int j = 0; j < size; j++) {
-				sBuilder.append(adjMatrix[i][j] + "\t");
+				if (adjMatrix[i][j] == null)
+					sBuilder.append("X" + "\t");
+				else
+					sBuilder.append("O"/* adjMatrix[i][j].data */ + "\t");
 			}
 			sBuilder.append("\n");
 		}

@@ -203,11 +203,14 @@ public class Main {
 		dGraph.addEdge(vc, vd);
 		dGraph.addEdge(vd, ve);
 		dGraph.addEdge(vc, ve);
+		dGraph.removeEdge(vc, va);
+		dGraph.removeEdge(vc, ve);
 
 //		dGraph.setVertex(0, "a");
 //		dGraph.setVertex(1, "b");
 //		dGraph.setVertex(2, "c");
 		System.out.println(dGraph.toString());
+		System.out.println(dGraph.edgeCount());
 		dGraph.bfs(va);
 		dGraph.deBfs(va);
 		dGraph.bfs(va);
