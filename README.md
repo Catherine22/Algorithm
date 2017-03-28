@@ -90,8 +90,9 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
 ### Directed Graph
   - Breadth-first search (BFS) - Choose a vertex being the first and start to visit each vertex in a graph. It's just like level order traversal of the Tree.
   - [DirectedGraph]
-  
-  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional boolean array. For example, if adjMatrix[i][j] is true, it means there's an edge from i to j.
+
+  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
+  > An Edge<E> is a user-defined class, it contains data, weight and status.
 
 ## Reference
   - [Algorithms, 4th Edition]

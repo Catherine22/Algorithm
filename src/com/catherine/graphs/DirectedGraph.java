@@ -8,6 +8,8 @@ import java.util.Queue;
 import java.util.TimeZone;
 
 import com.catherine.data_type.trees.MyBinaryTree.Node;
+import com.catherine.utils.Analysis;
+import com.catherine.utils.TrackLog;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 /**
@@ -75,20 +77,14 @@ public class DirectedGraph<E> {
 		}
 
 		public String toString() {
-			String statusString = "UNDISCOVERED";
-			if (status == Status.DISCOVERED)
-				statusString = "DISCOVERED";
-			else if (status == Status.VISITED)
-				statusString = "VISITED";
-
 			if (data == null)
 				return String.format(
 						"{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d, \"status\": \"%s\", \"dTime\": %d, \"fTime\": %d, \"priority\": %d}",
-						"Null data", indegree, outdegree, statusString, dTime, fTime, priority);
+						"Null data", indegree, outdegree, status, dTime, fTime, priority);
 
 			return String.format(
 					"{\"data\": \"%s\", \"indegree\": %d, \"outdegree\": %d, \"status\": \"%s\", \"dTime\": %d, \"fTime\": %d, \"priority\": %d}",
-					data, indegree, outdegree, statusString, dTime, fTime, priority);
+					data, indegree, outdegree, status, dTime, fTime, priority);
 		}
 	}
 
@@ -114,21 +110,11 @@ public class DirectedGraph<E> {
 		}
 
 		public String toString() {
-			String statusString = "UNDETERMINED";
-			if (status == Status.TREE)
-				statusString = "TREE";
-			else if (status == Status.CROSS)
-				statusString = "CROSS";
-			else if (status == Status.FORWARD)
-				statusString = "FORWARD";
-			else if (status == Status.BACKWARD)
-				statusString = "BACKWARD";
-
 			if (data == null)
 				return String.format("{\"data\": \"%s\", \"weight\": %d, \"status\": \"%s\"}", "Null data", weight,
-						statusString);
+						status);
 
-			return String.format("{\"data\": \"%s\", \"weight\": %d, \"status\": \"%s\"}", data, weight, statusString);
+			return String.format("{\"data\": \"%s\", \"weight\": %d, \"status\": \"%s\"}", data, weight, status);
 		}
 	}
 
@@ -229,22 +215,23 @@ public class DirectedGraph<E> {
 			target.indegree++;
 		}
 	}
-	
+
 	/**
 	 * 移除边
+	 * 
 	 * @param begin
 	 *            起始顶点
 	 * @param target
 	 *            结束顶点
 	 */
-	public void removeEdge(Vertex<E> begin, Vertex<E> target){
+	public void removeEdge(Vertex<E> begin, Vertex<E> target) {
 		if (isVertexNull(begin))
 			throw new NullPointerException("null begin vertex!");
 		if (isVertexNull(target))
 			throw new NullPointerException("null target vertex!");
 		if (begin == target)
 			throw new IllegalArgumentException("You can't make a vertex point to itself.");
-		
+
 		// 如果已经建立链接则忽略
 		if (adjMatrix[indexOf(begin)][indexOf(target)] != null) {
 			adjMatrix[indexOf(begin)][indexOf(target)] = null;
@@ -253,7 +240,7 @@ public class DirectedGraph<E> {
 			begin.outdegree--;
 			target.indegree--;
 		}
-		
+
 	}
 
 	/**
@@ -344,8 +331,8 @@ public class DirectedGraph<E> {
 	public void bfs(Vertex<E> begin) {
 		if (isVertexNull(begin))
 			throw new NullPointerException("null begin vertex!");
-
-		System.out.println("started at " + unixToDataString(getUnixtime()));
+		TrackLog tLog = new TrackLog("BFS");
+		Analysis.startTracking(tLog);
 
 		Queue<Vertex<E>> parent = new LinkedList<>();
 		Queue<Vertex<E>> siblings = new LinkedList<>();
@@ -368,6 +355,7 @@ public class DirectedGraph<E> {
 						int sibHeader = 1;
 						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
 						while (sibV != null) {
+							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = Edge.Status.TREE;
 							siblings.offer(sibV);
 							sibV = nextNbr(vertex, sibHeader++);
 						}
@@ -384,7 +372,8 @@ public class DirectedGraph<E> {
 			System.out.print("\n");
 		}
 
-		System.out.println("finished at " + unixToDataString(getUnixtime()));
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	/**
@@ -398,8 +387,6 @@ public class DirectedGraph<E> {
 	public void deBfs(Vertex<E> begin) {
 		if (isVertexNull(begin))
 			throw new NullPointerException("null begin vertex!");
-
-		// System.out.println("started at " + unixToDataString(getUnixtime()));
 
 		Queue<Vertex<E>> parent = new LinkedList<>();
 		Queue<Vertex<E>> siblings = new LinkedList<>();
@@ -415,11 +402,12 @@ public class DirectedGraph<E> {
 				if (vertex.status != Vertex.Status.UNDISCOVERED) {
 					vertex.dTime = -1;
 					vertex.status = Vertex.Status.DISCOVERED;
-					System.out.print(vertex.data + " ");
+					// System.out.print(vertex.data + " ");
 					if (vertex.outdegree > 0) {
 						int sibHeader = 1;
 						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
 						while (sibV != null) {
+							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = Edge.Status.UNDETERMINED;
 							siblings.offer(sibV);
 							sibV = nextNbr(vertex, sibHeader++);
 						}
@@ -435,8 +423,6 @@ public class DirectedGraph<E> {
 			vertex = null;
 			// System.out.print("\n");
 		}
-
-		// System.out.println("finished at " + unixToDataString(getUnixtime()));
 	}
 
 	private int getUnixtime() {
@@ -562,7 +548,7 @@ public class DirectedGraph<E> {
 				if (adjMatrix[i][j] == null)
 					sBuilder.append("X" + "\t");
 				else
-					sBuilder.append("O"/* adjMatrix[i][j].data */ + "\t");
+					sBuilder.append(/* "O" */adjMatrix[i][j].status + "\t");
 			}
 			sBuilder.append("\n");
 		}
