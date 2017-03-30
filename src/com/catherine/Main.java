@@ -190,22 +190,38 @@ public class Main {
 
 		// Graph
 		DirectedGraph<String> dGraph = new DirectedGraph<>();
+//		Vertex<String> va = dGraph.addVertex("A");
+//		Vertex<String> vc = dGraph.addVertex("C");
+//		Vertex<String> vb = dGraph.addVertex(1, "B");
+//		Vertex<String> vd = dGraph.addVertex("D");
+//		Vertex<String> ve = dGraph.addVertex("E");
+//
+//		dGraph.addEdge(va, vb);
+//		dGraph.addEdge(vb, vc);
+//		dGraph.addEdge(vb, ve);
+//		dGraph.addEdge(va, vc);
+//		dGraph.addEdge(vc, vd);
+//		dGraph.addEdge(vd, ve);
+//		dGraph.addEdge(vc, ve);
+//		dGraph.removeEdge(vc, va);
+//		dGraph.removeEdge(vc, ve);
 		Vertex<String> va = dGraph.addVertex("A");
+		Vertex<String> vb = dGraph.addVertex("B");
 		Vertex<String> vc = dGraph.addVertex("C");
-		Vertex<String> vb = dGraph.addVertex(1, "B");
 		Vertex<String> vd = dGraph.addVertex("D");
 		Vertex<String> ve = dGraph.addVertex("E");
-
+		Vertex<String> vf = dGraph.addVertex("F");
+		Vertex<String> vg = dGraph.addVertex("G");
 		dGraph.addEdge(va, vb);
-		dGraph.addEdge(vb, vc);
-		dGraph.addEdge(vb, ve);
 		dGraph.addEdge(va, vc);
-		dGraph.addEdge(vc, vd);
-		dGraph.addEdge(vd, ve);
-		dGraph.addEdge(vc, ve);
-		dGraph.removeEdge(vc, va);
-		dGraph.removeEdge(vc, ve);
-
+		dGraph.addEdge(va, vd);
+		dGraph.addEdge(vb, vc);
+		dGraph.addEdge(vb, vd);
+		dGraph.addEdge(vb, vf);
+		dGraph.addEdge(vd, vf);
+		dGraph.addEdge(vd, vg);
+		dGraph.addEdge(vf, vg);
+		
 //		dGraph.setVertex(0, "a");
 //		dGraph.setVertex(1, "b");
 //		dGraph.setVertex(2, "c");
