@@ -320,13 +320,13 @@ public class DirectedGraph<E> {
 	public Vertex<E> firstNbr(Vertex<E> v) {
 		return nextNbr(v, 1);
 	}
-
+	
 	/**
 	 * 广度优先搜索，做法类似二叉树的阶层走访<br>
 	 * 当一顶点所有对外链接的顶点（邻居）都找出来后，状态变成VISITED<br>
-	 * 访问过的边要变成TREE的状态。
+	 * 访问过的边要变成TREE或CROSS的状态，把所有TREE状态的边连起来就是一颗二叉树。
 	 * 
-	 * @param begin
+	 * @param begin 开始顶点（树根）
 	 */
 	public void bfs(Vertex<E> begin) {
 		if (isVertexNull(begin))
@@ -355,8 +355,15 @@ public class DirectedGraph<E> {
 						int sibHeader = 1;
 						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
 						while (sibV != null) {
-							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = Edge.Status.TREE;
-							siblings.offer(sibV);
+							//当目标顶点还没被走访过，连边的状态为TREE，如果已经走访过（表示该顶点已经有走访过自己的其他邻边），状态为CROSS
+							//把所有状态为TREE的边链接起来就是一颗二叉树
+							Edge.Status eStatus = (sibV.status == Vertex.Status.UNDISCOVERED) ? Edge.Status.TREE
+									: Edge.Status.CROSS;
+							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = eStatus;
+							if (sibV.status != Vertex.Status.VISITED) {
+								sibV.status = Vertex.Status.DISCOVERED;
+								siblings.offer(sibV);
+							}
 							sibV = nextNbr(vertex, sibHeader++);
 						}
 					}
@@ -387,33 +394,41 @@ public class DirectedGraph<E> {
 	public void deBfs(Vertex<E> begin) {
 		if (isVertexNull(begin))
 			throw new NullPointerException("null begin vertex!");
+		TrackLog tLog = new TrackLog("deBFS");
+		Analysis.startTracking(tLog);
 
 		Queue<Vertex<E>> parent = new LinkedList<>();
 		Queue<Vertex<E>> siblings = new LinkedList<>();
 		Vertex<E> vertex = begin;
 
-		// int level = 0;
+		int level = 0;
 		parent.offer(vertex);
 		while (vertex != null || !parent.isEmpty()) {
-			// System.out.print("level " + level++ + ",\t");
+			System.out.print("level " + level++ + ",\t");
 
 			while (!parent.isEmpty()) {
 				vertex = parent.poll();
 				if (vertex.status != Vertex.Status.UNDISCOVERED) {
-					vertex.dTime = -1;
+					vertex.dTime = getUnixtime();
 					vertex.status = Vertex.Status.DISCOVERED;
-					// System.out.print(vertex.data + " ");
+
+					System.out.print(vertex.data + " ");
+
 					if (vertex.outdegree > 0) {
 						int sibHeader = 1;
 						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
 						while (sibV != null) {
-							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = Edge.Status.UNDETERMINED;
-							siblings.offer(sibV);
+							Edge.Status eStatus = Edge.Status.UNDETERMINED;
+							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = eStatus;
+							if (sibV.status != Vertex.Status.UNDISCOVERED) {
+								sibV.status = Vertex.Status.DISCOVERED;
+								siblings.offer(sibV);
+							}
 							sibV = nextNbr(vertex, sibHeader++);
 						}
 					}
 					vertex.status = Vertex.Status.UNDISCOVERED;
-					vertex.fTime = -1;
+					vertex.fTime = getUnixtime();
 				}
 			}
 
@@ -421,8 +436,11 @@ public class DirectedGraph<E> {
 				parent.offer(v);
 			siblings.clear();
 			vertex = null;
-			// System.out.print("\n");
+			System.out.print("\n");
 		}
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
 	}
 
 	private int getUnixtime() {

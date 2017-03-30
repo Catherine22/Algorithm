@@ -215,8 +215,9 @@ public class Main {
 		System.out.println(dGraph.toString());
 		System.out.println(dGraph.edgeCount());
 		dGraph.deBfs(va);
-//		System.out.println("size:" + dGraph.size());
-//		System.out.println(dGraph.nextNbr(va, 2).toString());
+		System.out.println(dGraph.toString());
+		System.out.println("size:" + dGraph.size());
+		System.out.println(dGraph.nextNbr(va, 2).toString());
 	}
 
 	public static void printArray(String title, int[] array) {
