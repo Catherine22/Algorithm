@@ -190,28 +190,28 @@ public class Main {
 
 		// Graph
 		DirectedGraph<String> dGraph = new DirectedGraph<>();
-//		Vertex<String> va = dGraph.addVertex("A");
-//		Vertex<String> vc = dGraph.addVertex("C");
-//		Vertex<String> vb = dGraph.addVertex(1, "B");
-//		Vertex<String> vd = dGraph.addVertex("D");
-//		Vertex<String> ve = dGraph.addVertex("E");
-//
-//		dGraph.addEdge(va, vb);
-//		dGraph.addEdge(vb, vc);
-//		dGraph.addEdge(vb, ve);
-//		dGraph.addEdge(va, vc);
-//		dGraph.addEdge(vc, vd);
-//		dGraph.addEdge(vd, ve);
-//		dGraph.addEdge(vc, ve);
-//		dGraph.removeEdge(vc, va);
-//		dGraph.removeEdge(vc, ve);
-		Vertex<String> va = dGraph.addVertex("A");
+		// Vertex<String> va = dGraph.addVertex("A");
+		// Vertex<String> vc = dGraph.addVertex("C");
+		// Vertex<String> vb = dGraph.addVertex(1, "B");
+		// Vertex<String> vd = dGraph.addVertex("D");
+		// Vertex<String> ve = dGraph.addVertex("E");
+		//
+		// dGraph.addEdge(va, vb);
+		// dGraph.addEdge(vb, vc);
+		// dGraph.addEdge(vb, ve);
+		// dGraph.addEdge(va, vc);
+		// dGraph.addEdge(vc, vd);
+		// dGraph.addEdge(vd, ve);
+		// dGraph.addEdge(vc, ve);
+		// dGraph.removeEdge(vc, va);
+		// dGraph.removeEdge(vc, ve);
 		Vertex<String> vb = dGraph.addVertex("B");
 		Vertex<String> vc = dGraph.addVertex("C");
 		Vertex<String> vd = dGraph.addVertex("D");
-		Vertex<String> ve = dGraph.addVertex("E");
+		// Vertex<String> ve = dGraph.addVertex("E");
 		Vertex<String> vf = dGraph.addVertex("F");
 		Vertex<String> vg = dGraph.addVertex("G");
+		Vertex<String> va = dGraph.addVertex("A");
 		dGraph.addEdge(va, vb);
 		dGraph.addEdge(va, vc);
 		dGraph.addEdge(va, vd);
@@ -221,19 +221,26 @@ public class Main {
 		dGraph.addEdge(vd, vf);
 		dGraph.addEdge(vd, vg);
 		dGraph.addEdge(vf, vg);
-		
-//		dGraph.setVertex(0, "a");
-//		dGraph.setVertex(1, "b");
-//		dGraph.setVertex(2, "c");
-		System.out.println(dGraph.toString());
-		System.out.println(dGraph.edgeCount());
-		dGraph.bfs(va);
-		System.out.println(dGraph.toString());
-		System.out.println(dGraph.edgeCount());
-		dGraph.deBfs(va);
-		System.out.println(dGraph.toString());
-		System.out.println("size:" + dGraph.size());
-		System.out.println(dGraph.nextNbr(va, 2).toString());
+
+		// dGraph.setVertex(0, "a");
+		// dGraph.setVertex(1, "b");
+		// dGraph.setVertex(2, "c");
+
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// System.out.println(dGraph.edgeCount());
+		// dGraph.bfs(vb);
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// System.out.println(dGraph.edgeCount());
+		// dGraph.deBfs(vb);
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// System.out.println(dGraph.edgeCount());
+
+		System.out.println("bfs vertex:" + dGraph.bfs().toString());
+		// System.out.println("size:" + dGraph.size());
+		// System.out.println(dGraph.nextNbr(va, 2).toString());
 	}
 
 	public static void printArray(String title, int[] array) {

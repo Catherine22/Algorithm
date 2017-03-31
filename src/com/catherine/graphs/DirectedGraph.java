@@ -320,13 +320,14 @@ public class DirectedGraph<E> {
 	public Vertex<E> firstNbr(Vertex<E> v) {
 		return nextNbr(v, 1);
 	}
-	
+
 	/**
 	 * 广度优先搜索，做法类似二叉树的阶层走访<br>
 	 * 当一顶点所有对外链接的顶点（邻居）都找出来后，状态变成VISITED<br>
 	 * 访问过的边要变成TREE或CROSS的状态，把所有TREE状态的边连起来就是一颗树。
 	 * 
-	 * @param begin 开始顶点（树根）
+	 * @param begin
+	 *            开始顶点（树根）
 	 */
 	public void bfs(Vertex<E> begin) {
 		if (isVertexNull(begin))
@@ -355,8 +356,8 @@ public class DirectedGraph<E> {
 						int sibHeader = 1;
 						Vertex<E> sibV = nextNbr(vertex, sibHeader++);
 						while (sibV != null) {
-							//当目标顶点还没被走访过，连边的状态为TREE，如果已经走访过（表示该顶点已经有走访过自己的其他邻边），状态为CROSS
-							//把所有状态为TREE的边链接起来就是一颗树
+							// 当目标顶点还没被走访过，连边的状态为TREE，如果已经走访过（表示该顶点已经有走访过自己的其他邻边），状态为CROSS
+							// 把所有状态为TREE的边链接起来就是一颗树
 							Edge.Status eStatus = (sibV.status == Vertex.Status.UNDISCOVERED) ? Edge.Status.TREE
 									: Edge.Status.CROSS;
 							adjMatrix[indexOf(vertex)][indexOf(sibV)].status = eStatus;
@@ -441,6 +442,29 @@ public class DirectedGraph<E> {
 
 		Analysis.endTracking(tLog);
 		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 无论整个图有多少联通域，都能确保bfs有遍历整个连通图
+	 * 
+	 * @return 起始顶点
+	 */
+	public Vertex<E> bfs() {
+		int index = -1;
+		boolean visitedWholeGraph = false;
+		do {
+			Vertex<E> vertex = vertexes[++index];
+			System.out.println("YO " + index);
+			deBfs(vertex);
+			bfs(vertex);
+			System.out.println("YO " + vertex.data);
+			// 检查bfs搜索后是否所有边都被找过了（Status.VISITED）
+			for (int i = 0; i < vertexes.length; i++) {
+
+			}
+		} while (!visitedWholeGraph && index < size);
+
+		return vertexes[index];
 	}
 
 	private int getUnixtime() {
@@ -571,5 +595,12 @@ public class DirectedGraph<E> {
 			sBuilder.append("\n");
 		}
 		return sBuilder.toString();
+	}
+
+	public void printVertexes() {
+		System.out.println("vertexes:{");
+		for (int i = 0; i < size; i++)
+			System.out.println(vertexes[i].toString());
+		System.out.println("}\n");
 	}
 }
