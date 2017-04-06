@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.TimeZone;
 
 import com.catherine.data_type.trees.MyBinaryTree.Node;
@@ -476,6 +477,80 @@ public class DirectedGraph<E> {
 			return vertexes[index];
 		else
 			return null;
+	}
+
+	/**
+	 * 深度优先搜索<br>
+	 * 若有尚未访问的邻居，任选一个递归执行DFS，如果邻居都访问过就回到上一个顶点，以此类推直到全部邻居都访问过就返回null
+	 * 
+	 * @param begin
+	 *            开始顶点（树根）
+	 */
+	public void dfs(Vertex<E> begin) {
+		if (isVertexNull(begin))
+			throw new NullPointerException("null begin vertex!");
+		TrackLog tLog = new TrackLog("DFS");
+		Analysis.startTracking(tLog);
+
+		Stack<Vertex<E>> tmpBin = new Stack<>();
+		Vertex<E> vertex = begin;
+		tmpBin.push(vertex);
+		int limit = 10;
+		while (!tmpBin.isEmpty() && vertex != null && limit > 0) {
+			limit--;
+			System.out.println(vertex.toString());
+			if (vertex.status == Vertex.Status.UNDISCOVERED) {
+				vertex.status = Vertex.Status.DISCOVERED;
+				vertex.dTime = getUnixtime();
+			}
+
+			int childCount = vertex.outdegree;
+			while (childCount > 0) {
+				Vertex<E> child = getChild(vertex, childCount--);
+				System.out.println(child.data);
+				if (child.status == Vertex.Status.UNDISCOVERED) {
+					child.status = Vertex.Status.DISCOVERED;
+					child.dTime = getUnixtime();
+					childCount = child.outdegree;
+					tmpBin.push(child);
+					vertex = child;
+				} else if (child.status == Vertex.Status.DISCOVERED) {
+					childCount = child.outdegree;
+					tmpBin.push(child);
+					vertex = child;
+				} else if (child.status == Vertex.Status.VISITED)
+					child = getChild(vertex, childCount--);
+
+			}
+			System.out.println(tmpBin.toString());
+			vertex = tmpBin.pop();
+			System.out.println(vertex.data + " visited");
+			vertex.status = Vertex.Status.VISITED;
+			vertex.fTime = getUnixtime();
+			vertex = tmpBin.pop();
+		}
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	public Vertex<E> getChild(Vertex<E> parent, int index) {
+		if (isVertexNull(parent))
+			throw new NullPointerException("null begin vertex!");
+
+		if (index < 0 || index > parent.outdegree)
+			outOfBoundsMsg(index);
+
+		int pos = indexOf(parent);
+		int header = -1;
+		while (index > 0 && header < size) {
+			if (adjMatrix[pos][++header] != null)
+				index--;
+		}
+		if (index > 0)
+			return null;
+		else
+			return vertexes[header];
 	}
 
 	private int getUnixtime() {

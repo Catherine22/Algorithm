@@ -208,7 +208,7 @@ public class Main {
 		Vertex<String> vb = dGraph.addVertex("B");
 		Vertex<String> vc = dGraph.addVertex("C");
 		Vertex<String> vd = dGraph.addVertex("D");
-//		 Vertex<String> ve = dGraph.addVertex("E");
+		// Vertex<String> ve = dGraph.addVertex("E");
 		Vertex<String> vf = dGraph.addVertex("F");
 		Vertex<String> vg = dGraph.addVertex("G");
 		Vertex<String> va = dGraph.addVertex("A");
@@ -226,6 +226,10 @@ public class Main {
 		// dGraph.setVertex(1, "b");
 		// dGraph.setVertex(2, "c");
 
+		// System.out.println("size:" + dGraph.size());
+		// System.out.println(dGraph.nextNbr(va, 2).toString());
+		// System.out.println(dGraph.getChild(vb, 3).toString());
+
 		// bfs
 		// System.out.println(dGraph.toString());
 		// dGraph.printVertexes();
@@ -238,12 +242,16 @@ public class Main {
 		// System.out.println(dGraph.toString());
 		// dGraph.printVertexes();
 		// System.out.println(dGraph.edgeCount());
-
-		 System.out.println("size:" + dGraph.size());
-		 System.out.println(dGraph.nextNbr(va, 2).toString());
-		
+		//
 		// bfs连通图专用
-		System.out.println("bfs vertex:" + dGraph.bfs().toString());
+		// System.out.println("bfs vertex:" + dGraph.bfs().toString());
+
+		// dfs
+//		 System.out.println(dGraph.toString());
+//		 dGraph.printVertexes();
+		 dGraph.dfs(va);
+//		 System.out.println(dGraph.toString());
+//		 dGraph.printVertexes();
 	}
 
 	public static void printArray(String title, int[] array) {
