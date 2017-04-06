@@ -74,7 +74,7 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
 
 
   - Imaginary Tree is sort of a List<List>
-  - [MyBinarySearchTree]
+  - [MyBinaryTree]
 
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>

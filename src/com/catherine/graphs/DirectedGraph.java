@@ -446,7 +446,8 @@ public class DirectedGraph<E> {
 
 	/**
 	 * 无论整个图有多少联通域，都能确保bfs有遍历整个连通图。<br>
-	 * 前提是整个图必须是连通图（图中任意两点都是连通的）
+	 * 前提是整个图必须是连通图（图中任意两点都是连通的）<br>
+	 * 找不到一条完整的联通路线时返回null
 	 * 
 	 * @return 起始顶点
 	 */
@@ -455,7 +456,7 @@ public class DirectedGraph<E> {
 		boolean visitedWholeGraph = true;
 		do {
 			Vertex<E> vertex = vertexes[++index];
-			System.out.println("Now at " + index + ", data=" + vertex.data);
+			// System.out.println("Now at " + index + ", data=" + vertex.data);
 			bfs(vertex);
 			visitedWholeGraph = true;
 			// 检查bfs搜索后是否所有边都被找过了（Status.VISITED）
