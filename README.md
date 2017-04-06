@@ -89,7 +89,7 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
 
 ### Directed Graph
   - Breadth-first search (BFS) - Choose a vertex being the first and start to visit each vertex in a graph. It's just like level order traversal of the Tree.
-  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ```Java public Vertex<E> bfs(){...} ``` 
+  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
   - [DirectedGraph]
 
   > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
