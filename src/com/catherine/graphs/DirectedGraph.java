@@ -445,26 +445,36 @@ public class DirectedGraph<E> {
 	}
 
 	/**
-	 * 无论整个图有多少联通域，都能确保bfs有遍历整个连通图
+	 * 无论整个图有多少联通域，都能确保bfs有遍历整个连通图。<br>
+	 * 前提是整个图必须是连通图（图中任意两点都是连通的）
 	 * 
 	 * @return 起始顶点
 	 */
 	public Vertex<E> bfs() {
 		int index = -1;
-		boolean visitedWholeGraph = false;
+		boolean visitedWholeGraph = true;
 		do {
 			Vertex<E> vertex = vertexes[++index];
-			System.out.println("YO " + index);
-			deBfs(vertex);
+			System.out.println("Now at " + index + ", data=" + vertex.data);
 			bfs(vertex);
-			System.out.println("YO " + vertex.data);
+			visitedWholeGraph = true;
 			// 检查bfs搜索后是否所有边都被找过了（Status.VISITED）
-			for (int i = 0; i < vertexes.length; i++) {
-
+			for (int i = 0; i < size; i++) {
+				// System.out.print(vertexes[i].data + "(" + vertexes[i].status
+				// + ")");
+				if (vertexes[i].status != Vertex.Status.VISITED) {
+					visitedWholeGraph = false;
+					break;
+				}
 			}
-		} while (!visitedWholeGraph && index < size);
+			deBfs(vertex);
+			// System.out.print("\n");
+		} while (!visitedWholeGraph && index < size - 1);
 
-		return vertexes[index];
+		if (visitedWholeGraph)
+			return vertexes[index];
+		else
+			return null;
 	}
 
 	private int getUnixtime() {

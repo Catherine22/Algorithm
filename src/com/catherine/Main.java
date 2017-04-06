@@ -226,6 +226,7 @@ public class Main {
 		// dGraph.setVertex(1, "b");
 		// dGraph.setVertex(2, "c");
 
+		// bfs
 		// System.out.println(dGraph.toString());
 		// dGraph.printVertexes();
 		// System.out.println(dGraph.edgeCount());
@@ -238,6 +239,7 @@ public class Main {
 		// dGraph.printVertexes();
 		// System.out.println(dGraph.edgeCount());
 
+		// bfs连通图专用
 		System.out.println("bfs vertex:" + dGraph.bfs().toString());
 		// System.out.println("size:" + dGraph.size());
 		// System.out.println(dGraph.nextNbr(va, 2).toString());
