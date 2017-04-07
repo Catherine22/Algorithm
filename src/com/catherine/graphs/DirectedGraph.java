@@ -341,6 +341,7 @@ public class DirectedGraph<E> {
 		Vertex<E> vertex = begin;
 
 		int level = 0;
+		Clock clock = new Clock();
 		parent.offer(vertex);
 		while (vertex != null || !parent.isEmpty()) {
 			System.out.print("level " + level++ + ",\t");
@@ -348,7 +349,7 @@ public class DirectedGraph<E> {
 			while (!parent.isEmpty()) {
 				vertex = parent.poll();
 				if (vertex.status != Vertex.Status.VISITED) {
-					vertex.dTime = getUnixtime();
+					vertex.dTime = getTimes(clock);
 					vertex.status = Vertex.Status.DISCOVERED;
 
 					System.out.print(vertex.data + " ");
@@ -370,7 +371,8 @@ public class DirectedGraph<E> {
 						}
 					}
 					vertex.status = Vertex.Status.VISITED;
-					vertex.fTime = getUnixtime();
+					vertex.fTime = getTimes(clock);
+					;
 				}
 			}
 
@@ -411,7 +413,7 @@ public class DirectedGraph<E> {
 			while (!parent.isEmpty()) {
 				vertex = parent.poll();
 				if (vertex.status != Vertex.Status.UNDISCOVERED) {
-					vertex.dTime = getUnixtime();
+					vertex.dTime = -1;
 					vertex.status = Vertex.Status.DISCOVERED;
 
 					System.out.print(vertex.data + " ");
@@ -430,7 +432,8 @@ public class DirectedGraph<E> {
 						}
 					}
 					vertex.status = Vertex.Status.UNDISCOVERED;
-					vertex.fTime = getUnixtime();
+					vertex.priority = Integer.MAX_VALUE;
+					vertex.fTime = -1;
 				}
 			}
 
@@ -495,21 +498,25 @@ public class DirectedGraph<E> {
 		Stack<Vertex<E>> tmpBin = new Stack<>();
 		Vertex<E> v = begin;
 		tmpBin.push(v);
+		Clock clock = new Clock();
 
 		while (!tmpBin.isEmpty()) {
+			if (tmpBin.peek().dTime == -1)
+				tmpBin.peek().dTime = getTimes(clock);
 			v = getUnvisitedChild(tmpBin.peek());
 			if (v != null) {
 				tmpBin.push(v);
 			} else {
 				v = tmpBin.pop();
 				v.status = Vertex.Status.VISITED;
+				v.fTime = getTimes(clock);
 			}
 
-//			System.out.print("[");
-//			for (Vertex<E> tmp : tmpBin) {
-//				System.out.print(tmp.data + " ");
-//			}
-//			System.out.print("]\n");
+			// System.out.print("[");
+			// for (Vertex<E> tmp : tmpBin) {
+			// System.out.print(tmp.data + " ");
+			// }
+			// System.out.print("]\n");
 		}
 
 		Analysis.endTracking(tLog);
@@ -517,7 +524,7 @@ public class DirectedGraph<E> {
 	}
 
 	private Vertex<E> getUnvisitedChild(Vertex<E> parent) {
-//		System.out.println("parent is " + parent.toString());
+		// System.out.println("parent is " + parent.toString());
 		if (parent.outdegree == 0 || parent.status == Vertex.Status.VISITED)
 			return null;
 
@@ -528,7 +535,7 @@ public class DirectedGraph<E> {
 			v = getChild(parent, header++);
 			if (v.status != Vertex.Status.VISITED) {
 				if (v != null) {
-//					System.out.println("now you're at " + v.toString());
+					// System.out.println("now you're at " + v.toString());
 					return v;
 				}
 			}
@@ -554,6 +561,20 @@ public class DirectedGraph<E> {
 			return null;
 		else
 			return vertexes[header];
+	}
+
+	private class Clock {
+		int times = 0;
+	}
+
+	/**
+	 * 一个方法就用一个时钟，clock初始预设为0，每次操作进行递加
+	 * 
+	 * @param clock
+	 * @return
+	 */
+	private int getTimes(Clock clock) {
+		return clock.times++;
 	}
 
 	private int getUnixtime() {

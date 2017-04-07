@@ -247,10 +247,10 @@ public class Main {
 		// System.out.println("bfs vertex:" + dGraph.bfs().toString());
 
 		// dfs
-//		 System.out.println(dGraph.toString());
+		// System.out.println(dGraph.toString());
 		 dGraph.printVertexes();
 		 dGraph.dfs(vb);
-//		 System.out.println(dGraph.toString());
+		// System.out.println(dGraph.toString());
 		 dGraph.printVertexes();
 	}
 
