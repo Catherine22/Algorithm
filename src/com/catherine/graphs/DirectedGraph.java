@@ -493,52 +493,55 @@ public class DirectedGraph<E> {
 		Analysis.startTracking(tLog);
 
 		Stack<Vertex<E>> tmpBin = new Stack<>();
-		Vertex<E> vertex = begin;
-		tmpBin.push(vertex);
-		int limit = 10;
-		while (!tmpBin.isEmpty() && vertex != null && limit > 0) {
-			limit--;
-			System.out.println(vertex.toString());
-			if (vertex.status == Vertex.Status.UNDISCOVERED) {
-				vertex.status = Vertex.Status.DISCOVERED;
-				vertex.dTime = getUnixtime();
+		Vertex<E> v = begin;
+		tmpBin.push(v);
+
+		while (!tmpBin.isEmpty()) {
+			v = getUnvisitedChild(tmpBin.peek());
+			if (v != null) {
+				tmpBin.push(v);
+			} else {
+				v = tmpBin.pop();
+				v.status = Vertex.Status.VISITED;
 			}
 
-			int childCount = vertex.outdegree;
-			while (childCount > 0) {
-				Vertex<E> child = getChild(vertex, childCount--);
-				System.out.println(child.data);
-				if (child.status == Vertex.Status.UNDISCOVERED) {
-					child.status = Vertex.Status.DISCOVERED;
-					child.dTime = getUnixtime();
-					childCount = child.outdegree;
-					tmpBin.push(child);
-					vertex = child;
-				} else if (child.status == Vertex.Status.DISCOVERED) {
-					childCount = child.outdegree;
-					tmpBin.push(child);
-					vertex = child;
-				} else if (child.status == Vertex.Status.VISITED)
-					child = getChild(vertex, childCount--);
-
-			}
-			System.out.println(tmpBin.toString());
-			vertex = tmpBin.pop();
-			System.out.println(vertex.data + " visited");
-			vertex.status = Vertex.Status.VISITED;
-			vertex.fTime = getUnixtime();
-			vertex = tmpBin.pop();
+//			System.out.print("[");
+//			for (Vertex<E> tmp : tmpBin) {
+//				System.out.print(tmp.data + " ");
+//			}
+//			System.out.print("]\n");
 		}
 
 		Analysis.endTracking(tLog);
 		Analysis.printTrack(tLog);
 	}
 
+	private Vertex<E> getUnvisitedChild(Vertex<E> parent) {
+//		System.out.println("parent is " + parent.toString());
+		if (parent.outdegree == 0 || parent.status == Vertex.Status.VISITED)
+			return null;
+
+		Vertex<E> v = null;
+		// 找出还没完成走访的顶点
+		int header = 1;
+		while (header <= parent.outdegree) {
+			v = getChild(parent, header++);
+			if (v.status != Vertex.Status.VISITED) {
+				if (v != null) {
+//					System.out.println("now you're at " + v.toString());
+					return v;
+				}
+			}
+		}
+		// 表示该顶点的所有对外邻边的邻居都是VISITED
+		return null;
+	}
+
 	public Vertex<E> getChild(Vertex<E> parent, int index) {
 		if (isVertexNull(parent))
 			throw new NullPointerException("null begin vertex!");
 
-		if (index < 0 || index > parent.outdegree)
+		if (index <= 0 || index > parent.outdegree)
 			outOfBoundsMsg(index);
 
 		int pos = indexOf(parent);

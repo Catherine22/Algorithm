@@ -248,10 +248,10 @@ public class Main {
 
 		// dfs
 //		 System.out.println(dGraph.toString());
-//		 dGraph.printVertexes();
-		 dGraph.dfs(va);
+		 dGraph.printVertexes();
+		 dGraph.dfs(vb);
 //		 System.out.println(dGraph.toString());
-//		 dGraph.printVertexes();
+		 dGraph.printVertexes();
 	}
 
 	public static void printArray(String title, int[] array) {
