@@ -10,7 +10,7 @@ Algorithms
 - Quick sort
 - [Selection sort]
 
-## Simulate Turing Machine
+## Simulating Turing Machine
   - [1 + a positive integer]
 
 ## [Sequence]
@@ -29,20 +29,19 @@ Algorithms
   > **Tips**
   > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
   > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort before removing duplicates. It's a little like using sort()+unique() in vector on C++. <br>
-  >  <br>
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array to find an element.** If an array contains an element, it'll return where the element is in the array and also return the latest position if there're duplicated elements.
-  - And if the element wasn't found, this algorithm would return the index which refer to a value(array[index] < element < array[index+1]).
-      - two ways to do binary searching (Usually, binSearch2() is more efficient than binSearch(), it's better)
+  - [Sequence Searching] is used to **search a sorted array to find an element.** If the array contains the element, it'll return where the element is in the array or the latest position if there're duplicated elements.
+  - As I was saying, if the element've never been found, this algorithm would return the index referring to a value(array[index] < element < array[index+1]).
+      - two ways to do binary searching (Usually, binSearch2() which is more efficient than binSearch() is better)
       - Fibonacci Searching
 
 ## List
   - [MyArrayList]
     - Base on array
   - [MyLinkedList]
-    - Base on node, a user-defined Object including a predecessor, a value, and a successor.
+    - Base on the node, a user-defined Object including a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
@@ -58,9 +57,15 @@ Algorithms
 ## Queue
   -
 
-## Tree
-  - Performance
+## Graph
 
+Traversal - to simplify a graph data structure and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
+
+
+### Tree
+
+  - It's a special case of graphs.
+  - Performance
 
 |    | vector | list | tree |
 | ---- | ---- | ---- | ---- |
@@ -69,7 +74,7 @@ Algorithms
 
 
   - Imaginary Tree is sort of a List<List>
-  - [MyBinarySearchTree]
+  - [MyBinaryTree]
 
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>
@@ -77,8 +82,30 @@ Algorithms
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
+
+
+### Undirected Graph
+  - [UndirectedGraph]
+
+### Directed Graph
+|    | BFS | DFS |
+| ---- | ---- | ---- |
+| next node | neighbor | child |
+| speed |  | faster |
+| memory requirement |  | less |
+| data type | Queue | Stack |
+
+  - Breadth-first search (BFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex. It's just like level order traversal of the Tree.
+  - Depth-first search (DFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex.
+  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
+  - [DirectedGraph]
+
+  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
+  > An Edge<E> is a user-defined class, it contains data, weight and status.
+
 ## Reference
   - [Algorithms, 4th Edition]
+  - [数据结构学习网]
 
 ## License
 
@@ -111,4 +138,7 @@ Algorithms
    [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/trees/MyBinaryTree.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
+   [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
+   [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
+   [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>

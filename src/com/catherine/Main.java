@@ -11,6 +11,8 @@ import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.data_type.trees.MyBinaryTree;
 import com.catherine.data_type.trees.MyBinaryTree.Node;
+import com.catherine.graphs.DirectedGraph;
+import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -162,20 +164,18 @@ public class Main {
 		// System.out.println(b1 + "");
 
 		// Tree
-		MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
-		Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
-		mBT.insertRC(lc, "C");
-		Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
-		Node<String> rclc = mBT.insertLC(rc, "D");
-		mBT.insertRC(rc, "E");
-		mBT.setLC(rclc, "F");
+		// MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
+		// Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
+		// mBT.insertRC(lc, "C");
+		// Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
+		// Node<String> rclc = mBT.insertLC(rc, "D");
+		// mBT.insertRC(rc, "E");
+		// mBT.setLC(rclc, "F");
 
 		// for (int i = 0; i < 500; i++) {
 		// Node<String> node = mBT.insertRC(rclc, "G");
 		// rclc = node;
 		// }
-
-		// mBT.removeRCCompletely(mBT.getRoot());
 
 		// System.out.println("H:" + mBT.getHeight());
 		// mBT.traversePre();
@@ -186,8 +186,72 @@ public class Main {
 		// mBT.traversePost();
 		// mBT.traversePostNR1();
 		// mBT.traversePostNR2();
-		mBT.traverseLevel();
+		// mBT.traverseLevel();
 
+		// Graph
+		DirectedGraph<String> dGraph = new DirectedGraph<>();
+		// Vertex<String> va = dGraph.addVertex("A");
+		// Vertex<String> vc = dGraph.addVertex("C");
+		// Vertex<String> vb = dGraph.addVertex(1, "B");
+		// Vertex<String> vd = dGraph.addVertex("D");
+		// Vertex<String> ve = dGraph.addVertex("E");
+		//
+		// dGraph.addEdge(va, vb);
+		// dGraph.addEdge(vb, vc);
+		// dGraph.addEdge(vb, ve);
+		// dGraph.addEdge(va, vc);
+		// dGraph.addEdge(vc, vd);
+		// dGraph.addEdge(vd, ve);
+		// dGraph.addEdge(vc, ve);
+		// dGraph.removeEdge(vc, va);
+		// dGraph.removeEdge(vc, ve);
+		Vertex<String> vb = dGraph.addVertex("B");
+		Vertex<String> vc = dGraph.addVertex("C");
+		Vertex<String> vd = dGraph.addVertex("D");
+		// Vertex<String> ve = dGraph.addVertex("E");
+		Vertex<String> vf = dGraph.addVertex("F");
+		Vertex<String> vg = dGraph.addVertex("G");
+		Vertex<String> va = dGraph.addVertex("A");
+		dGraph.addEdge(va, vb);
+		dGraph.addEdge(va, vc);
+		dGraph.addEdge(va, vd);
+		dGraph.addEdge(vb, vc);
+		dGraph.addEdge(vb, vd);
+		dGraph.addEdge(vb, vf);
+		dGraph.addEdge(vd, vf);
+		dGraph.addEdge(vd, vg);
+		dGraph.addEdge(vf, vg);
+
+		// dGraph.setVertex(0, "a");
+		// dGraph.setVertex(1, "b");
+		// dGraph.setVertex(2, "c");
+
+		// System.out.println("size:" + dGraph.size());
+		// System.out.println(dGraph.nextNbr(va, 2).toString());
+		// System.out.println(dGraph.getChild(vb, 3).toString());
+
+		// bfs
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// System.out.println(dGraph.edgeCount());
+		// dGraph.bfs(vb);
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// System.out.println(dGraph.edgeCount());
+		// dGraph.deBfs(vb);
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// System.out.println(dGraph.edgeCount());
+		//
+		// bfs连通图专用
+		 System.out.println("bfs vertex:" + dGraph.bfs().toString());
+
+		// dfs
+		System.out.println(dGraph.toString());
+		dGraph.printVertexes();
+		dGraph.dfs(va);
+		System.out.println(dGraph.toString());
+		dGraph.printVertexes();
 	}
 
 	public static void printArray(String title, int[] array) {
