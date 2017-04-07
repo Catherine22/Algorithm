@@ -88,8 +88,15 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
   - [UndirectedGraph]
 
 ### Directed Graph
-  - Depth-first search (DFS) - 
-  - Breadth-first search (BFS) - Choose a vertex being the first and start to visit each vertex in a graph. It's just like level order traversal of the Tree.
+|    | BFS | DFS |
+| ---- | ---- | ---- |
+| next node | neighbor | child |
+| speed |  | faster |
+| memory requirement |  | less |
+| data type | Queue | Stack |
+
+  - Breadth-first search (BFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex. It's just like level order traversal of the Tree.
+  - Depth-first search (DFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex.
   - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
   - [DirectedGraph]
 

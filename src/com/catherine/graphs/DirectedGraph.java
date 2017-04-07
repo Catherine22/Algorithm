@@ -523,6 +523,13 @@ public class DirectedGraph<E> {
 		Analysis.printTrack(tLog);
 	}
 
+	/**
+	 * 
+	 * 取得对外边指向的相邻顶点，且状态不是VISITED
+	 * 
+	 * @param parent
+	 * @return
+	 */
 	private Vertex<E> getUnvisitedChild(Vertex<E> parent) {
 		// System.out.println("parent is " + parent.toString());
 		if (parent.outdegree == 0 || parent.status == Vertex.Status.VISITED)
@@ -544,6 +551,13 @@ public class DirectedGraph<E> {
 		return null;
 	}
 
+	/**
+	 * 取得对外边指向的相邻顶点
+	 * 
+	 * @param parent
+	 * @param index
+	 * @return
+	 */
 	public Vertex<E> getChild(Vertex<E> parent, int index) {
 		if (isVertexNull(parent))
 			throw new NullPointerException("null begin vertex!");
