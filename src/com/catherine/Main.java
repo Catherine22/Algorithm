@@ -244,14 +244,14 @@ public class Main {
 		// System.out.println(dGraph.edgeCount());
 		//
 		// bfs连通图专用
-		// System.out.println("bfs vertex:" + dGraph.bfs().toString());
+		 System.out.println("bfs vertex:" + dGraph.bfs().toString());
 
 		// dfs
-		 System.out.println(dGraph.toString());
-		 dGraph.printVertexes();
-		 dGraph.dfs(va);
-		 System.out.println(dGraph.toString());
-		 dGraph.printVertexes();
+		System.out.println(dGraph.toString());
+		dGraph.printVertexes();
+		dGraph.dfs(va);
+		System.out.println(dGraph.toString());
+		dGraph.printVertexes();
 	}
 
 	public static void printArray(String title, int[] array) {
