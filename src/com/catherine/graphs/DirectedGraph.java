@@ -484,7 +484,10 @@ public class DirectedGraph<E> {
 
 	/**
 	 * 深度优先搜索<br>
-	 * 若有尚未访问的邻居，任选一个递归执行DFS，如果邻居都访问过就回到上一个顶点，以此类推直到全部邻居都访问过就返回null
+	 * 若有尚未访问的邻居，任选一个递归执行DFS，如果邻居都访问过就回到上一个顶点，以此类推直到全部邻居都访问过就返回null<br>
+	 * 当邻居未曾发现时，意味着支撑树可以在此拓展，边的状态为TREE<br>
+	 * 邻居状态为已发现未访问完，因被后代指向祖先，边的状态为BACKWARD<br>
+	 * 若邻居已访问完，若邻居完成时间较早，状态为前向边FOREWARD，反之为跨边CROSS<br>
 	 * 
 	 * @param begin
 	 *            开始顶点（树根）
@@ -501,8 +504,10 @@ public class DirectedGraph<E> {
 		Clock clock = new Clock();
 
 		while (!tmpBin.isEmpty()) {
-			if (tmpBin.peek().dTime == -1)
+			if (tmpBin.peek().status == Vertex.Status.UNDISCOVERED) {
 				tmpBin.peek().dTime = getTimes(clock);
+				tmpBin.peek().status = Vertex.Status.DISCOVERED;
+			}
 			v = getUnvisitedChild(tmpBin.peek());
 			if (v != null) {
 				tmpBin.push(v);
@@ -512,11 +517,10 @@ public class DirectedGraph<E> {
 				v.fTime = getTimes(clock);
 			}
 
-			// System.out.print("[");
-			// for (Vertex<E> tmp : tmpBin) {
-			// System.out.print(tmp.data + " ");
-			// }
-			// System.out.print("]\n");
+			System.out.print("[");
+			for (Vertex<E> tmp : tmpBin)
+				System.out.print(tmp.data + " ");
+			System.out.print("]\n");
 		}
 
 		Analysis.endTracking(tLog);
@@ -531,19 +535,39 @@ public class DirectedGraph<E> {
 	 * @return
 	 */
 	private Vertex<E> getUnvisitedChild(Vertex<E> parent) {
-		// System.out.println("parent is " + parent.toString());
+		System.out.println("parent is " + parent.toString());
 		if (parent.outdegree == 0 || parent.status == Vertex.Status.VISITED)
 			return null;
 
 		Vertex<E> v = null;
+		Edge.Status eStatus = Edge.Status.UNDETERMINED;
 		// 找出还没完成走访的顶点
 		int header = 1;
 		while (header <= parent.outdegree) {
 			v = getChild(parent, header++);
-			if (v.status != Vertex.Status.VISITED) {
-				if (v != null) {
-					// System.out.println("now you're at " + v.toString());
+			if (v != null) {
+				int x = indexOf(parent);
+				int y = indexOf(v);
+				if (v.status == Vertex.Status.UNDISCOVERED) {
+					System.out.println("now you're at " + v.toString());
+					eStatus = Edge.Status.TREE;
+					if (adjMatrix[x][y].status == Edge.Status.UNDETERMINED)
+						adjMatrix[x][y].status = eStatus;
+					System.out.println("edge status: " + adjMatrix[x][y].status);
 					return v;
+				} else if (v.status == Vertex.Status.DISCOVERED) {
+					System.out.println("now you're at " + v.toString());
+					eStatus = Edge.Status.BACKWARD;
+					if (adjMatrix[x][y].status == Edge.Status.UNDETERMINED)
+						adjMatrix[x][y].status = eStatus;
+					System.out.println("edge status: " + adjMatrix[x][y].status);
+					return v;
+				} else {
+					System.out.println("now you're at " + v.toString());
+					eStatus = (v.dTime > parent.dTime) ? Edge.Status.CROSS : Edge.Status.FORWARD;
+					if (adjMatrix[x][y].status == Edge.Status.UNDETERMINED)
+						adjMatrix[x][y].status = eStatus;
+					System.out.println("edge status: " + adjMatrix[x][y].status);
 				}
 			}
 		}

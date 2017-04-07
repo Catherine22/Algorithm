@@ -249,7 +249,7 @@ public class Main {
 		// dfs
 		 System.out.println(dGraph.toString());
 		 dGraph.printVertexes();
-		 dGraph.dfs(vb);
+		 dGraph.dfs(va);
 		 System.out.println(dGraph.toString());
 		 dGraph.printVertexes();
 	}
