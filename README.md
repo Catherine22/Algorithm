@@ -62,7 +62,7 @@ Algorithms
 Traversal - to simplify a graph data structure and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
 
 
-### Tree
+### Binary Tree
 
   - It's a special case of graphs.
   - Performance
@@ -83,9 +83,11 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
 ### Binary Search Tree (BST)
-  - call by key
+  - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
+  - In this case, I was assuming that there are no duplicated keys in the BST. Every operation based on this scenario.
+  - [MyBinarySearchTree]
 
-
+  > Most methods copied from [MyBinaryTree]. But here I added 'key' in the Node of [BST_Template], which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
 
 ### Undirected Graph
   - [UndirectedGraph]
@@ -139,6 +141,8 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
    [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinaryTree.java>
+   [BST_Template]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/BST_Template.java>
+   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTree.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>

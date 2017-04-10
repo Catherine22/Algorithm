@@ -6,6 +6,13 @@ import java.util.Stack;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
+/**
+ * 大致和{@link com.catherine.graphs.trees.MyBinaryTree}差不多，但Node多了key值，为了BST排序用。
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
 abstract class BST_Template<E> {
 	final static boolean SHOW_LOG = true;
 	transient int size = 0;
@@ -601,7 +608,8 @@ abstract class BST_Template<E> {
 	 * <br>
 	 * 每比较一次，节点的深度都会下降一层，也就是递归深度不超过树高。<br>
 	 * 
-	 * @param data
+	 * @param key
+	 *            搜寻节点的key
 	 * @return 命中节点或<code>null<code>
 	 */
 	public abstract Node<E> search(int key);
@@ -609,7 +617,10 @@ abstract class BST_Template<E> {
 	/**
 	 * 先做一次遍历，得到hot，用hot作为父节点插入。 暂不考虑重复数值情况。
 	 * 
+	 * @param key
+	 *            插入节点的key
 	 * @param data
+	 *            插入节点的value
 	 */
 	public abstract void insert(int key, E data);
 }
