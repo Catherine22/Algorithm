@@ -1,5 +1,11 @@
 package com.catherine.graphs.trees;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+import com.catherine.utils.Analysis;
+import com.catherine.utils.TrackLog;
+
 abstract class BST_Template<E> {
 	final static boolean SHOW_LOG = true;
 	transient int size = 0;
@@ -10,8 +16,8 @@ abstract class BST_Template<E> {
 	 */
 	Node<E> hot;
 
-	BST_Template(E root) {
-		setRoot(root);
+	BST_Template(int key, E root) {
+		setRoot(key, root);
 	}
 
 	/**
@@ -20,14 +26,15 @@ abstract class BST_Template<E> {
 	 * @param 数值
 	 * @return 根节点
 	 */
-	public Node<E> setRoot(E data) {
+	public Node<E> setRoot(int key, E data) {
 		size++;
 		Node<E> n;
 		if (root == null)
-			n = new Node<>(data, null, null, null, 0);
+			n = new Node<>(key, data, null, null, null, 0);
 		else
-			n = new Node<>(data, null, root.lChild, root.rChild, root.height);
+			n = new Node<>(key, data, null, root.lChild, root.rChild, root.height);
 		root = n;
+		hot = root;
 		return root;
 	}
 
@@ -46,17 +53,32 @@ abstract class BST_Template<E> {
 		 * 节点到叶子的最长长度
 		 */
 		int height;
+
+		/**
+		 * key-value, key不重复
+		 */
+		int key;
 		E data;
 		Node<E> parent;
 		Node<E> lChild;
 		Node<E> rChild;
 
-		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height) {
+		public Node(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height) {
+			this.key = key;
 			this.data = data;
 			this.height = height;
 			this.parent = parent;
 			this.lChild = lChild;
 			this.rChild = rChild;
+		}
+
+		public String toString() {
+			if (parent != null)
+				return String.format("{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"parent_key\": \"%d\"}", key,
+						data, height, parent.key);
+			else
+				return String.format("{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"parent_key\": \"%s\"}", key,
+						data, height, "null parent");
 		}
 	}
 
@@ -192,16 +214,16 @@ abstract class BST_Template<E> {
 	 *            数值
 	 * @return 新节点
 	 */
-	public Node<E> insertLC(Node<E> parent, E data) {
+	Node<E> insertLC(Node<E> parent, int key, E data) {
 		Node<E> child;
 		if (parent.lChild != null) {
 			final Node<E> cNode = parent.lChild;
 			final Node<E> lChild = cNode.lChild;
 			final Node<E> rChild = cNode.rChild;
 			final int h = cNode.height;
-			child = new Node<>(data, parent, lChild, rChild, h + 1);
+			child = new Node<>(key, data, parent, lChild, rChild, h + 1);
 		} else
-			child = new Node<>(data, parent, null, null, 0);
+			child = new Node<>(key, data, parent, null, null, parent.height + 1);
 
 		parent.lChild = child;
 		updateAboveHeight(child);
@@ -217,16 +239,16 @@ abstract class BST_Template<E> {
 	 *            数值
 	 * @return 新节点
 	 */
-	public Node<E> insertRC(Node<E> parent, E data) {
+	Node<E> insertRC(Node<E> parent, int key, E data) {
 		Node<E> child;
 		if (parent.rChild != null) {
 			final Node<E> cNode = parent.rChild;
 			final Node<E> lChild = cNode.lChild;
 			final Node<E> rChild = cNode.rChild;
 			final int h = cNode.height;
-			child = new Node<>(data, parent, lChild, rChild, h + 1);
+			child = new Node<>(key, data, parent, lChild, rChild, h + 1);
 		} else
-			child = new Node<>(data, parent, null, null, 0);
+			child = new Node<>(key, data, parent, null, null, parent.height + 1);
 
 		parent.rChild = child;
 		updateAboveHeight(child);
@@ -258,6 +280,321 @@ abstract class BST_Template<E> {
 	}
 
 	/**
+	 * 以阶层遍历
+	 */
+	public void traverseLevel() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		Queue<Node<E>> parent = new LinkedList<>();
+		Queue<Node<E>> siblings = new LinkedList<>();
+		Node<E> node = root;
+		parent.offer(node);
+		int level = 0;
+
+		while (node != null || !parent.isEmpty()) {
+			System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				node = parent.poll();
+				System.out.print(node.key + " ");
+
+				if (node.lChild != null)
+					siblings.offer(node.lChild);
+
+				if (node.rChild != null)
+					siblings.offer(node.rChild);
+			}
+
+			for (Node<E> n : siblings)
+				parent.offer(n);
+
+			siblings.clear();
+			node = null;
+
+			System.out.print("\n");
+		}
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 先序遍历（中-左-右）
+	 */
+	public void traversePreNR1() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePreNR1");
+		Analysis.startTracking(tLog);
+
+		System.out.println("non-recursively pre-order traverse:");
+		Stack<Node<E>> bin = new Stack<>();
+		bin.push(root);
+		while (!bin.isEmpty()) {
+			Node<E> node = bin.pop();
+			System.out.print(node.key + " ");
+
+			if (node.rChild != null)
+				bin.push(node.rChild);
+
+			if (node.lChild != null)
+				bin.push(node.lChild);
+		}
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 先序遍历（中-左-右）<br>
+	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。<br>
+	 * <br>
+	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
+	 */
+	public void traversePreNR2() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePreNR2");
+		Analysis.startTracking(tLog);
+
+		System.out.println("non-recursively pre-order traverse:");
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+
+		while (node != null || !bin.isEmpty()) {
+			// 遍历一排的所有左节点
+			while (node != null) {
+				System.out.print(node.key + " ");
+				bin.push(node);// 弹出打印过的没用节点
+				node = node.lChild;
+			}
+
+			// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
+			if (bin.size() > 0) {
+				node = bin.pop();
+				node = node.rChild;
+			}
+		}
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 递归<br>
+	 * 先序遍历（中-左-右）
+	 */
+	public void traversePre() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePre");
+		Analysis.startTracking(tLog);
+
+		System.out.println("recursively pre-order traverse:");
+		traversePre(root);
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 递归<br>
+	 * 从任一节点先序遍历（中-左-右）
+	 */
+	public void traversePre(Node<E> node) {
+		System.out.print(node.key + " ");
+		if (node.lChild != null)
+			traversePre(node.lChild);
+		if (node.rChild != null)
+			traversePre(node.rChild);
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 中序遍历（左-中-右）<br>
+	 * 每个左侧节点就是一条链，由最左下的节点开始遍历右子树。 <br>
+	 * <br>
+	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
+	 * 
+	 */
+	public void traverseInNR() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traverseInNR");
+		Analysis.startTracking(tLog);
+
+		System.out.println("non-recursively in-order traverse:");
+
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+
+		while (node != null || bin.size() > 0) {
+			while (node != null) {
+				bin.push(node);
+				node = node.lChild;
+			}
+			if (!bin.isEmpty()) {
+				node = bin.pop();
+				System.out.print(node.key + " ");
+				node = node.rChild;
+			}
+		}
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 递归<br>
+	 * 中序遍历（左-中-右）
+	 */
+	public void traverseIn() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traverseIn");
+		Analysis.startTracking(tLog);
+
+		System.out.println("recursively in-order traverse:");
+		traverseIn(root);
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 递归<br>
+	 * 从任一节点中序遍历（左-中-右）
+	 */
+	public void traverseIn(Node<E> node) {
+		if (node.lChild != null)
+			traverseIn(node.lChild);
+		System.out.print(node.key + " ");
+		if (node.rChild != null)
+			traverseIn(node.rChild);
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 后序遍历（左-右-中）<br>
+	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
+	 */
+	public void traversePostNR1() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePostNR1");
+		Analysis.startTracking(tLog);
+
+		System.out.println("non-recursively post-order traverse:");
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+		Node<E> lastLC = null;// 如果该节点有右子树，遍历其右子树之前先暂存该节点。
+
+		while (node != null || bin.size() > 0) {
+			while (node != null) {
+				bin.push(node);
+				node = node.lChild;
+			}
+
+			node = bin.peek();
+
+			// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
+			if (node.rChild == null || node.rChild == lastLC) {
+				System.out.print(node.key + " ");
+				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.rChild == lastLC
+				bin.pop();// 打印过就从栈里弹出
+				node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
+			} else
+				node = node.rChild;
+		}
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 使用迭代而非递归<br>
+	 * 后序遍历（左-右-中）<br>
+	 * 双栈法
+	 */
+	public void traversePostNR2() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePostNR2");
+		Analysis.startTracking(tLog);
+
+		System.out.println("non-recursively post-order traverse:");
+		Stack<Node<E>> lBin = new Stack<>();
+		Stack<Node<E>> rBin = new Stack<>();
+		Node<E> node = root;
+		lBin.push(node);
+
+		while (!lBin.isEmpty()) {
+			node = lBin.pop();
+			rBin.push(node);
+
+			if (node.lChild != null)
+				lBin.push(node.lChild);
+
+			if (node.rChild != null)
+				lBin.push(node.rChild);
+		}
+
+		while (!rBin.isEmpty()) {
+			System.out.print(rBin.peek().key + " ");
+			rBin.pop();
+		}
+
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 递归<br>
+	 * 后序遍历（左-右-中）
+	 */
+	public void traversePost() {
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		TrackLog tLog = new TrackLog("traversePost");
+		Analysis.startTracking(tLog);
+
+		System.out.println("post-order traverse:");
+		traversePost(root);
+		System.out.println("\n");
+
+		Analysis.endTracking(tLog);
+		Analysis.printTrack(tLog);
+	}
+
+	/**
+	 * 递归<br>
+	 * 从任一节点后序遍历（左-右-中）
+	 */
+	public void traversePost(Node<E> node) {
+		if (node.lChild != null)
+			traversePost(node.lChild);
+		if (node.rChild != null)
+			traversePost(node.rChild);
+		System.out.print(node.key + " ");
+	}
+
+	/**
 	 * 由于所有节点的垂直投影就是该树的中序遍历，搜寻时用{@link com.catherine.data_type.Search}
 	 * 的binSearch概念。<br>
 	 * 无论成功与否，都是指向命中节点。（没找到时，在{@link #hot}建立一个子节点作为哨兵，整棵树仍然是BST<br>
@@ -267,5 +604,12 @@ abstract class BST_Template<E> {
 	 * @param data
 	 * @return 命中节点或<code>null<code>
 	 */
-	public abstract Node<E> search(E data);
+	public abstract Node<E> search(int key);
+
+	/**
+	 * 先做一次遍历，得到hot，用hot作为父节点插入。 暂不考虑重复数值情况。
+	 * 
+	 * @param data
+	 */
+	public abstract void insert(int key, E data);
 }
