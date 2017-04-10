@@ -213,7 +213,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			final int h = cNode.height;
 			child = new Node<>(data, parent, lChild, rChild, h + 1);
 		} else
-			child = new Node<>(data, parent, null, null, 0);
+			child = new Node<>(data, parent, null, null, parent.height + 1);
 
 		parent.lChild = child;
 		updateAboveHeight(child);
@@ -238,7 +238,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			final int h = cNode.height;
 			child = new Node<>(data, parent, lChild, rChild, h + 1);
 		} else
-			child = new Node<>(data, parent, null, null, 0);
+			child = new Node<>(data, parent, null, null, parent.height + 1);
 
 		parent.rChild = child;
 		updateAboveHeight(child);
