@@ -1,4 +1,4 @@
-package com.catherine.data_type.trees;
+package com.catherine.graphs.trees;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -307,15 +307,6 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		final E o = parent.rChild.data;
 		parent.rChild.data = data;
 		return o;
-	}
-
-	/**
-	 * 中序时的直接后继
-	 * 
-	 * @return
-	 */
-	public Node<E> succ() {
-		return null;
 	}
 
 	/**
