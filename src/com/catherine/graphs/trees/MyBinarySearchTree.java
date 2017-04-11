@@ -64,10 +64,35 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 		if (node == null)
 			throw new NullPointerException("Node not found.");
 
-		if (node.lChild == null && node.rChild == null){
+		// 情况2
+		if (node.lChild != null && node.rChild != null) {
+			Node<E> succ = succ(node);
+
+			System.out.println("node:" + node.key);
+			System.out.println("succ:" + succ.key);
+			swap(node, succ);
+			node = succ;
+		}
+
+		Node<E> parent = node.parent;
+		// 情况1
+		if (node.lChild != null && node.rChild == null) {
+			killParent(parent, node.lChild);
+		}
+		// 情况1
+		else if (node.lChild == null && node.rChild != null) {
+			killParent(parent, node.rChild);
+		}
+		// 情况1
+		else {
+			if (node != root && node == parent.lChild)
+				parent.lChild = null;
+			else if (node != root && node == parent.rChild)
+				parent.rChild = null;
 			node = null;
 		}
 
-		updateAboveHeight(hot);
+		size--;
+//		updateAboveHeight(parent);
 	}
 }

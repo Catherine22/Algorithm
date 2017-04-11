@@ -203,13 +203,13 @@ public class Main {
 		mBST.insert(35, "");
 		mBST.insert(25, "");
 		mBST.insert(65, "");
-		mBST.removeRCCompletely(mBST.search(80));
-		mBST.removeLCCompletely(mBST.search(80));
-//		mBST.remove(65);
+//		mBST.removeRCCompletely(mBST.search(80));
+//		mBST.removeLCCompletely(mBST.search(80));
+		mBST.remove(20);
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
-		System.out.println(mBST.succ(mBST.search(30)));
-		System.out.println(mBST.search(65));
+		System.out.println(mBST.succ(mBST.search(20)));
+		System.out.println(mBST.search(25));
 		System.out.println(mBST.size());
 
 		// Graph--------------------------------------------------------

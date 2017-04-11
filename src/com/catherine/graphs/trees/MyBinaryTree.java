@@ -109,6 +109,31 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	}
 
 	/**
+	 * 交换两节点的值（仍是同样的引用）
+	 * 
+	 * @param node1
+	 * @param node2
+	 */
+	protected void swap(Node<E> node1, Node<E> node2) {
+		if (SHOW_LOG) {
+			System.out.println("node1:" + node1.toString());
+			System.out.println("node2:" + node2.toString());
+		}
+		int tmpHeigh = node1.height;
+		E tmpData = node1.data;
+
+		node1.height = node2.height;
+		node1.data = node2.data;
+		node2.height = tmpHeigh;
+		node2.data = tmpData;
+
+		if (SHOW_LOG) {
+			System.out.println("new node1:" + node1.toString());
+			System.out.println("new node2:" + node2.toString());
+		}
+	}
+
+	/**
 	 * 每加入或移除一子节点，父节点及其父节点等高度都会变动。 <br>
 	 * 二叉树须检查是否已被兄弟节点修改过。 <br>
 	 * 节点高度定义：<br>
@@ -543,7 +568,11 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * {@link #succ(Node)}专用，记录直接后继
 	 */
 	private Node<E> succ;
-	
+	/**
+	 * {@link #succ(Node)}专用，停止递归
+	 */
+	private boolean stopRecursion = false;
+
 	/**
 	 * 返回当前节点在中序意义下的直接后继。
 	 * 
@@ -554,6 +583,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	public Node<E> succ(Node<E> node) {
 		succ = null;
 		preTmp = null;
+		stopRecursion = false;
 		succ(node, root);
 		return succ;
 	}
@@ -566,17 +596,24 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 *            每次递归的节点
 	 */
 	private void succ(Node<E> node, Node<E> tmp) {
-		if (tmp.lChild != null)
-			succ(node, tmp.lChild);
-		// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
-		if (node == preTmp) {
-			succ = tmp;
-			return;
+		if (!stopRecursion) {
+			if (tmp.lChild != null)
+				succ(node, tmp.lChild);
+			if (SHOW_LOG) {
+				if (preTmp == null)
+					System.out.print(tmp.data + "(NULL) ");
+				else
+					System.out.print(tmp.data + "(" + preTmp.data + ") ");
+			}
+			// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
+			if (node == preTmp) {
+				succ = tmp;
+				stopRecursion = true;
+			}
+			preTmp = tmp;
+			if (tmp.rChild != null)
+				succ(node, tmp.rChild);
 		}
-		preTmp = tmp;
-		System.out.print(tmp.data + " ");
-		if (tmp.rChild != null)
-			succ(node, tmp.rChild);
 	}
 
 	/**

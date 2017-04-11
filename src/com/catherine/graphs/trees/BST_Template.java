@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.catherine.graphs.trees.BST_Template.Node;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -15,7 +16,7 @@ import com.catherine.utils.TrackLog;
  * @param <E>
  */
 abstract class BST_Template<E> {
-	final static boolean SHOW_LOG = true;
+	final static boolean SHOW_LOG = false;
 	transient int size = 0;
 	Node<E> root;
 	/**
@@ -122,6 +123,56 @@ abstract class BST_Template<E> {
 		if (node.rChild != null)
 			s += size(node.rChild);
 		return s;
+	}
+
+	/**
+	 * 内部方法{@link #remove(int)}专用<br>
+	 * grandParent - parent - grandchild，移除parent<br>
+	 * size和height在{@link #remove(int)}处理
+	 * 
+	 * @param grandParent
+	 * @param grandchild
+	 */
+	protected void killParent(Node<E> grandParent, Node<E> grandchild) {
+		Node<E> parent = grandchild.parent;
+		if (grandParent.rChild == parent) {
+			grandParent.rChild = grandchild;
+			grandchild.parent = grandParent;
+			parent = null;
+		} else if (grandParent.lChild == parent) {
+			grandParent.lChild = grandchild;
+			grandchild.parent = grandParent;
+			parent = null;
+		}
+	}
+
+	/**
+	 * 内部方法{@link #remove(int)}专用<br>
+	 * 交换两节点的值（仍是同样的引用）
+	 * 
+	 * @param node1
+	 * @param node2
+	 */
+	protected void swap(Node<E> node1, Node<E> node2) {
+		if (SHOW_LOG) {
+			System.out.println("node1:" + node1.toString());
+			System.out.println("node2:" + node2.toString());
+		}
+		int tmpKey = node1.key;
+		int tmpHeigh = node1.height;
+		E tmpData = node1.data;
+
+		node1.key = node2.key;
+		node1.height = node2.height;
+		node1.data = node2.data;
+		node2.key = tmpKey;
+		node2.height = tmpHeigh;
+		node2.data = tmpData;
+
+		if (SHOW_LOG) {
+			System.out.println("new node1:" + node1.toString());
+			System.out.println("new node2:" + node2.toString());
+		}
 	}
 
 	/**
@@ -501,6 +552,10 @@ abstract class BST_Template<E> {
 	 * {@link #succ(Node)}专用，记录直接后继
 	 */
 	private Node<E> succ;
+	/**
+	 * {@link #succ(Node)}专用，停止递归
+	 */
+	private boolean stopRecursion = false;
 
 	/**
 	 * 返回当前节点在中序意义下的直接后继。
@@ -512,6 +567,7 @@ abstract class BST_Template<E> {
 	public Node<E> succ(Node<E> node) {
 		succ = null;
 		preTmp = null;
+		stopRecursion = false;
 		succ(node, root);
 		return succ;
 	}
@@ -524,18 +580,24 @@ abstract class BST_Template<E> {
 	 *            每次递归的节点
 	 */
 	private void succ(Node<E> node, Node<E> tmp) {
-		if (tmp.lChild != null)
-			succ(node, tmp.lChild);
-		// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
-		if (node == preTmp) {
-			succ = tmp;
-			return;
+		if (!stopRecursion) {
+			if (tmp.lChild != null)
+				succ(node, tmp.lChild);
+			if (SHOW_LOG) {
+				if (preTmp == null)
+					System.out.print(tmp.key + "(NULL) ");
+				else
+					System.out.print(tmp.key + "(" + preTmp.key + ") ");
+			}
+			// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
+			if (node == preTmp) {
+				succ = tmp;
+				stopRecursion = true;
+			}
+			preTmp = tmp;
+			if (tmp.rChild != null)
+				succ(node, tmp.rChild);
 		}
-		preTmp = tmp;
-		if (SHOW_LOG)
-			System.out.print(tmp.key + " ");
-		if (tmp.rChild != null)
-			succ(node, tmp.rChild);
 	}
 
 	/**
