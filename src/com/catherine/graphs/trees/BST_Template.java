@@ -35,11 +35,11 @@ abstract class BST_Template<E> {
 	 * @return 根节点
 	 */
 	public Node<E> setRoot(int key, E data) {
-		size++;
 		Node<E> n;
-		if (root == null)
+		if (root == null) {
+			size++;
 			n = new Node<>(key, data, null, null, null, 0);
-		else
+		} else
 			n = new Node<>(key, data, null, root.lChild, root.rChild, root.height);
 		root = n;
 		hot = root;
@@ -140,7 +140,7 @@ abstract class BST_Template<E> {
 	 * 
 	 * @return 高度
 	 */
-	private void updateAboveHeight(Node<E> node) {
+	protected void updateAboveHeight(Node<E> node) {
 		if (node.parent == null)
 			return;
 
@@ -233,6 +233,7 @@ abstract class BST_Template<E> {
 		} else
 			child = new Node<>(key, data, parent, null, null, parent.height + 1);
 
+		size++;
 		parent.lChild = child;
 		updateAboveHeight(child);
 		return child;
@@ -258,6 +259,7 @@ abstract class BST_Template<E> {
 		} else
 			child = new Node<>(key, data, parent, null, null, parent.height + 1);
 
+		size++;
 		parent.rChild = child;
 		updateAboveHeight(child);
 		return child;
@@ -270,6 +272,8 @@ abstract class BST_Template<E> {
 	 *            父节点
 	 */
 	public void removeRCCompletely(Node<E> parent) {
+		if (parent.rChild != null)
+			size -= size(parent.rChild);
 		parent.rChild = null;
 	}
 
@@ -280,6 +284,8 @@ abstract class BST_Template<E> {
 	 *            父节点
 	 */
 	public void removeLCCompletely(Node<E> parent) {
+		if (parent.lChild != null)
+			size -= size(parent.lChild);
 		parent.lChild = null;
 	}
 
@@ -495,7 +501,7 @@ abstract class BST_Template<E> {
 	 * {@link #succ(Node)}专用，记录直接后继
 	 */
 	private Node<E> succ;
-	
+
 	/**
 	 * 返回当前节点在中序意义下的直接后继。
 	 * 
@@ -526,7 +532,8 @@ abstract class BST_Template<E> {
 			return;
 		}
 		preTmp = tmp;
-		System.out.print(tmp.key + " ");
+		if (SHOW_LOG)
+			System.out.print(tmp.key + " ");
 		if (tmp.rChild != null)
 			succ(node, tmp.rChild);
 	}
@@ -667,7 +674,9 @@ abstract class BST_Template<E> {
 
 	/**
 	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
-	 * 情况2:<br>
+	 * 情况2:欲移除节点有左右孩子。化繁为简，变成情况1再处理<br>
+	 * 情况2先找出目标节点的后继节点{@link #succ(Node)}，两节点交换后就变成情况1（顶多只会有右孩子，因为后继已经是最左边的节点了），
+	 * 比照情况1处理，这边还要再将欲移除节点的父节点设为hot，重新整理树高。
 	 * 
 	 * @param key
 	 */

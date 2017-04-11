@@ -193,18 +193,24 @@ public class Main {
 		// mBT.traverseLevel();
 
 		// BST--------------------------------------------------------
-		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(5, "R");
-		mBST.insert(2, "YO");
-		mBST.insert(8, "");
-		mBST.insert(1, "");
-		mBST.insert(3, "");
-		mBST.insert(7, "");
-		mBST.insert(9, "");
-//		mBST.removeRCCompletely(mBST.search(8));
-//		mBST.removeLCCompletely(mBST.search(8));
+		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
+		mBST.insert(20, "二十");
+		mBST.insert(80, "");
+		mBST.insert(10, "");
+		mBST.insert(30, "");
+		mBST.insert(70, "");
+		mBST.insert(90, "");
+		mBST.insert(35, "");
+		mBST.insert(25, "");
+		mBST.insert(65, "");
+		mBST.removeRCCompletely(mBST.search(80));
+		mBST.removeLCCompletely(mBST.search(80));
+//		mBST.remove(65);
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
-		System.out.println(mBST.succ(mBST.search(3)));
+		System.out.println(mBST.succ(mBST.search(30)));
+		System.out.println(mBST.search(65));
+		System.out.println(mBST.size());
 
 		// Graph--------------------------------------------------------
 		// DirectedGraph<String> dGraph = new DirectedGraph<>();

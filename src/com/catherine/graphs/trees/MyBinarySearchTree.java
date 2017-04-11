@@ -56,14 +56,18 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 			node = insertLC(parent, key, data);
 		if (SHOW_LOG)
 			System.out.println(node.toString());
-
 	}
 
 	@Override
 	public void remove(int key) {
-		if (search(key) == null)
+		Node<E> node = search(key);
+		if (node == null)
 			throw new NullPointerException("Node not found.");
-		
-//		updateAboveHeight(child);
+
+		if (node.lChild == null && node.rChild == null){
+			node = null;
+		}
+
+		updateAboveHeight(hot);
 	}
 }

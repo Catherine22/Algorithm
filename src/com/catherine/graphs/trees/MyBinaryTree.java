@@ -34,10 +34,11 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * @return 根节点
 	 */
 	public Node<E> setRoot(E data) {
-		size++;
 		Node<E> n;
-		if (root == null)
+		if (root == null){
+			size++;
 			n = new Node<>(data, null, null, null, 0);
+		}
 		else
 			n = new Node<>(data, null, root.lChild, root.rChild, root.height);
 		root = n;
@@ -216,6 +217,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		} else
 			child = new Node<>(data, parent, null, null, parent.height + 1);
 
+		size++;
 		parent.lChild = child;
 		updateAboveHeight(child);
 		return child;
@@ -241,6 +243,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		} else
 			child = new Node<>(data, parent, null, null, parent.height + 1);
 
+		size++;
 		parent.rChild = child;
 		updateAboveHeight(child);
 		return child;
@@ -253,6 +256,8 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 *            父节点
 	 */
 	public void removeRCCompletely(Node<E> parent) {
+		if (parent.rChild != null)
+			size -= size(parent.rChild);
 		parent.rChild = null;
 	}
 
@@ -263,6 +268,8 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 *            父节点
 	 */
 	public void removeLCCompletely(Node<E> parent) {
+		if (parent.lChild != null)
+			size -= size(parent.lChild);
 		parent.lChild = null;
 	}
 

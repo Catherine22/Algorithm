@@ -74,11 +74,13 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
 
 
   - Imaginary Tree is sort of a List<List>
+  - Tree traversal (Pre-order, in-order and post-order)
   - [MyBinaryTree]
 
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>
   > - Depth-first search (DFS) in recursion and non-recursion ways<br>
+  > - Find out the successor of any node by in-order traversal.<br>
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
