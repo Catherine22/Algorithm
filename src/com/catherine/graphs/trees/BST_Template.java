@@ -3,6 +3,7 @@ package com.catherine.graphs.trees;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -270,8 +271,6 @@ abstract class BST_Template<E> {
 	 */
 	public void removeRCCompletely(Node<E> parent) {
 		parent.rChild = null;
-		parent.height = 0;
-		updateAboveHeight(parent);
 	}
 
 	/**
@@ -282,8 +281,6 @@ abstract class BST_Template<E> {
 	 */
 	public void removeLCCompletely(Node<E> parent) {
 		parent.lChild = null;
-		parent.height = 0;
-		updateAboveHeight(parent);
 	}
 
 	/**
@@ -623,4 +620,6 @@ abstract class BST_Template<E> {
 	 *            插入节点的value
 	 */
 	public abstract void insert(int key, E data);
+
+	public abstract void remove(int key);
 }

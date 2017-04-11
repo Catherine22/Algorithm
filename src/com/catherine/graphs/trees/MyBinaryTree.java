@@ -253,8 +253,6 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 */
 	public void removeRCCompletely(Node<E> parent) {
 		parent.rChild = null;
-		parent.height = 0;
-		updateAboveHeight(parent);
 	}
 
 	/**
@@ -265,8 +263,6 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 */
 	public void removeLCCompletely(Node<E> parent) {
 		parent.lChild = null;
-		parent.height = 0;
-		updateAboveHeight(parent);
 	}
 
 	/**

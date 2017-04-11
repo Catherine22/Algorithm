@@ -22,7 +22,7 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 		hot = root;
 		boolean stop = false;
 		Node<E> node = null;
-		
+
 		while (!stop) {
 			if (key > hot.key) {
 				if (hot.rChild == null)
@@ -54,7 +54,16 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 			node = insertRC(parent, key, data);
 		else if (key < parent.key)
 			node = insertLC(parent, key, data);
-		System.out.println(node.toString());
+		if (SHOW_LOG)
+			System.out.println(node.toString());
 
+	}
+
+	@Override
+	public void remove(int key) {
+		if (search(key) == null)
+			throw new NullPointerException("Node not found.");
+		
+//		updateAboveHeight(child);
 	}
 }

@@ -200,9 +200,11 @@ public class Main {
 		mBST.insert(3, "");
 		mBST.insert(7, "");
 		mBST.insert(9, "");
+		mBST.removeRCCompletely(mBST.search(8));
+		mBST.removeLCCompletely(mBST.search(8));
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
-		System.out.println(mBST.search(7).toString());
+		System.out.println(mBST.search(8).toString());
 
 		// Graph--------------------------------------------------------
 		// DirectedGraph<String> dGraph = new DirectedGraph<>();

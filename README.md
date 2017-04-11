@@ -87,7 +87,7 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
   - In this case, I was assuming that there are no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
-  > Most methods copied from [MyBinaryTree]. But here I added 'key' in the Node of [BST_Template], which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
+  > Most methods were copied from [MyBinaryTree]. But here I added 'key' in the Node of [BST_Template], which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
 
 ### Undirected Graph
   - [UndirectedGraph]
