@@ -488,6 +488,50 @@ abstract class BST_Template<E> {
 	}
 
 	/**
+	 * {@link #succ(Node)}专用，记录上次中序访问节点
+	 */
+	private Node<E> preTmp;
+	/**
+	 * {@link #succ(Node)}专用，记录直接后继
+	 */
+	private Node<E> succ;
+	
+	/**
+	 * 返回当前节点在中序意义下的直接后继。
+	 * 
+	 * @param node
+	 *            当前节点
+	 * @return 后继节点
+	 */
+	public Node<E> succ(Node<E> node) {
+		succ = null;
+		preTmp = null;
+		succ(node, root);
+		return succ;
+	}
+
+	/**
+	 * 
+	 * @param node
+	 *            指定节点（固定）
+	 * @param tmp
+	 *            每次递归的节点
+	 */
+	private void succ(Node<E> node, Node<E> tmp) {
+		if (tmp.lChild != null)
+			succ(node, tmp.lChild);
+		// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
+		if (node == preTmp) {
+			succ = tmp;
+			return;
+		}
+		preTmp = tmp;
+		System.out.print(tmp.key + " ");
+		if (tmp.rChild != null)
+			succ(node, tmp.rChild);
+	}
+
+	/**
 	 * 使用迭代而非递归<br>
 	 * 后序遍历（左-右-中）<br>
 	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
@@ -621,5 +665,11 @@ abstract class BST_Template<E> {
 	 */
 	public abstract void insert(int key, E data);
 
+	/**
+	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
+	 * 情况2:<br>
+	 * 
+	 * @param key
+	 */
 	public abstract void remove(int key);
 }

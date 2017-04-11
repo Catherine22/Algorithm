@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.catherine.graphs.trees.BST_Template.Node;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -525,6 +526,50 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			System.out.print(node.data + " ");
 		if (node.rChild != null)
 			traverseIn(node.rChild);
+	}
+
+	/**
+	 * {@link #succ(Node)}专用，记录上次中序访问节点
+	 */
+	private Node<E> preTmp;
+	/**
+	 * {@link #succ(Node)}专用，记录直接后继
+	 */
+	private Node<E> succ;
+	
+	/**
+	 * 返回当前节点在中序意义下的直接后继。
+	 * 
+	 * @param node
+	 *            当前节点
+	 * @return 后继节点
+	 */
+	public Node<E> succ(Node<E> node) {
+		succ = null;
+		preTmp = null;
+		succ(node, root);
+		return succ;
+	}
+
+	/**
+	 * 
+	 * @param node
+	 *            指定节点（固定）
+	 * @param tmp
+	 *            每次递归的节点
+	 */
+	private void succ(Node<E> node, Node<E> tmp) {
+		if (tmp.lChild != null)
+			succ(node, tmp.lChild);
+		// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
+		if (node == preTmp) {
+			succ = tmp;
+			return;
+		}
+		preTmp = tmp;
+		System.out.print(tmp.data + " ");
+		if (tmp.rChild != null)
+			succ(node, tmp.rChild);
 	}
 
 	/**
