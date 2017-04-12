@@ -49,13 +49,10 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 			throw new IllegalArgumentException("This node has already been added.");
 
 		final Node<E> parent = hot;
-		Node<E> node = null;
 		if (key > parent.key)
-			node = insertRC(parent, key, data);
+			insertRC(parent, key, data);
 		else if (key < parent.key)
-			node = insertLC(parent, key, data);
-		if (SHOW_LOG)
-			System.out.println(node.toString());
+			insertLC(parent, key, data);
 	}
 
 	@Override
@@ -90,9 +87,10 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 			else if (node != root && node == parent.rChild)
 				parent.rChild = null;
 			node = null;
+			System.out.println("updateAboveHeight:" + parent.key);
+			updateAboveHeight(parent);
 		}
 
 		size--;
-//		updateAboveHeight(parent);
 	}
 }

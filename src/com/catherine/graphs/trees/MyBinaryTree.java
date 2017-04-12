@@ -123,12 +123,15 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			System.out.println("node1:" + node1.toString());
 			System.out.println("node2:" + node2.toString());
 		}
-		int tmpHeigh = node1.height;
+		int tmpHeight = node1.height;
+		int tmpDepth = node1.depth;
 		E tmpData = node1.data;
 
 		node1.height = node2.height;
+		node1.depth = node2.depth;
 		node1.data = node2.data;
-		node2.height = tmpHeigh;
+		node2.height = tmpHeight;
+		node2.depth = tmpDepth;
 		node2.data = tmpData;
 
 		if (SHOW_LOG) {

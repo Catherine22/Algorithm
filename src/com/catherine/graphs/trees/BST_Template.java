@@ -15,7 +15,7 @@ import com.catherine.utils.TrackLog;
  * @param <E>
  */
 abstract class BST_Template<E> {
-	final static boolean SHOW_LOG = false;
+	final static boolean SHOW_LOG = true;
 	transient int size = 0;
 	Node<E> root;
 	/**
@@ -151,6 +151,11 @@ abstract class BST_Template<E> {
 			grandchild.parent = grandParent;
 			parent = null;
 		}
+		updateAboveHeight(grandParent);
+		if (SHOW_LOG) {
+			System.out.println("kp grandchild:" + grandchild.toString());
+			System.out.println("kp grandparent:" + grandParent.toString());
+		}
 	}
 
 	/**
@@ -166,14 +171,17 @@ abstract class BST_Template<E> {
 			System.out.println("node2:" + node2.toString());
 		}
 		int tmpKey = node1.key;
-		int tmpHeigh = node1.height;
+		int tmpHeight = node1.height;
+		int tmpDepth = node1.depth;
 		E tmpData = node1.data;
 
 		node1.key = node2.key;
 		node1.height = node2.height;
+		node1.depth = node2.depth;
 		node1.data = node2.data;
 		node2.key = tmpKey;
-		node2.height = tmpHeigh;
+		node2.height = tmpHeight;
+		node2.depth = tmpDepth;
 		node2.data = tmpData;
 
 		if (SHOW_LOG) {
@@ -289,7 +297,7 @@ abstract class BST_Template<E> {
 			child = new Node<>(key, data, parent, lChild, rChild, cNode.height, cNode.depth);
 		} else
 			child = new Node<>(key, data, parent, null, null, 0, parent.depth + 1);
-		
+
 		if (SHOW_LOG)
 			System.out.println("insertLC:" + child.toString());
 		size++;
@@ -548,7 +556,7 @@ abstract class BST_Template<E> {
 	public void traverseIn(Node<E> node) {
 		if (node.lChild != null)
 			traverseIn(node.lChild);
-		System.out.print(node.key);
+		System.out.print(node.key + " ");
 		if (node.rChild != null)
 			traverseIn(node.rChild);
 	}
@@ -592,12 +600,6 @@ abstract class BST_Template<E> {
 		if (!stopRecursion) {
 			if (tmp.lChild != null)
 				succ(node, tmp.lChild);
-			if (SHOW_LOG) {
-				if (preTmp == null)
-					System.out.print(tmp.key + "(NULL) ");
-				else
-					System.out.print(tmp.key + "(" + preTmp.key + ") ");
-			}
 			// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
 			if (node == preTmp) {
 				succ = tmp;

@@ -64,6 +64,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Binary Tree
 
+![tree][1]
   - It's a special case of Graph.
   - Performance
 
@@ -149,5 +150,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
+   [tree_pic]:<https://github.com/Catherine22/Algorithms/blob/master/res/tree.png>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>
+
+
+  [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
