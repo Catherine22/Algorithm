@@ -9,10 +9,11 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
-import com.catherine.data_type.trees.MyBinaryTree;
-import com.catherine.data_type.trees.MyBinaryTree.Node;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.graphs.trees.MyBinarySearchTree;
+import com.catherine.graphs.trees.MyBinaryTree;
+import com.catherine.graphs.trees.MyBinaryTree.Node;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -36,11 +37,11 @@ public class Main {
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
-		// InsertionSort
+		// InsertionSort--------------------------------------------------------
 		// InsertionSort is = new InsertionSort();
 		// // printArray("InsertionSort", is.sort(input1, true));
 
-		// MergeSort
+		// MergeSort--------------------------------------------------------
 		// MergeSort ms = new MergeSort();
 		// TrackLog tLog = new TrackLog("MergeSort"); //track
 		// Analysis.startTracking(tLog); //track
@@ -48,7 +49,7 @@ public class Main {
 		// Analysis.endTracking(tLog); //track
 		// Analysis.printTrack(tLog); //track
 
-		// BubbleSort
+		// BubbleSort--------------------------------------------------------
 		// BubbleSort bs = new BubbleSort();
 		// TrackLog tLog1 = new TrackLog("BubbleSort"); //track
 		// Analysis.startTracking(tLog1); //track
@@ -58,7 +59,7 @@ public class Main {
 		// printArray("BubbleSort2", bs.sort2(input3, false));
 		// printArray("BubbleSort3", bs.sort3(input7, false));
 
-		// SelectionSort
+		// SelectionSort--------------------------------------------------------
 		// SelectionSort ms = new SelectionSort();
 		// TrackLog tLog = new TrackLog("SelectionSort"); //track
 		// Analysis.startTracking(tLog); //track
@@ -66,11 +67,12 @@ public class Main {
 		// Analysis.endTracking(tLog); //track
 		// Analysis.printTrack(tLog); //track
 
-		// Hailstone
+		// Hailstone--------------------------------------------------------
 		// Others other = new Others();
 		// printList("Hailstone", other.getHailstone(42));
 
-		// Increment on Turing Machine
+		// Increment on Turing
+		// Machine--------------------------------------------------------
 		// TuringMachine tMachine = new TuringMachine();
 		// printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1,
 		// 1, 1 }));
@@ -80,6 +82,7 @@ public class Main {
 		// sequence.increaseArray();
 		// sequence.doubleArray();
 
+		// Sequence--------------------------------------------------------
 		// System.out.println("find " + sequence.find(input1, -10));
 		// printArray("insert", sequence.insert(input1, 5, 9));
 		// printArray("remove", sequence.remove(input1, 1, 7));
@@ -96,6 +99,7 @@ public class Main {
 		// printArray("removeDuplicatesAndSort1",sequence.removeDuplicatesAndSort1(input6));
 		// printArray("removeDuplicatesAndSort2",sequence.removeDuplicatesAndSort2(input6));
 
+		// Search--------------------------------------------------------
 		// Search search = new Search();
 		// System.out.println("binSearch:" + search.binSearch(input6, 1, 0,
 		// input6.length - 1));
@@ -104,7 +108,7 @@ public class Main {
 		// System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0,
 		// input6.length - 1));
 
-		// ArrayList
+		// ArrayList--------------------------------------------------------
 		// List<String> a1 = new ArrayList<>();
 		// List<String> a2 = new ArrayList<>();
 		// a2 = a1;// 两者指向相同地址，所以其实是一样的
@@ -122,7 +126,7 @@ public class Main {
 		// System.out.println(myA1);
 		// System.out.println(myA2);
 
-		// LinkedList
+		// LinkedList--------------------------------------------------------
 		// MyLinkedList<Integer> list = new MyLinkedList<>();
 		// list.add(1);
 		// list.add(1);
@@ -138,7 +142,7 @@ public class Main {
 		// list.removeDuplicates();
 		// printList("MyLinkedList", list);
 
-		// Stack
+		// Stack--------------------------------------------------------
 		// NumberSystem ns = new NumberSystem();
 		// System.out.println(ns.convertDecimalToOthers(33646, 35));
 		// System.out.println(Integer.toString(33646, 35));
@@ -163,7 +167,7 @@ public class Main {
 		// boolean b1 = ssp.isSortableStack(oriS,sortedS);
 		// System.out.println(b1 + "");
 
-		// Tree
+		// Binary Tree--------------------------------------------------------
 		// MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
 		// Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
 		// mBT.insertRC(lc, "C");
@@ -188,8 +192,28 @@ public class Main {
 		// mBT.traversePostNR2();
 		// mBT.traverseLevel();
 
-		// Graph
-		DirectedGraph<String> dGraph = new DirectedGraph<>();
+		// BST--------------------------------------------------------
+		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
+		mBST.insert(20, "二十");
+		mBST.insert(80, "");
+		mBST.insert(10, "");
+		mBST.insert(30, "");
+		mBST.insert(70, "");
+		mBST.insert(90, "");
+		mBST.insert(35, "");
+		mBST.insert(25, "");
+		mBST.insert(65, "");
+//		mBST.removeRCCompletely(mBST.search(80));
+//		mBST.removeLCCompletely(mBST.search(80));
+		mBST.remove(20);
+		mBST.traverseIn();// 中序一定是小到大排
+		mBST.traverseLevel();
+//		System.out.println(mBST.succ(mBST.search(20)));
+		System.out.println(mBST.search(25));
+		System.out.println(mBST.size());
+
+		// Graph--------------------------------------------------------
+		// DirectedGraph<String> dGraph = new DirectedGraph<>();
 		// Vertex<String> va = dGraph.addVertex("A");
 		// Vertex<String> vc = dGraph.addVertex("C");
 		// Vertex<String> vb = dGraph.addVertex(1, "B");
@@ -205,22 +229,22 @@ public class Main {
 		// dGraph.addEdge(vc, ve);
 		// dGraph.removeEdge(vc, va);
 		// dGraph.removeEdge(vc, ve);
-		Vertex<String> vb = dGraph.addVertex("B");
-		Vertex<String> vc = dGraph.addVertex("C");
-		Vertex<String> vd = dGraph.addVertex("D");
-		// Vertex<String> ve = dGraph.addVertex("E");
-		Vertex<String> vf = dGraph.addVertex("F");
-		Vertex<String> vg = dGraph.addVertex("G");
-		Vertex<String> va = dGraph.addVertex("A");
-		dGraph.addEdge(va, vb);
-		dGraph.addEdge(va, vc);
-		dGraph.addEdge(va, vd);
-		dGraph.addEdge(vb, vc);
-		dGraph.addEdge(vb, vd);
-		dGraph.addEdge(vb, vf);
-		dGraph.addEdge(vd, vf);
-		dGraph.addEdge(vd, vg);
-		dGraph.addEdge(vf, vg);
+		// Vertex<String> vb = dGraph.addVertex("B");
+		// Vertex<String> vc = dGraph.addVertex("C");
+		// Vertex<String> vd = dGraph.addVertex("D");
+		// // Vertex<String> ve = dGraph.addVertex("E");
+		// Vertex<String> vf = dGraph.addVertex("F");
+		// Vertex<String> vg = dGraph.addVertex("G");
+		// Vertex<String> va = dGraph.addVertex("A");
+		// dGraph.addEdge(va, vb);
+		// dGraph.addEdge(va, vc);
+		// dGraph.addEdge(va, vd);
+		// dGraph.addEdge(vb, vc);
+		// dGraph.addEdge(vb, vd);
+		// dGraph.addEdge(vb, vf);
+		// dGraph.addEdge(vd, vf);
+		// dGraph.addEdge(vd, vg);
+		// dGraph.addEdge(vf, vg);
 
 		// dGraph.setVertex(0, "a");
 		// dGraph.setVertex(1, "b");
@@ -244,14 +268,14 @@ public class Main {
 		// System.out.println(dGraph.edgeCount());
 		//
 		// bfs连通图专用
-		 System.out.println("bfs vertex:" + dGraph.bfs().toString());
+		// System.out.println("bfs vertex:" + dGraph.bfs().toString());
 
 		// dfs
-		System.out.println(dGraph.toString());
-		dGraph.printVertexes();
-		dGraph.dfs(va);
-		System.out.println(dGraph.toString());
-		dGraph.printVertexes();
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
+		// dGraph.dfs(va);
+		// System.out.println(dGraph.toString());
+		// dGraph.printVertexes();
 	}
 
 	public static void printArray(String title, int[] array) {

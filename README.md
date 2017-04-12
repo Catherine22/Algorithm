@@ -59,12 +59,13 @@ Algorithms
 
 ## Graph
 
-Traversal - to simplify a graph data structure and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
+Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
 
 
-### Tree
+### Binary Tree
 
-  - It's a special case of graphs.
+![tree][1]
+  - It's a special case of Graph.
   - Performance
 
 |    | vector | list | tree |
@@ -73,16 +74,23 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
 | insert / remove | X | O | O |
 
 
-  - Imaginary Tree is sort of a List<List>
+  - Imaginary Tree is sort of List<List>
+  - Tree traversal (Pre-order, in-order and post-order)
   - [MyBinaryTree]
 
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>
   > - Depth-first search (DFS) in recursion and non-recursion ways<br>
+  > - Find out the successor of any node by in-order traversal.<br>
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
+### Binary Search Tree (BST)
+  - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
+  - In this case, I was assuming that there are no duplicated keys in the BST. Every operation based on this scenario.
+  - [MyBinarySearchTree]
 
+  > Most methods were copied from [MyBinaryTree]. But here I added 'key' in the Node of [BST_Template], which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
 
 ### Undirected Graph
   - [UndirectedGraph]
@@ -135,10 +143,16 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
-   [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/trees/MyBinaryTree.java>
+   [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinaryTree.java>
+   [BST_Template]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/BST_Template.java>
+   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTree.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
+   [tree_pic]:<https://github.com/Catherine22/Algorithms/blob/master/res/tree.png>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>
+
+
+  [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
