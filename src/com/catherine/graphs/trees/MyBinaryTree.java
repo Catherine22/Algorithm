@@ -293,6 +293,8 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		if (parent.rChild != null)
 			size -= size(parent.rChild);
 		parent.rChild = null;
+		parent.height = (parent.lChild != null) ? parent.lChild.height + 1 : 0;
+		updateAboveHeight(parent);
 	}
 
 	/**
@@ -305,6 +307,8 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		if (parent.lChild != null)
 			size -= size(parent.lChild);
 		parent.lChild = null;
+		parent.height = (parent.rChild != null) ? parent.rChild.height + 1 : 0;
+		updateAboveHeight(parent);
 	}
 
 	/**

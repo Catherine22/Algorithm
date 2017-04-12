@@ -64,9 +64,10 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 		// 情况2
 		if (node.lChild != null && node.rChild != null) {
 			Node<E> succ = succ(node);
-
-			System.out.println("node:" + node.key);
-			System.out.println("succ:" + succ.key);
+			if (SHOW_LOG) {
+				System.out.println("node:" + node.key);
+				System.out.println("succ:" + succ.key);
+			}
 			swap(node, succ);
 			node = succ;
 		}
@@ -75,10 +76,12 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 		// 情况1
 		if (node.lChild != null && node.rChild == null) {
 			killParent(parent, node.lChild);
+			parent.height = parent.lChild.height + 1;
 		}
 		// 情况1
 		else if (node.lChild == null && node.rChild != null) {
 			killParent(parent, node.rChild);
+			parent.height = parent.rChild.height + 1;
 		}
 		// 情况1
 		else {
@@ -86,10 +89,10 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 				parent.lChild = null;
 			else if (node != root && node == parent.rChild)
 				parent.rChild = null;
+			parent.height = 0;
 			node = null;
-			System.out.println("updateAboveHeight:" + parent.key);
-			updateAboveHeight(parent);
 		}
+		updateAboveHeight(parent);
 
 		size--;
 	}
