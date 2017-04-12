@@ -19,7 +19,7 @@ Algorithms
 > **Tips**
 > - increaseArray() - In the worst case, It takes O(n) to increase the capacity of a vector by one, but it's space utilization is always 100%. <br>
 > - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1). <br>
-> While you need a bigger array, double the capacity of your array is more efficient. In general, it's better.
+> If you need a large array, double the capacity of your array is more efficient. In general, it's better.
 
   - Insert/remove/find a element
   - Shift continued-elements (It's also a high level method to remove continued-elements)
@@ -28,11 +28,11 @@ Algorithms
 
   > **Tips**
   > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
-  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort before removing duplicates. It's a little like using sort()+unique() in vector on C++. <br>
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array to find an element.** If the array contains the element, it'll return where the element is in the array or the latest position if there're duplicated elements.
+  - [Sequence Searching] is used to **search a sorted array to find an element.** If the array contains the element, it'll return where the element is in the array or the latest position while there're duplicated elements.
   - As I was saying, if the element've never been found, this algorithm would return the index referring to a value(array[index] < element < array[index+1]).
       - two ways to do binary searching (Usually, binSearch2() which is more efficient than binSearch() is better)
       - Fibonacci Searching
@@ -87,7 +87,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Binary Search Tree (BST)
   - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
-  - In this case, I was assuming that there are no duplicated keys in the BST. Every operation based on this scenario.
+  - In this case, I assumed that there are no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
   > Most methods were copied from [MyBinaryTree]. But here I added 'key' in the Node of [BST_Template], which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
