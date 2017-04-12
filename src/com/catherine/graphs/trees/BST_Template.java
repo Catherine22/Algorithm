@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-import com.catherine.graphs.trees.BST_Template.Node;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -39,9 +38,9 @@ abstract class BST_Template<E> {
 		Node<E> n;
 		if (root == null) {
 			size++;
-			n = new Node<>(key, data, null, null, null, 0);
+			n = new Node<>(key, data, null, null, null, 0, 0);
 		} else
-			n = new Node<>(key, data, null, root.lChild, root.rChild, root.height);
+			n = new Node<>(key, data, null, root.lChild, root.rChild, root.height, root.depth);
 		root = n;
 		hot = root;
 		return root;
@@ -59,9 +58,14 @@ abstract class BST_Template<E> {
 	public static class Node<E> {
 
 		/**
-		 * 节点到叶子的最长长度
+		 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 		 */
 		int height;
+
+		/**
+		 * 根到节点的最长长度（由上往下，从根出发）
+		 */
+		int depth;
 
 		/**
 		 * key-value, key不重复
@@ -72,9 +76,10 @@ abstract class BST_Template<E> {
 		Node<E> lChild;
 		Node<E> rChild;
 
-		public Node(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height) {
+		public Node(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
 			this.key = key;
 			this.data = data;
+			this.depth = depth;
 			this.height = height;
 			this.parent = parent;
 			this.lChild = lChild;
@@ -83,11 +88,13 @@ abstract class BST_Template<E> {
 
 		public String toString() {
 			if (parent != null)
-				return String.format("{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"parent_key\": \"%d\"}", key,
-						data, height, parent.key);
+				return String.format(
+						"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%d\"}",
+						key, data, height, depth, parent.key);
 			else
-				return String.format("{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"parent_key\": \"%s\"}", key,
-						data, height, "null parent");
+				return String.format(
+						"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\"}",
+						key, data, height, depth, "null parent");
 		}
 	}
 
@@ -279,11 +286,12 @@ abstract class BST_Template<E> {
 			final Node<E> cNode = parent.lChild;
 			final Node<E> lChild = cNode.lChild;
 			final Node<E> rChild = cNode.rChild;
-			final int h = cNode.height;
-			child = new Node<>(key, data, parent, lChild, rChild, h + 1);
+			child = new Node<>(key, data, parent, lChild, rChild, cNode.height, cNode.depth);
 		} else
-			child = new Node<>(key, data, parent, null, null, parent.height + 1);
-
+			child = new Node<>(key, data, parent, null, null, 0, parent.depth + 1);
+		
+		if (SHOW_LOG)
+			System.out.println("insertLC:" + child.toString());
 		size++;
 		parent.lChild = child;
 		updateAboveHeight(child);
@@ -305,11 +313,12 @@ abstract class BST_Template<E> {
 			final Node<E> cNode = parent.rChild;
 			final Node<E> lChild = cNode.lChild;
 			final Node<E> rChild = cNode.rChild;
-			final int h = cNode.height;
-			child = new Node<>(key, data, parent, lChild, rChild, h + 1);
+			child = new Node<>(key, data, parent, lChild, rChild, cNode.height, cNode.depth);
 		} else
-			child = new Node<>(key, data, parent, null, null, parent.height + 1);
+			child = new Node<>(key, data, parent, null, null, 0, parent.depth + 1);
 
+		if (SHOW_LOG)
+			System.out.println("insertRC:" + child.toString());
 		size++;
 		parent.rChild = child;
 		updateAboveHeight(child);
@@ -358,7 +367,7 @@ abstract class BST_Template<E> {
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
-				System.out.print(node.key + " ");
+				System.out.print(node.key + "(" + node.height + ") ");
 
 				if (node.lChild != null)
 					siblings.offer(node.lChild);
@@ -539,7 +548,7 @@ abstract class BST_Template<E> {
 	public void traverseIn(Node<E> node) {
 		if (node.lChild != null)
 			traverseIn(node.lChild);
-		System.out.print(node.key + " ");
+		System.out.print(node.key);
 		if (node.rChild != null)
 			traverseIn(node.rChild);
 	}

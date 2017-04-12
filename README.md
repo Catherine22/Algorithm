@@ -59,12 +59,12 @@ Algorithms
 
 ## Graph
 
-Traversal - to simplify a graph data structure and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
+Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
 
 
 ### Binary Tree
 
-  - It's a special case of graphs.
+  - It's a special case of Graph.
   - Performance
 
 |    | vector | list | tree |
@@ -73,7 +73,7 @@ Traversal - to simplify a graph data structure and make it looks like a sequence
 | insert / remove | X | O | O |
 
 
-  - Imaginary Tree is sort of a List<List>
+  - Imaginary Tree is sort of List<List>
   - Tree traversal (Pre-order, in-order and post-order)
   - [MyBinaryTree]
 

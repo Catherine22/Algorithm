@@ -6,11 +6,11 @@ public class TuringMachine {
 	protected final boolean SHOW_DEBUG_LOG = true;
 
 	/**
-	 * 1. move head to the last character from index 0. 2. move head to the left
-	 * index and update the value. <br>
+	 * 1. Move head to the last character from index 0.<br>
+	 * 2. Move head to the left index and update the value. <br>
 	 * <br>
-	 * In this function, head keep moving until the flag 'accomplished' become
-	 * to true, if take away the flag and the increase codes, the user-input
+	 * In this function, head keeps moving until 'accomplished',the flag turns
+	 * to true, if you take the flag away and the codes in 'increase' area, the user-input
 	 * array would be scanned without a break. <br>
 	 * 
 	 * @param array
@@ -133,7 +133,7 @@ public class TuringMachine {
 	private Stack<Instruction> history = new Stack<>();
 
 	/**
-	 * Instructions stack
+	 * Instruction
 	 * 
 	 * @param headState
 	 * @param chr

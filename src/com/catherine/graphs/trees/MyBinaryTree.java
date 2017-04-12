@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-import com.catherine.graphs.trees.BST_Template.Node;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -35,12 +34,11 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 */
 	public Node<E> setRoot(E data) {
 		Node<E> n;
-		if (root == null){
+		if (root == null) {
 			size++;
-			n = new Node<>(data, null, null, null, 0);
-		}
-		else
-			n = new Node<>(data, null, root.lChild, root.rChild, root.height);
+			n = new Node<>(data, null, null, null, 0, 0);
+		} else
+			n = new Node<>(data, null, root.lChild, root.rChild, root.height, root.depth);
 		root = n;
 		return root;
 	}
@@ -57,16 +55,22 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	public static class Node<E> {
 
 		/**
-		 * 节点到叶子的最长长度
+		 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 		 */
 		int height;
+
+		/**
+		 * 根到节点的最长长度（由上往下，从根出发）
+		 */
+		int depth;
 		E data;
 		Node<E> parent;
 		Node<E> lChild;
 		Node<E> rChild;
 
-		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height) {
+		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
 			this.data = data;
+			this.depth = depth;
 			this.height = height;
 			this.parent = parent;
 			this.lChild = lChild;
@@ -237,11 +241,12 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			final Node<E> cNode = parent.lChild;
 			final Node<E> lChild = cNode.lChild;
 			final Node<E> rChild = cNode.rChild;
-			final int h = cNode.height;
-			child = new Node<>(data, parent, lChild, rChild, h + 1);
+			child = new Node<>(data, parent, lChild, rChild, cNode.height, cNode.depth);
 		} else
-			child = new Node<>(data, parent, null, null, parent.height + 1);
+			child = new Node<>(data, parent, null, null, 0, parent.depth + 1);
 
+		if (SHOW_LOG)
+			System.out.println("insertLC:" + child.toString());
 		size++;
 		parent.lChild = child;
 		updateAboveHeight(child);
@@ -263,11 +268,12 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			final Node<E> cNode = parent.rChild;
 			final Node<E> lChild = cNode.lChild;
 			final Node<E> rChild = cNode.rChild;
-			final int h = cNode.height;
-			child = new Node<>(data, parent, lChild, rChild, h + 1);
+			child = new Node<>(data, parent, lChild, rChild, cNode.height, cNode.depth);
 		} else
-			child = new Node<>(data, parent, null, null, parent.height + 1);
+			child = new Node<>(data, parent, null, null, 0, parent.depth + 1);
 
+		if (SHOW_LOG)
+			System.out.println("insertRC:" + child.toString());
 		size++;
 		parent.rChild = child;
 		updateAboveHeight(child);
