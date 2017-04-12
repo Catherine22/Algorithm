@@ -3,7 +3,7 @@ Algorithms
 
 
 ## Sort
-- [Bubble Sort] (normal version, v2, v3)
+- [Bubble Sort]
 - [Insertion Sort]
 - [Merge Sort]
 - Heap sort
