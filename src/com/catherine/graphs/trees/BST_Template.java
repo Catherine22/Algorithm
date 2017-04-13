@@ -15,7 +15,7 @@ import com.catherine.utils.TrackLog;
  * @param <E>
  */
 abstract class BST_Template<E> {
-	final static boolean SHOW_LOG = true;
+	final static boolean SHOW_LOG = false;
 	transient int size = 0;
 	Node<E> root;
 	/**
