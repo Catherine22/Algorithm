@@ -18,7 +18,7 @@ import com.catherine.utils.TrackLog;
 public class MyBinaryTree<E> implements java.io.Serializable {
 
 	private static final long serialVersionUID = 551109471535675044L;
-	private final static boolean SHOW_LOG = true;
+	private final static boolean SHOW_LOG = false;
 	transient int size = 0;
 	private Node<E> root;
 
@@ -75,6 +75,17 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			this.parent = parent;
 			this.lChild = lChild;
 			this.rChild = rChild;
+		}
+
+		public String toString() {
+			if (parent != null)
+				return String.format(
+						"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
+						data, data, height, depth, parent.data);
+			else
+				return String.format(
+						"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
+						data, data, height, depth, "null parent");
 		}
 	}
 

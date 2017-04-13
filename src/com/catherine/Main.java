@@ -168,29 +168,29 @@ public class Main {
 		// System.out.println(b1 + "");
 
 		// Binary Tree--------------------------------------------------------
-		// MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
-		// Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
-		// mBT.insertRC(lc, "C");
-		// Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
-		// Node<String> rclc = mBT.insertLC(rc, "D");
-		// mBT.insertRC(rc, "E");
-		// mBT.setLC(rclc, "F");
-
-		// for (int i = 0; i < 500; i++) {
-		// Node<String> node = mBT.insertRC(rclc, "G");
-		// rclc = node;
-		// }
-
-		// System.out.println("H:" + mBT.getHeight());
-		// mBT.traversePre();
-		// mBT.traversePreNR1();
-		// mBT.traversePreNR2();
-		// mBT.traverseIn();
-		// mBT.traverseInNR();
-		// mBT.traversePost();
-		// mBT.traversePostNR1();
-		// mBT.traversePostNR2();
-		// mBT.traverseLevel();
+//		 MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
+//		 Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
+//		 mBT.insertRC(lc, "C");
+//		 Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
+//		 Node<String> rclc = mBT.insertLC(rc, "D");
+//		 mBT.insertRC(rc, "E");
+//		 mBT.setLC(rclc, "F");
+//
+//		 for (int i = 0; i < 500; i++) {
+//		 Node<String> node = mBT.insertRC(rclc, "G");
+//		 rclc = node;
+//		 }
+//
+//		 System.out.println("H:" + mBT.getHeight());
+//		 mBT.traversePre();
+//		 mBT.traversePreNR1();
+//		 mBT.traversePreNR2();
+//		 mBT.traverseIn();
+//		 mBT.traverseInNR();
+//		 mBT.traversePost();
+//		 mBT.traversePostNR1();
+//		 mBT.traversePostNR2();
+//		 mBT.traverseLevel();
 
 		// BST--------------------------------------------------------
 		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
@@ -204,7 +204,7 @@ public class Main {
 		mBST.insert(25, "");
 		mBST.insert(65, "");
 //		mBST.removeRCCompletely(mBST.search(80));
-//		mBST.removeLCCompletely(mBST.search(80));
+		mBST.removeLCCompletely(mBST.search(80));
 		mBST.remove(20);
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
