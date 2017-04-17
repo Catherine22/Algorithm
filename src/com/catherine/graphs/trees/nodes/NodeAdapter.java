@@ -1,5 +1,12 @@
 package com.catherine.graphs.trees.nodes;
 
+/**
+ * 利用装饰者模式切换Node
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
 public class NodeAdapter<E> implements Node<E> {
 	private Nodes type;
 	private Node<E> aNode;

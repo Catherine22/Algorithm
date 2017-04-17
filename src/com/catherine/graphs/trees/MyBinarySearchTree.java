@@ -302,4 +302,44 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 		return child;
 	}
 
+	/**
+	 * Binary Tree only
+	 */
+	@Override
+	public Node<E> setRoot(E data) {
+		throw new UnsupportedOperationException("setRoot(E data)");
+	}
+
+	/**
+	 * Binary Tree only
+	 */
+	@Override
+	public Node<E> insertLC(Node<E> parent, E data) {
+		throw new UnsupportedOperationException("insertLC(Node<E> parent, E data)");
+	}
+
+	/**
+	 * Binary Tree only
+	 */
+	@Override
+	public Node<E> insertRC(Node<E> parent, E data) {
+		throw new UnsupportedOperationException("insertRC(Node<E> parent, E data)");
+	}
+
+	/**
+	 * Binary Tree only
+	 */
+	@Override
+	public E setLC(Node<E> parent, E data) {
+		throw new UnsupportedOperationException("setLC(Node<E> parent, E data)");
+	}
+
+	/**
+	 * Binary Tree only
+	 */
+	@Override
+	public E setRC(Node<E> parent, E data) {
+		throw new UnsupportedOperationException("setRC(Node<E> parent, E data)");
+	}
+
 }
