@@ -3,6 +3,10 @@ package com.catherine.graphs.trees;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+
+import com.catherine.graphs.trees.nodes.Node;
+import com.catherine.graphs.trees.nodes.NodeAdapter;
+import com.catherine.graphs.trees.nodes.Nodes;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -15,11 +19,17 @@ import com.catherine.utils.TrackLog;
  * @param <E>
  */
 public class MyBinaryTree<E> {
-	private final static boolean SHOW_LOG = false;
-	transient int size = 0;
-	private Node<E> root;
+	protected final static boolean SHOW_LOG = false;
+	protected NodeAdapter<E> adapter;
+	protected transient int size = 0;
+	protected Node<E> root;
+
+	public MyBinaryTree() {
+	}
 
 	public MyBinaryTree(E root) {
+		adapter = new NodeAdapter<>();
+		adapter.setType(Nodes.STANDARD);
 		setRoot(root);
 	}
 
@@ -33,9 +43,9 @@ public class MyBinaryTree<E> {
 		Node<E> n;
 		if (root == null) {
 			size++;
-			n = new Node<>(data, null, null, null, 0, 0);
+			n = adapter.buildNode(data, null, null, null, 0, 0);
 		} else
-			n = new Node<>(data, null, root.lChild, root.rChild, root.height, root.depth);
+			n = adapter.buildNode(data, null, root.getlChild(), root.getrChild(), root.getHeight(), root.getDepth());
 		root = n;
 		return root;
 	}
@@ -47,31 +57,6 @@ public class MyBinaryTree<E> {
 	 */
 	public Node<E> getRoot() {
 		return root;
-	}
-
-	public class Node<E> extends AbstractNode<E> {
-		Node<E> parent;
-		Node<E> lChild;
-		Node<E> rChild;
-
-		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
-			super(data, height, depth);
-			this.parent = parent;
-			this.lChild = lChild;
-			this.rChild = rChild;
-		}
-
-		@Override
-		public String toString() {
-			if (parent != null)
-				return String.format(
-						"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-						data, data, height, depth, parent.data);
-			else
-				return String.format(
-						"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-						data, data, height, depth, "null parent");
-		}
 	}
 
 	/**
@@ -100,40 +85,12 @@ public class MyBinaryTree<E> {
 	 */
 	public int size(Node<E> node) {
 		int s = 1;// 加入自身
-		if (node.lChild != null)
-			s += size(node.lChild);
+		if (node.getlChild() != null)
+			s += size(node.getlChild());
 
-		if (node.rChild != null)
-			s += size(node.rChild);
+		if (node.getrChild() != null)
+			s += size(node.getrChild());
 		return s;
-	}
-
-	/**
-	 * 交换两节点的值（仍是同样的引用）
-	 * 
-	 * @param node1
-	 * @param node2
-	 */
-	protected void swap(Node<E> node1, Node<E> node2) {
-		if (SHOW_LOG) {
-			System.out.println("node1:" + node1.toString());
-			System.out.println("node2:" + node2.toString());
-		}
-		int tmpHeight = node1.height;
-		int tmpDepth = node1.depth;
-		E tmpData = node1.data;
-
-		node1.height = node2.height;
-		node1.depth = node2.depth;
-		node1.data = node2.data;
-		node2.height = tmpHeight;
-		node2.depth = tmpDepth;
-		node2.data = tmpData;
-
-		if (SHOW_LOG) {
-			System.out.println("new node1:" + node1.toString());
-			System.out.println("new node2:" + node2.toString());
-		}
 	}
 
 	/**
@@ -152,16 +109,16 @@ public class MyBinaryTree<E> {
 	 * 
 	 * @return 高度
 	 */
-	private void updateAboveHeight(Node<E> node) {
-		if (node.parent == null)
+	protected void updateAboveHeight(Node<E> node) {
+		if (node.getParent() == null)
 			return;
 
-		if (node.height == node.parent.height) {
-			node.parent.height++;
-			updateAboveHeight(node.parent);
-		} else if (node.parent.height - node.height >= 2) {
-			node.parent.height = node.height + 1;
-			updateAboveHeight(node.parent);
+		if (node.getHeight() == node.getParent().getHeight()) {
+			node.getParent().setHeight(node.getParent().getHeight() + 1);
+			updateAboveHeight(node.getParent());
+		} else if (node.getParent().getHeight() - node.getHeight() >= 2) {
+			node.getParent().setHeight(node.getHeight() + 1);
+			updateAboveHeight(node.getParent());
 		} else
 			return;
 	}
@@ -178,7 +135,7 @@ public class MyBinaryTree<E> {
 		if (root == null)
 			return -1;
 
-		if (root.lChild == null && root.rChild == null)
+		if (root.getlChild() == null && root.getrChild() == null)
 			return 0;
 
 		return getHighestChild(root);
@@ -197,21 +154,21 @@ public class MyBinaryTree<E> {
 		if (node == null)
 			return -1;// 若为叶子，上一次判断时会直达else判断式，因此l和r都多加一次，在此处扣除
 
-		if (node.lChild != null && node.rChild == null) {
-			l += getHighestChild(node.lChild);
+		if (node.getlChild() != null && node.getrChild() == null) {
+			l += getHighestChild(node.getlChild());
 			l++;
-		} else if (node.lChild == null && node.rChild != null) {
-			r += getHighestChild(node.rChild);
+		} else if (node.getlChild() == null && node.getrChild() != null) {
+			r += getHighestChild(node.getrChild());
 			r++;
 		} else {
-			l += getHighestChild(node.lChild);// 若为叶子得-1
-			r += getHighestChild(node.rChild);// 若为叶子得-1
+			l += getHighestChild(node.getlChild());// 若为叶子得-1
+			r += getHighestChild(node.getrChild());// 若为叶子得-1
 			l++;
 			r++;
 		}
 
 		if (SHOW_LOG)
-			System.out.println(node.data + "\tl:" + l + "\tr:" + r + "\th:" + node.height);
+			System.out.println(node.getData() + "\tl:" + l + "\tr:" + r + "\th:" + node.getHeight());
 		return (l > r) ? l : r;
 	}
 
@@ -236,18 +193,18 @@ public class MyBinaryTree<E> {
 	 */
 	public Node<E> insertLC(Node<E> parent, E data) {
 		Node<E> child;
-		if (parent.lChild != null) {
-			final Node<E> cNode = parent.lChild;
-			final Node<E> lChild = cNode.lChild;
-			final Node<E> rChild = cNode.rChild;
-			child = new Node<>(data, parent, lChild, rChild, cNode.height, cNode.depth);
+		if (parent.getlChild() != null) {
+			final Node<E> cNode = parent.getlChild();
+			final Node<E> lChild = cNode.getlChild();
+			final Node<E> rChild = cNode.getrChild();
+			child = adapter.buildNode(data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
 		} else
-			child = new Node<>(data, parent, null, null, 0, parent.depth + 1);
+			child = adapter.buildNode(data, parent, null, null, 0, parent.getDepth() + 1);
 
 		if (SHOW_LOG)
 			System.out.println("insertLC:" + child.toString());
 		size++;
-		parent.lChild = child;
+		parent.setlChild(child);
 		updateAboveHeight(child);
 		return child;
 	}
@@ -263,18 +220,18 @@ public class MyBinaryTree<E> {
 	 */
 	public Node<E> insertRC(Node<E> parent, E data) {
 		Node<E> child;
-		if (parent.rChild != null) {
-			final Node<E> cNode = parent.rChild;
-			final Node<E> lChild = cNode.lChild;
-			final Node<E> rChild = cNode.rChild;
-			child = new Node<>(data, parent, lChild, rChild, cNode.height, cNode.depth);
+		if (parent.getrChild() != null) {
+			final Node<E> cNode = parent.getrChild();
+			final Node<E> lChild = cNode.getlChild();
+			final Node<E> rChild = cNode.getrChild();
+			child = adapter.buildNode(data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
 		} else
-			child = new Node<>(data, parent, null, null, 0, parent.depth + 1);
+			child = adapter.buildNode(data, parent, null, null, 0, parent.getDepth() + 1);
 
 		if (SHOW_LOG)
 			System.out.println("insertRC:" + child.toString());
 		size++;
-		parent.rChild = child;
+		parent.setrChild(child);
 		updateAboveHeight(child);
 		return child;
 	}
@@ -286,10 +243,11 @@ public class MyBinaryTree<E> {
 	 *            父节点
 	 */
 	public void removeRCCompletely(Node<E> parent) {
-		if (parent.rChild != null)
-			size -= size(parent.rChild);
-		parent.rChild = null;
-		parent.height = (parent.lChild != null) ? parent.lChild.height + 1 : 0;
+		if (parent.getrChild() != null)
+			size -= size(parent.getrChild());
+		parent.setrChild(null);
+		int height = (parent.getlChild() != null) ? parent.getlChild().getHeight() + 1 : 0;
+		parent.setHeight(height);
 		updateAboveHeight(parent);
 	}
 
@@ -300,10 +258,11 @@ public class MyBinaryTree<E> {
 	 *            父节点
 	 */
 	public void removeLCCompletely(Node<E> parent) {
-		if (parent.lChild != null)
-			size -= size(parent.lChild);
-		parent.lChild = null;
-		parent.height = (parent.rChild != null) ? parent.rChild.height + 1 : 0;
+		if (parent.getlChild() != null)
+			size -= size(parent.getlChild());
+		parent.setlChild(null);
+		int height = (parent.getrChild() != null) ? parent.getrChild().getHeight() + 1 : 0;
+		parent.setHeight(height);
 		updateAboveHeight(parent);
 	}
 
@@ -317,13 +276,13 @@ public class MyBinaryTree<E> {
 	 * @return 原数值
 	 */
 	public E setLC(Node<E> parent, E data) {
-		if (parent.lChild == null) {
+		if (parent.getlChild() == null) {
 			insertLC(parent, data);
 			return null;
 		}
 
-		final E o = parent.lChild.data;
-		parent.lChild.data = data;
+		final E o = parent.getlChild().getData();
+		parent.getlChild().setData(data);
 		return o;
 	}
 
@@ -337,13 +296,13 @@ public class MyBinaryTree<E> {
 	 * @return 原数值
 	 */
 	public E setRC(Node<E> parent, E data) {
-		if (parent.rChild == null) {
+		if (parent.getrChild() == null) {
 			insertRC(parent, data);
 			return null;
 		}
 
-		final E o = parent.rChild.data;
-		parent.rChild.data = data;
+		final E o = parent.getrChild().getData();
+		parent.getrChild().setData(data);
 		return o;
 	}
 
@@ -365,16 +324,13 @@ public class MyBinaryTree<E> {
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
+				System.out.print(node.getInfo());
 
-				if (node.lChild != null)
-					siblings.offer(node.lChild);
+				if (node.getlChild() != null)
+					siblings.offer(node.getlChild());
 
-				if (node.rChild != null)
-					siblings.offer(node.rChild);
+				if (node.getrChild() != null)
+					siblings.offer(node.getrChild());
 			}
 
 			for (Node<E> n : siblings)
@@ -403,16 +359,13 @@ public class MyBinaryTree<E> {
 		bin.push(root);
 		while (!bin.isEmpty()) {
 			Node<E> node = bin.pop();
-			if (node.data == null)
-				System.out.print("null ");
-			else
-				System.out.print(node.data + " ");
+			System.out.print(node.getInfo());
 
-			if (node.rChild != null)
-				bin.push(node.rChild);
+			if (node.getrChild() != null)
+				bin.push(node.getrChild());
 
-			if (node.lChild != null)
-				bin.push(node.lChild);
+			if (node.getlChild() != null)
+				bin.push(node.getlChild());
 		}
 		System.out.println("\n");
 
@@ -441,18 +394,15 @@ public class MyBinaryTree<E> {
 		while (node != null || !bin.isEmpty()) {
 			// 遍历一排的所有左节点
 			while (node != null) {
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
+				System.out.print(node.getInfo());
 				bin.push(node);// 弹出打印过的没用节点
-				node = node.lChild;
+				node = node.getlChild();
 			}
 
 			// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
 			if (bin.size() > 0) {
 				node = bin.pop();
-				node = node.rChild;
+				node = node.getrChild();
 			}
 		}
 		System.out.println("\n");
@@ -485,14 +435,11 @@ public class MyBinaryTree<E> {
 	 * 从任一节点先序遍历（中-左-右）
 	 */
 	public void traversePre(Node<E> node) {
-		if (node.data == null)
-			System.out.print("null ");
-		else
-			System.out.print(node.data + " ");
-		if (node.lChild != null)
-			traversePre(node.lChild);
-		if (node.rChild != null)
-			traversePre(node.rChild);
+		System.out.print(node.getInfo());
+		if (node.getlChild() != null)
+			traversePre(node.getlChild());
+		if (node.getrChild() != null)
+			traversePre(node.getrChild());
 	}
 
 	/**
@@ -518,15 +465,12 @@ public class MyBinaryTree<E> {
 		while (node != null || bin.size() > 0) {
 			while (node != null) {
 				bin.push(node);
-				node = node.lChild;
+				node = node.getlChild();
 			}
 			if (!bin.isEmpty()) {
 				node = bin.pop();
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
-				node = node.rChild;
+				System.out.print(node.getInfo());
+				node = node.getrChild();
 			}
 		}
 		System.out.println("\n");
@@ -559,14 +503,11 @@ public class MyBinaryTree<E> {
 	 * 从任一节点中序遍历（左-中-右）
 	 */
 	public void traverseIn(Node<E> node) {
-		if (node.lChild != null)
-			traverseIn(node.lChild);
-		if (node.data == null)
-			System.out.print("null ");
-		else
-			System.out.print(node.data + " ");
-		if (node.rChild != null)
-			traverseIn(node.rChild);
+		if (node.getlChild() != null)
+			traverseIn(node.getlChild());
+		System.out.print(node.getInfo());
+		if (node.getrChild() != null)
+			traverseIn(node.getrChild());
 	}
 
 	/**
@@ -606,16 +547,16 @@ public class MyBinaryTree<E> {
 	 */
 	private void succ(Node<E> node, Node<E> tmp) {
 		if (!stopRecursion) {
-			if (tmp.lChild != null)
-				succ(node, tmp.lChild);
+			if (tmp.getlChild() != null)
+				succ(node, tmp.getlChild());
 			// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
 			if (node == preTmp) {
 				succ = tmp;
 				stopRecursion = true;
 			}
 			preTmp = tmp;
-			if (tmp.rChild != null)
-				succ(node, tmp.rChild);
+			if (tmp.getrChild() != null)
+				succ(node, tmp.getrChild());
 		}
 	}
 
@@ -639,22 +580,19 @@ public class MyBinaryTree<E> {
 		while (node != null || bin.size() > 0) {
 			while (node != null) {
 				bin.push(node);
-				node = node.lChild;
+				node = node.getlChild();
 			}
 
 			node = bin.peek();
 
 			// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
-			if (node.rChild == null || node.rChild == lastLC) {
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
-				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.rChild == lastLC
+			if (node.getrChild() == null || node.getrChild() == lastLC) {
+				System.out.print(node.getInfo());
+				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() == lastLC
 				bin.pop();// 打印过就从栈里弹出
 				node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
 			} else
-				node = node.rChild;
+				node = node.getrChild();
 		}
 		System.out.println("\n");
 
@@ -684,18 +622,15 @@ public class MyBinaryTree<E> {
 			node = lBin.pop();
 			rBin.push(node);
 
-			if (node.lChild != null)
-				lBin.push(node.lChild);
+			if (node.getlChild() != null)
+				lBin.push(node.getlChild());
 
-			if (node.rChild != null)
-				lBin.push(node.rChild);
+			if (node.getrChild() != null)
+				lBin.push(node.getrChild());
 		}
 
 		while (!rBin.isEmpty()) {
-			if (rBin.peek().data == null)
-				System.out.print("null ");
-			else
-				System.out.print(rBin.peek().data + " ");
+			System.out.print(rBin.peek().getInfo());
 			rBin.pop();
 		}
 
@@ -729,13 +664,10 @@ public class MyBinaryTree<E> {
 	 * 从任一节点后序遍历（左-右-中）
 	 */
 	public void traversePost(Node<E> node) {
-		if (node.lChild != null)
-			traversePost(node.lChild);
-		if (node.rChild != null)
-			traversePost(node.rChild);
-		if (node.data == null)
-			System.out.print("null ");
-		else
-			System.out.print(node.data + " ");
+		if (node.getlChild() != null)
+			traversePost(node.getlChild());
+		if (node.getrChild() != null)
+			traversePost(node.getrChild());
+		System.out.print(node.getInfo());
 	}
 }

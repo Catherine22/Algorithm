@@ -2,6 +2,10 @@ package com.catherine.graphs.trees.nodes;
 
 public interface Node<E> {
 
+	public int getKey();
+
+	public void setKey(int key);
+
 	public int getHeight();
 
 	public void setHeight(int height);
@@ -25,4 +29,6 @@ public interface Node<E> {
 	public Node<E> getrChild();
 
 	public void setrChild(Node<E> rChild);
+
+	public String getInfo();
 }

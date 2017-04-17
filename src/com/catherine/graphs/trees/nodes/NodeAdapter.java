@@ -4,27 +4,33 @@ public class NodeAdapter<E> implements Node<E> {
 	private Nodes type;
 	private Node<E> aNode;
 
-	public NodeAdapter(Nodes type) {
+	public NodeAdapter() {
+	}
+
+	public void setType(Nodes type) {
 		this.type = type;
 	}
 
-	public void buildNode(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
+	public Node<E> buildNode(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
 		if (type == Nodes.STANDARD)
 			aNode = new BNode<E>(data, (BNode<E>) parent, (BNode<E>) lChild, (BNode<E>) rChild, height, depth);
+		return aNode;
 	}
 
-	public void buildNode(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
+	public Node<E> buildNode(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
 		if (type == Nodes.STANDARD)
 			aNode = new BNode<E>(data, (BNode<E>) parent, (BNode<E>) lChild, (BNode<E>) rChild, height, depth);
 		else if (type == Nodes.BST)
 			aNode = new BSTNode<E>(key, data, (BSTNode<E>) parent, (BSTNode<E>) lChild, (BSTNode<E>) rChild, height,
 					depth);
+		return aNode;
 	}
 
 	public Nodes getType() {
 		return type;
 	}
 
+	@Override
 	public int getKey() {
 		if (type == Nodes.BST) {
 			BSTNode<E> node = (BSTNode<E>) aNode;
@@ -34,11 +40,11 @@ public class NodeAdapter<E> implements Node<E> {
 
 	}
 
+	@Override
 	public void setKey(int key) {
 		if (type == Nodes.BST) {
 			BSTNode<E> node = (BSTNode<E>) aNode;
 			node.setKey(key);
-			;
 		}
 	}
 
@@ -105,6 +111,11 @@ public class NodeAdapter<E> implements Node<E> {
 	@Override
 	public String toString() {
 		return aNode.toString();
+	}
+
+	@Override
+	public String getInfo() {
+		return aNode.getInfo();
 	}
 
 }

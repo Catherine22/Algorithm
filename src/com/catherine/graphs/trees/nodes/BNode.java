@@ -24,14 +24,6 @@ public class BNode<E> implements Node<E> {
 		this.rChild = rChild;
 	}
 
-	public String getInfo() {
-		if (data != null)
-			return data + " ";
-		else
-			return "null ";
-
-	}
-
 	@Override
 	public String toString() {
 		if (parent != null)
@@ -44,6 +36,17 @@ public class BNode<E> implements Node<E> {
 					data, data, height, depth, "null parent");
 	}
 
+
+	@Override
+	public int getKey() {
+		//Do nothing
+		return -1;
+	}
+
+	@Override
+	public void setKey(int key) {
+		//Do nothing
+	}
 	@Override
 	public int getHeight() {
 		return height;
@@ -102,5 +105,14 @@ public class BNode<E> implements Node<E> {
 	@Override
 	public void setrChild(Node<E> rChild) {
 		this.rChild = (BNode<E>) rChild;
+	}
+
+	@Override
+	public String getInfo() {
+		if (data != null)
+			return data + " ";
+		else
+			return "null ";
+
 	}
 }

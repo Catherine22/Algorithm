@@ -31,10 +31,6 @@ public class BSTNode<E> implements Node<E> {
 		this.rChild = rChild;
 	}
 
-	public String getInfo() {
-		return key + "(" + height + ") ";
-	}
-
 	@Override
 	public String toString() {
 		if (parent != null)
@@ -47,10 +43,12 @@ public class BSTNode<E> implements Node<E> {
 					data, height, depth, "null parent");
 	}
 
+	@Override
 	public int getKey() {
 		return key;
 	}
 
+	@Override
 	public void setKey(int key) {
 		this.key = key;
 	}
@@ -113,5 +111,10 @@ public class BSTNode<E> implements Node<E> {
 	@Override
 	public void setrChild(Node<E> rChild) {
 		this.rChild = (BSTNode<E>) rChild;
+	}
+
+	@Override
+	public String getInfo() {
+		return key + "(" + height + ") ";
 	}
 }

@@ -13,7 +13,7 @@ import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.graphs.trees.MyBinarySearchTree;
 import com.catherine.graphs.trees.MyBinaryTree;
-import com.catherine.graphs.trees.MyBinaryTree.Node;
+import com.catherine.graphs.trees.nodes.Node;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
