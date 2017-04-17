@@ -10,9 +10,8 @@ package com.catherine.graphs.trees;
  * @author Catherine
  *
  */
-public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Serializable {
-	private static final long serialVersionUID = -9214087702987337919L;
-
+public class MyBinarySearchTree<E> extends BST_Template<E>{
+	
 	public MyBinarySearchTree(int key, E root) {
 		super(key, root);
 	}
@@ -95,5 +94,25 @@ public class MyBinarySearchTree<E> extends BST_Template<E> implements java.io.Se
 		updateAboveHeight(parent);
 
 		size--;
+	}
+
+	@Override
+	public boolean isBBST() {
+		return false;
+	}
+
+	@Override
+	void balance() {
+		
+	}
+
+	@Override
+	void zig(Node<E> node) {
+		
+	}
+
+	@Override
+	void zag(Node<E> node) {
+		
 	}
 }

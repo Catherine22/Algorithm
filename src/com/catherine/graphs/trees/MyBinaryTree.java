@@ -3,7 +3,6 @@ package com.catherine.graphs.trees;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
-
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -15,9 +14,7 @@ import com.catherine.utils.TrackLog;
  *
  * @param <E>
  */
-public class MyBinaryTree<E> implements java.io.Serializable {
-
-	private static final long serialVersionUID = 551109471535675044L;
+public class MyBinaryTree<E> {
 	private final static boolean SHOW_LOG = false;
 	transient int size = 0;
 	private Node<E> root;
@@ -52,31 +49,19 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		return root;
 	}
 
-	public static class Node<E> {
-
-		/**
-		 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
-		 */
-		int height;
-
-		/**
-		 * 根到节点的最长长度（由上往下，从根出发）
-		 */
-		int depth;
-		E data;
+	public class Node<E> extends AbstractNode<E> {
 		Node<E> parent;
 		Node<E> lChild;
 		Node<E> rChild;
 
 		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
-			this.data = data;
-			this.depth = depth;
-			this.height = height;
+			super(data, height, depth);
 			this.parent = parent;
 			this.lChild = lChild;
 			this.rChild = rChild;
 		}
 
+		@Override
 		public String toString() {
 			if (parent != null)
 				return String.format(
@@ -623,12 +608,6 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		if (!stopRecursion) {
 			if (tmp.lChild != null)
 				succ(node, tmp.lChild);
-			if (SHOW_LOG) {
-				if (preTmp == null)
-					System.out.print(tmp.data + "(NULL) ");
-				else
-					System.out.print(tmp.data + "(" + preTmp.data + ") ");
-			}
 			// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
 			if (node == preTmp) {
 				succ = tmp;

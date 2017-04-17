@@ -3,7 +3,6 @@ package com.catherine.graphs.trees;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
-
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -55,37 +54,25 @@ abstract class BST_Template<E> {
 		return root;
 	}
 
-	public static class Node<E> {
-
-		/**
-		 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
-		 */
-		int height;
-
-		/**
-		 * 根到节点的最长长度（由上往下，从根出发）
-		 */
-		int depth;
+	public static class Node<E> extends AbstractNode<E> {
 
 		/**
 		 * key-value, key不重复
 		 */
 		int key;
-		E data;
 		Node<E> parent;
 		Node<E> lChild;
 		Node<E> rChild;
 
 		public Node(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
+			super(data, height, depth);
 			this.key = key;
-			this.data = data;
-			this.depth = depth;
-			this.height = height;
 			this.parent = parent;
 			this.lChild = lChild;
 			this.rChild = rChild;
 		}
 
+		@Override
 		public String toString() {
 			if (parent != null)
 				return String.format(
@@ -737,7 +724,7 @@ abstract class BST_Template<E> {
 	 *            搜寻节点的key
 	 * @return 命中节点或<code>null<code>
 	 */
-	public abstract Node<E> search(int key);
+	abstract Node<E> search(int key);
 
 	/**
 	 * 先做一次遍历，得到hot，用hot作为父节点插入。 暂不考虑重复数值情况。
@@ -747,7 +734,7 @@ abstract class BST_Template<E> {
 	 * @param data
 	 *            插入节点的value
 	 */
-	public abstract void insert(int key, E data);
+	abstract void insert(int key, E data);
 
 	/**
 	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
@@ -757,5 +744,39 @@ abstract class BST_Template<E> {
 	 * 
 	 * @param key
 	 */
-	public abstract void remove(int key);
+	abstract void remove(int key);
+
+	/**
+	 * 随机生成，取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
+	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
+	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
+	 */
+
+	/**
+	 * 左右子树的高度越接近（越平衡），全树的高度也通常越低。<br>
+	 * 由n个节点组成的二叉树，高度不低于base2的log n，此时成为理想平衡，出现在满二叉树。<br>
+	 * 实际应用中理想平衡太严苛，会放松平衡的标准，只要能确保树的高度不超过base10的log n，就是适度平衡。<br>
+	 * 此时的树称为BBST，平衡二叉搜索树。
+	 * 
+	 * @return
+	 */
+	abstract boolean isBBST();
+
+	/**
+	 * 两个限制：<br>
+	 * 操作的计算时间O(1)<br>
+	 * 操作次数不超过O(log n)
+	 */
+	abstract void balance();
+
+	/**
+	 * 围绕node向右旋转
+	 */
+	abstract void zig(Node<E> node);
+
+	/**
+	 * 围绕node向左旋转
+	 */
+	abstract void zag(Node<E> node);
+
 }
