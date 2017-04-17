@@ -104,6 +104,93 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	}
 
 	/**
+	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
+	 * 情况2:欲移除节点有左右孩子。化繁为简，变成情况1再处理<br>
+	 * 情况2先找出目标节点的后继节点{@link #succ(Node)}，两节点交换后就变成情况1（顶多只会有右孩子，因为后继已经是最左边的节点了），
+	 * 比照情况1处理，这边还要再将欲移除节点的父节点设为hot，重新整理树高。
+	 * 
+	 * @param key
+	 */
+	public void remove(int key) {
+		Node<E> node = search(key);
+		if (node == null)
+			throw new NullPointerException("Node not found.");
+
+		// 情况2
+		if (node.getlChild() != null && node.getrChild() != null) {
+			Node<E> succ = succ(node);
+			if (SHOW_LOG) {
+				System.out.println("node:" + node.getKey());
+				System.out.println("succ:" + succ.getKey());
+			}
+			swap(node, succ);
+			node = succ;
+		}
+
+		Node<E> parent = node.getParent();
+		// 情况1
+		if (node.getlChild() != null && node.getrChild() == null) {
+			killParent(parent, node.getlChild());
+			parent.setHeight(parent.getlChild().getHeight() + 1);
+		}
+		// 情况1
+		else if (node.getlChild() == null && node.getrChild() != null) {
+			killParent(parent, node.getrChild());
+			parent.setHeight(parent.getrChild().getHeight() + 1);
+		}
+		// 情况1
+		else {
+			if (node != root && node == parent.getlChild())
+				parent.setlChild(null);
+			else if (node != root && node == parent.getrChild())
+				parent.setrChild(null);
+			parent.setHeight(0);
+			node = null;
+		}
+		updateAboveHeight(parent);
+
+		size--;
+	}
+
+	/**
+	 * 随机生成，取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
+	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
+	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
+	 */
+
+	/**
+	 * 左右子树的高度越接近（越平衡），全树的高度也通常越低。<br>
+	 * 由n个节点组成的二叉树，高度不低于base2的log n，此时成为理想平衡，出现在满二叉树。<br>
+	 * 实际应用中理想平衡太严苛，会放松平衡的标准，只要能确保树的高度不超过base10的log n，就是适度平衡。<br>
+	 * 此时的树称为BBST，平衡二叉搜索树。
+	 * 
+	 * @return
+	 */
+	boolean isBBST() {
+		return false;
+	}
+
+	/**
+	 * 两个限制：<br>
+	 * 操作的计算时间O(1)<br>
+	 * 操作次数不超过O(log n)
+	 */
+	void balance() {
+	}
+
+	/**
+	 * 围绕node向右旋转
+	 */
+	void zig(Node<E> node) {
+	}
+
+	/**
+	 * 围绕node向左旋转
+	 */
+	void zag(Node<E> node) {
+	}
+
+	/**
 	 * 内部方法{@link #remove(int)}专用<br>
 	 * grandParent - parent - grandchild，移除parent<br>
 	 * size和height在{@link #remove(int)}处理
@@ -215,90 +302,4 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 		return child;
 	}
 
-	/**
-	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
-	 * 情况2:欲移除节点有左右孩子。化繁为简，变成情况1再处理<br>
-	 * 情况2先找出目标节点的后继节点{@link #succ(Node)}，两节点交换后就变成情况1（顶多只会有右孩子，因为后继已经是最左边的节点了），
-	 * 比照情况1处理，这边还要再将欲移除节点的父节点设为hot，重新整理树高。
-	 * 
-	 * @param key
-	 */
-	public void remove(int key) {
-		Node<E> node = search(key);
-		if (node == null)
-			throw new NullPointerException("Node not found.");
-
-		// 情况2
-		if (node.getlChild() != null && node.getrChild() != null) {
-			Node<E> succ = succ(node);
-			if (SHOW_LOG) {
-				System.out.println("node:" + node.getKey());
-				System.out.println("succ:" + succ.getKey());
-			}
-			swap(node, succ);
-			node = succ;
-		}
-
-		Node<E> parent = node.getParent();
-		// 情况1
-		if (node.getlChild() != null && node.getrChild() == null) {
-			killParent(parent, node.getlChild());
-			parent.setHeight(parent.getlChild().getHeight() + 1);
-		}
-		// 情况1
-		else if (node.getlChild() == null && node.getrChild() != null) {
-			killParent(parent, node.getrChild());
-			parent.setHeight(parent.getrChild().getHeight() + 1);
-		}
-		// 情况1
-		else {
-			if (node != root && node == parent.getrChild())
-				parent.setlChild(null);
-			else if (node != root && node == parent.getrChild())
-				parent.setrChild(null);
-			parent.setHeight(0);
-			node = null;
-		}
-		updateAboveHeight(parent);
-
-		size--;
-	}
-
-	/**
-	 * 随机生成，取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
-	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
-	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
-	 */
-
-	/**
-	 * 左右子树的高度越接近（越平衡），全树的高度也通常越低。<br>
-	 * 由n个节点组成的二叉树，高度不低于base2的log n，此时成为理想平衡，出现在满二叉树。<br>
-	 * 实际应用中理想平衡太严苛，会放松平衡的标准，只要能确保树的高度不超过base10的log n，就是适度平衡。<br>
-	 * 此时的树称为BBST，平衡二叉搜索树。
-	 * 
-	 * @return
-	 */
-	boolean isBBST() {
-		return false;
-	}
-
-	/**
-	 * 两个限制：<br>
-	 * 操作的计算时间O(1)<br>
-	 * 操作次数不超过O(log n)
-	 */
-	void balance() {
-	}
-
-	/**
-	 * 围绕node向右旋转
-	 */
-	void zig(Node<E> node) {
-	}
-
-	/**
-	 * 围绕node向左旋转
-	 */
-	void zag(Node<E> node) {
-	}
 }
