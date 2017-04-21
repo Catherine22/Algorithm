@@ -1,8 +1,13 @@
 package com.catherine.graphs.trees;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.catherine.graphs.trees.nodes.Node;
 import com.catherine.graphs.trees.nodes.NodeAdapter;
 import com.catherine.graphs.trees.nodes.Nodes;
+import com.catherine.utils.Others;
 
 /**
  * 
@@ -269,8 +274,31 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
-	public MyBinarySearchTree<E> random(int size) {
-		return null;
+	public static MyBinarySearchTree<Object> random(int size) {
+		MyBinarySearchTree<Object> newBST = new MyBinarySearchTree<>(0, null);
+		List<Integer> sequence = new ArrayList<>();
+		for (int i = 0; i < size - 1; i++) {
+			sequence.add(i + 1);
+		}
+		// 产生乱数序列
+		Collections.shuffle(sequence);
+		for (int i = 0; i < size - 1; i++) {
+			System.out.print(sequence.get(i) + " ");
+			newBST.insert(sequence.get(i), null);
+		}
+
+		return newBST;
+	}
+
+	/**
+	 * 随机生成产生的树的组合只有卡塔兰数个
+	 * 
+	 * @param size
+	 * @return
+	 */
+	public int countRandomTrees(int size) {
+		Others others = new Others();
+		return others.getCatalan1(size);
 	}
 
 	/**
