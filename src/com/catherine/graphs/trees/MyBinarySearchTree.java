@@ -275,17 +275,20 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
 	public static MyBinarySearchTree<Object> random(int size) {
-		MyBinarySearchTree<Object> newBST = new MyBinarySearchTree<>(0, null);
+		MyBinarySearchTree<Object> newBST;
 		List<Integer> sequence = new ArrayList<>();
-		for (int i = 0; i < size - 1; i++) {
+		for (int i = 0; i < size; i++) {
 			sequence.add(i + 1);
 		}
 		// 产生乱数序列
 		Collections.shuffle(sequence);
-		for (int i = 0; i < size - 1; i++) {
+		System.out.print(sequence.get(0) + " ");
+		newBST = new MyBinarySearchTree<>(sequence.get(0), null);
+		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
 			newBST.insert(sequence.get(i), null);
 		}
+		System.out.print("\n");
 
 		return newBST;
 	}
