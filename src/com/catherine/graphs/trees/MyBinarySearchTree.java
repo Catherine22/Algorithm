@@ -18,7 +18,7 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 
 	/**
 	 * 二叉搜寻中，有找到，hot则指向该节点的父节点；没找到指向最后访问的节点。<br>
-	 * 加入哨兵的概念后，hot永远代表目标搜节点的父节点。
+	 * 加入哨兵的概念后，hot永远代表目标节点的父节点。
 	 */
 	Node<E> hot;
 
@@ -153,44 +153,6 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	}
 
 	/**
-	 * 随机生成，取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
-	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
-	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
-	 */
-
-	/**
-	 * 左右子树的高度越接近（越平衡），全树的高度也通常越低。<br>
-	 * 由n个节点组成的二叉树，高度不低于base2的log n，此时成为理想平衡，出现在满二叉树。<br>
-	 * 实际应用中理想平衡太严苛，会放松平衡的标准，只要能确保树的高度不超过base10的log n，就是适度平衡。<br>
-	 * 此时的树称为BBST，平衡二叉搜索树。
-	 * 
-	 * @return
-	 */
-	boolean isBBST() {
-		return false;
-	}
-
-	/**
-	 * 两个限制：<br>
-	 * 操作的计算时间O(1)<br>
-	 * 操作次数不超过O(log n)
-	 */
-	void balance() {
-	}
-
-	/**
-	 * 围绕node向右旋转
-	 */
-	void zig(Node<E> node) {
-	}
-
-	/**
-	 * 围绕node向左旋转
-	 */
-	void zag(Node<E> node) {
-	}
-
-	/**
 	 * 内部方法{@link #remove(int)}专用<br>
 	 * grandParent - parent - grandchild，移除parent<br>
 	 * size和height在{@link #remove(int)}处理
@@ -300,6 +262,47 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 		parent.setrChild(child);
 		updateAboveHeight(child);
 		return child;
+	}
+
+	/**
+	 * 随机生成，取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
+	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
+	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
+	 */
+	public MyBinarySearchTree<E> random(int size) {
+		return null;
+	}
+
+	/**
+	 * 左右子树的高度越接近（越平衡），全树的高度也通常越低。<br>
+	 * 由n个节点组成的二叉树，高度不低于base2的log n，此时成为理想平衡，出现在满二叉树。<br>
+	 * 实际应用中理想平衡太严苛，会放松平衡的标准，只要能确保树的高度不超过base10的log n，就是适度平衡。<br>
+	 * 此时的树称为BBST，平衡二叉搜索树。
+	 * 
+	 * @return
+	 */
+	boolean isBBST() {
+		return false;
+	}
+
+	/**
+	 * 两个限制：<br>
+	 * 操作的计算时间O(1)<br>
+	 * 操作次数不超过O(log n)
+	 */
+	void balance() {
+	}
+
+	/**
+	 * 围绕node向右旋转
+	 */
+	void zig(Node<E> node) {
+	}
+
+	/**
+	 * 围绕node向左旋转
+	 */
+	void zag(Node<E> node) {
 	}
 
 	/**

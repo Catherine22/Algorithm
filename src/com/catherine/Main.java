@@ -211,6 +211,10 @@ public class Main {
 //		System.out.println(mBST.succ(mBST.search(20)));
 		System.out.println(mBST.search(25));
 		System.out.println(mBST.size());
+		
+		Others others = new Others();
+		System.out.println(others.getCatalan1(5));
+		System.out.println(others.getCatalan2(5));
 
 		// Graph--------------------------------------------------------
 		// DirectedGraph<String> dGraph = new DirectedGraph<>();

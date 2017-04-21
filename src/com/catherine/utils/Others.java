@@ -81,4 +81,88 @@ public class Others {
 			return false;
 		}
 	}
+
+	/**
+	 * h(0)=1<br>
+	 * h(1)=1<br>
+	 * n>=2,<br>
+	 * h(n) = h(0)*h(n-1)+h(1)*h(n-2) + ... + h(n-1)*h(0)<br>
+	 * = h(n-1)*(4*n-2)/(n+1); <br>
+	 * 解法1——公式解h(n) = h(n-1)*(4*n-2)/(n+1); <br>
+	 * 
+	 * @param index
+	 * @return 卡特兰数
+	 */
+	public int getCatalan1(int n) {
+		if (n < 0)
+			throw new IllegalArgumentException("n<0");
+		if (n <= 1)
+			return 1;
+
+		int catalan = getCatalanKernel(n);
+		return catalan;
+	}
+
+	/**
+	 * 递归推导公式
+	 * 
+	 * @param n
+	 * @return
+	 */
+	private int getCatalanKernel(int n) {
+		if (n <= 1)
+			return 1;
+		return getCatalanKernel(n - 1) * (4 * n - 2) / (n + 1);
+	}
+
+	/**
+	 * 解法2，建立卡特兰数列表
+	 */
+	private List<Integer> catalans;
+
+	/**
+	 * h(0)=1<br>
+	 * h(1)=1<br>
+	 * n>=2,<br>
+	 * h(n) = h(0)*h(n-1)+h(1)*h(n-2) + ... + h(n-1)*h(0)<br>
+	 * = h(n-1)*(4*n-2)/(n+1); <br>
+	 * 解法2——h(n) = h(0)*h(n-1)+h(1)*h(n-2) + ... + h(n-1)*h(0)<br>
+	 * 
+	 * @param index
+	 * @return 卡特兰数
+	 */
+	public int getCatalan2(int n) {
+		if (n < 0)
+			throw new IllegalArgumentException("n<0");
+		catalans = new ArrayList<>();
+		catalans.add(1);// n=0
+		catalans.add(1);// n=1
+		calculateCatalan(n);
+		// 释放内存
+		int ans = catalans.get(n);
+		catalans.clear();
+		return ans;
+	}
+
+	/**
+	 * 递归原公式
+	 * 
+	 * @param n
+	 * @return
+	 */
+	private int calculateCatalan(int n) {
+		if (n <= 1)
+			return 1;
+		int catalan = 0;
+		int head = n;
+		if (catalans.size() - 1 < n) {
+			while (head > 0) {
+				catalan += calculateCatalan(head - 1) * calculateCatalan(catalans.size() - head);
+				head--;
+			}
+			catalans.add(catalan);
+		}
+		return catalans.get(n);
+	}
+
 }

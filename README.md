@@ -90,7 +90,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - In this case, I assumed that there are no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
-  > Most methods were copied from [MyBinaryTree]. But here I added 'key' in the Node of [BST_Template], which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
+  > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
 
 ### Undirected Graph
   - [UndirectedGraph]
@@ -110,6 +110,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
   > An Edge<E> is a user-defined class, it contains data, weight and status.
+
+## [Others]
+  - Hailstone
+  - Fibonacci
+  - Catalan
+
 
 ## Reference
   - [Algorithms, 4th Edition]
@@ -144,8 +150,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
    [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinaryTree.java>
-   [BST_Template]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/BST_Template.java>
    [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTree.java>
+   [BSTNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BSTNode.java>
+   [BNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BNode.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
