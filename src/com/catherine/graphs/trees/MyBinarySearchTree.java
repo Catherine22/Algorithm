@@ -26,6 +26,14 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * 加入哨兵的概念后，hot永远代表目标节点的父节点。
 	 */
 	protected Node<E> hot;
+	/**
+	 * (AVL Tree)一旦一个节点平衡因子不符合，直接停止递归
+	 */
+	private boolean stopCheckAVL;
+	/**
+	 * (AVL Tree)符合的节点数=全部节点数
+	 */
+	private int counter;
 
 	public MyBinarySearchTree(int key, E root) {
 		super();
@@ -315,7 +323,7 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * 
 	 * @return
 	 */
-	boolean isBBST() {
+	public boolean isBBST() {
 		return false;
 	}
 
@@ -337,6 +345,63 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * 围绕node向左旋转
 	 */
 	void zag(Node<E> node) {
+	}
+
+	/**
+	 * BST中每个节点的平衡因子都是1、0或-1则为AVL Tree
+	 * 
+	 * @param callback
+	 */
+	public void isAVLTree(final Callback callback) {
+		counter = size;
+		isAVLTree(root, new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				counter--;
+				if (!result) {
+					stopCheckAVL = true;
+					callback.onResponse(false);
+				}
+
+				if (counter == 0 && !stopCheckAVL)
+					callback.onResponse(true);
+			}
+		});
+	}
+
+	/**
+	 * 递归<br>
+	 * 从任一节点中序遍历（左-中-右）
+	 */
+	private void isAVLTree(Node<E> node, Callback callback) {
+		if (!stopCheckAVL) {
+			if (node.getlChild() != null)
+				isAVLTree(node.getlChild(), callback);
+			if (Math.abs(getBalanceFactor(node)) > 1) {
+				// System.out.println(node.getInfo());
+				callback.onResponse(false);
+			} else {
+				// System.out.println(node.getInfo());
+				callback.onResponse(true);
+			}
+			if (node.getrChild() != null)
+				isAVLTree(node.getrChild(), callback);
+		}
+	}
+
+	/**
+	 * 取得各节点的平衡因子（左子树高度-右子树高度） <br>
+	 * 子树节点高度定义（同节点高度定义）：<br>
+	 * 1. 子树为单一节点：0<br>
+	 * 2. 无子树：-1<br>
+	 * 3. 其他：取子树高度<br>
+	 * 
+	 * @return
+	 */
+	protected int getBalanceFactor(Node<E> node) {
+		int lHeight = (node.getlChild() == null) ? -1 : node.getlChild().getHeight();
+		int rHeight = (node.getrChild() == null) ? -1 : node.getrChild().getHeight();
+		return lHeight - rHeight;
 	}
 
 	/**

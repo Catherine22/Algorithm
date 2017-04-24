@@ -11,6 +11,7 @@ import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.graphs.trees.Callback;
 import com.catherine.graphs.trees.MyAVLTree;
 import com.catherine.graphs.trees.MyBinarySearchTree;
 import com.catherine.graphs.trees.MyBinaryTree;
@@ -226,7 +227,7 @@ public class Main {
 		myAVLTree.insert(10, null);
 		myAVLTree.traverseIn();
 		myAVLTree.traverseLevel();
-		myAVLTree.isAVLTree(new MyAVLTree.Callback() {
+		myAVLTree.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
 				System.out.println("Is this an AVL TREE? " + result);
