@@ -270,7 +270,8 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	}
 
 	/**
-	 * 随机生成，取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
+	 * 不公平的随机生成二叉搜寻树<br>
+	 * 取任意不重复的n个数产生的排列组合应为n!，生成的树平均高度为log n；<br>
 	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
@@ -306,7 +307,7 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 
 	/**
 	 * 左右子树的高度越接近（越平衡），全树的高度也通常越低。<br>
-	 * 由n个节点组成的二叉树，高度不低于base2的log n，此时成为理想平衡，出现在满二叉树。<br>
+	 * 由n个节点组成的二叉树，高度不低于base2的log n，恰为log n时为理想平衡，出现在满二叉树。<br>
 	 * 实际应用中理想平衡太严苛，会放松平衡的标准，只要能确保树的高度不超过base10的log n，就是适度平衡。<br>
 	 * 此时的树称为BBST，平衡二叉搜索树。
 	 * 

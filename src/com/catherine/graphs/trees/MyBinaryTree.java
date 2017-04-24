@@ -176,10 +176,49 @@ public class MyBinaryTree<E> {
 	 * 满二叉树（full binary tree）、真二叉树（proper binary tree）又称为严格二叉树（strictly binary
 	 * tree），每个节点都只有0或2个节点。
 	 * 
+	 * 用{@link #traverseLevel()}
+	 * 
 	 * @return
 	 */
 	public boolean isFull() {
-		return false;
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		Queue<Node<E>> parent = new LinkedList<>();
+		Queue<Node<E>> siblings = new LinkedList<>();
+		Node<E> node = root;
+		parent.offer(node);
+		// int level = 0;
+
+		while (node != null || !parent.isEmpty()) {
+			// System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				node = parent.poll();
+				// System.out.print(node.getInfo());
+
+				if (node.getlChild() != null)
+					siblings.offer(node.getlChild());
+
+				if (node.getrChild() != null)
+					siblings.offer(node.getrChild());
+
+				if (node.getlChild() != null && node.getrChild() == null)
+					return false;
+
+				if (node.getlChild() == null && node.getrChild() != null)
+					return false;
+			}
+
+			for (Node<E> n : siblings)
+				parent.offer(n);
+
+			siblings.clear();
+			node = null;
+
+			// System.out.print("\n");
+		}
+		return true;
 	};
 
 	/**

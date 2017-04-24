@@ -211,7 +211,10 @@ public class Main {
 		// System.out.println(mBST.succ(mBST.search(20)));
 		System.out.println(mBST.search(25));
 		System.out.println(mBST.size());
-		MyBinarySearchTree.random(3).traverseLevel();
+		MyBinarySearchTree<Object> randomBST = MyBinarySearchTree.random(5);
+		randomBST.traverseLevel();
+		System.out.println(randomBST.isFull());
+
 		// Graph--------------------------------------------------------
 		// DirectedGraph<String> dGraph = new DirectedGraph<>();
 		// Vertex<String> va = dGraph.addVertex("A");
