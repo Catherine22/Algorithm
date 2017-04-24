@@ -9,7 +9,7 @@ import com.catherine.graphs.trees.nodes.Node;
  *
  * @param <E>
  */
-public class MyAVLTree<E> extends MyBinarySearchTree<E> {
+public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 
 	public MyAVLTree(int key, E root) {
 		super(key, root);

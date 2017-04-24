@@ -213,7 +213,8 @@ public class Main {
 		// // System.out.println(mBST.succ(mBST.search(20)));
 		// System.out.println(mBST.search(25));
 		// System.out.println(mBST.size());
-		// MyBinarySearchTree<Object> randomBST = MyBinarySearchTree.random(5);
+		// MyBinarySearchTree<Object> randomBST = (MyBinarySearchTree<Object>)
+		// MyBinarySearchTree.random(5);
 		// randomBST.traverseLevel();
 		// System.out.println("Is this BST full? " + randomBST.isFull());
 		// AVL Tree-----------------------------------------------------
