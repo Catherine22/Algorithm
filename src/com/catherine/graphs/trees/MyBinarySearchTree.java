@@ -25,7 +25,7 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * 二叉搜寻中，有找到，hot则指向该节点的父节点；没找到指向最后访问的节点。<br>
 	 * 加入哨兵的概念后，hot永远代表目标节点的父节点。
 	 */
-	Node<E> hot;
+	protected Node<E> hot;
 
 	public MyBinarySearchTree(int key, E root) {
 		super();
@@ -97,15 +97,17 @@ public class MyBinarySearchTree<E> extends MyBinaryTree<E> {
 	 * @param data
 	 *            插入节点的value
 	 */
-	public void insert(int key, E data) {
+	public Node<E> insert(int key, E data) {
 		if (search(key) != null)
 			throw new IllegalArgumentException("This node has already been added.");
 
 		final Node<E> parent = hot;
 		if (key > parent.getKey())
-			insertRC(parent, key, data);
+			return insertRC(parent, key, data);
 		else if (key < parent.getKey())
-			insertLC(parent, key, data);
+			return insertLC(parent, key, data);
+		else
+			return null;// 暂不考虑重复数值情况。
 	}
 
 	/**

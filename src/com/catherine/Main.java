@@ -11,6 +11,7 @@ import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.graphs.trees.MyAVLTree;
 import com.catherine.graphs.trees.MyBinarySearchTree;
 import com.catherine.graphs.trees.MyBinaryTree;
 import com.catherine.graphs.trees.nodes.Node;
@@ -193,27 +194,44 @@ public class Main {
 		// mBT.traverseLevel();
 
 		// BST--------------------------------------------------------
-		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
-		mBST.insert(20, "二十");
-		mBST.insert(80, "");
-		mBST.insert(10, "");
-		mBST.insert(30, "");
-		mBST.insert(70, "");
-		mBST.insert(90, "");
-		mBST.insert(35, "");
-		mBST.insert(25, "");
-		mBST.insert(65, "");
-		// mBST.removeRCCompletely(mBST.search(80));
-		mBST.removeLCCompletely(mBST.search(80));
-		mBST.remove(20);
-		mBST.traverseIn();// 中序一定是小到大排
-		mBST.traverseLevel();
-		// System.out.println(mBST.succ(mBST.search(20)));
-		System.out.println(mBST.search(25));
-		System.out.println(mBST.size());
-		MyBinarySearchTree<Object> randomBST = MyBinarySearchTree.random(5);
-		randomBST.traverseLevel();
-		System.out.println(randomBST.isFull());
+		// MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
+		// mBST.insert(20, "二十");
+		// mBST.insert(80, "");
+		// mBST.insert(10, "");
+		// mBST.insert(30, "");
+		// mBST.insert(70, "");
+		// mBST.insert(90, "");
+		// mBST.insert(35, "");
+		// mBST.insert(25, "");
+		// mBST.insert(65, "");
+		// // mBST.removeRCCompletely(mBST.search(80));
+		// mBST.removeLCCompletely(mBST.search(80));
+		// mBST.remove(20);
+		// mBST.traverseIn();// 中序一定是小到大排
+		// mBST.traverseLevel();
+		// // System.out.println(mBST.succ(mBST.search(20)));
+		// System.out.println(mBST.search(25));
+		// System.out.println(mBST.size());
+		// MyBinarySearchTree<Object> randomBST = MyBinarySearchTree.random(5);
+		// randomBST.traverseLevel();
+		// System.out.println("Is this BST full? " + randomBST.isFull());
+		// AVL Tree-----------------------------------------------------
+		MyAVLTree<String> myAVLTree = new MyAVLTree<String>(3, null);
+		myAVLTree.insert(2, null);
+		myAVLTree.insert(11, null);
+		myAVLTree.insert(1, null);
+		myAVLTree.insert(6, null);
+		myAVLTree.insert(18, null);
+		myAVLTree.insert(9, null);
+		myAVLTree.insert(10, null);
+		myAVLTree.traverseIn();
+		myAVLTree.traverseLevel();
+		myAVLTree.isAVLTree(new MyAVLTree.Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				System.out.println("Is this an AVL TREE? " + result);
+			}
+		});
 
 		// Graph--------------------------------------------------------
 		// DirectedGraph<String> dGraph = new DirectedGraph<>();
