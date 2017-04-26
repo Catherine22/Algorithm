@@ -22,11 +22,18 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		return true;
 	}
 
+	/**
+	 * 所有祖先节点都會失衡
+	 */
 	@Override
 	public Node<E> insert(int key, E data) {
 		return null;
 	}
 
+
+	/**
+	 * 只有一个父节点会失衡
+	 */
 	@Override
 	public void remove(int key) {
 

@@ -106,10 +106,16 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		Node<E> node = search(key);
 		if (node == null)
 			throw new NullPointerException("Node not found.");
-
+		if (node.getParent() == null) {
+			// 移除根节点
+			size = 0;
+			root = null;
+		}
+		hot = node.getParent();
 		// 情况2
 		if (node.getlChild() != null && node.getrChild() != null) {
 			Node<E> succ = succ(node);
+			hot = succ.getParent();
 			if (SHOW_LOG) {
 				System.out.println("node:" + node.getKey());
 				System.out.println("succ:" + succ.getKey());
@@ -117,17 +123,15 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			swap(node, succ);
 			node = succ;
 		}
-
+		
 		Node<E> parent = node.getParent();
 		// 情况1
 		if (node.getlChild() != null && node.getrChild() == null) {
 			killParent(parent, node.getlChild());
-			parent.setHeight(parent.getlChild().getHeight() + 1);
 		}
 		// 情况1
 		else if (node.getlChild() == null && node.getrChild() != null) {
 			killParent(parent, node.getrChild());
-			parent.setHeight(parent.getrChild().getHeight() + 1);
 		}
 		// 情况1
 		else {
@@ -135,11 +139,11 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 				parent.setlChild(null);
 			else if (node != root && node == parent.getrChild())
 				parent.setrChild(null);
-			parent.setHeight(0);
 			node = null;
 		}
-		updateAboveHeight(parent);
 
+		hot.setHeight(getHeight(hot));
+		updateAboveHeight(hot);
 		size--;
 	}
 
@@ -162,7 +166,6 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			grandchild.setParent(grandParent);
 			parent = null;
 		}
-		updateAboveHeight(grandParent);
 		if (SHOW_LOG) {
 			System.out.println("kp grandchild:" + grandchild.toString());
 			System.out.println("kp grandparent:" + grandParent.toString());
@@ -224,6 +227,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			System.out.println("insertLC:" + child.toString());
 		size++;
 		parent.setlChild(child);
+		child.setHeight(getHeight(child));
 		updateAboveHeight(child);
 		return child;
 	}
@@ -251,6 +255,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			System.out.println("insertRC:" + child.toString());
 		size++;
 		parent.setrChild(child);
+		child.setHeight(getHeight(child));
 		updateAboveHeight(child);
 		return child;
 	}

@@ -90,10 +90,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - In this case, I assumed that there are no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
-  > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br>
-  > [MyBinaryTree] implements BinaryTree the interface <br>
-  > [MyBinarySearchTreeKernel] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
-  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [MyBinarySearchTreeKernel], however. Because I want to hide some public methods which are unsupported for BST are built by [MyBinaryTree] <br>
+  > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
+  > - [MyBinaryTree] implements BinaryTree the interface <br>
+  > - [MyBinarySearchTreeKernel] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
+  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [MyBinarySearchTreeKernel], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
 
 ### AVL Tree
   -

@@ -83,12 +83,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	 * 1. 只有单一节点：0<br>
 	 * 2. 无节点，也就是空树：-1<br>
 	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
-	 * <br>
-	 * 只有两种可能，parent的高度大于等于2，表示为移除节点<br>
-	 * parent的高度和自身一样，表示为新增节点<br>
 	 * 
-	 * <br>
-	 * parent的高度=自身+1为正常情况。
 	 * 
 	 * @return 高度
 	 */
@@ -96,14 +91,16 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 		if (node.getParent() == null)
 			return;
 
-		if (node.getHeight() == node.getParent().getHeight()) {
-			node.getParent().setHeight(node.getParent().getHeight() + 1);
-			updateAboveHeight(node.getParent());
-		} else if (node.getParent().getHeight() - node.getHeight() >= 2) {
-			node.getParent().setHeight(node.getHeight() + 1);
-			updateAboveHeight(node.getParent());
-		} else
-			return;
+		int h1 = node.getHeight();
+		int h2 = -1;
+		if (node.getParent().getlChild() == node && node.getParent().getrChild() != null) {
+			h2 = node.getParent().getrChild().getHeight();
+		} else if (node.getParent().getrChild() == node && node.getParent().getlChild() != null) {
+			h2 = node.getParent().getlChild().getHeight();
+		}
+		int newH = (h1 > h2) ? h1 + 1 : h2 + 1;
+		node.getParent().setHeight(newH);
+		updateAboveHeight(node.getParent());
 	}
 
 	@Override
@@ -114,7 +111,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 		if (root.getlChild() == null && root.getrChild() == null)
 			return 0;
 
-		return getHighestChild(root);
+		return getHeight(root);
 	}
 
 	/**
@@ -123,7 +120,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	 * @param node
 	 * @return
 	 */
-	private int getHighestChild(Node<E> node) {
+	protected int getHeight(Node<E> node) {
 		int l = 0;
 		int r = 0;
 
@@ -131,20 +128,19 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 			return -1;// 若为叶子，上一次判断时会直达else判断式，因此l和r都多加一次，在此处扣除
 
 		if (node.getlChild() != null && node.getrChild() == null) {
-			l += getHighestChild(node.getlChild());
+			l += getHeight(node.getlChild());
 			l++;
 		} else if (node.getlChild() == null && node.getrChild() != null) {
-			r += getHighestChild(node.getrChild());
+			r += getHeight(node.getrChild());
 			r++;
 		} else {
-			l += getHighestChild(node.getlChild());// 若为叶子得-1
-			r += getHighestChild(node.getrChild());// 若为叶子得-1
+			l += getHeight(node.getlChild());// 若为叶子得-1
+			r += getHeight(node.getrChild());// 若为叶子得-1
 			l++;
 			r++;
 		}
-
 		if (SHOW_LOG)
-			System.out.println(node.getData() + "\tl:" + l + "\tr:" + r + "\th:" + node.getHeight());
+			System.out.println(node.getInfo() + "\tl:" + l + "\tr:" + r + "\th:" + node.getHeight());
 		return (l > r) ? l : r;
 	}
 
@@ -213,6 +209,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 			System.out.println("insertLC:" + child.toString());
 		size++;
 		parent.setlChild(child);
+		child.setHeight(getHeight(child));
 		updateAboveHeight(child);
 		return child;
 	}
@@ -240,6 +237,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 			System.out.println("insertRC:" + child.toString());
 		size++;
 		parent.setrChild(child);
+		child.setHeight(getHeight(child));
 		updateAboveHeight(child);
 		return child;
 	}
