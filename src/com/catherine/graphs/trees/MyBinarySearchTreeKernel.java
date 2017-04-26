@@ -123,7 +123,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			swap(node, succ);
 			node = succ;
 		}
-		
+
 		Node<E> parent = node.getParent();
 		// 情况1
 		if (node.getlChild() != null && node.getrChild() == null) {
@@ -306,6 +306,28 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public void zag(Node<E> node) {
+		if (node.getParent() == null) {
+			// 根节点不处理？
+		}
+		Node<E> lc = node.getParent();
+		hot = lc;
+		if (lc.getParent() == null) {
+			root = node;
+			node.setParent(null);
+		} else if (lc.getParent().getlChild() == lc) {
+			lc.getParent().setlChild(node);
+			node.setParent(lc.getParent());
+		} else {
+			lc.getParent().setrChild(node);
+			node.setParent(lc.getParent());
+		}
+		lc.setrChild(node.getlChild());
+		if (lc.getrChild() != null)
+			lc.getrChild().setParent(lc);
+		node.setlChild(lc);
+		lc.setParent(node);
+		hot.setHeight(getHeight(hot));
+		updateAboveHeight(hot);
 	}
 
 	@Override
