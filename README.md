@@ -61,6 +61,25 @@ Algorithms
 
 Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
 
+### Undirected Graph
+  - [UndirectedGraph]
+
+### Directed Graph
+|    | BFS | DFS |
+| ---- | ---- | ---- |
+| next node | neighbor | child |
+| speed |  | faster |
+| memory requirement |  | less |
+| data type | Queue | Stack |
+
+  - Breadth-first search (BFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex. It's just like level order traversal of the Tree.
+  - Depth-first search (DFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex.
+  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
+  - [DirectedGraph]
+
+  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
+  > An Edge<E> is a user-defined class, it contains data, weight and status.
+
 
 ### Binary Tree
 
@@ -85,7 +104,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
+
 ### Binary Search Tree (BST)
+
   - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
   - In this case, I assumed that there are no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
@@ -99,24 +120,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   -
   - [MyAVLTree]
 
-### Undirected Graph
-  - [UndirectedGraph]
-
-### Directed Graph
-|    | BFS | DFS |
-| ---- | ---- | ---- |
-| next node | neighbor | child |
-| speed |  | faster |
-| memory requirement |  | less |
-| data type | Queue | Stack |
-
-  - Breadth-first search (BFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex. It's just like level order traversal of the Tree.
-  - Depth-first search (DFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex.
-  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
-  - [DirectedGraph]
-
-  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
-  > An Edge<E> is a user-defined class, it contains data, weight and status.
 
 ## [Others]
   - Hailstone
