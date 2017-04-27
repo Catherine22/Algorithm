@@ -51,8 +51,8 @@ public class Main {
 		// testLinkedList();
 		// testStack();
 		// testBinaryTree();
-		testBST();
-		// testAVLTree();
+		// testBST();
+		testAVLTree();
 		// testDirectedGraph();
 
 	}
@@ -285,22 +285,40 @@ public class Main {
 	}
 
 	public static void testAVLTree() {
-		MyAVLTree<String> myAVLTree = new MyAVLTree<String>(3, null);
-		myAVLTree.insert(2, null);
-		myAVLTree.insert(11, null);
-		myAVLTree.insert(1, null);
-		myAVLTree.insert(6, null);
-		myAVLTree.insert(18, null);
-		myAVLTree.insert(9, null);
-		myAVLTree.insert(10, null);
+		final MyAVLTree<String> myAVLTree = new MyAVLTree<String>(10, null);
+		myAVLTree.insert(5, null);
+		myAVLTree.insert(20, null);
+		myAVLTree.insert(15, null);
+		myAVLTree.insert(25, null);
 		myAVLTree.traverseIn();
 		myAVLTree.traverseLevel();
 		myAVLTree.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
 				System.out.println("Is this an AVL TREE? " + result);
+
+				// 破坏平衡
+				final Node<String> newNode = myAVLTree.insert(24, null);
+				myAVLTree.traverseLevel();
+				myAVLTree.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						System.out.println("Is this an AVL TREE? " + result);
+
+						// 重新平衡
+						myAVLTree.balance(newNode);
+						myAVLTree.traverseLevel();
+						myAVLTree.isAVLTree(new Callback() {
+							@Override
+							public void onResponse(boolean result) {
+								System.out.println("Is this an AVL TREE? " + result);
+							}
+						});
+					}
+				});
 			}
 		});
+
 	}
 
 	public static void testDirectedGraph() {

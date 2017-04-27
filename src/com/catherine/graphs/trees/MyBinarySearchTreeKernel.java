@@ -26,14 +26,6 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * 加入哨兵的概念后，hot永远代表目标节点的父节点。
 	 */
 	protected Node<E> hot;
-	/**
-	 * (AVL Tree)一旦一个节点平衡因子不符合，直接停止递归
-	 */
-	private boolean stopCheckingAVL;
-	/**
-	 * (AVL Tree)符合的节点数=全部节点数
-	 */
-	private int counter;
 
 	public MyBinarySearchTreeKernel(int key, E root) {
 		super();
@@ -388,20 +380,33 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		return child.getParent().getrChild() == child;
 	}
 
+	private class CheckAVLPointer {
+		/**
+		 * (AVL Tree)一旦一个节点平衡因子不符合，直接停止递归
+		 */
+		public boolean stopCheckingAVL;
+		/**
+		 * (AVL Tree)符合的节点数=全部节点数
+		 */
+		public int counter;
+	}
+
 	@Override
 	public void isAVLTree(final Callback callback) {
-		counter = size;
-		isAVLTree(root, new Callback() {
+		final CheckAVLPointer checkAVLPointer = new CheckAVLPointer();
+		checkAVLPointer.counter = size;
+		isAVLTree(root, checkAVLPointer, new Callback() {
 			@Override
 			public void onResponse(boolean result) {
-				counter--;
+				checkAVLPointer.counter--;
 				if (!result) {
-					stopCheckingAVL = true;
+					checkAVLPointer.stopCheckingAVL = true;
 					callback.onResponse(false);
 				}
 
-				if (counter == 0 && !stopCheckingAVL)
+				if (checkAVLPointer.counter == 0 && !checkAVLPointer.stopCheckingAVL)
 					callback.onResponse(true);
+
 			}
 		});
 	}
@@ -410,10 +415,10 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * 递归<br>
 	 * 从任一节点中序遍历（左-中-右）
 	 */
-	private void isAVLTree(Node<E> node, Callback callback) {
-		if (!stopCheckingAVL) {
+	private void isAVLTree(Node<E> node, CheckAVLPointer checkAVLPointer, Callback callback) {
+		if (!checkAVLPointer.stopCheckingAVL) {
 			if (node.getlChild() != null)
-				isAVLTree(node.getlChild(), callback);
+				isAVLTree(node.getlChild(), checkAVLPointer, callback);
 			if (Math.abs(getBalanceFactor(node)) > 1) {
 				// System.out.println(node.getInfo());
 				callback.onResponse(false);
@@ -422,7 +427,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 				callback.onResponse(true);
 			}
 			if (node.getrChild() != null)
-				isAVLTree(node.getrChild(), callback);
+				isAVLTree(node.getrChild(), checkAVLPointer, callback);
 		}
 	}
 
