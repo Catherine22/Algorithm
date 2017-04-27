@@ -29,7 +29,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	/**
 	 * (AVL Tree)一旦一个节点平衡因子不符合，直接停止递归
 	 */
-	private boolean stopCheckAVL;
+	private boolean stopCheckingAVL;
 	/**
 	 * (AVL Tree)符合的节点数=全部节点数
 	 */
@@ -302,20 +302,22 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public void zig(Node<E> node) {
-		if (node.getParent() == null) {
-			// 根节点不处理？
-			throw new UnsupportedOperationException("root cannot rotate");
+		if (node == root) {
+			if (root.getlChild() != null)
+				node = root.getlChild();
+			else
+				throw new UnsupportedOperationException("This node cannot rotate");
 		}
 		Node<E> rc = node.getParent();
 		hot = rc;
 		if (rc.getParent() == null && root.getrChild() == node) {
-			// 不处理？
+			// 不能转不处理
 			throw new UnsupportedOperationException("This node cannot rotate");
 		}
 		if (rc.getParent() == null) {
 			root = node;
 			node.setParent(null);
-		} else if (rc.getParent().getlChild() == rc) {
+		} else if (isLeftChild(rc)) {
 			rc.getParent().setlChild(node);
 			node.setParent(rc.getParent());
 		} else {
@@ -327,26 +329,29 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			rc.getlChild().setParent(rc);
 		node.setrChild(rc);
 		rc.setParent(node);
+
 		hot.setHeight(getHeight(hot));
 		updateAboveHeight(hot);
 	}
 
 	@Override
 	public void zag(Node<E> node) {
-		if (node.getParent() == null) {
-			// 根节点不处理？
-			throw new UnsupportedOperationException("root cannot rotate");
+		if (node == root) {
+			if (root.getrChild() != null)
+				node = root.getrChild();
+			else
+				throw new UnsupportedOperationException("This node cannot rotate");
 		}
 		Node<E> lc = node.getParent();
 		hot = lc;
 		if (lc.getParent() == null && root.getlChild() == node) {
-			// 不处理？
+			// 不能转不处理
 			throw new UnsupportedOperationException("This node cannot rotate");
 		}
 		if (lc.getParent() == null) {
 			root = node;
 			node.setParent(null);
-		} else if (lc.getParent().getlChild() == lc) {
+		} else if (isLeftChild(lc)) {
 			lc.getParent().setlChild(node);
 			node.setParent(lc.getParent());
 		} else {
@@ -358,8 +363,29 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			lc.getrChild().setParent(lc);
 		node.setlChild(lc);
 		lc.setParent(node);
+
 		hot.setHeight(getHeight(hot));
 		updateAboveHeight(hot);
+	}
+
+	/**
+	 * 传入一节点，检查是否为父节点的左孩子
+	 * 
+	 * @param child
+	 * @return
+	 */
+	protected boolean isLeftChild(Node<E> child) {
+		return child.getParent().getlChild() == child;
+	}
+
+	/**
+	 * 传入一节点，检查是否为父节点的右孩子
+	 * 
+	 * @param child
+	 * @return
+	 */
+	protected boolean isRightChild(Node<E> child) {
+		return child.getParent().getrChild() == child;
 	}
 
 	@Override
@@ -370,11 +396,11 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			public void onResponse(boolean result) {
 				counter--;
 				if (!result) {
-					stopCheckAVL = true;
+					stopCheckingAVL = true;
 					callback.onResponse(false);
 				}
 
-				if (counter == 0 && !stopCheckAVL)
+				if (counter == 0 && !stopCheckingAVL)
 					callback.onResponse(true);
 			}
 		});
@@ -385,7 +411,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * 从任一节点中序遍历（左-中-右）
 	 */
 	private void isAVLTree(Node<E> node, Callback callback) {
-		if (!stopCheckAVL) {
+		if (!stopCheckingAVL) {
 			if (node.getlChild() != null)
 				isAVLTree(node.getlChild(), callback);
 			if (Math.abs(getBalanceFactor(node)) > 1) {

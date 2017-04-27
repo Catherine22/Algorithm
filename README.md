@@ -117,7 +117,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [MyBinarySearchTreeKernel], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
 
 ### AVL Tree
-  -
+
+  - An AVL tree is a balanced binary search tree. In an AVL tree, balance factor of every node is either -1, 0 or +1.
+  - Rotation
   - [MyAVLTree]
 
 

@@ -18,16 +18,46 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	/**
 	 * AVL Tree一定是适度平衡
 	 */
+	@Override
 	public boolean isBBST() {
 		return true;
 	}
 
 	/**
-	 * 所有祖先节点都會失衡
+	 * 所有祖先节点都會失衡<br>
 	 */
 	@Override
 	public Node<E> insert(int key, E data) {
-		return null;
+		return super.insert(key, data);
+	}
+
+	/**
+	 * 
+	 * 1. 插入节点的父节点往上推，祖孙三代都是同方向，只需旋转祖父节点可达到平衡（包含祖父以上节点）<br>
+	 * 
+	 * @param ins
+	 */
+	public void balance(final Node<E> node) {
+		if (node.getParent() != null || node.getParent().getParent() != null
+				|| node.getParent().getParent().getParent() != null) {
+			int count = 3;// 祖孙三代
+			int left = 0;
+			int right = 0;
+
+			while (count > 0) {
+				count--;
+				if (isLeftChild(node))
+					left++;
+				else
+					right++;
+			}
+			// 情况1
+			if (right == 3)
+				zig(node.getParent().getParent().getParent());
+			else if (left == 3)
+				zag(node.getParent().getParent().getParent());
+		}
+
 	}
 
 	/**
@@ -37,18 +67,5 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	public void remove(int key) {
 
 	}
-	/**
-	 * 围绕node向右旋转，视情况双旋（为了平衡）
-	 */
-	@Override
-	public void zig(Node<E> node) {
-		super.zig(node);
-	}
-	/**
-	 * 围绕node向左旋转，视情况双旋（为了平衡）
-	 */
-	@Override
-	public void zag(Node<E> node) {
-		super.zag(node);
-	}
+
 }
