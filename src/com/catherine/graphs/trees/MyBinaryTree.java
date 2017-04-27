@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.catherine.graphs.trees.nodes.Node;
+import com.catherine.graphs.trees.nodes.NodeAdapter;
+import com.catherine.graphs.trees.nodes.Nodes;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -15,14 +18,18 @@ import com.catherine.utils.TrackLog;
  *
  * @param <E>
  */
-public class MyBinaryTree<E> implements java.io.Serializable {
+public class MyBinaryTree<E> implements BinaryTree<E> {
+	protected final static boolean SHOW_LOG = false;
+	protected NodeAdapter<E> adapter;
+	protected transient int size = 0;
+	protected Node<E> root;
 
-	private static final long serialVersionUID = 551109471535675044L;
-	private final static boolean SHOW_LOG = false;
-	transient int size = 0;
-	private Node<E> root;
+	public MyBinaryTree() {
+	}
 
 	public MyBinaryTree(E root) {
+		adapter = new NodeAdapter<>();
+		adapter.setType(Nodes.STANDARD);
 		setRoot(root);
 	}
 
@@ -36,119 +43,37 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		Node<E> n;
 		if (root == null) {
 			size++;
-			n = new Node<>(data, null, null, null, 0, 0);
+			n = adapter.buildNode(data, null, null, null, 0, 0);
 		} else
-			n = new Node<>(data, null, root.lChild, root.rChild, root.height, root.depth);
+			n = adapter.buildNode(data, null, root.getlChild(), root.getrChild(), root.getHeight(), root.getDepth());
 		root = n;
 		return root;
 	}
 
-	/**
-	 * 返回根节点
-	 * 
-	 * @return 根节点
-	 */
+	@Override
 	public Node<E> getRoot() {
 		return root;
 	}
 
-	public static class Node<E> {
-
-		/**
-		 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
-		 */
-		int height;
-
-		/**
-		 * 根到节点的最长长度（由上往下，从根出发）
-		 */
-		int depth;
-		E data;
-		Node<E> parent;
-		Node<E> lChild;
-		Node<E> rChild;
-
-		public Node(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
-			this.data = data;
-			this.depth = depth;
-			this.height = height;
-			this.parent = parent;
-			this.lChild = lChild;
-			this.rChild = rChild;
-		}
-
-		public String toString() {
-			if (parent != null)
-				return String.format(
-						"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-						data, data, height, depth, parent.data);
-			else
-				return String.format(
-						"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-						data, data, height, depth, "null parent");
-		}
-	}
-
-	/**
-	 * 是否为空树（没有节点）
-	 * 
-	 * @return boolean
-	 */
+	@Override
 	public boolean isEmpty() {
 		return (size == 0);
 	}
 
-	/**
-	 * 子树规模
-	 * 
-	 * @return 子节点数
-	 */
+	@Override
 	public int size() {
 		return size;
 	}
 
-	/**
-	 * 当前节点的子树规模
-	 * 
-	 * @param 指定节点
-	 * @return 子节点数
-	 */
+	@Override
 	public int size(Node<E> node) {
 		int s = 1;// 加入自身
-		if (node.lChild != null)
-			s += size(node.lChild);
+		if (node.getlChild() != null)
+			s += size(node.getlChild());
 
-		if (node.rChild != null)
-			s += size(node.rChild);
+		if (node.getrChild() != null)
+			s += size(node.getrChild());
 		return s;
-	}
-
-	/**
-	 * 交换两节点的值（仍是同样的引用）
-	 * 
-	 * @param node1
-	 * @param node2
-	 */
-	protected void swap(Node<E> node1, Node<E> node2) {
-		if (SHOW_LOG) {
-			System.out.println("node1:" + node1.toString());
-			System.out.println("node2:" + node2.toString());
-		}
-		int tmpHeight = node1.height;
-		int tmpDepth = node1.depth;
-		E tmpData = node1.data;
-
-		node1.height = node2.height;
-		node1.depth = node2.depth;
-		node1.data = node2.data;
-		node2.height = tmpHeight;
-		node2.depth = tmpDepth;
-		node2.data = tmpData;
-
-		if (SHOW_LOG) {
-			System.out.println("new node1:" + node1.toString());
-			System.out.println("new node2:" + node2.toString());
-		}
 	}
 
 	/**
@@ -158,45 +83,35 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * 1. 只有单一节点：0<br>
 	 * 2. 无节点，也就是空树：-1<br>
 	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
-	 * <br>
-	 * 只有两种可能，parent的高度大于等于2，表示为移除节点<br>
-	 * parent的高度和自身一样，表示为新增节点<br>
 	 * 
-	 * <br>
-	 * parent的高度=自身+1为正常情况。
 	 * 
 	 * @return 高度
 	 */
-	private void updateAboveHeight(Node<E> node) {
-		if (node.parent == null)
+	protected void updateAboveHeight(Node<E> node) {
+		if (node.getParent() == null)
 			return;
 
-		if (node.height == node.parent.height) {
-			node.parent.height++;
-			updateAboveHeight(node.parent);
-		} else if (node.parent.height - node.height >= 2) {
-			node.parent.height = node.height + 1;
-			updateAboveHeight(node.parent);
-		} else
-			return;
+		int h1 = node.getHeight();
+		int h2 = -1;
+		if (node.getParent().getlChild() == node && node.getParent().getrChild() != null) {
+			h2 = node.getParent().getrChild().getHeight();
+		} else if (node.getParent().getrChild() == node && node.getParent().getlChild() != null) {
+			h2 = node.getParent().getlChild().getHeight();
+		}
+		int newH = (h1 > h2) ? h1 + 1 : h2 + 1;
+		node.getParent().setHeight(newH);
+		updateAboveHeight(node.getParent());
 	}
 
-	/**
-	 * 节点高度定义：<br>
-	 * 1. 只有单一节点：0<br>
-	 * 2. 无节点，也就是空树：-1<br>
-	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
-	 * 
-	 * @return 高度
-	 */
+	@Override
 	public int getHeight() {
 		if (root == null)
 			return -1;
 
-		if (root.lChild == null && root.rChild == null)
+		if (root.getlChild() == null && root.getrChild() == null)
 			return 0;
 
-		return getHighestChild(root);
+		return getHeight(root);
 	}
 
 	/**
@@ -205,39 +120,70 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * @param node
 	 * @return
 	 */
-	private int getHighestChild(Node<E> node) {
+	protected int getHeight(Node<E> node) {
 		int l = 0;
 		int r = 0;
 
 		if (node == null)
 			return -1;// 若为叶子，上一次判断时会直达else判断式，因此l和r都多加一次，在此处扣除
 
-		if (node.lChild != null && node.rChild == null) {
-			l += getHighestChild(node.lChild);
+		if (node.getlChild() != null && node.getrChild() == null) {
+			l += getHeight(node.getlChild());
 			l++;
-		} else if (node.lChild == null && node.rChild != null) {
-			r += getHighestChild(node.rChild);
+		} else if (node.getlChild() == null && node.getrChild() != null) {
+			r += getHeight(node.getrChild());
 			r++;
 		} else {
-			l += getHighestChild(node.lChild);// 若为叶子得-1
-			r += getHighestChild(node.rChild);// 若为叶子得-1
+			l += getHeight(node.getlChild());// 若为叶子得-1
+			r += getHeight(node.getrChild());// 若为叶子得-1
 			l++;
 			r++;
 		}
-
 		if (SHOW_LOG)
-			System.out.println(node.data + "\tl:" + l + "\tr:" + r + "\th:" + node.height);
+			System.out.println(node.getInfo() + "\tl:" + l + "\tr:" + r + "\th:" + node.getHeight());
 		return (l > r) ? l : r;
 	}
 
-	/**
-	 * 满二叉树（full binary tree）、真二叉树（proper binary tree）又称为严格二叉树（strictly binary
-	 * tree），每个节点都只有0或2个节点。
-	 * 
-	 * @return
-	 */
+	@Override
 	public boolean isFull() {
-		return false;
+		if (root == null)
+			throw new NullPointerException("null root!");
+
+		Queue<Node<E>> parent = new LinkedList<>();
+		Queue<Node<E>> siblings = new LinkedList<>();
+		Node<E> node = root;
+		parent.offer(node);
+		// int level = 0;
+
+		while (node != null || !parent.isEmpty()) {
+			// System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				node = parent.poll();
+				// System.out.print(node.getInfo());
+
+				if (node.getlChild() != null)
+					siblings.offer(node.getlChild());
+
+				if (node.getrChild() != null)
+					siblings.offer(node.getrChild());
+
+				if (node.getlChild() != null && node.getrChild() == null)
+					return false;
+
+				if (node.getlChild() == null && node.getrChild() != null)
+					return false;
+			}
+
+			for (Node<E> n : siblings)
+				parent.offer(n);
+
+			siblings.clear();
+			node = null;
+
+			// System.out.print("\n");
+		}
+		return true;
 	};
 
 	/**
@@ -251,18 +197,19 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 */
 	public Node<E> insertLC(Node<E> parent, E data) {
 		Node<E> child;
-		if (parent.lChild != null) {
-			final Node<E> cNode = parent.lChild;
-			final Node<E> lChild = cNode.lChild;
-			final Node<E> rChild = cNode.rChild;
-			child = new Node<>(data, parent, lChild, rChild, cNode.height, cNode.depth);
+		if (parent.getlChild() != null) {
+			final Node<E> cNode = parent.getlChild();
+			final Node<E> lChild = cNode.getlChild();
+			final Node<E> rChild = cNode.getrChild();
+			child = adapter.buildNode(data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
 		} else
-			child = new Node<>(data, parent, null, null, 0, parent.depth + 1);
+			child = adapter.buildNode(data, parent, null, null, 0, parent.getDepth() + 1);
 
 		if (SHOW_LOG)
 			System.out.println("insertLC:" + child.toString());
 		size++;
-		parent.lChild = child;
+		parent.setlChild(child);
+		child.setHeight(getHeight(child));
 		updateAboveHeight(child);
 		return child;
 	}
@@ -278,47 +225,40 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 */
 	public Node<E> insertRC(Node<E> parent, E data) {
 		Node<E> child;
-		if (parent.rChild != null) {
-			final Node<E> cNode = parent.rChild;
-			final Node<E> lChild = cNode.lChild;
-			final Node<E> rChild = cNode.rChild;
-			child = new Node<>(data, parent, lChild, rChild, cNode.height, cNode.depth);
+		if (parent.getrChild() != null) {
+			final Node<E> cNode = parent.getrChild();
+			final Node<E> lChild = cNode.getlChild();
+			final Node<E> rChild = cNode.getrChild();
+			child = adapter.buildNode(data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
 		} else
-			child = new Node<>(data, parent, null, null, 0, parent.depth + 1);
+			child = adapter.buildNode(data, parent, null, null, 0, parent.getDepth() + 1);
 
 		if (SHOW_LOG)
 			System.out.println("insertRC:" + child.toString());
 		size++;
-		parent.rChild = child;
+		parent.setrChild(child);
+		child.setHeight(getHeight(child));
 		updateAboveHeight(child);
 		return child;
 	}
 
-	/**
-	 * 移除整个右子树
-	 * 
-	 * @param parent
-	 *            父节点
-	 */
+	@Override
 	public void removeRCCompletely(Node<E> parent) {
-		if (parent.rChild != null)
-			size -= size(parent.rChild);
-		parent.rChild = null;
-		parent.height = (parent.lChild != null) ? parent.lChild.height + 1 : 0;
+		if (parent.getrChild() != null)
+			size -= size(parent.getrChild());
+		parent.setrChild(null);
+		int height = (parent.getlChild() != null) ? parent.getlChild().getHeight() + 1 : 0;
+		parent.setHeight(height);
 		updateAboveHeight(parent);
 	}
 
-	/**
-	 * 移除整个左子树
-	 * 
-	 * @param parent
-	 *            父节点
-	 */
+	@Override
 	public void removeLCCompletely(Node<E> parent) {
-		if (parent.lChild != null)
-			size -= size(parent.lChild);
-		parent.lChild = null;
-		parent.height = (parent.rChild != null) ? parent.rChild.height + 1 : 0;
+		if (parent.getlChild() != null)
+			size -= size(parent.getlChild());
+		parent.setlChild(null);
+		int height = (parent.getrChild() != null) ? parent.getrChild().getHeight() + 1 : 0;
+		parent.setHeight(height);
 		updateAboveHeight(parent);
 	}
 
@@ -332,13 +272,13 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * @return 原数值
 	 */
 	public E setLC(Node<E> parent, E data) {
-		if (parent.lChild == null) {
+		if (parent.getlChild() == null) {
 			insertLC(parent, data);
 			return null;
 		}
 
-		final E o = parent.lChild.data;
-		parent.lChild.data = data;
+		final E o = parent.getlChild().getData();
+		parent.getlChild().setData(data);
 		return o;
 	}
 
@@ -352,19 +292,17 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * @return 原数值
 	 */
 	public E setRC(Node<E> parent, E data) {
-		if (parent.rChild == null) {
+		if (parent.getrChild() == null) {
 			insertRC(parent, data);
 			return null;
 		}
 
-		final E o = parent.rChild.data;
-		parent.rChild.data = data;
+		final E o = parent.getrChild().getData();
+		parent.getrChild().setData(data);
 		return o;
 	}
 
-	/**
-	 * 以阶层遍历
-	 */
+	@Override
 	public void traverseLevel() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -380,16 +318,13 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
+				System.out.print(node.getInfo());
 
-				if (node.lChild != null)
-					siblings.offer(node.lChild);
+				if (node.getlChild() != null)
+					siblings.offer(node.getlChild());
 
-				if (node.rChild != null)
-					siblings.offer(node.rChild);
+				if (node.getrChild() != null)
+					siblings.offer(node.getrChild());
 			}
 
 			for (Node<E> n : siblings)
@@ -402,10 +337,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		}
 	}
 
-	/**
-	 * 使用迭代而非递归<br>
-	 * 先序遍历（中-左-右）
-	 */
+	@Override
 	public void traversePreNR1() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -418,16 +350,13 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		bin.push(root);
 		while (!bin.isEmpty()) {
 			Node<E> node = bin.pop();
-			if (node.data == null)
-				System.out.print("null ");
-			else
-				System.out.print(node.data + " ");
+			System.out.print(node.getInfo());
 
-			if (node.rChild != null)
-				bin.push(node.rChild);
+			if (node.getrChild() != null)
+				bin.push(node.getrChild());
 
-			if (node.lChild != null)
-				bin.push(node.lChild);
+			if (node.getlChild() != null)
+				bin.push(node.getlChild());
 		}
 		System.out.println("\n");
 
@@ -435,13 +364,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		Analysis.printTrack(tLog);
 	}
 
-	/**
-	 * 使用迭代而非递归<br>
-	 * 先序遍历（中-左-右）<br>
-	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。<br>
-	 * <br>
-	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
-	 */
+	@Override
 	public void traversePreNR2() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -456,18 +379,15 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		while (node != null || !bin.isEmpty()) {
 			// 遍历一排的所有左节点
 			while (node != null) {
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
+				System.out.print(node.getInfo());
 				bin.push(node);// 弹出打印过的没用节点
-				node = node.lChild;
+				node = node.getlChild();
 			}
 
 			// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
 			if (bin.size() > 0) {
 				node = bin.pop();
-				node = node.rChild;
+				node = node.getrChild();
 			}
 		}
 		System.out.println("\n");
@@ -476,10 +396,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		Analysis.printTrack(tLog);
 	}
 
-	/**
-	 * 递归<br>
-	 * 先序遍历（中-左-右）
-	 */
+	@Override
 	public void traversePre() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -500,24 +417,14 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * 从任一节点先序遍历（中-左-右）
 	 */
 	public void traversePre(Node<E> node) {
-		if (node.data == null)
-			System.out.print("null ");
-		else
-			System.out.print(node.data + " ");
-		if (node.lChild != null)
-			traversePre(node.lChild);
-		if (node.rChild != null)
-			traversePre(node.rChild);
+		System.out.print(node.getInfo());
+		if (node.getlChild() != null)
+			traversePre(node.getlChild());
+		if (node.getrChild() != null)
+			traversePre(node.getrChild());
 	}
 
-	/**
-	 * 使用迭代而非递归<br>
-	 * 中序遍历（左-中-右）<br>
-	 * 每个左侧节点就是一条链，由最左下的节点开始遍历右子树。 <br>
-	 * <br>
-	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
-	 * 
-	 */
+	@Override
 	public void traverseInNR() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -533,15 +440,12 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		while (node != null || bin.size() > 0) {
 			while (node != null) {
 				bin.push(node);
-				node = node.lChild;
+				node = node.getlChild();
 			}
 			if (!bin.isEmpty()) {
 				node = bin.pop();
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
-				node = node.rChild;
+				System.out.print(node.getInfo());
+				node = node.getrChild();
 			}
 		}
 		System.out.println("\n");
@@ -550,10 +454,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		Analysis.printTrack(tLog);
 	}
 
-	/**
-	 * 递归<br>
-	 * 中序遍历（左-中-右）
-	 */
+	@Override
 	public void traverseIn() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -574,14 +475,11 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * 从任一节点中序遍历（左-中-右）
 	 */
 	public void traverseIn(Node<E> node) {
-		if (node.lChild != null)
-			traverseIn(node.lChild);
-		if (node.data == null)
-			System.out.print("null ");
-		else
-			System.out.print(node.data + " ");
-		if (node.rChild != null)
-			traverseIn(node.rChild);
+		if (node.getlChild() != null)
+			traverseIn(node.getlChild());
+		System.out.print(node.getInfo());
+		if (node.getrChild() != null)
+			traverseIn(node.getrChild());
 	}
 
 	/**
@@ -604,6 +502,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 *            当前节点
 	 * @return 后继节点
 	 */
+	@Override
 	public Node<E> succ(Node<E> node) {
 		succ = null;
 		preTmp = null;
@@ -621,30 +520,20 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 */
 	private void succ(Node<E> node, Node<E> tmp) {
 		if (!stopRecursion) {
-			if (tmp.lChild != null)
-				succ(node, tmp.lChild);
-			if (SHOW_LOG) {
-				if (preTmp == null)
-					System.out.print(tmp.data + "(NULL) ");
-				else
-					System.out.print(tmp.data + "(" + preTmp.data + ") ");
-			}
+			if (tmp.getlChild() != null)
+				succ(node, tmp.getlChild());
 			// 目的是要找出直接后继，一旦上一个节点为指定节点，表示这次的节点就是要找的直接后继
 			if (node == preTmp) {
 				succ = tmp;
 				stopRecursion = true;
 			}
 			preTmp = tmp;
-			if (tmp.rChild != null)
-				succ(node, tmp.rChild);
+			if (tmp.getrChild() != null)
+				succ(node, tmp.getrChild());
 		}
 	}
 
-	/**
-	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）<br>
-	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
-	 */
+	@Override
 	public void traversePostNR1() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -660,22 +549,19 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		while (node != null || bin.size() > 0) {
 			while (node != null) {
 				bin.push(node);
-				node = node.lChild;
+				node = node.getlChild();
 			}
 
 			node = bin.peek();
 
 			// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
-			if (node.rChild == null || node.rChild == lastLC) {
-				if (node.data == null)
-					System.out.print("null ");
-				else
-					System.out.print(node.data + " ");
-				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.rChild == lastLC
+			if (node.getrChild() == null || node.getrChild() == lastLC) {
+				System.out.print(node.getInfo());
+				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() == lastLC
 				bin.pop();// 打印过就从栈里弹出
 				node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
 			} else
-				node = node.rChild;
+				node = node.getrChild();
 		}
 		System.out.println("\n");
 
@@ -683,11 +569,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		Analysis.printTrack(tLog);
 	}
 
-	/**
-	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）<br>
-	 * 双栈法
-	 */
+	@Override
 	public void traversePostNR2() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -705,18 +587,15 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 			node = lBin.pop();
 			rBin.push(node);
 
-			if (node.lChild != null)
-				lBin.push(node.lChild);
+			if (node.getlChild() != null)
+				lBin.push(node.getlChild());
 
-			if (node.rChild != null)
-				lBin.push(node.rChild);
+			if (node.getrChild() != null)
+				lBin.push(node.getrChild());
 		}
 
 		while (!rBin.isEmpty()) {
-			if (rBin.peek().data == null)
-				System.out.print("null ");
-			else
-				System.out.print(rBin.peek().data + " ");
+			System.out.print(rBin.peek().getInfo());
 			rBin.pop();
 		}
 
@@ -726,10 +605,7 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 		Analysis.printTrack(tLog);
 	}
 
-	/**
-	 * 递归<br>
-	 * 后序遍历（左-右-中）
-	 */
+	@Override
 	public void traversePost() {
 		if (root == null)
 			throw new NullPointerException("null root!");
@@ -749,14 +625,11 @@ public class MyBinaryTree<E> implements java.io.Serializable {
 	 * 递归<br>
 	 * 从任一节点后序遍历（左-右-中）
 	 */
-	public void traversePost(Node<E> node) {
-		if (node.lChild != null)
-			traversePost(node.lChild);
-		if (node.rChild != null)
-			traversePost(node.rChild);
-		if (node.data == null)
-			System.out.print("null ");
-		else
-			System.out.print(node.data + " ");
+	private void traversePost(Node<E> node) {
+		if (node.getlChild() != null)
+			traversePost(node.getlChild());
+		if (node.getrChild() != null)
+			traversePost(node.getrChild());
+		System.out.print(node.getInfo());
 	}
 }
