@@ -304,9 +304,14 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	public void zig(Node<E> node) {
 		if (node.getParent() == null) {
 			// 根节点不处理？
+			throw new UnsupportedOperationException("root cannot rotate");
 		}
 		Node<E> rc = node.getParent();
 		hot = rc;
+		if (rc.getParent() == null && root.getrChild() == node) {
+			// 不处理？
+			throw new UnsupportedOperationException("This node cannot rotate");
+		}
 		if (rc.getParent() == null) {
 			root = node;
 			node.setParent(null);
@@ -330,9 +335,14 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	public void zag(Node<E> node) {
 		if (node.getParent() == null) {
 			// 根节点不处理？
+			throw new UnsupportedOperationException("root cannot rotate");
 		}
 		Node<E> lc = node.getParent();
 		hot = lc;
+		if (lc.getParent() == null && root.getlChild() == node) {
+			// 不处理？
+			throw new UnsupportedOperationException("This node cannot rotate");
+		}
 		if (lc.getParent() == null) {
 			root = node;
 			node.setParent(null);

@@ -268,7 +268,7 @@ public class Main {
 		mBST.insert(65, "");
 		// mBST.removeRCCompletely(mBST.search(80));
 		// mBST.removeLCCompletely(mBST.search(80));
-//		mBST.remove(20);
+		// mBST.remove(20);
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
 		mBST.zig(mBST.search(80));
