@@ -302,6 +302,28 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public void zig(Node<E> node) {
+		if (node.getParent() == null) {
+			// 根节点不处理？
+		}
+		Node<E> rc = node.getParent();
+		hot = rc;
+		if (rc.getParent() == null) {
+			root = node;
+			node.setParent(null);
+		} else if (rc.getParent().getlChild() == rc) {
+			rc.getParent().setlChild(node);
+			node.setParent(rc.getParent());
+		} else {
+			rc.getParent().setrChild(node);
+			node.setParent(rc.getParent());
+		}
+		rc.setlChild(node.getrChild());
+		if (rc.getlChild() != null)
+			rc.getlChild().setParent(rc);
+		node.setrChild(rc);
+		rc.setParent(node);
+		hot.setHeight(getHeight(hot));
+		updateAboveHeight(hot);
 	}
 
 	@Override

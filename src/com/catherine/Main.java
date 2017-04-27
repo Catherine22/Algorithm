@@ -271,7 +271,7 @@ public class Main {
 //		mBST.remove(20);
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
-		mBST.zag(mBST.search(80));
+		mBST.zig(mBST.search(80));
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
 		// System.out.println(mBST.succ(mBST.search(20)));
