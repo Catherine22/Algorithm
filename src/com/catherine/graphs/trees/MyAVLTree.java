@@ -32,7 +32,8 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	}
 
 	/**
-	 * 
+	 * 插入或移除节点造成AVL Tree失衡<br>
+	 * 插入情形：<br>
 	 * 1. 插入节点的父节点往上推，祖孙三代都是同方向，只需旋转祖父节点可达到平衡（包含祖父以上节点）<br>
 	 * 2. A（祖父） - B（父，左子树） — C （右子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
 	 * 

@@ -119,7 +119,28 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ### AVL Tree
 
   - An AVL tree is a balanced binary search tree. In an AVL tree, balance factor of every node is either -1, 0 or +1.
-  - Rotation
+  - Single rotation
+
+  ```java
+  zig(node);
+  ```
+  or
+  ```java
+  zag(node);
+  ```
+
+  - Double rotations
+  ```java
+  zig(node);
+  zag(node);
+  ```
+  or
+  ```java
+  zag(node);
+  zig(node);
+  ```
+
+
   - [MyAVLTree]
 
 
