@@ -82,7 +82,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	@Override
 	public Node<E> insert(int key, E data) {
 		if (search(key) != null)
-			throw new IllegalArgumentException("This node has already been added.");
+			throw new UnsupportedOperationException("This node has already been added.");
 
 		final Node<E> parent = hot;
 		if (key > parent.getKey())
@@ -285,7 +285,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public boolean isBBST() {
-		return false;
+		return getHeight() <= Math.log10(size);
 	}
 
 	@Override

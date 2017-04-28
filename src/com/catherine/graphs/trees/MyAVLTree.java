@@ -34,6 +34,7 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	/**
 	 * 
 	 * 1. 插入节点的父节点往上推，祖孙三代都是同方向，只需旋转祖父节点可达到平衡（包含祖父以上节点）<br>
+	 * 2. A（祖父） - B（父，左子树） — C （右子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
 	 * 
 	 * @param ins
 	 */
@@ -44,18 +45,32 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 			int left = 0;
 			int right = 0;
 
+			Node<E> target = node;
 			while (count > 0) {
 				count--;
-				if (isLeftChild(node))
+				if (isLeftChild(target))
 					left++;
 				else
 					right++;
+				target = target.getParent();
 			}
-			// 情况1
+
+			// 情况1，单旋
 			if (right == 3)
-				zig(node.getParent().getParent().getParent());
-			else if (left == 3)
 				zag(node.getParent().getParent().getParent());
+			else if (left == 3)
+				zig(node.getParent().getParent().getParent());
+
+			// 情况2，双旋
+			else if (right == 2 && left == 1) {
+				target = node.getParent();
+				zag(target);
+				zig(target);
+			} else if (right == 1 && left == 2) {
+				target = node.getParent();
+				zig(target);
+				zag(target);
+			}
 		}
 
 	}
