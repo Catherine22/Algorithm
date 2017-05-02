@@ -286,66 +286,110 @@ public class Main {
 
 	public static void testAVLTree() {
 		final MyAVLTree<String> myAVLTree = new MyAVLTree<String>(10, null);
-//		myAVLTree.insert(5, null);
-//		myAVLTree.insert(20, null);
-//		myAVLTree.insert(15, null);
-//		myAVLTree.insert(25, null);
-//		myAVLTree.traverseIn();
-//		myAVLTree.traverseLevel();
-//		myAVLTree.isAVLTree(new Callback() {
-//			@Override
-//			public void onResponse(boolean result) {
-//				System.out.println("Is this an AVL TREE? " + result);
-//
-//				// 破坏平衡（插入操作情况1）
-//				final Node<String> newNode = myAVLTree.insert(26, null);
-//				myAVLTree.traverseLevel();
-//				myAVLTree.isAVLTree(new Callback() {
-//					@Override
-//					public void onResponse(boolean result) {
-//						System.out.println("Is this an AVL TREE? " + result);
-//
-//						// 重新平衡
-//						myAVLTree.balance(newNode);
-//						myAVLTree.traverseLevel();
-//						myAVLTree.isAVLTree(new Callback() {
-//							@Override
-//							public void onResponse(boolean result) {
-//								System.out.println("Is this an AVL TREE? " + result);
-//							}
-//						});
-//					}
-//				});
-//			}
-//		});
+		// myAVLTree.insert(5, null);
+		// myAVLTree.insert(20, null);
+		// myAVLTree.insert(15, null);
+		// myAVLTree.insert(25, null);
+		// myAVLTree.traverseIn();
+		// myAVLTree.traverseLevel();
+		// myAVLTree.isAVLTree(new Callback() {
+		// @Override
+		// public void onResponse(boolean result) {
+		// System.out.println("Is this an AVL TREE? " + result);
+		//
+		// // 破坏平衡（插入操作情况1）
+		// myAVLTree.insert(26, null);
+		// myAVLTree.traverseLevel();
+		// myAVLTree.isAVLTree(new Callback() {
+		// @Override
+		// public void onResponse(boolean result) {
+		// System.out.println("Is this an AVL TREE? " + result);
+		//
+		// myAVLTree.remove(26);
+		// // 重新平衡
+		// myAVLTree.insertAndBalance(26, null);
+		// myAVLTree.traverseLevel();
+		// myAVLTree.isAVLTree(new Callback() {
+		// @Override
+		// public void onResponse(boolean result) {
+		// System.out.println("Is this an AVL TREE? " + result);
+		// }
+		// });
+		// }
+		// });
+		// }
+		// });
 
-		myAVLTree.insert(5, null);
-		myAVLTree.insert(15, null);
-		myAVLTree.insert(13, null);
-		myAVLTree.insert(18, null);
-		myAVLTree.traverseLevel();
-		myAVLTree.isAVLTree(new Callback() {
+		// myAVLTree.insert(5, null);
+		// myAVLTree.insert(15, null);
+		// myAVLTree.insert(13, null);
+		// myAVLTree.insert(18, null);
+		// myAVLTree.traverseLevel();
+		// myAVLTree.isAVLTree(new Callback() {
+		// @Override
+		// public void onResponse(boolean result) {
+		// System.out.println("Is this an AVL TREE? " + result);
+		//
+		// // 破坏平衡（插入操作情况2）
+		// myAVLTree.insert(12, null);
+		// myAVLTree.traverseLevel();
+		// myAVLTree.isAVLTree(new Callback() {
+		// @Override
+		// public void onResponse(boolean result) {
+		// System.out.println("Is this an AVL TREE? " + result);
+		// myAVLTree.remove(12);
+		//
+		// // 重新平衡
+		// myAVLTree.insertAndBalance(12, null);
+		// myAVLTree.traverseLevel();
+		// myAVLTree.isAVLTree(new Callback() {
+		// @Override
+		// public void onResponse(boolean result) {
+		// System.out.println("Is this an AVL TREE? " + result);
+		// }
+		// });
+		// }
+		// });
+		// }
+		// });
+
+		final MyAVLTree<String> myAVLTree2 = new MyAVLTree<String>(20, null);
+		myAVLTree2.insert(10, null);
+		myAVLTree2.insert(30, null);
+		myAVLTree2.insert(7, null);
+		myAVLTree2.insert(15, null);
+		myAVLTree2.insert(13, null);
+		myAVLTree2.insert(3, null);
+		myAVLTree2.insert(9, null);
+		myAVLTree2.insert(1, null);
+		myAVLTree2.insert(5, null);
+//		myAVLTree2.insert(8, null);
+		myAVLTree2.insert(25, null);
+		myAVLTree2.insert(35, null);
+		myAVLTree2.insert(23, null);
+		myAVLTree2.insert(27, null);
+		myAVLTree2.insert(31, null);
+		myAVLTree2.insert(39, null);
+		myAVLTree2.insert(26, null);
+		myAVLTree2.insert(34, null);
+		myAVLTree2.insert(37, null);
+		myAVLTree2.insert(44, null);
+		myAVLTree2.insert(41, null);
+		myAVLTree2.traverseLevel();
+		myAVLTree2.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
 				System.out.println("Is this an AVL TREE? " + result);
 				
-				// 破坏平衡（插入操作情况2）
-				final Node<String> newNode = myAVLTree.insert(12, null);
-				myAVLTree.traverseLevel();
-				myAVLTree.isAVLTree(new Callback() {
+				// 情况1，右单旋
+				//根节点但右子树高度=4，左子树原高度=3，但移除节点后左子树原高度变成2，AVL tree失衡
+				myAVLTree2.removeAndBalance(13);
+				myAVLTree2.traverseLevel();
+				
+				myAVLTree2.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
 						System.out.println("Is this an AVL TREE? " + result);
-
-						// 重新平衡
-						myAVLTree.balance(newNode);
-						myAVLTree.traverseLevel();
-						myAVLTree.isAVLTree(new Callback() {
-							@Override
-							public void onResponse(boolean result) {
-								System.out.println("Is this an AVL TREE? " + result);
-							}
-						});
 					}
 				});
 			}

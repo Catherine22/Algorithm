@@ -95,7 +95,10 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public void remove(int key) {
-		Node<E> node = search(key);
+		remove(search(key));
+	}
+
+	protected void remove(Node<E> node) {
 		if (node == null)
 			throw new NullPointerException("Node not found.");
 		if (node.getParent() == null) {

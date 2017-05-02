@@ -39,7 +39,8 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * 
 	 * @param ins
 	 */
-	public void balance(final Node<E> node) {
+	public void insertAndBalance(int key, E data) {
+		final Node<E> node = super.insert(key, data);
 		if (node.getParent() != null || node.getParent().getParent() != null
 				|| node.getParent().getParent().getParent() != null) {
 			int count = 3;// 祖孙三代
@@ -81,7 +82,83 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 */
 	@Override
 	public void remove(int key) {
-
+		super.remove(key);
 	}
 
+	/**
+	 * 
+	 * 插入或移除节点造成AVL Tree失衡<br>
+	 * 移除情形：<br>
+	 * 1. 找出移除节点的祖先（未必是父节点），该祖先的子节点以及孙子节点为一直线同方向，<br>
+	 * 此时根据该祖先的子节点的高度不同旋转次数也会不同。
+	 * 
+	 * @param key
+	 */
+	public void removeAndBalance(int key) {
+		Node<E> delNode = search(key);
+		super.remove(delNode);
+		int count = 3;// 祖孙三代
+		int right = 0;
+		int left = 0;
+
+		// 找到该节点的祖先
+		Node<E> ancestor = getAncestor(delNode);
+		Node<E> tmp = ancestor;
+		System.out.println("ancestor:" + ancestor.getInfo());
+
+		if (isRightChild(tmp)) {
+			while (count > 0) {
+				count--;
+				if (tmp.getrChild() != null)
+					right++;
+				else
+					count = -1;
+				tmp = tmp.getrChild();
+			}
+
+			// 情况1，左单旋该祖先的子节点
+			// if (right == 3) {
+			// zag(ancestor.getrChild());
+			// }
+
+		} else {
+			while (count > 0) {
+				count--;
+				if (tmp.getlChild() != null)
+					left++;
+				else
+					count = -1;
+				tmp = tmp.getlChild();
+			}
+
+			// 情况1，右单旋该祖先的子节点
+			if (left == 3) {
+				zig(ancestor.getlChild());
+				int bf = root.getlChild().getHeight() - root.getrChild().getHeight();
+				// 失衡
+				// while (Math.abs(bf) > 1) {
+				//
+				// }
+				zag(root);
+				System.out.println(String.format("bf:%d", bf));
+				bf = root.getlChild().getHeight() - root.getrChild().getHeight();
+				System.out.println(String.format("new bf:%d", bf));
+				// 检查新祖先的高度变化
+			}
+		}
+		System.out.println(String.format("left:%d, right:%d", left, right));
+
+		// release
+		tmp = null;
+	}
+
+	private Node<E> getAncestor(Node<E> node) {
+		if (node == null || node.getParent() == null)
+			return node;
+		Node<E> target = node;
+		while (target.getParent() != root) {
+			target = target.getParent();
+		}
+		return target;
+	}
 }
