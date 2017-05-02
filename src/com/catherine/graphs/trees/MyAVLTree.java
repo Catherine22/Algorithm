@@ -102,7 +102,14 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		int left = 0;
 
 		// 找到该节点的祖先
-		Node<E> ancestor = getAncestor(delNode);
+		Node<E> ancestor = delNode;
+		while (Math.abs(getBalanceFactor(ancestor)) <= 1) {
+			ancestor = ancestor.getParent();
+		}
+		// 移除节点后仍平衡直接结束
+		if (ancestor == null)
+			return;
+
 		Node<E> tmp = ancestor;
 		System.out.println("ancestor:" + ancestor.getInfo());
 
@@ -115,11 +122,24 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 					count = -1;
 				tmp = tmp.getrChild();
 			}
+			System.out.println(String.format("left:%d, right:%d", left, right));
 
 			// 情况1，左单旋该祖先的子节点
-			// if (right == 3) {
-			// zag(ancestor.getrChild());
-			// }
+			if (right == 3) {
+				Node<E> target = ancestor.getlChild();
+				zag(target);
+				int bf = 0;
+				// 检查新祖先的高度变化，检查到根节点为止
+				while (target != null) {
+					bf = getBalanceFactor(target);
+					System.out.println("target:" + target.getInfo());
+					System.out.println(String.format("bf:%d", bf));
+					// 失衡
+					if (Math.abs(bf) > 1)
+						zig(target);
+					target = target.getParent();
+				}
+			}
 
 		} else {
 			while (count > 0) {
@@ -130,23 +150,28 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 					count = -1;
 				tmp = tmp.getlChild();
 			}
+			System.out.println(String.format("left:%d, right:%d", left, right));
 
 			// 情况1，右单旋该祖先的子节点
 			if (left == 3) {
-				zig(ancestor.getlChild());
-				int bf = root.getlChild().getHeight() - root.getrChild().getHeight();
-				// 失衡
-				// while (Math.abs(bf) > 1) {
-				//
-				// }
-				zag(root);
-				System.out.println(String.format("bf:%d", bf));
-				bf = root.getlChild().getHeight() - root.getrChild().getHeight();
-				System.out.println(String.format("new bf:%d", bf));
-				// 检查新祖先的高度变化
+				Node<E> target = ancestor.getlChild();
+				zig(target);
+				System.out.println("_________");
+				traverseLevel();
+				System.out.println("_________");
+				int bf = 0;
+				// 检查新祖先的高度变化，检查到根节点为止
+				while (target != null) {
+					bf = getBalanceFactor(target);
+					System.out.println("target:" + target.getInfo());
+					System.out.println(String.format("bf:%d", bf));
+					// 失衡
+					if (Math.abs(bf) > 1)
+						zag(target);
+					target = (target.getParent() == null) ? null : target.getParent().getParent();
+				}
 			}
 		}
-		System.out.println(String.format("left:%d, right:%d", left, right));
 
 		// release
 		tmp = null;
