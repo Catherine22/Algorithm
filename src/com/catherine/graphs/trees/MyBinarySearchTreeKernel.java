@@ -105,6 +105,8 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			// 移除根节点
 			size = 0;
 			root = null;
+			hot = null;
+			return;
 		}
 		hot = node.getParent();
 		// 情况2
