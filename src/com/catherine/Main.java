@@ -353,70 +353,26 @@ public class Main {
 		// }
 		// });
 
-		final MyAVLTree<String> myAVLTree2 = new MyAVLTree<String>(50, null);//50
-		// left children
-		myAVLTree2.insert(20, null);
-		myAVLTree2.insert(10, null);
+		final MyAVLTree<String> myAVLTree2 = new MyAVLTree<String>(50, null);// 50
 		myAVLTree2.insert(30, null);
-		myAVLTree2.insert(7, null);
+		myAVLTree2.insert(60, null);
 		myAVLTree2.insert(15, null);
-		myAVLTree2.insert(13, null);
-		myAVLTree2.insert(3, null);
-		myAVLTree2.insert(9, null);
-		myAVLTree2.insert(1, null);
-		myAVLTree2.insert(5, null);
-		// myAVLTree2.insert(8, null);
-		myAVLTree2.insert(25, null);
-		myAVLTree2.insert(35, null);
-		myAVLTree2.insert(23, null);
-		myAVLTree2.insert(27, null);
-		myAVLTree2.insert(31, null);
-		myAVLTree2.insert(39, null);
-		myAVLTree2.insert(26, null);
-		myAVLTree2.insert(34, null);
-		myAVLTree2.insert(37, null);
-		myAVLTree2.insert(44, null);
-		myAVLTree2.insert(41, null);
-
-		// right children
-		myAVLTree2.insert(2000, null);
-		myAVLTree2.insert(1000, null);
-		myAVLTree2.insert(3000, null);
-		myAVLTree2.insert(700, null);
-		myAVLTree2.insert(1500, null);
-		myAVLTree2.insert(1300, null);
-		myAVLTree2.insert(300, null);
-		myAVLTree2.insert(900, null);
-		myAVLTree2.insert(100, null);
-		myAVLTree2.insert(500, null);
-		// myAVLTree2.insert(800, null);
-		myAVLTree2.insert(2500, null);
-		myAVLTree2.insert(3500, null);
-		myAVLTree2.insert(2300, null);
-		myAVLTree2.insert(2700, null);
-		myAVLTree2.insert(3100, null);
-		myAVLTree2.insert(3900, null);
-		myAVLTree2.insert(2600, null);
-		myAVLTree2.insert(3400, null);
-		myAVLTree2.insert(3700, null);
-		myAVLTree2.insert(4400, null);
-		myAVLTree2.insert(4100, null);
-
+		myAVLTree2.insert(40, null);
+		myAVLTree2.insert(10, null);
+		myAVLTree2.insert(20, null);
+		myAVLTree2.insert(55, null);
+		myAVLTree2.insert(70, null);
 		myAVLTree2.traverseLevel();
 		myAVLTree2.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
-				System.out.println("Is this an AVL TREE? " + result);
-
-				// 情况1，右单旋
-				// 根节点但右子树高度=4，左子树原高度=3，但移除节点后左子树原高度变成2，AVL tree失衡
-				myAVLTree2.removeAndBalance(13);
-				myAVLTree2.traverseLevel();
-
+				System.out.println("Is AVL tree? " + result);
+				myAVLTree2.removeAndBalance(40);
 				myAVLTree2.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
-						System.out.println("Is this an AVL TREE? " + result);
+						myAVLTree2.traverseLevel();
+						System.out.println("Is AVL tree? " + result);
 					}
 				});
 			}

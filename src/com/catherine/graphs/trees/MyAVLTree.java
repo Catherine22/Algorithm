@@ -10,6 +10,7 @@ import com.catherine.graphs.trees.nodes.Node;
  * @param <E>
  */
 public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
+	protected final static boolean SHOW_LOG = true;
 
 	public MyAVLTree(int key, E root) {
 		super(key, root);
@@ -89,31 +90,40 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * 
 	 * 插入或移除节点造成AVL Tree失衡<br>
 	 * 移除情形：<br>
-	 * 1. 找出移除节点的祖先（未必是父节点），该祖先的子节点以及孙子节点为一直线同方向，<br>
-	 * 此时根据该祖先的子节点的高度不同旋转次数也会不同。
+	 * 1. 可能会失衡的节点，hot或其祖先（{@link #remove(int)} 操作后重新指定），该祖先的子节点以及孙子节点为一直线同方向，
+	 * <br>
+	 * 此时根据该祖先的子节点的高度不同旋转次数也会不同，复衡最多O(log n)次。 <br>
+	 * 
+	 * 其它. 旋转后高度不变，就不会发生新的失衡。<br>
 	 * 
 	 * @param key
 	 */
 	public void removeAndBalance(int key) {
 		Node<E> delNode = search(key);
 		super.remove(delNode);
-		int count = 3;// 祖孙三代
-		int right = 0;
-		int left = 0;
+		if (SHOW_LOG)
+			System.out.println("hot:" + hot.getInfo());
 
-		// 找到该节点的祖先
-		Node<E> ancestor = delNode;
-		while (Math.abs(getBalanceFactor(ancestor)) <= 1) {
+		// 找到可能会失衡的祖先
+		Node<E> ancestor = hot;// 祖先从hot开始，hot的定义详见super.remove()
+		while (ancestor != null && Math.abs(getBalanceFactor(ancestor)) <= 1) {
 			ancestor = ancestor.getParent();
 		}
 		// 移除节点后仍平衡直接结束
 		if (ancestor == null)
 			return;
 
-		Node<E> tmp = ancestor;
-		System.out.println("ancestor:" + ancestor.getInfo());
+		if (SHOW_LOG)
+			System.out.println("lean, ancestor:" + ancestor.getInfo());
 
-		if (isRightChild(tmp)) {
+		Node<E> tmp = ancestor;
+
+		// 情况1
+		int count = 2;// 祖孙三代
+		int right = 0;
+		int left = 0;
+
+		if (isRightChild(tmp)) {// 本身是右子树，只需要检查自己的右孩子及右孙子
 			while (count > 0) {
 				count--;
 				if (tmp.getrChild() != null)
@@ -122,18 +132,21 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 					count = -1;
 				tmp = tmp.getrChild();
 			}
-			System.out.println(String.format("left:%d, right:%d", left, right));
+			if (SHOW_LOG)
+				System.out.println(String.format("left:%d, right:%d", left, right));
 
 			// 情况1，左单旋该祖先的子节点
-			if (right == 3) {
-				Node<E> target = ancestor.getlChild();
+			if (right == 2) {
+				Node<E> target = ancestor.getrChild();
 				zag(target);
 				int bf = 0;
 				// 检查新祖先的高度变化，检查到根节点为止
 				while (target != null) {
 					bf = getBalanceFactor(target);
-					System.out.println("target:" + target.getInfo());
-					System.out.println(String.format("bf:%d", bf));
+					if (SHOW_LOG) {
+						System.out.println("target:" + target.getInfo());
+						System.out.println(String.format("bf:%d", bf));
+					}
 					// 失衡
 					if (Math.abs(bf) > 1)
 						zig(target);
@@ -141,7 +154,7 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 				}
 			}
 
-		} else {
+		} else if (isLeftChild(tmp)) {// 本身是左子树，只需要检查自己的左孩子及左孙子
 			while (count > 0) {
 				count--;
 				if (tmp.getlChild() != null)
@@ -150,40 +163,38 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 					count = -1;
 				tmp = tmp.getlChild();
 			}
-			System.out.println(String.format("left:%d, right:%d", left, right));
+			if (SHOW_LOG)
+				System.out.println(String.format("left:%d, right:%d", left, right));
 
 			// 情况1，右单旋该祖先的子节点
-			if (left == 3) {
+			if (left == 2) {
 				Node<E> target = ancestor.getlChild();
 				zig(target);
-				System.out.println("_________");
-				traverseLevel();
-				System.out.println("_________");
 				int bf = 0;
 				// 检查新祖先的高度变化，检查到根节点为止
 				while (target != null) {
 					bf = getBalanceFactor(target);
-					System.out.println("target:" + target.getInfo());
-					System.out.println(String.format("bf:%d", bf));
+					if (SHOW_LOG) {
+						System.out.println("target:" + target.getInfo());
+						System.out.println(String.format("bf:%d", bf));
+					}
 					// 失衡
 					if (Math.abs(bf) > 1)
 						zag(target);
-					target = (target.getParent() == null) ? null : target.getParent().getParent();
+					target = target.getParent();
 				}
 			}
+
 		}
 
 		// release
 		tmp = null;
-	}
 
-	private Node<E> getAncestor(Node<E> node) {
-		if (node == null || node.getParent() == null)
-			return node;
-		Node<E> target = node;
-		while (target.getParent() != root) {
-			target = target.getParent();
-		}
-		return target;
+		// 其它
+		// int bf = getBalanceFactor(ancestor);
+		// if (bf > 1)
+		// zig(ancestor);
+		// else if (bf < -1)
+		// zag(ancestor);
 	}
 }
