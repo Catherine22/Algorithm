@@ -294,5 +294,13 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 
 		// release
 		tmp = null;
+		delNode = null;
+	}
+
+	/**
+	 * 3+4重构
+	 */
+	public void balance() {
+
 	}
 }

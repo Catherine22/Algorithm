@@ -146,9 +146,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   zig(newRChild);
   ```
 
-
+  - keep balance while inserting and removing
   - [MyAVLTree]
 
+
+  - 34connect()
+    > You have to consider some scenarios while inserting or deleting nodes in AVL tree, and it is kinda tricky to develop or maintain those codes, however. Fortunately, there is a simple way to balance an AVL tree. First of all, you add or remove a node, the AVL tree becomes unbalanced. Second, you find out **three** nodes - the first unbalanced node (in my project, I named it 'hot') and its ancestors or children. Then you pick all **four** subtrees from the three nodes. You've got three nodes and the four subtrees, traversing the three nodes in-order and the four subtrees. Finally, merge the sorted nodes and the sorted subtrees to an balanced AVL tree.
 
 ## [Others]
   - Hailstone
