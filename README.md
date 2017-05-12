@@ -131,15 +131,15 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - Double rotations
   ```java
-  //parent-child-grandchild looks like ">"
-	Node<E> newLChild = node;
-	Node<E> newParent = node.getrChild().getlChild();
-	zig(newParent);
-	zag(newLChild);
+  //parent-target-child looks like ">"
+  Node<E> newLChild = node;
+  Node<E> newParent = node.getrChild().getlChild();
+  zig(newParent);
+  zag(newLChild);
   ```
   or
   ```java
-  //parent-child-grandchild looks like "<"
+  //parent-target-child looks like "<"
   Node<E> newRChild = node;
   Node<E> newParent = node.getlChild().getrChild();
   zag(newParent);
@@ -150,7 +150,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - [MyAVLTree]
 
 
-  - 34connect()
+  - 3+4 refactor
     > You have to consider some scenarios while inserting or deleting nodes in AVL tree, and it is kinda tricky to develop or maintain those codes, however. Fortunately, there is a simple way to balance an AVL tree. First of all, you add or remove a node, the AVL tree becomes unbalanced. Second, you find out **three** nodes - the first unbalanced node (in my project, I named it 'hot') and its ancestors or children. Then you pick all **four** subtrees from the three nodes. You've got three nodes and the four subtrees, traversing the three nodes in-order and the four subtrees. Finally, merge the sorted nodes and the sorted subtrees to an balanced AVL tree.
 
 ## [Others]

@@ -298,7 +298,10 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	}
 
 	/**
-	 * 3+4重构
+	 * 3+4重构<br>
+	 * 做完插入或移除操作后，失衡的AVL tree通过此方法恢复平衡<br>
+	 * 找出第一个失衡的祖先节点hot及其祖孙一共三个节点，再取出此三个节点的子树一共四个，<br>
+	 * 分别中序排序三个节点和四个子树后合并，成为平衡的AVL tree。
 	 */
 	public void balance() {
 
