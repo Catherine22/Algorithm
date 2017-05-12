@@ -364,6 +364,8 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * @return
 	 */
 	protected boolean isLeftChild(Node<E> child) {
+		if (child.getParent() == null)
+			return false;
 		return child.getParent().getlChild() == child;
 	}
 
@@ -374,6 +376,8 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * @return
 	 */
 	protected boolean isRightChild(Node<E> child) {
+		if (child.getParent() == null)
+			return false;
 		return child.getParent().getrChild() == child;
 	}
 

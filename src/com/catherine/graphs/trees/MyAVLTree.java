@@ -90,17 +90,24 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * 
 	 * 插入或移除节点造成AVL Tree失衡<br>
 	 * 移除情形：<br>
-	 * 1. 可能会失衡的节点，hot或其祖先（{@link #remove(int)} 操作后重新指定），该祖先的子节点以及孙子节点为一直线同方向，
-	 * <br>
+	 * 1. 可能会失衡的节点，hot（{@link #remove(int)} 操作后重新指定）或其祖先，该祖先的子节点以及孙子节点为一直线同方向，
 	 * 此时根据该祖先的子节点的高度不同旋转次数也会不同，复衡最多O(log n)次。 <br>
-	 * 
+	 * 2. 可能会失衡的节点，hot（{@link #remove(int)} 操作后重新指定）或其祖先，该祖先的子节点以及孙子节点为>或<的方向，
+	 * 此时做一次双旋让孙子节点成为新的父节点，复衡最多O(log n)次。 <br>
 	 * 其它. 旋转后高度不变，就不会发生新的失衡。<br>
 	 * 
 	 * @param key
 	 */
 	public void removeAndBalance(int key) {
 		Node<E> delNode = search(key);
+		boolean skip = false;// 假如已经处理过后面可省略不再检查
+		boolean isDelNodeLeftChild = isLeftChild(delNode);// 不用考虑移除的是根节点的情况，因为移除后会直接返回，该变数也没用了
+
 		super.remove(delNode);
+		if (hot == null) {// 表示移除根节点并且成为空树了
+			System.out.println("变成空树");
+			return;
+		}
 		if (SHOW_LOG)
 			System.out.println("hot:" + hot.getInfo());
 
@@ -119,82 +126,173 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		Node<E> tmp = ancestor;
 
 		// 情况1
-		int count = 2;// 祖孙三代
-		int right = 0;
-		int left = 0;
+		if (!skip) {
+			int count = 2;// 祖孙三代
+			int right = 0;
+			int left = 0;
 
-		if (isRightChild(tmp)) {// 本身是右子树，只需要检查自己的右孩子及右孙子
-			while (count > 0) {
-				count--;
-				if (tmp.getrChild() != null)
-					right++;
-				else
-					count = -1;
-				tmp = tmp.getrChild();
-			}
-			if (SHOW_LOG)
-				System.out.println(String.format("left:%d, right:%d", left, right));
+			if (isRightChild(tmp)) {// 本身是右子树，只需要检查自己的右孩子及右孙子
+				while (count > 0) {
+					count--;
+					if (tmp.getrChild() != null)
+						right++;
+					else
+						count = -1;
+					tmp = tmp.getrChild();
+				}
+				if (SHOW_LOG)
+					System.out.println(String.format("left:%d, right:%d", left, right));
 
-			// 情况1，左单旋该祖先的子节点
-			if (right == 2) {
-				Node<E> target = ancestor.getrChild();
-				zag(target);
-				int bf = 0;
-				// 检查新祖先的高度变化，检查到根节点为止
-				while (target != null) {
-					bf = getBalanceFactor(target);
-					if (SHOW_LOG) {
-						System.out.println("target:" + target.getInfo());
-						System.out.println(String.format("bf:%d", bf));
+				// 情况1，左单旋该祖先的子节点
+				if (right == 2) {
+					Node<E> target = ancestor.getrChild();
+					zag(target);
+					int bf = 0;
+					// 检查新祖先的高度变化，检查到根节点为止
+					while (target != null) {
+						bf = getBalanceFactor(target);
+						if (SHOW_LOG) {
+							System.out.println("target:" + target.getInfo());
+							System.out.println(String.format("bf:%d", bf));
+						}
+						// 失衡
+						if (Math.abs(bf) > 1)
+							zig(target);
+						target = target.getParent();
 					}
-					// 失衡
-					if (Math.abs(bf) > 1)
-						zig(target);
-					target = target.getParent();
+					skip = true;
 				}
 			}
+			if (isLeftChild(tmp)) {// 本身是左子树，只需要检查自己的左孩子及左孙子
+				while (count > 0) {
+					count--;
+					if (tmp.getlChild() != null)
+						left++;
+					else
+						count = -1;
+					tmp = tmp.getlChild();
+				}
+				if (SHOW_LOG)
+					System.out.println(String.format("left:%d, right:%d", left, right));
 
-		} else if (isLeftChild(tmp)) {// 本身是左子树，只需要检查自己的左孩子及左孙子
-			while (count > 0) {
-				count--;
-				if (tmp.getlChild() != null)
-					left++;
-				else
-					count = -1;
-				tmp = tmp.getlChild();
-			}
-			if (SHOW_LOG)
-				System.out.println(String.format("left:%d, right:%d", left, right));
-
-			// 情况1，右单旋该祖先的子节点
-			if (left == 2) {
-				Node<E> target = ancestor.getlChild();
-				zig(target);
-				int bf = 0;
-				// 检查新祖先的高度变化，检查到根节点为止
-				while (target != null) {
-					bf = getBalanceFactor(target);
-					if (SHOW_LOG) {
-						System.out.println("target:" + target.getInfo());
-						System.out.println(String.format("bf:%d", bf));
+				// 情况1，右单旋该祖先的子节点
+				if (left == 2) {
+					Node<E> target = ancestor.getlChild();
+					zig(target);
+					int bf = 0;
+					// 检查新祖先的高度变化，检查到根节点为止
+					while (target != null) {
+						bf = getBalanceFactor(target);
+						if (SHOW_LOG) {
+							System.out.println("target:" + target.getInfo());
+							System.out.println(String.format("bf:%d", bf));
+						}
+						// 失衡
+						if (Math.abs(bf) > 1)
+							zag(target);
+						target = target.getParent();
 					}
-					// 失衡
-					if (Math.abs(bf) > 1)
-						zag(target);
-					target = target.getParent();
+					skip = true;
 				}
 			}
+		}
 
+		if (!skip) {
+			if (SHOW_LOG)
+				System.out.print("情况2, ");
+			if (isRightChild(tmp)) {// 本身是右子树，只需要检查自己的左孩子及右孙子
+				if (SHOW_LOG)
+					System.out.println("hot本身是右子树");
+				if (tmp.getlChild() != null && tmp.getlChild().getrChild() != null) {
+					if (SHOW_LOG)
+						System.out.println(">形");
+
+					// 情况2，zig()zag()
+					Node<E> newLChild = ancestor;
+					Node<E> newParent = ancestor.getrChild().getlChild();
+					zig(newParent);
+					zag(newLChild);
+					int bf = 0;
+					// 检查新祖先的高度变化，检查到根节点为止
+					while (newParent != null) {
+						bf = getBalanceFactor(newParent);
+						if (SHOW_LOG) {
+							System.out.println("target:" + newParent.getInfo());
+							System.out.println(String.format("bf:%d", bf));
+						}
+						// 失衡
+						if (Math.abs(bf) > 1) {
+							System.out.println("失衡");
+						}
+						newParent = newParent.getParent();
+					}
+					skip = true;
+
+				}
+			} else if (isLeftChild(tmp)) {// 本身是左子树，只需要检查自己的右孩子及左孙子
+				if (SHOW_LOG)
+					System.out.println("hot本身是左子树");
+				if (tmp.getrChild() != null && tmp.getrChild().getlChild() != null) {
+					if (SHOW_LOG)
+						System.out.println("<形");
+
+					// 情况2，zag()zig()
+					Node<E> newRChild = ancestor;
+					Node<E> newParent = ancestor.getlChild().getrChild();
+					zag(newParent);
+					zig(newRChild);
+					int bf = 0;
+					// 检查新祖先的高度变化，检查到根节点为止
+					while (newParent != null) {
+						bf = getBalanceFactor(newParent);
+						if (SHOW_LOG) {
+							System.out.println("target:" + newParent.getInfo());
+							System.out.println(String.format("bf:%d", bf));
+						}
+						// 失衡
+						if (Math.abs(bf) > 1) {
+							System.out.println("失衡");
+						}
+						newParent = newParent.getParent();
+					}
+					skip = true;
+				}
+			} else {// 本身是根节点
+				if (SHOW_LOG)
+					System.out.print("hot是根节点, ");
+				if (isDelNodeLeftChild) {
+					if (SHOW_LOG)
+						System.out.println(">形");
+
+					// 情况2，zig()zag()
+					Node<E> newLChild = ancestor;
+					Node<E> newParent = ancestor.getrChild().getlChild();
+					zig(newParent);
+					zag(newLChild);
+				} else {
+					if (SHOW_LOG)
+						System.out.println("<形");
+
+					// 情况2，zag()zig()
+					Node<E> newRChild = ancestor;
+					Node<E> newParent = ancestor.getlChild().getrChild();
+					zag(newParent);
+					zig(newRChild);
+				}
+				skip = true;
+			}
+		}
+
+		// 其它
+		if (!skip) {
+			int bf = getBalanceFactor(ancestor);
+			if (bf > 1)
+				zig(ancestor);
+			else if (bf < -1)
+				zag(ancestor);
 		}
 
 		// release
 		tmp = null;
-
-		// 其它
-		// int bf = getBalanceFactor(ancestor);
-		// if (bf > 1)
-		// zig(ancestor);
-		// else if (bf < -1)
-		// zag(ancestor);
 	}
 }
