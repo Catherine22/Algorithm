@@ -131,13 +131,19 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - Double rotations
   ```java
-  zig(node);
-  zag(node);
+  //parent-child-grandchild looks like ">"
+	Node<E> newLChild = node;
+	Node<E> newParent = node.getrChild().getlChild();
+	zig(newParent);
+	zag(newLChild);
   ```
   or
   ```java
-  zag(node);
-  zig(node);
+  //parent-child-grandchild looks like "<"
+  Node<E> newRChild = node;
+  Node<E> newParent = node.getlChild().getrChild();
+  zag(newParent);
+  zig(newRChild);
   ```
 
 
