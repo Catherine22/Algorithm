@@ -63,12 +63,12 @@ public interface BinarySearchTree<E> {
 	public void balance();
 
 	/**
-	 * 围绕node向右旋转
+	 * node和node的左孩子向右旋转，没有左孩子则报错
 	 */
 	public void zig(Node<E> node);
 
 	/**
-	 * 围绕node向左旋转
+	 * node和node的右孩子向左旋转，没有右孩子则报错
 	 */
 	public void zag(Node<E> node);
 

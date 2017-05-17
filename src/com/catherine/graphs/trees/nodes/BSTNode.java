@@ -33,14 +33,14 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public String toString() {
-		if (parent != null)
-			return String.format(
-					"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%d\"}", key,
-					data, height, depth, parent.key);
-		else
-			return String.format(
-					"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\"}", key,
-					data, height, depth, "null parent");
+		String pkey = (parent != null) ? parent.key + "" : "null parent";
+		String lkey = (lChild != null) ? lChild.key + "" : "null lChild";
+		String rkey = (rChild != null) ? rChild.key + "" : "null rChild";
+
+		return String.format(
+				"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
+				key, data, height, depth, pkey, lkey, rkey);
+
 	}
 
 	@Override
