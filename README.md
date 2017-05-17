@@ -121,6 +121,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
   - Single rotation
 
+  ![rotation][2]
+
   ```java
   zig(node);
   ```
@@ -130,28 +132,30 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   ```
 
   - Double rotations
+
+  ![double rotation][3]
+
   ```java
-  //parent-target-child looks like ">"
-  Node<E> newLChild = node;
-  Node<E> newParent = node.getrChild().getlChild();
-  zig(newParent);
-  zag(newLChild);
+  //parent-node-child looks like "<"
+  final Node<E> parent = node.getParent();
+  zag(node);
+  zig(parent);
   ```
   or
   ```java
-  //parent-target-child looks like "<"
-  Node<E> newRChild = node;
-  Node<E> newParent = node.getlChild().getrChild();
-  zag(newParent);
-  zig(newRChild);
+  //parent-node-child looks like ">"
+  final Node<E> child = node.getlChild();
+  zig(node);
+  zag(child);
   ```
 
   - keep balance while inserting and removing
   - [MyAVLTree]
 
 
-  - 3+4 refactor
-    > You have to consider some scenarios while inserting or deleting nodes in AVL tree, and it is kinda tricky to develop or maintain those codes, however. Fortunately, there is a simple way to balance an AVL tree. First of all, you add or remove a node, the AVL tree becomes unbalanced. Second, you find out **three** nodes - the first unbalanced node (in my project, I named it 'hot') and its ancestors or children. Then you pick all **four** subtrees from the three nodes. You've got three nodes and the four subtrees, traversing the three nodes in-order and the four subtrees. Finally, merge the sorted nodes and the sorted subtrees to an balanced AVL tree.
+  - **3+4 refactor**
+    > You have to consider some scenarios while inserting or deleting nodes in AVL tree, and it is kinda tricky to develop or maintain those codes, however.
+    > Fortunately, there is a simple way to balance an AVL tree. First of all, you add or remove a node and the AVL tree becomes unbalanced. Second, you find out **three** nodes - the first unbalanced node (in my project, I named it 'hot') and its ancestors or children. Then you pick all **four** subtrees from the three nodes. Now you've got three nodes and the four subtrees, traverse the three nodes and the four subtrees in-order . Finally, merge the sorted nodes and the sorted subtrees to an balanced AVL tree.
 
 ## [Others]
   - Hailstone
@@ -201,9 +205,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
-   [tree_pic]:<https://github.com/Catherine22/Algorithms/blob/master/res/tree.png>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>
 
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
+  [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
+  [3]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_double_rotation.png
