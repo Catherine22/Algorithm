@@ -360,6 +360,21 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			updateAboveHeight(hot);
 		}
 	}
+	
+	@Override
+	public void left_rightRotate(Node<E> node){
+		  final Node<E> child = node.getlChild();
+		  zag(child);
+		  zig(node);
+	}
+	
+	@Override
+	public void right_leftRotate(Node<E> node){
+		  final Node<E> child = node.getrChild();
+		  final Node<E> grandChild = child.getlChild();
+		  zig(child);
+		  zag(grandChild);
+	}
 
 	/**
 	 * 传入一节点，检查是否为父节点的左孩子

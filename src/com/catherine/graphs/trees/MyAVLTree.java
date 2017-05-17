@@ -1,5 +1,8 @@
 package com.catherine.graphs.trees;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.catherine.graphs.trees.nodes.Node;
 
 /**
@@ -113,7 +116,7 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 
 		// 找到可能会失衡的祖先
 		Node<E> ancestor = hot;// 祖先从hot开始，hot的定义详见super.remove()
-		while (ancestor != null && Math.abs(getBalanceFactor(ancestor)) <= 1) {
+		while (ancestor != null && isBalanced(ancestor)) {
 			ancestor = ancestor.getParent();
 		}
 		// 移除节点后仍平衡直接结束
@@ -187,6 +190,7 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 							System.out.println("target:" + target.getInfo());
 							System.out.println(String.format("bf:%d", bf));
 						}
+traverseLevel();
 						// 失衡
 						if (Math.abs(bf) > 1)
 							zag(target);
@@ -298,12 +302,64 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	}
 
 	/**
+	 * 移除并利用3+4重构达成平衡
+	 * 
+	 * @param key
+	 */
+	public void removeAndConnect34(int key) {
+		Node<E> delNode = search(key);
+		super.remove(delNode);
+		if (hot == null) {// 表示移除根节点并且成为空树了
+			System.out.println("变成空树");
+			return;
+		}
+		if (SHOW_LOG)
+			System.out.println("hot:" + hot.getInfo());
+		
+		connect34(hot);
+	}
+
+	/**
+	 * 
 	 * 3+4重构<br>
 	 * 做完插入或移除操作后，失衡的AVL tree通过此方法恢复平衡<br>
-	 * 找出第一个失衡的祖先节点hot及其祖孙一共三个节点，再取出此三个节点的子树一共四个，<br>
+	 * 找出第一个失衡的祖先节点hot及其父親、祖父一共三个节点，再取出此三个节点的子树一共四个，<br>
 	 * 分别中序排序三个节点和四个子树后合并，成为平衡的AVL tree。
+	 * 
+	 * @param node
 	 */
-	public void balance() {
+	public void connect34(Node<E> node) {
+		if (isBalanced(node))
+			return;
 
+		Node<E> p = node.getParent();
+		if (p == null)
+			return;
+		Node<E> g = p.getParent();
+		if (g == null)
+			return;
+		final Node<E> ancestor = g.getParent();
+		List<Node<E>> subtrees = new LinkedList<>();
+
+		subtrees.add(node.getlChild());
+		subtrees.add(node.getrChild());
+		Node<E> tmp = p;
+		Node<E> mark = node;
+		while (tmp != ancestor) {
+			if (p.getlChild() != mark)
+				subtrees.add(p.getlChild());
+			else
+				subtrees.add(p.getrChild());
+
+			mark = tmp;
+			tmp = tmp.getParent();
+		}
+		if (SHOW_LOG) {
+			System.out.print("{");
+			for (Node<E> n : subtrees) {
+				System.out.print(n.getInfo());
+			}
+			System.out.println("{");
+		}
 	}
 }

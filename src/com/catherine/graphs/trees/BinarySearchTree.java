@@ -73,6 +73,16 @@ public interface BinarySearchTree<E> {
 	public void zag(Node<E> node);
 
 	/**
+	 * node-lChild-lrChild 看起来像"<"
+	 */
+	public void left_rightRotate(Node<E> node);
+
+	/**
+	 * node-rChild-rlChild 看起来像">"
+	 */
+	public void right_leftRotate(Node<E> node);
+
+	/**
 	 * BST中每个节点的平衡因子都是1、0或-1则为AVL Tree
 	 * 
 	 * @param callback

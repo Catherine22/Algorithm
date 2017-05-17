@@ -182,5 +182,13 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	public void isAVLTree(Callback callback) {
 		bst.isAVLTree(callback);
 	}
-
+	@Override
+	public void left_rightRotate(Node<E> node){
+		bst.left_rightRotate(node);
+	}
+	
+	@Override
+	public void right_leftRotate(Node<E> node){
+		bst.right_leftRotate(node);
+	}
 }
