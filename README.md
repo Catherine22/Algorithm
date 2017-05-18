@@ -137,16 +137,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   ```java
   //parent-node-child looks like "<"
-  final Node<E> parent = node.getParent();
-  zag(node);
-  zig(parent);
+  left_rightRotate(node);
   ```
   or
   ```java
   //parent-node-child looks like ">"
-  final Node<E> child = node.getlChild();
-  zig(node);
-  zag(child);
+  right_leftRotate(node)
   ```
 
   - keep balance while inserting and removing

@@ -315,11 +315,11 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		} else
 			root = p;
 		p.setParent(gp);
-		
+
 		node.setlChild(subtree);
 		if (subtree != null)
 			subtree.setParent(node);
-		
+
 		p.setrChild(node);
 		node.setParent(p);
 
@@ -347,11 +347,11 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		} else
 			root = p;
 		p.setParent(gp);
-		
+
 		node.setrChild(subtree);
 		if (subtree != null)
 			subtree.setParent(node);
-		
+
 		p.setlChild(node);
 		node.setParent(p);
 
@@ -360,20 +360,89 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 			updateAboveHeight(hot);
 		}
 	}
-	
+
 	@Override
-	public void left_rightRotate(Node<E> node){
-		  final Node<E> child = node.getlChild();
-		  zag(child);
-		  zig(node);
+	public void left_rightRotate(Node<E> node) {
+		Node<E> leftSubtree = node.getlChild();
+		if (leftSubtree == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+		Node<E> p = leftSubtree.getrChild();
+		if (p == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+
+		hot = p;
+		Node<E> gp = node.getParent();
+
+		if (gp != null) {
+			if (isLeftChild(node))
+				gp.setlChild(p);
+			else
+				gp.setrChild(p);
+		} else
+			root = p;
+		p.setParent(gp);
+
+		Node<E> leftSubtreeTmp = p.getrChild();
+		node.setlChild(leftSubtreeTmp);
+		if (leftSubtreeTmp != null)
+			leftSubtreeTmp.setParent(node);
+
+		Node<E> rightSubtreeTmp = p.getlChild();
+		leftSubtree.setrChild(rightSubtreeTmp);
+		if (rightSubtreeTmp != null)
+			rightSubtreeTmp.setParent(leftSubtree);
+
+		p.setrChild(node);
+		node.setParent(p);
+
+		p.setlChild(leftSubtree);
+		leftSubtree.setParent(p);
+
+		p.getlChild().setHeight(getHeight(p.getlChild()));
+		p.getrChild().setHeight(getHeight(p.getrChild()));
+		updateAboveHeight(p.getlChild());
 	}
-	
+
 	@Override
-	public void right_leftRotate(Node<E> node){
-		  final Node<E> child = node.getrChild();
-		  final Node<E> grandChild = child.getlChild();
-		  zig(child);
-		  zag(grandChild);
+	public void right_leftRotate(Node<E> node) {
+		Node<E> rightSubtree = node.getrChild();
+		if (rightSubtree == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+		Node<E> p = rightSubtree.getlChild();
+		if (p == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+
+		hot = p;
+		Node<E> gp = node.getParent();
+
+		if (gp != null) {
+			if (isLeftChild(node))
+				gp.setlChild(p);
+			else
+				gp.setrChild(p);
+		} else
+			root = p;
+		p.setParent(gp);
+
+		Node<E> rightSubtreeTmp = p.getlChild();
+		node.setrChild(rightSubtreeTmp);
+		if (rightSubtreeTmp != null)
+			rightSubtreeTmp.setParent(node);
+
+		Node<E> leftSubtreeTmp = p.getrChild();
+		rightSubtree.setlChild(leftSubtreeTmp);
+		if (leftSubtreeTmp != null)
+			leftSubtreeTmp.setParent(rightSubtree);
+
+		p.setlChild(node);
+		node.setParent(p);
+
+		p.setrChild(rightSubtree);
+		rightSubtree.setParent(p);
+
+		p.getlChild().setHeight(getHeight(p.getlChild()));
+		p.getrChild().setHeight(getHeight(p.getrChild()));
+		updateAboveHeight(p.getlChild());
 	}
 
 	/**
