@@ -82,7 +82,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	@Override
 	public Node<E> insert(int key, E data) {
 		if (search(key) != null)
-			throw new IllegalArgumentException("This node has already been added.");
+			throw new UnsupportedOperationException("This node has already been added.");
 
 		final Node<E> parent = hot;
 		if (key > parent.getKey())
@@ -95,13 +95,18 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public void remove(int key) {
-		Node<E> node = search(key);
+		remove(search(key));
+	}
+
+	protected void remove(Node<E> node) {
 		if (node == null)
 			throw new NullPointerException("Node not found.");
 		if (node.getParent() == null) {
 			// 移除根节点
 			size = 0;
 			root = null;
+			hot = null;
+			return;
 		}
 		hot = node.getParent();
 		// 情况2
@@ -285,7 +290,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public boolean isBBST() {
-		return false;
+		return getHeight() <= Math.log10(size);
 	}
 
 	@Override
@@ -294,70 +299,150 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 
 	@Override
 	public void zig(Node<E> node) {
-		if (node == root) {
-			if (root.getlChild() != null)
-				node = root.getlChild();
-			else
-				throw new UnsupportedOperationException("This node cannot rotate");
-		}
-		Node<E> rc = node.getParent();
-		hot = rc;
-		if (rc.getParent() == null && root.getrChild() == node) {
-			// 不能转不处理
-			throw new UnsupportedOperationException("This node cannot rotate");
-		}
-		if (rc.getParent() == null) {
-			root = node;
-			node.setParent(null);
-		} else if (isLeftChild(rc)) {
-			rc.getParent().setlChild(node);
-			node.setParent(rc.getParent());
-		} else {
-			rc.getParent().setrChild(node);
-			node.setParent(rc.getParent());
-		}
-		rc.setlChild(node.getrChild());
-		if (rc.getlChild() != null)
-			rc.getlChild().setParent(rc);
-		node.setrChild(rc);
-		rc.setParent(node);
+		Node<E> p = node.getlChild();
+		if (p == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+		Node<E> gp = node.getParent();
+		hot = node;
 
-		hot.setHeight(getHeight(hot));
-		updateAboveHeight(hot);
+		Node<E> subtree = p.getrChild();
+
+		if (gp != null) {
+			if (isLeftChild(node))
+				gp.setlChild(p);
+			else
+				gp.setrChild(p);
+		} else
+			root = p;
+		p.setParent(gp);
+
+		node.setlChild(subtree);
+		if (subtree != null)
+			subtree.setParent(node);
+
+		p.setrChild(node);
+		node.setParent(p);
+
+		if (hot != null) {
+			hot.setHeight(getHeight(hot));
+			updateAboveHeight(hot);
+		}
 	}
 
 	@Override
 	public void zag(Node<E> node) {
-		if (node == root) {
-			if (root.getrChild() != null)
-				node = root.getrChild();
-			else
-				throw new UnsupportedOperationException("This node cannot rotate");
-		}
-		Node<E> lc = node.getParent();
-		hot = lc;
-		if (lc.getParent() == null && root.getlChild() == node) {
-			// 不能转不处理
-			throw new UnsupportedOperationException("This node cannot rotate");
-		}
-		if (lc.getParent() == null) {
-			root = node;
-			node.setParent(null);
-		} else if (isLeftChild(lc)) {
-			lc.getParent().setlChild(node);
-			node.setParent(lc.getParent());
-		} else {
-			lc.getParent().setrChild(node);
-			node.setParent(lc.getParent());
-		}
-		lc.setrChild(node.getlChild());
-		if (lc.getrChild() != null)
-			lc.getrChild().setParent(lc);
-		node.setlChild(lc);
-		lc.setParent(node);
+		Node<E> p = node.getrChild();
+		if (p == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+		Node<E> gp = node.getParent();
+		hot = node;
 
-		hot.setHeight(getHeight(hot));
-		updateAboveHeight(hot);
+		Node<E> subtree = p.getlChild();
+
+		if (gp != null) {
+			if (isLeftChild(node))
+				gp.setlChild(p);
+			else
+				gp.setrChild(p);
+		} else
+			root = p;
+		p.setParent(gp);
+
+		node.setrChild(subtree);
+		if (subtree != null)
+			subtree.setParent(node);
+
+		p.setlChild(node);
+		node.setParent(p);
+
+		if (hot != null) {
+			hot.setHeight(getHeight(hot));
+			updateAboveHeight(hot);
+		}
+	}
+
+	@Override
+	public void left_rightRotate(Node<E> node) {
+		Node<E> leftSubtree = node.getlChild();
+		if (leftSubtree == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+		Node<E> p = leftSubtree.getrChild();
+		if (p == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+
+		hot = p;
+		Node<E> gp = node.getParent();
+
+		if (gp != null) {
+			if (isLeftChild(node))
+				gp.setlChild(p);
+			else
+				gp.setrChild(p);
+		} else
+			root = p;
+		p.setParent(gp);
+
+		Node<E> leftSubtreeTmp = p.getrChild();
+		node.setlChild(leftSubtreeTmp);
+		if (leftSubtreeTmp != null)
+			leftSubtreeTmp.setParent(node);
+
+		Node<E> rightSubtreeTmp = p.getlChild();
+		leftSubtree.setrChild(rightSubtreeTmp);
+		if (rightSubtreeTmp != null)
+			rightSubtreeTmp.setParent(leftSubtree);
+
+		p.setrChild(node);
+		node.setParent(p);
+
+		p.setlChild(leftSubtree);
+		leftSubtree.setParent(p);
+
+		p.getlChild().setHeight(getHeight(p.getlChild()));
+		p.getrChild().setHeight(getHeight(p.getrChild()));
+		updateAboveHeight(p.getlChild());
+	}
+
+	@Override
+	public void right_leftRotate(Node<E> node) {
+		Node<E> rightSubtree = node.getrChild();
+		if (rightSubtree == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+		Node<E> p = rightSubtree.getlChild();
+		if (p == null)
+			throw new UnsupportedOperationException(String.format("This node(%s) cannot rotate", node.getInfo()));
+
+		hot = p;
+		Node<E> gp = node.getParent();
+
+		if (gp != null) {
+			if (isLeftChild(node))
+				gp.setlChild(p);
+			else
+				gp.setrChild(p);
+		} else
+			root = p;
+		p.setParent(gp);
+
+		Node<E> rightSubtreeTmp = p.getlChild();
+		node.setrChild(rightSubtreeTmp);
+		if (rightSubtreeTmp != null)
+			rightSubtreeTmp.setParent(node);
+
+		Node<E> leftSubtreeTmp = p.getrChild();
+		rightSubtree.setlChild(leftSubtreeTmp);
+		if (leftSubtreeTmp != null)
+			leftSubtreeTmp.setParent(rightSubtree);
+
+		p.setlChild(node);
+		node.setParent(p);
+
+		p.setrChild(rightSubtree);
+		rightSubtree.setParent(p);
+
+		p.getlChild().setHeight(getHeight(p.getlChild()));
+		p.getrChild().setHeight(getHeight(p.getrChild()));
+		updateAboveHeight(p.getlChild());
 	}
 
 	/**
@@ -367,6 +452,8 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * @return
 	 */
 	protected boolean isLeftChild(Node<E> child) {
+		if (child.getParent() == null)
+			return false;
 		return child.getParent().getlChild() == child;
 	}
 
@@ -377,6 +464,8 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * @return
 	 */
 	protected boolean isRightChild(Node<E> child) {
+		if (child.getParent() == null)
+			return false;
 		return child.getParent().getrChild() == child;
 	}
 
@@ -444,6 +533,16 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		int lHeight = (node.getlChild() == null) ? -1 : node.getlChild().getHeight();
 		int rHeight = (node.getrChild() == null) ? -1 : node.getrChild().getHeight();
 		return lHeight - rHeight;
+	}
+
+	/**
+	 * 当左子树-右子树的高度<=1时即为平衡节点
+	 * 
+	 * @param node
+	 * @return
+	 */
+	protected boolean isBalanced(Node<E> node) {
+		return Math.abs(getBalanceFactor(node)) <= 1;
 	}
 
 	/**

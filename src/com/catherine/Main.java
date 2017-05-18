@@ -285,40 +285,29 @@ public class Main {
 	}
 
 	public static void testAVLTree() {
-		final MyAVLTree<String> myAVLTree = new MyAVLTree<String>(10, null);
-		myAVLTree.insert(5, null);
-		myAVLTree.insert(20, null);
-		myAVLTree.insert(15, null);
-		myAVLTree.insert(25, null);
-		myAVLTree.traverseIn();
-		myAVLTree.traverseLevel();
-		myAVLTree.isAVLTree(new Callback() {
+		final MyAVLTree<String> myAVLTre1 = new MyAVLTree<String>(20, null);
+		myAVLTre1.insert(10, null);
+		myAVLTre1.insert(30, null);
+		myAVLTre1.insert(5, null);
+		myAVLTre1.insert(25, null);
+		myAVLTre1.insert(40, null);
+		myAVLTre1.insert(35, null);
+		myAVLTre1.insert(45, null);
+		myAVLTre1.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
-				System.out.println("Is this an AVL TREE? " + result);
-
-				// 破坏平衡
-				final Node<String> newNode = myAVLTree.insert(24, null);
-				myAVLTree.traverseLevel();
-				myAVLTree.isAVLTree(new Callback() {
+				myAVLTre1.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTre1.insertAndBalance(34, null);
+				myAVLTre1.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
-						System.out.println("Is this an AVL TREE? " + result);
-
-						// 重新平衡
-						myAVLTree.balance(newNode);
-						myAVLTree.traverseLevel();
-						myAVLTree.isAVLTree(new Callback() {
-							@Override
-							public void onResponse(boolean result) {
-								System.out.println("Is this an AVL TREE? " + result);
-							}
-						});
+						myAVLTre1.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
 			}
 		});
-
 	}
 
 	public static void testDirectedGraph() {
