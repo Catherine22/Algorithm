@@ -40,7 +40,7 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * 插入情形：<br>
 	 * 1. 插入节点的父节点往上推，祖孙三代都是同方向，只需旋转祖父节点可达到平衡（包含祖父以上节点）<br>
 	 * 2. A（祖父） - B（父，左子树） — C （右子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
-	 * A（祖父） - B（父，右子树） — C （左子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
+	 * Or A（祖父） - B（父，右子树） — C （左子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
 	 * 
 	 * @param ins
 	 */
@@ -63,12 +63,17 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 			} else
 				break;
 		}
-		if (SHOW_LOG)
-			System.out.println(String.format("%s -> %s -> %s", ancestor.getKey(), child.getKey(), grandchild.getKey()));
-
 		boolean isLeftNode = isLeftChild(ancestor);
 		boolean isLeftChild = isLeftChild(child);
 		boolean isLeftGrandchild = isLeftChild(grandchild);
+
+		if (SHOW_LOG) {
+			String r1 = (isLeftNode) ? "L" : "R";
+			String r2 = (isLeftChild) ? "L" : "R";
+			String r3 = (isLeftGrandchild) ? "L" : "R";
+			System.out.println(String.format("%s(%s) -> %s(%s) -> %s(%s)", ancestor.getKey(), r1, child.getKey(), r2,
+					grandchild.getKey(), r3));
+		}
 
 		tmp = null;
 		child = null;
@@ -80,28 +85,27 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 				System.out.println("没失衡的祖先直接返回");
 			return;
 		}
-		if (isLeftNode == isLeftChild == isLeftGrandchild == true) {
+		if (isLeftChild && isLeftGrandchild) {
 			if (SHOW_LOG)
 				System.out.println("符合情况1，三节点相连为一左斜线");
 			// 符合情况1，三节点相连为一斜线
 			zig(ancestor);
-		} else if (isLeftNode == isLeftChild == isLeftGrandchild == false) {
+		} else if (!isLeftChild && !isLeftGrandchild) {
 			if (SHOW_LOG)
 				System.out.println("符合情况1，三节点相连为一右斜线");
 			// 符合情况1，三节点相连为一斜线
 			zag(ancestor);
-		} else if (isLeftNode == isLeftGrandchild == true) {
+		} else if (isLeftChild && !isLeftGrandchild) {
 			if (SHOW_LOG)
 				System.out.println("符合情况2，<形");
 			// 符合情况2，"<"形
 			left_rightRotate(ancestor);
-		} else if (isLeftNode == isLeftGrandchild == false) {
+		} else if (!isLeftChild && isLeftGrandchild) {
 			if (SHOW_LOG)
 				System.out.println("符合情况2，>形");
 			// 符合情况2，">"形
 			right_leftRotate(ancestor);
 		}
-
 	}
 
 	/**
