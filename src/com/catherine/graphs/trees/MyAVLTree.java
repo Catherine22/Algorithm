@@ -40,43 +40,66 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * 插入情形：<br>
 	 * 1. 插入节点的父节点往上推，祖孙三代都是同方向，只需旋转祖父节点可达到平衡（包含祖父以上节点）<br>
 	 * 2. A（祖父） - B（父，左子树） — C （右子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
+	 * A（祖父） - B（父，右子树） — C （左子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
 	 * 
 	 * @param ins
 	 */
+	@SuppressWarnings("unused")
 	public void insertAndBalance(int key, E data) {
-		final Node<E> node = super.insert(key, data);
-		if (node.getParent() != null || node.getParent().getParent() != null
-				|| node.getParent().getParent().getParent() != null) {
-			int count = 3;// 祖孙三代
-			int left = 0;
-			int right = 0;
+		final Node<E> newNode = insert(key, data);
+		Node<E> ancestor = newNode.getParent();
 
-			Node<E> target = node;
-			while (count > 0) {
-				count--;
-				if (isLeftChild(target))
-					left++;
-				else
-					right++;
-				target = target.getParent();
-			}
+		Node<E> child = ancestor;
+		Node<E> tmp = newNode;
+		Node<E> grandchild = null;
 
-			// 情况1，单旋
-			if (right == 3)
-				zag(node.getParent().getParent().getParent());
-			else if (left == 3)
-				zig(node.getParent().getParent().getParent());
+		// 找出第一个失衡的祖先
+		while (ancestor != null) {
+			if (isBalanced(ancestor)) {
+				child = ancestor;
+				grandchild = tmp;
+				ancestor = ancestor.getParent();
+				tmp = child;
+			} else
+				break;
+		}
+		if (SHOW_LOG)
+			System.out.println(String.format("%s -> %s -> %s", ancestor.getKey(), child.getKey(), grandchild.getKey()));
 
-			// 情况2，双旋
-			else if (right == 2 && left == 1) {
-				target = node.getParent();
-				zag(target);
-				zig(target);
-			} else if (right == 1 && left == 2) {
-				target = node.getParent();
-				zig(target);
-				zag(target);
-			}
+		boolean isLeftNode = isLeftChild(ancestor);
+		boolean isLeftChild = isLeftChild(child);
+		boolean isLeftGrandchild = isLeftChild(grandchild);
+
+		tmp = null;
+		child = null;
+		grandchild = null;
+
+		// 没失衡的祖先直接返回
+		if (ancestor == null) {
+			if (SHOW_LOG)
+				System.out.println("没失衡的祖先直接返回");
+			return;
+		}
+		if (isLeftNode == isLeftChild == isLeftGrandchild == true) {
+			if (SHOW_LOG)
+				System.out.println("符合情况1，三节点相连为一左斜线");
+			// 符合情况1，三节点相连为一斜线
+			zig(ancestor);
+		} else if (isLeftNode == isLeftChild == isLeftGrandchild == false) {
+			if (SHOW_LOG)
+				System.out.println("符合情况1，三节点相连为一右斜线");
+			// 符合情况1，三节点相连为一斜线
+			zag(ancestor);
+		} else if (isLeftNode == isLeftGrandchild == true) {
+			if (SHOW_LOG)
+				System.out.println("符合情况2，<形");
+			// 符合情况2，"<"形
+			left_rightRotate(ancestor);
+		} else if (isLeftNode == isLeftGrandchild == false) {
+			if (SHOW_LOG)
+				System.out.println("符合情况2，>形");
+			// 符合情况2，">"形
+			right_leftRotate(ancestor);
 		}
 
 	}
@@ -190,7 +213,7 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 							System.out.println("target:" + target.getInfo());
 							System.out.println(String.format("bf:%d", bf));
 						}
-traverseLevel();
+						traverseLevel();
 						// 失衡
 						if (Math.abs(bf) > 1)
 							zag(target);
@@ -315,7 +338,7 @@ traverseLevel();
 		}
 		if (SHOW_LOG)
 			System.out.println("hot:" + hot.getInfo());
-		
+
 		connect34(hot);
 	}
 
