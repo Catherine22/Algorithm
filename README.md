@@ -119,7 +119,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ### AVL Tree
 
   - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
-  - Single rotation
+
+  - Single rotations
 
   ![rotation][2]
 

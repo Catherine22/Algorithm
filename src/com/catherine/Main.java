@@ -285,14 +285,29 @@ public class Main {
 	}
 
 	public static void testAVLTree() {
-		final MyAVLTree<String> myAVLTre1 = new MyAVLTree<String>(5, null);
+		final MyAVLTree<String> myAVLTre1 = new MyAVLTree<String>(20, null);
 		myAVLTre1.insert(10, null);
-		myAVLTre1.insert(1, null);
-		myAVLTre1.insert(7, null);
-		myAVLTre1.insert(12, null);
-		myAVLTre1.traverseLevel();
-		myAVLTre1.right_leftRotate(myAVLTre1.search(5));
-		myAVLTre1.traverseLevel();
+		myAVLTre1.insert(30, null);
+		myAVLTre1.insert(5, null);
+		myAVLTre1.insert(25, null);
+		myAVLTre1.insert(40, null);
+		myAVLTre1.insert(35, null);
+		myAVLTre1.insert(45, null);
+		myAVLTre1.isAVLTree(new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				myAVLTre1.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTre1.insertAndBalance(34, null);
+				myAVLTre1.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						myAVLTre1.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
+					}
+				});
+			}
+		});
 	}
 
 	public static void testDirectedGraph() {
