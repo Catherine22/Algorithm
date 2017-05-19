@@ -285,24 +285,49 @@ public class Main {
 	}
 
 	public static void testAVLTree() {
-		final MyAVLTree<String> myAVLTre1 = new MyAVLTree<String>(20, null);
-		myAVLTre1.insert(10, null);
-		myAVLTre1.insert(30, null);
-		myAVLTre1.insert(5, null);
-		myAVLTre1.insert(25, null);
-		myAVLTre1.insert(40, null);
-		myAVLTre1.insert(35, null);
-		myAVLTre1.insert(45, null);
-		myAVLTre1.isAVLTree(new Callback() {
+//		final MyAVLTree<String> myAVLTre1 = new MyAVLTree<String>(20, null);
+//		myAVLTre1.insert(10, null);
+//		myAVLTre1.insert(30, null);
+//		myAVLTre1.insert(5, null);
+//		myAVLTre1.insert(25, null);
+//		myAVLTre1.insert(40, null);
+//		myAVLTre1.insert(35, null);
+//		myAVLTre1.insert(45, null);
+//		myAVLTre1.isAVLTree(new Callback() {
+//			@Override
+//			public void onResponse(boolean result) {
+//				myAVLTre1.traverseLevel();
+//				System.out.println("Is that an AVL tree? " + result);
+//				myAVLTre1.insertAndBalance(34, null);
+//				myAVLTre1.isAVLTree(new Callback() {
+//					@Override
+//					public void onResponse(boolean result) {
+//						myAVLTre1.traverseLevel();
+//						System.out.println("Is that still an AVL tree? " + result);
+//					}
+//				});
+//			}
+//		});
+		
+		final MyAVLTree<String> myAVLTre2 = new MyAVLTree<String>(9, null);
+		myAVLTre2.insert(1, null);
+		myAVLTre2.insert(10, null);
+		myAVLTre2.insert(5, null);
+		myAVLTre2.insert(0, null);
+		myAVLTre2.insert(11, null);
+		myAVLTre2.insert(-1, null);
+		myAVLTre2.insert(2, null);
+		myAVLTre2.insert(6, null);
+		myAVLTre2.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
-				myAVLTre1.traverseLevel();
+				myAVLTre2.traverseLevel();
 				System.out.println("Is that an AVL tree? " + result);
-				myAVLTre1.insertAndBalance(34, null);
-				myAVLTre1.isAVLTree(new Callback() {
+				myAVLTre2.removeAndBalance(10);
+				myAVLTre2.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
-						myAVLTre1.traverseLevel();
+						myAVLTre2.traverseLevel();
 						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});

@@ -67,15 +67,13 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		if (ancestor == null || child == null || grandchild == null)
 			return;
 
-		boolean isLeftNode = isLeftChild(ancestor);
 		boolean isLeftChild = isLeftChild(child);
 		boolean isLeftGrandchild = isLeftChild(grandchild);
 
 		if (SHOW_LOG) {
-			String r1 = (isLeftNode) ? "L" : "R";
 			String r2 = (isLeftChild) ? "L" : "R";
 			String r3 = (isLeftGrandchild) ? "L" : "R";
-			System.out.println(String.format("%s(%s) -> %s(%s) -> %s(%s)", ancestor.getKey(), r1, child.getKey(), r2,
+			System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
 					grandchild.getKey(), r3));
 		}
 
@@ -83,13 +81,6 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		child = null;
 		grandchild = null;
 
-		// 没失衡的祖先直接返回
-		// if (ancestor == null) {
-		// if (SHOW_LOG)
-		// System.out.println("没失衡的祖先直接返回");
-		// return;
-		// }
-		
 		if (isLeftChild && isLeftGrandchild) {
 			if (SHOW_LOG)
 				System.out.println("符合情况1，三节点相连为一左斜线");
@@ -135,43 +126,79 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * @param key
 	 */
 	public void removeAndBalance(int key) {
-		super.remove(key);
-		Node<E> ancestor = hot;
+		Node<E> tmp = search(key);
+		super.remove(tmp);
 
-		Node<E> child = ancestor;
+		Node<E> ancestor = hot;
+		Node<E> child = null;
 		Node<E> grandchild = null;
-		Node<E> tmp = null;
 
 		while (ancestor != null) {
 			if (isBalanced(ancestor)) {
-				child = ancestor;
-				grandchild = tmp;
 				ancestor = ancestor.getParent();
-				tmp = child;
-			} else
+			} else {
+				if (isLeftChild(tmp)) {
+					child = ancestor.getrChild();
+					if (child != null) {
+						// 孙子节点取高度较高的，情况2取得的孙子节点的高度一定高于兄弟
+						if (getBalanceFactor(child) < -1) {
+							grandchild = child.getlChild();
+						} else
+							grandchild = child.getrChild();
+					}
+				} else {
+					child = ancestor.getlChild();
+					if (child != null) {
+						// 孙子节点取高度较高的，情况2取得的孙子节点的高度一定高于兄弟
+						if (getBalanceFactor(child) < -1) {
+							grandchild = child.getrChild();
+						} else
+							grandchild = child.getlChild();
+					}
+				}
 				break;
+			}
 		}
 
-		if (ancestor == null)
+		// 没失衡的祖先直接返回
+		if (ancestor == null || child == null || grandchild == null)
 			return;
 
-		boolean isLeftNode = isLeftChild(ancestor);
 		boolean isLeftChild = isLeftChild(child);
 		boolean isLeftGrandchild = isLeftChild(grandchild);
 
 		if (SHOW_LOG) {
-			String r1 = (isLeftNode) ? "L" : "R";
 			String r2 = (isLeftChild) ? "L" : "R";
 			String r3 = (isLeftGrandchild) ? "L" : "R";
-			System.out.println(String.format("%s(%s) -> %s(%s) -> %s(%s)", ancestor.getKey(), r1, child.getKey(), r2,
+			System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
 					grandchild.getKey(), r3));
 		}
 
 		tmp = null;
 		child = null;
 		grandchild = null;
-
-		System.out.println("失衡节点：" + ancestor.getKey());
+		
+		if (isLeftChild && isLeftGrandchild) {
+			if (SHOW_LOG)
+				System.out.println("符合情况1，三节点相连为一左斜线");
+			// 符合情况1，三节点相连为一斜线
+			zig(ancestor);
+		} else if (!isLeftChild && !isLeftGrandchild) {
+			if (SHOW_LOG)
+				System.out.println("符合情况1，三节点相连为一右斜线");
+			// 符合情况1，三节点相连为一斜线
+			zag(ancestor);
+		} else if (isLeftChild && !isLeftGrandchild) {
+			if (SHOW_LOG)
+				System.out.println("符合情况2，<形");
+			// 符合情况2，"<"形
+			left_rightRotate(ancestor);
+		} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
+			if (SHOW_LOG)
+				System.out.println("符合情况2，>形");
+			// 符合情况2，">"形
+			right_leftRotate(ancestor);
+		}
 	}
 
 	/**
