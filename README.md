@@ -120,7 +120,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
 
-**Single rotations**
+  - **Single rotations**
 
   ![rotation][2]
 
@@ -132,7 +132,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   zag(node);
   ```
 
-**Double rotations**
+  - **Double rotations**
 
   ![double rotation][3]
 
@@ -147,6 +147,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   ```
 
   - keep balance while inserting and removing
+
+  ![tree][4]
+  ![tree][5]
+  ![tree][6]
+  ![tree][7]
+
   - [MyAVLTree]
 
 
@@ -209,3 +215,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
   [3]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_double_rotation.png
+  [4]: https://github.com/Catherine22/Algorithms/blob/master/res/i_s.png
+  [5]: https://github.com/Catherine22/Algorithms/blob/master/res/i_d.png
+  [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
+  [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
