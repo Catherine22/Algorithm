@@ -64,7 +64,7 @@ public class Others {
 			for (int i = 0; i < expression.length(); i++) {
 				String c = String.valueOf(expression.charAt(i));
 				if (c.equals("("))
-					leftBrackets.push("C");
+					leftBrackets.push("(");
 				else if (c.equals("["))
 					leftBrackets.push("[");
 				else if (c.equals("{"))
