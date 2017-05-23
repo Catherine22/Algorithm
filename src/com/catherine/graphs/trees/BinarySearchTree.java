@@ -56,13 +56,6 @@ public interface BinarySearchTree<E> {
 	public boolean isBBST();
 
 	/**
-	 * 两个限制：<br>
-	 * 操作的计算时间O(1)<br>
-	 * 操作次数不超过O(log n)
-	 */
-	public void balance();
-
-	/**
 	 * node和node的左孩子向右旋转，没有左孩子则报错
 	 */
 	public void zig(Node<E> node);

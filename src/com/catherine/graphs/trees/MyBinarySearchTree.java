@@ -164,11 +164,6 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	}
 
 	@Override
-	public void balance() {
-		bst.balance();
-	}
-
-	@Override
 	public void zig(Node<E> node) {
 		bst.zig(node);
 	}
