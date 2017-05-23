@@ -122,6 +122,12 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 	 * 2. 可能会失衡的节点，hot（{@link #remove(int)} 操作后重新指定）或其祖先，该祖先的子节点以及孙子节点为>或<的方向，
 	 * 此时做一次双旋让孙子节点成为新的父节点，复衡最多O(log n)次。 <br>
 	 * 其它. 旋转后高度不变，就不会发生新的失衡。<br>
+	 * <br>
+	 * <br>
+	 * p.s. 取子节点和孙子节点则是依照balance factory，如果左子树较高，balance factory > 1，那就取左边的节点，
+	 * <br>
+	 * 反之balance factory <
+	 * -1，那就取右边的节点（为什么不是介于1和-1之间是因为如果是1、0或-1表示平衡，就不会被当成目标节点）。
 	 * 
 	 * @param key
 	 */
@@ -133,71 +139,62 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		Node<E> child = null;
 		Node<E> grandchild = null;
 
+		int count = 1;
 		while (ancestor != null) {
+			if (SHOW_LOG)
+				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
+
 			if (isBalanced(ancestor)) {
 				ancestor = ancestor.getParent();
 			} else {
-				if (isLeftChild(tmp)) {
-					child = ancestor.getrChild();
-					if (child != null) {
-						// 孙子节点取高度较高的，情况2取得的孙子节点的高度一定高于兄弟
-						if (getBalanceFactor(child) < -1) {
-							grandchild = child.getlChild();
-						} else
-							grandchild = child.getrChild();
-					}
-				} else {
-					child = ancestor.getlChild();
-					if (child != null) {
-						// 孙子节点取高度较高的，情况2取得的孙子节点的高度一定高于兄弟
-						if (getBalanceFactor(child) < -1) {
-							grandchild = child.getrChild();
-						} else
-							grandchild = child.getlChild();
-					}
+				// 子节点取高度较高的那边
+				child = (getBalanceFactor(ancestor) < -1) ? ancestor.getrChild() : ancestor.getlChild();
+				if (child != null) {
+					// 孙子节点取高度较高的
+					grandchild = (getBalanceFactor(child) < -1) ? child.getrChild() : child.getlChild();
 				}
-				break;
+
+				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
+				if (ancestor == null || child == null || grandchild == null) {
+					break;
+				}
+
+				boolean isLeftChild = isLeftChild(child);
+				boolean isLeftGrandchild = isLeftChild(grandchild);
+
+				if (SHOW_LOG) {
+					String r2 = (isLeftChild) ? "L" : "R";
+					String r3 = (isLeftGrandchild) ? "L" : "R";
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
+							grandchild.getKey(), r3));
+				}
+
+				tmp = null;
+				child = null;
+				grandchild = null;
+
+				if (isLeftChild && isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一左斜线");
+					// 符合情况1，三节点相连为一斜线
+					zig(ancestor);
+				} else if (!isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一右斜线");
+					// 符合情况1，三节点相连为一斜线
+					zag(ancestor);
+				} else if (isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况2，<形");
+					// 符合情况2，"<"形
+					left_rightRotate(ancestor);
+				} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
+					if (SHOW_LOG)
+						System.out.println("符合情况2，>形");
+					// 符合情况2，">"形
+					right_leftRotate(ancestor);
+				}
 			}
-		}
-
-		// 没失衡的祖先直接返回
-		if (ancestor == null || child == null || grandchild == null)
-			return;
-
-		boolean isLeftChild = isLeftChild(child);
-		boolean isLeftGrandchild = isLeftChild(grandchild);
-
-		if (SHOW_LOG) {
-			String r2 = (isLeftChild) ? "L" : "R";
-			String r3 = (isLeftGrandchild) ? "L" : "R";
-			System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
-					grandchild.getKey(), r3));
-		}
-
-		tmp = null;
-		child = null;
-		grandchild = null;
-		
-		if (isLeftChild && isLeftGrandchild) {
-			if (SHOW_LOG)
-				System.out.println("符合情况1，三节点相连为一左斜线");
-			// 符合情况1，三节点相连为一斜线
-			zig(ancestor);
-		} else if (!isLeftChild && !isLeftGrandchild) {
-			if (SHOW_LOG)
-				System.out.println("符合情况1，三节点相连为一右斜线");
-			// 符合情况1，三节点相连为一斜线
-			zag(ancestor);
-		} else if (isLeftChild && !isLeftGrandchild) {
-			if (SHOW_LOG)
-				System.out.println("符合情况2，<形");
-			// 符合情况2，"<"形
-			left_rightRotate(ancestor);
-		} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
-			if (SHOW_LOG)
-				System.out.println("符合情况2，>形");
-			// 符合情况2，">"形
-			right_leftRotate(ancestor);
 		}
 	}
 

@@ -138,7 +138,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 				parent.setrChild(null);
 			node = null;
 		}
-
+		
 		hot.setHeight(getHeight(hot));
 		updateAboveHeight(hot);
 		size--;
