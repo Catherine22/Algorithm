@@ -53,54 +53,56 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 		Node<E> tmp = newNode;
 		Node<E> grandchild = null;
 
-		// 找出第一个失衡的祖先
+		int count = 1;
 		while (ancestor != null) {
+			if (SHOW_LOG)
+				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
+
 			if (isBalanced(ancestor)) {
 				child = ancestor;
 				grandchild = tmp;
 				ancestor = ancestor.getParent();
 				tmp = child;
-			} else
-				break;
-		}
+			} else {
+				if (ancestor == null || child == null || grandchild == null)
+					break;
 
-		if (ancestor == null || child == null || grandchild == null)
-			return;
+				boolean isLeftChild = isLeftChild(child);
+				boolean isLeftGrandchild = isLeftChild(grandchild);
 
-		boolean isLeftChild = isLeftChild(child);
-		boolean isLeftGrandchild = isLeftChild(grandchild);
+				if (SHOW_LOG) {
+					String r2 = (isLeftChild) ? "L" : "R";
+					String r3 = (isLeftGrandchild) ? "L" : "R";
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
+							grandchild.getKey(), r3));
+				}
 
-		if (SHOW_LOG) {
-			String r2 = (isLeftChild) ? "L" : "R";
-			String r3 = (isLeftGrandchild) ? "L" : "R";
-			System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
-					grandchild.getKey(), r3));
-		}
+				tmp = null;
+				child = null;
+				grandchild = null;
 
-		tmp = null;
-		child = null;
-		grandchild = null;
-
-		if (isLeftChild && isLeftGrandchild) {
-			if (SHOW_LOG)
-				System.out.println("符合情况1，三节点相连为一左斜线");
-			// 符合情况1，三节点相连为一斜线
-			zig(ancestor);
-		} else if (!isLeftChild && !isLeftGrandchild) {
-			if (SHOW_LOG)
-				System.out.println("符合情况1，三节点相连为一右斜线");
-			// 符合情况1，三节点相连为一斜线
-			zag(ancestor);
-		} else if (isLeftChild && !isLeftGrandchild) {
-			if (SHOW_LOG)
-				System.out.println("符合情况2，<形");
-			// 符合情况2，"<"形
-			left_rightRotate(ancestor);
-		} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
-			if (SHOW_LOG)
-				System.out.println("符合情况2，>形");
-			// 符合情况2，">"形
-			right_leftRotate(ancestor);
+				if (isLeftChild && isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一左斜线");
+					// 符合情况1，三节点相连为一斜线
+					zig(ancestor);
+				} else if (!isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一右斜线");
+					// 符合情况1，三节点相连为一斜线
+					zag(ancestor);
+				} else if (isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况2，<形");
+					// 符合情况2，"<"形
+					left_rightRotate(ancestor);
+				} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
+					if (SHOW_LOG)
+						System.out.println("符合情况2，>形");
+					// 符合情况2，">"形
+					right_leftRotate(ancestor);
+				}
+			}
 		}
 	}
 
