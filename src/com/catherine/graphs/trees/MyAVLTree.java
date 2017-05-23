@@ -1,8 +1,5 @@
 package com.catherine.graphs.trees;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.catherine.graphs.trees.nodes.Node;
 
 /**
@@ -13,7 +10,7 @@ import com.catherine.graphs.trees.nodes.Node;
  * @param <E>
  */
 public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
-	protected final static boolean SHOW_LOG = true;
+	protected final static boolean SHOW_LOG = false;
 
 	public MyAVLTree(int key, E root) {
 		super(key, root);
@@ -196,69 +193,10 @@ public class MyAVLTree<E> extends MyBinarySearchTreeKernel<E> {
 					// 符合情况2，">"形
 					right_leftRotate(ancestor);
 				}
+				// System.out.println("hot:"+hot.getKey());
+				// traverseLevel();
 			}
 		}
 	}
 
-	/**
-	 * 移除并利用3+4重构达成平衡
-	 * 
-	 * @param key
-	 */
-	public void removeAndConnect34(int key) {
-		Node<E> delNode = search(key);
-		super.remove(delNode);
-		if (hot == null) {// 表示移除根节点并且成为空树了
-			System.out.println("变成空树");
-			return;
-		}
-		if (SHOW_LOG)
-			System.out.println("hot:" + hot.getInfo());
-
-		connect34(hot);
-	}
-
-	/**
-	 * 
-	 * 3+4重构<br>
-	 * 做完插入或移除操作后，失衡的AVL tree通过此方法恢复平衡<br>
-	 * 找出第一个失衡的祖先节点hot及其父親、祖父一共三个节点，再取出此三个节点的子树一共四个，<br>
-	 * 分别中序排序三个节点和四个子树后合并，成为平衡的AVL tree。
-	 * 
-	 * @param node
-	 */
-	public void connect34(Node<E> node) {
-		if (isBalanced(node))
-			return;
-
-		Node<E> p = node.getParent();
-		if (p == null)
-			return;
-		Node<E> g = p.getParent();
-		if (g == null)
-			return;
-		final Node<E> ancestor = g.getParent();
-		List<Node<E>> subtrees = new LinkedList<>();
-
-		subtrees.add(node.getlChild());
-		subtrees.add(node.getrChild());
-		Node<E> tmp = p;
-		Node<E> mark = node;
-		while (tmp != ancestor) {
-			if (p.getlChild() != mark)
-				subtrees.add(p.getlChild());
-			else
-				subtrees.add(p.getrChild());
-
-			mark = tmp;
-			tmp = tmp.getParent();
-		}
-		if (SHOW_LOG) {
-			System.out.print("{");
-			for (Node<E> n : subtrees) {
-				System.out.print(n.getInfo());
-			}
-			System.out.println("{");
-		}
-	}
 }

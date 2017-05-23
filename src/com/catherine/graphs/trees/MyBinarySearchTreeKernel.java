@@ -138,7 +138,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 				parent.setrChild(null);
 			node = null;
 		}
-		
+
 		hot.setHeight(getHeight(hot));
 		updateAboveHeight(hot);
 		size--;
@@ -176,23 +176,17 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * @param node1
 	 * @param node2
 	 */
-	private void swap(Node<E> node1, Node<E> node2) {
+	protected void swap(Node<E> node1, Node<E> node2) {
 		if (SHOW_LOG) {
 			System.out.println("node1:" + node1.toString());
 			System.out.println("node2:" + node2.toString());
 		}
 		int tmpKey = node1.getKey();
-		int tmpHeight = node1.getHeight();
-		int tmpDepth = node1.getDepth();
 		E tmpData = node1.getData();
 
 		node1.setKey(node2.getKey());
-		node1.setHeight(node2.getHeight());
-		node1.setDepth(node2.getDepth());
 		node1.setData(node2.getData());
 		node2.setKey(tmpKey);
-		node2.setHeight(tmpHeight);
-		node2.setDepth(tmpDepth);
 		node2.setData(tmpData);
 
 		if (SHOW_LOG) {
@@ -291,10 +285,6 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	@Override
 	public boolean isBBST() {
 		return getHeight() <= Math.log10(size);
-	}
-
-	@Override
-	public void balance() {
 	}
 
 	@Override
@@ -584,5 +574,4 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	public E setRC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("setRC(Node<E> parent, E data)");
 	}
-
 }
