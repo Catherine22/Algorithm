@@ -159,6 +159,16 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - [MyAVLTree]
 
+### Splay tree
+
+Splay tree practices well when 
+1. The recently accessed node may be accessed again.
+2. Next node is located by the recently accessed node.
+
+两种情况下特别适用伸展树：
+1. 当被访问过的节点很可能再度被访问时
+2. 下个访问节点就在刚被访问过的节点附近
+
 ## [Others]
   - Hailstone
   - Fibonacci
