@@ -7,6 +7,7 @@ import java.util.List;
 import com.catherine.graphs.trees.nodes.Node;
 import com.catherine.graphs.trees.nodes.NodeAdapter;
 import com.catherine.graphs.trees.nodes.Nodes;
+import com.catherine.utils.Analysis;
 import com.catherine.utils.Others;
 
 /**
@@ -60,6 +61,9 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		Node<E> node = null;
 
 		while (!stop) {
+			if (SHOW_LOG)
+				Analysis.count(23104987);
+
 			if (key > hot.getKey()) {
 				if (hot.getrChild() == null)
 					stop = true;
@@ -76,6 +80,10 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 				stop = true;
 			}
 		}
+
+		if (SHOW_LOG)
+			Analysis.stopCounting(23104987);
+
 		return node;
 	}
 
@@ -539,7 +547,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public Node<E> setRoot(E data) {
+	public final Node<E> setRoot(E data) {
 		throw new UnsupportedOperationException("setRoot(E data)");
 	}
 
@@ -547,7 +555,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public Node<E> insertLC(Node<E> parent, E data) {
+	public final Node<E> insertLC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("insertLC(Node<E> parent, E data)");
 	}
 
@@ -555,7 +563,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public Node<E> insertRC(Node<E> parent, E data) {
+	public final Node<E> insertRC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("insertRC(Node<E> parent, E data)");
 	}
 
@@ -563,7 +571,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public E setLC(Node<E> parent, E data) {
+	public final E setLC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("setLC(Node<E> parent, E data)");
 	}
 
@@ -571,7 +579,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public E setRC(Node<E> parent, E data) {
+	public final E setRC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("setRC(Node<E> parent, E data)");
 	}
 }
