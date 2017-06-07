@@ -161,13 +161,11 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Splay tree
 
-Splay tree practices well when 
+Splay tree practices well when
 1. The recently accessed node may be accessed again.
 2. Next node is located by the recently accessed node.
 
-两种情况下特别适用伸展树：
-1. 当被访问过的节点很可能再度被访问时
-2. 下个访问节点就在刚被访问过的节点附近
+>If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree works.
 
 ## [Others]
   - Hailstone

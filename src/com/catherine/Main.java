@@ -15,6 +15,7 @@ import com.catherine.graphs.trees.Callback;
 import com.catherine.graphs.trees.MyAVLTree;
 import com.catherine.graphs.trees.MyBinarySearchTree;
 import com.catherine.graphs.trees.MyBinaryTree;
+import com.catherine.graphs.trees.MySplayTree;
 import com.catherine.graphs.trees.nodes.Node;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
@@ -50,10 +51,11 @@ public class Main {
 		// testArrayList();
 		// testLinkedList();
 		// testStack();
+		// testDirectedGraph();
 		// testBinaryTree();
 		// testBST();
-		testAVLTree();
-		// testDirectedGraph();
+		// testAVLTree();
+		testSplayTree();
 
 	}
 
@@ -229,191 +231,6 @@ public class Main {
 		System.out.println(b1 + "");
 	}
 
-	public static void testBinaryTree() {
-		MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
-		Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
-		mBT.insertRC(lc, "C");
-		Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
-		Node<String> rclc = mBT.insertLC(rc, "D");
-		mBT.insertRC(rc, "E");
-		mBT.setLC(rclc, "F");
-
-		for (int i = 0; i < 500; i++) {
-			Node<String> node = mBT.insertRC(rclc, "G");
-			rclc = node;
-		}
-
-		System.out.println("H:" + mBT.getHeight());
-		mBT.traversePre();
-		mBT.traversePreNR1();
-		mBT.traversePreNR2();
-		mBT.traverseIn();
-		mBT.traverseInNR();
-		mBT.traversePost();
-		mBT.traversePostNR1();
-		mBT.traversePostNR2();
-		mBT.traverseLevel();
-	}
-
-	public static void testBST() {
-		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
-		mBST.insert(20, "二十");
-		mBST.insert(80, "");
-		mBST.insert(10, "");
-		mBST.insert(30, "");
-		mBST.insert(70, "");
-		mBST.insert(90, "");
-		mBST.insert(35, "");
-		mBST.insert(25, "");
-		mBST.insert(65, "");
-		// mBST.removeRCCompletely(mBST.search(80));
-		// mBST.removeLCCompletely(mBST.search(80));
-		// mBST.remove(20);
-		mBST.traverseIn();// 中序一定是小到大排
-		mBST.traverseLevel();
-		mBST.zig(mBST.search(80));
-		mBST.traverseIn();// 中序一定是小到大排
-		mBST.traverseLevel();
-		// System.out.println(mBST.succ(mBST.search(20)));
-
-		// System.out.println(mBST.search(25));
-		// System.out.println(mBST.size());
-		// MyBinarySearchTree<Object> randomBST = (MyBinarySearchTree<Object>)
-		// MyBinarySearchTree.random(5);
-		// randomBST.traverseLevel();
-		// System.out.println("Is this BST full? " + randomBST.isFull());
-	}
-
-	public static void testAVLTree() {
-		 final MyAVLTree<String> myAVLTree1 = new MyAVLTree<String>(20, null);
-		 myAVLTree1.insert(10, null);
-		 myAVLTree1.insert(30, null);
-		 myAVLTree1.insert(5, null);
-		 myAVLTree1.insert(25, null);
-		 myAVLTree1.insert(40, null);
-		 myAVLTree1.insert(35, null);
-		 myAVLTree1.insert(45, null);
-		 myAVLTree1.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree1.traverseLevel();
-		 System.out.println("Is that an AVL tree? " + result);
-		 myAVLTree1.insertAndBalance(34, null);
-		 myAVLTree1.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree1.traverseLevel();
-		 System.out.println("Is that still an AVL tree? " + result);
-		 }
-		 });
-		 }
-		 });
-
-		 final MyAVLTree<String> myAVLTree2 = new MyAVLTree<String>(9, null);
-		 myAVLTree2.insert(1, null);
-		 myAVLTree2.insert(10, null);
-		 myAVLTree2.insert(5, null);
-		 myAVLTree2.insert(0, null);
-		 myAVLTree2.insert(11, null);
-		 myAVLTree2.insert(-1, null);
-		 myAVLTree2.insert(2, null);
-		 myAVLTree2.insert(6, null);
-		 myAVLTree2.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree2.traverseLevel();
-		 System.out.println("Is that an AVL tree? " + result);
-		 myAVLTree2.removeAndBalance(10);
-		 myAVLTree2.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree2.traverseLevel();
-		 System.out.println("Is that still an AVL tree? " + result);
-		 }
-		 });
-		 }
-		 });
-
-		 final MyAVLTree<String> myAVLTree3 = new MyAVLTree<String>(44, null);
-		 myAVLTree3.insert(17, null);
-		 myAVLTree3.insert(78, null);
-		 myAVLTree3.insert(32, null);
-		 myAVLTree3.insert(50, null);
-		 myAVLTree3.insert(88, null);
-		 myAVLTree3.insert(48, null);
-		 myAVLTree3.insert(62, null);
-		 myAVLTree3.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree3.traverseLevel();
-		 System.out.println("Is that an AVL tree? " + result);
-		 myAVLTree3.removeAndBalance(32);
-		 myAVLTree3.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree3.traverseLevel();
-		 System.out.println("Is that still an AVL tree? " + result);
-		 }
-		 });
-		 }
-		 });
-
-		 final MyAVLTree<String> myAVLTree4 = new MyAVLTree<String>(50, null);
-		 myAVLTree4.insert(25, null);
-		 myAVLTree4.insert(75, null);
-		 myAVLTree4.insert(10, null);
-		 myAVLTree4.insert(30, null);
-		 myAVLTree4.insert(60, null);
-		 myAVLTree4.insert(80, null);
-		 myAVLTree4.insert(5, null);
-		 myAVLTree4.insert(15, null);
-		 myAVLTree4.insert(27, null);
-		 myAVLTree4.insert(55, null);
-		 myAVLTree4.insert(1, null);
-		 myAVLTree4.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree4.traverseLevel();
-		 System.out.println("Is that an AVL tree? " + result);
-		 myAVLTree4.removeAndBalance(80);
-		 myAVLTree4.isAVLTree(new Callback() {
-		 @Override
-		 public void onResponse(boolean result) {
-		 myAVLTree4.traverseLevel();
-		 System.out.println("Is that still an AVL tree? " + result);
-		 }
-		 });
-		 }
-		 });
-
-		final MyAVLTree<String> myAVLTree5 = new MyAVLTree<String>(50, null);
-		myAVLTree5.insert(25, null);
-		myAVLTree5.insert(75, null);
-		myAVLTree5.insert(10, null);
-		myAVLTree5.insert(30, null);
-		myAVLTree5.insert(60, null);
-		myAVLTree5.insert(5, null);
-		myAVLTree5.insert(15, null);
-		myAVLTree5.insert(27, null);
-		myAVLTree5.insert(55, null);
-		myAVLTree5.insert(1, null);
-		myAVLTree5.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree5.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree5.insertAndBalance(80, null);
-				myAVLTree5.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree5.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-	}
-
 	public static void testDirectedGraph() {
 		DirectedGraph<String> dGraph = new DirectedGraph<>();
 		// Vertex<String> va = dGraph.addVertex("A");
@@ -479,4 +296,203 @@ public class Main {
 		System.out.println(dGraph.toString());
 		dGraph.printVertexes();
 	}
+
+	public static void testBinaryTree() {
+		MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
+		Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
+		mBT.insertRC(lc, "C");
+		Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
+		Node<String> rclc = mBT.insertLC(rc, "D");
+		mBT.insertRC(rc, "E");
+		mBT.setLC(rclc, "F");
+
+		for (int i = 0; i < 500; i++) {
+			Node<String> node = mBT.insertRC(rclc, "G");
+			rclc = node;
+		}
+
+		System.out.println("H:" + mBT.getHeight());
+		mBT.traversePre();
+		mBT.traversePreNR1();
+		mBT.traversePreNR2();
+		mBT.traverseIn();
+		mBT.traverseInNR();
+		mBT.traversePost();
+		mBT.traversePostNR1();
+		mBT.traversePostNR2();
+		mBT.traverseLevel();
+	}
+
+	public static void testBST() {
+		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
+		mBST.insert(20, "二十");
+		mBST.insert(80, "");
+		mBST.insert(10, "");
+		mBST.insert(30, "");
+		mBST.insert(70, "");
+		mBST.insert(90, "");
+		mBST.insert(35, "");
+		mBST.insert(25, "");
+		mBST.insert(65, "");
+		// mBST.removeRCCompletely(mBST.search(80));
+		// mBST.removeLCCompletely(mBST.search(80));
+		// mBST.remove(20);
+		mBST.traverseIn();// 中序一定是小到大排
+		mBST.traverseLevel();
+		mBST.zig(mBST.search(80));
+		mBST.traverseIn();// 中序一定是小到大排
+		mBST.traverseLevel();
+		// System.out.println(mBST.succ(mBST.search(20)));
+
+		// System.out.println(mBST.search(25));
+		// System.out.println(mBST.size());
+		// MyBinarySearchTree<Object> randomBST = (MyBinarySearchTree<Object>)
+		// MyBinarySearchTree.random(5);
+		// randomBST.traverseLevel();
+		// System.out.println("Is this BST full? " + randomBST.isFull());
+	}
+
+	public static void testAVLTree() {
+		final MyAVLTree<String> myAVLTree1 = new MyAVLTree<String>(20, null);
+		myAVLTree1.insert(10, null);
+		myAVLTree1.insert(30, null);
+		myAVLTree1.insert(5, null);
+		myAVLTree1.insert(25, null);
+		myAVLTree1.insert(40, null);
+		myAVLTree1.insert(35, null);
+		myAVLTree1.insert(45, null);
+		myAVLTree1.isAVLTree(new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				myAVLTree1.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTree1.insertAndBalance(34, null);
+				myAVLTree1.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						myAVLTree1.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
+					}
+				});
+			}
+		});
+
+		final MyAVLTree<String> myAVLTree2 = new MyAVLTree<String>(9, null);
+		myAVLTree2.insert(1, null);
+		myAVLTree2.insert(10, null);
+		myAVLTree2.insert(5, null);
+		myAVLTree2.insert(0, null);
+		myAVLTree2.insert(11, null);
+		myAVLTree2.insert(-1, null);
+		myAVLTree2.insert(2, null);
+		myAVLTree2.insert(6, null);
+		myAVLTree2.isAVLTree(new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				myAVLTree2.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTree2.removeAndBalance(10);
+				myAVLTree2.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						myAVLTree2.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
+					}
+				});
+			}
+		});
+
+		final MyAVLTree<String> myAVLTree3 = new MyAVLTree<String>(44, null);
+		myAVLTree3.insert(17, null);
+		myAVLTree3.insert(78, null);
+		myAVLTree3.insert(32, null);
+		myAVLTree3.insert(50, null);
+		myAVLTree3.insert(88, null);
+		myAVLTree3.insert(48, null);
+		myAVLTree3.insert(62, null);
+		myAVLTree3.isAVLTree(new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				myAVLTree3.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTree3.removeAndBalance(32);
+				myAVLTree3.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						myAVLTree3.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
+					}
+				});
+			}
+		});
+
+		final MyAVLTree<String> myAVLTree4 = new MyAVLTree<String>(50, null);
+		myAVLTree4.insert(25, null);
+		myAVLTree4.insert(75, null);
+		myAVLTree4.insert(10, null);
+		myAVLTree4.insert(30, null);
+		myAVLTree4.insert(60, null);
+		myAVLTree4.insert(80, null);
+		myAVLTree4.insert(5, null);
+		myAVLTree4.insert(15, null);
+		myAVLTree4.insert(27, null);
+		myAVLTree4.insert(55, null);
+		myAVLTree4.insert(1, null);
+		myAVLTree4.isAVLTree(new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				myAVLTree4.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTree4.removeAndBalance(80);
+				myAVLTree4.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						myAVLTree4.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
+					}
+				});
+			}
+		});
+
+		final MyAVLTree<String> myAVLTree5 = new MyAVLTree<String>(50, null);
+		myAVLTree5.insert(25, null);
+		myAVLTree5.insert(75, null);
+		myAVLTree5.insert(10, null);
+		myAVLTree5.insert(30, null);
+		myAVLTree5.insert(60, null);
+		myAVLTree5.insert(5, null);
+		myAVLTree5.insert(15, null);
+		myAVLTree5.insert(27, null);
+		myAVLTree5.insert(55, null);
+		myAVLTree5.insert(1, null);
+		myAVLTree5.isAVLTree(new Callback() {
+			@Override
+			public void onResponse(boolean result) {
+				myAVLTree5.traverseLevel();
+				System.out.println("Is that an AVL tree? " + result);
+				myAVLTree5.insertAndBalance(80, null);
+				myAVLTree5.isAVLTree(new Callback() {
+					@Override
+					public void onResponse(boolean result) {
+						myAVLTree5.traverseLevel();
+						System.out.println("Is that still an AVL tree? " + result);
+					}
+				});
+			}
+		});
+	}
+
+	public static void testSplayTree() {
+		MySplayTree<String> mySplayTree = new MySplayTree<String>(10, null);
+		mySplayTree.insert(5, null);
+		mySplayTree.insert(3, null);
+		mySplayTree.insert(2, null);
+		mySplayTree.insert(7, null);
+		mySplayTree.insert(15, null);
+		mySplayTree.traverseLevel();
+
+//		mySplayTree.splay(mySplayTree.search(7));
+//		mySplayTree.traverseLevel();
+	}
+
 }
