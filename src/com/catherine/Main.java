@@ -60,26 +60,51 @@ public class Main {
 	}
 
 	public static void testSplayTree() {
-		MySplayTree<String> mySplayTree = new MySplayTree<String>(641, null);
-		mySplayTree.insert(468, null);
-		mySplayTree.insert(777, null);
-		mySplayTree.insert(448, null);
-		mySplayTree.insert(507, null);
-		mySplayTree.insert(743, null);
-		mySplayTree.insert(21, null);
-		mySplayTree.insert(486, null);
-		mySplayTree.insert(527, null);
-		mySplayTree.insert(1, null);
-		mySplayTree.insert(285, null);
-		mySplayTree.insert(495, null);
-		mySplayTree.insert(69, null);
-		mySplayTree.insert(333, null);
-		mySplayTree.insert(266, null);
-		mySplayTree.insert(400, null);
-		mySplayTree.traverseLevel();
+		// MySplayTree<String> mySplayTree1 = new MySplayTree<String>(641,
+		// null);
+		// mySplayTree1.insert(468, null);
+		// mySplayTree1.insert(777, null);
+		// mySplayTree1.insert(448, null);
+		// mySplayTree1.insert(507, null);
+		// mySplayTree1.insert(743, null);
+		// mySplayTree1.insert(21, null);
+		// mySplayTree1.insert(486, null);
+		// mySplayTree1.insert(527, null);
+		// mySplayTree1.insert(1, null);
+		// mySplayTree1.insert(285, null);
+		// mySplayTree1.insert(495, null);
+		// mySplayTree1.insert(69, null);
+		// mySplayTree1.insert(333, null);
+		// mySplayTree1.insert(266, null);
+		// mySplayTree1.insert(400, null);
+		// mySplayTree1.traverseLevel();
+		// mySplayTree1.search(333);
+		// mySplayTree1.traverseLevel();
 
-		 mySplayTree.search(333);
-		 mySplayTree.traverseLevel();
+		MySplayTree<String> mySplayTree2 = new MySplayTree<String>(9, null);
+		mySplayTree2.insert(8, null);
+		mySplayTree2.insert(7, null);
+		mySplayTree2.insert(6, null);
+		mySplayTree2.insert(5, null);
+		mySplayTree2.insert(4, null);
+		mySplayTree2.insert(3, null);
+		mySplayTree2.insert(2, null);
+		mySplayTree2.insert(1, null);
+		mySplayTree2.insert(0, null);
+
+		System.out.println("Searching with ordinary rotation in the worst cast");
+		for (int i = 0; i < 10; i++) {
+			System.out.println(String.format("rotate %d", i));
+			mySplayTree2.search(i, false);
+			mySplayTree2.traverseLevel();
+		}
+		System.out.println("");
+		System.out.println("Searching with efficient rotation in the worst cast");
+		for (int i = 0; i < 10; i++) {
+			System.out.println(String.format("rotate %d", i));
+			mySplayTree2.search(i);
+			mySplayTree2.traverseLevel();
+		}
 	}
 
 	public static void testAVLTree() {
