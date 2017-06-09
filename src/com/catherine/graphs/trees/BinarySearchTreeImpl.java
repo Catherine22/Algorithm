@@ -7,6 +7,7 @@ import java.util.List;
 import com.catherine.graphs.trees.nodes.Node;
 import com.catherine.graphs.trees.nodes.NodeAdapter;
 import com.catherine.graphs.trees.nodes.Nodes;
+import com.catherine.utils.Analysis;
 import com.catherine.utils.Others;
 
 /**
@@ -19,7 +20,7 @@ import com.catherine.utils.Others;
  * @author Catherine
  *
  */
-class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearchTree<E> {
+class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTree<E> {
 
 	/**
 	 * 二叉搜寻中，有找到，hot则指向该节点的父节点；没找到指向最后访问的节点。<br>
@@ -27,7 +28,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 */
 	protected Node<E> hot;
 
-	public MyBinarySearchTreeKernel(int key, E root) {
+	public BinarySearchTreeImpl(int key, E root) {
 		super();
 		adapter = new NodeAdapter<>();
 		adapter.setType(Nodes.BST);
@@ -60,6 +61,9 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		Node<E> node = null;
 
 		while (!stop) {
+			if (SHOW_LOG)
+				Analysis.count(23104987);
+
 			if (key > hot.getKey()) {
 				if (hot.getrChild() == null)
 					stop = true;
@@ -76,13 +80,17 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 				stop = true;
 			}
 		}
+
+		if (SHOW_LOG)
+			Analysis.stopCounting(23104987);
+
 		return node;
 	}
 
 	@Override
 	public Node<E> insert(int key, E data) {
 		if (search(key) != null)
-			throw new UnsupportedOperationException("This node has already been added.");
+			throw new UnsupportedOperationException(String.format("This node(%d) has already been added.", key));
 
 		final Node<E> parent = hot;
 		if (key > parent.getKey())
@@ -266,7 +274,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		// 产生乱数序列
 		Collections.shuffle(sequence);
 		System.out.print(sequence.get(0) + " ");
-		newBST = new MyBinarySearchTreeKernel<Object>(sequence.get(0), null);
+		newBST = new BinarySearchTreeImpl<Object>(sequence.get(0), null);
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
 			newBST.insert(sequence.get(i), null);
@@ -539,7 +547,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public Node<E> setRoot(E data) {
+	public final Node<E> setRoot(E data) {
 		throw new UnsupportedOperationException("setRoot(E data)");
 	}
 
@@ -547,7 +555,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public Node<E> insertLC(Node<E> parent, E data) {
+	public final Node<E> insertLC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("insertLC(Node<E> parent, E data)");
 	}
 
@@ -555,7 +563,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public Node<E> insertRC(Node<E> parent, E data) {
+	public final Node<E> insertRC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("insertRC(Node<E> parent, E data)");
 	}
 
@@ -563,7 +571,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public E setLC(Node<E> parent, E data) {
+	public final E setLC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("setLC(Node<E> parent, E data)");
 	}
 
@@ -571,7 +579,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 * Binary Tree only
 	 */
 	@Override
-	public E setRC(Node<E> parent, E data) {
+	public final E setRC(Node<E> parent, E data) {
 		throw new UnsupportedOperationException("setRC(Node<E> parent, E data)");
 	}
 }
