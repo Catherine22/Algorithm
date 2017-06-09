@@ -7,7 +7,7 @@ import java.util.List;
 import com.catherine.graphs.trees.nodes.Node;
 
 /**
- * {@link com.catherine.graphs.trees.MyBinarySearchTreeKernel}继承
+ * {@link com.catherine.graphs.trees.BinarySearchTreeImpl}继承
  * {@link com.catherine.graphs.trees.MyBinaryTree}<br>
  * 有一些从MyBinaryTree公开的方法不适用二叉搜索树（
  * 在MyBinarySearchTreeKernel内搜寻UnsupportedOperationException），所以另外定义一个客户端接口
@@ -17,10 +17,10 @@ import com.catherine.graphs.trees.nodes.Node;
  */
 public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E> {
 
-	private MyBinarySearchTreeKernel<E> bst;
+	private BinarySearchTreeImpl<E> bst;
 
 	public MyBinarySearchTree(int key, E root) {
-		bst = new MyBinarySearchTreeKernel<E>(key, root);
+		bst = new BinarySearchTreeImpl<E>(key, root);
 	}
 
 	@Override

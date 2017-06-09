@@ -113,8 +113,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
   > - [MyBinaryTree] implements BinaryTree the interface <br>
-  > - [MyBinarySearchTreeKernel] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
-  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [MyBinarySearchTreeKernel], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
+  > - [BinarySearchTreeImpl] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
+  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
 
 ### AVL Tree
 
@@ -161,11 +161,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Splay tree
 
-Splay tree practices well when
-1. The recently accessed node may be accessed again.
-2. Next node is located by the recently accessed node.
+Splay tree practices pretty well when the recently accessed node may be accessed again.
 
->If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree works.
+>If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
 
 ## [Others]
   - Hailstone
@@ -207,7 +205,7 @@ Splay tree practices well when
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
    [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinaryTree.java>
    [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTree.java>
-   [MyBinarySearchTreeKernel]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTreeKernel.java>
+   [BinarySearchTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/BinarySearchTreeImpl.java>
    [MyAVLTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyAVLTree.java>
    [BSTNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BSTNode.java>
    [BNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BNode.java>

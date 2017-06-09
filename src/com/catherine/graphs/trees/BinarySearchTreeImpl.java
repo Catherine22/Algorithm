@@ -20,7 +20,7 @@ import com.catherine.utils.Others;
  * @author Catherine
  *
  */
-class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearchTree<E> {
+class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTree<E> {
 
 	/**
 	 * 二叉搜寻中，有找到，hot则指向该节点的父节点；没找到指向最后访问的节点。<br>
@@ -28,7 +28,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	 */
 	protected Node<E> hot;
 
-	public MyBinarySearchTreeKernel(int key, E root) {
+	public BinarySearchTreeImpl(int key, E root) {
 		super();
 		adapter = new NodeAdapter<>();
 		adapter.setType(Nodes.BST);
@@ -90,7 +90,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 	@Override
 	public Node<E> insert(int key, E data) {
 		if (search(key) != null)
-			throw new UnsupportedOperationException("This node has already been added.");
+			throw new UnsupportedOperationException(String.format("This node(%d) has already been added.", key));
 
 		final Node<E> parent = hot;
 		if (key > parent.getKey())
@@ -274,7 +274,7 @@ class MyBinarySearchTreeKernel<E> extends MyBinaryTree<E> implements BinarySearc
 		// 产生乱数序列
 		Collections.shuffle(sequence);
 		System.out.print(sequence.get(0) + " ");
-		newBST = new MyBinarySearchTreeKernel<Object>(sequence.get(0), null);
+		newBST = new BinarySearchTreeImpl<Object>(sequence.get(0), null);
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
 			newBST.insert(sequence.get(i), null);
