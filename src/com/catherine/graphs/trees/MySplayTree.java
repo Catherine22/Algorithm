@@ -6,7 +6,8 @@ import com.catherine.graphs.trees.nodes.Node;
  * 
  * 当被访问过的节点很可能再度被访问时，特别适用伸展树 <br>
  * 定义：节点一旦访问过就移到树根（变成根节点） <br>
- * 做坏情况：假设有个伸展树树根为1，子树节点为2～5，整棵树看起来是一撇，做了从5～1的访问后，伸展树又回到原始的状态（也就是这样的情况可能不断循环）。
+ * 不需要记录和维护节点高度。出于效率的考虑，实际应用中可视情况，省略这类更新。<br>
+ * 最坏情况：假设有个伸展树树根为1，子树节点为2～5，整棵树看起来是一撇，做了从5～1的访问后，伸展树又回到原始的状态（也就是这样的情况可能不断循环）。
  * 
  * 
  * @author Catherine
@@ -37,7 +38,7 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	}
 
 	/**
-	 * 双层旋转，转到祖父节点。一次考察两节点，父节点和祖父节点。<br>
+	 * 双层旋转，转到祖父节点。一次考察两节点，父节点和祖父节点。用此方法避免“最坏情况”，在分摊的意义下提高整体效率。<br>
 	 * 一共有四种情况：<br>
 	 * 1. grandparent - parent(L) - target(L)：两次{@link #zig(Node)}<br>
 	 * 2. grandparent - parent(R) - target(R)：两次{@link #zag(Node)}<br>
@@ -85,7 +86,7 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	}
 
 	/**
-	 * 完成搜寻后就把该节点移到树根，大幅减少下次搜寻相同节点的时间。
+	 * 完成搜寻后就把该节点移到树根，大幅减少下次搜寻相同节点的时间。 与BST不同的是，无论找到与否，根节点都会变成最后被访问的节点。
 	 * 
 	 * @param key
 	 *            搜寻节点的key
@@ -106,11 +107,39 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 */
 	public Node<E> search(int key, boolean efficient) {
 		Node<E> result = spTree.search(key);
-		if (efficient)
-			splayEfficiently(result);
-		else
-			splay(result);
+		if (efficient) {
+			if (result == null)
+				splayEfficiently(spTree.hot);// 找不到就让最后访问的节点变成根节点
+			else
+				splayEfficiently(result);
+		} else {
+			if (result == null)
+				splay(spTree.hot);// 找不到就让最后访问的节点变成根节点
+			else
+				splay(result);
+		}
 		return result;
+	}
+
+	/**
+	 * 理论上是做一次BST的插入，再将新插入节点旋转至根节点。<br>
+	 * 在此有个便捷做法，先运行BST的插入操作，再用SplayTree（{@link #search(int)}）的搜寻操作 （因为
+	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
+	 */
+	@Override
+	public Node<E> insert(int key, E data) {
+		return search(spTree.insert(key, data).getKey());
+	}
+
+	/**
+	 * 理论上是做一次BST的删除，再将删除节点的父节点旋转至根节点。<br>
+	 * 新运行BST的删除操作，再用SplayTree（{@link #search(int)}）的搜寻操作 （因为
+	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
+	 */
+	@Override
+	public void remove(int key) {
+		spTree.remove(key);
+		search(key);
 	}
 
 	@Override
@@ -208,16 +237,6 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	public void traversePost() {
 		spTree.traversePost();
 
-	}
-
-	@Override
-	public Node<E> insert(int key, E data) {
-		return spTree.insert(key, data);
-	}
-
-	@Override
-	public void remove(int key) {
-		spTree.remove(key);
 	}
 
 	@Override

@@ -161,7 +161,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Splay tree
 
-Splay tree practices pretty well when the recently accessed node may be accessed again.
+- Splay tree practices pretty well when the recently accessed node may be accessed again.
+- Splay tree moves the selected node to the root after searching, inserting and removing.
+- Splaying the node every two levels (parent and grandparent) makes splaying more efficient then splaying the node every level.
+- [MySplayTree]
 
 >If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
 
@@ -207,6 +210,7 @@ Splay tree practices pretty well when the recently accessed node may be accessed
    [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTree.java>
    [BinarySearchTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/BinarySearchTreeImpl.java>
    [MyAVLTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyAVLTree.java>
+   [MySplayTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MySplayTree.java>
    [BSTNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BSTNode.java>
    [BNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BNode.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
