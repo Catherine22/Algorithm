@@ -1,8 +1,20 @@
 package com.catherine;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
@@ -56,8 +68,8 @@ public class Main {
 		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
-		testSplayTree();
-		// generateKeyPair();
+		// testSplayTree();
+		generateKeyPair();
 	}
 
 	public static void testSplayTree() {
@@ -121,6 +133,23 @@ public class Main {
 	private static void generateKeyPair() {
 		KeystoreManager km = new KeystoreManager();
 		km.generateKeyPair();
+		byte[] msg = null;
+		try {
+			msg = km.encrypty("你好啊！");
+			System.out.println(msg);
+		} catch (InvalidKeyException | UnsupportedEncodingException | BadPaddingException | CertificateException
+				| FileNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
+				| IllegalBlockSizeException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			System.out.println(km.decrypty(msg));
+		} catch (UnrecoverableKeyException | InvalidKeyException | KeyStoreException | NoSuchAlgorithmException
+				| CertificateException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
+				| IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void testAVLTree() {
