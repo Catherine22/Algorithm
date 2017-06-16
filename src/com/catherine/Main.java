@@ -24,6 +24,7 @@ import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
+import com.catherine.utils.KeystoreManager;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
@@ -56,7 +57,7 @@ public class Main {
 		// testBST();
 		// testAVLTree();
 		testSplayTree();
-
+		// generateKeyPair();
 	}
 
 	public static void testSplayTree() {
@@ -76,7 +77,7 @@ public class Main {
 		mySplayTree1.insert(333, null);
 		mySplayTree1.insert(266, null);
 		mySplayTree1.insert(400, null);
-		 mySplayTree1.traverseLevel();
+		mySplayTree1.traverseLevel();
 		mySplayTree1.search(333);
 		mySplayTree1.traverseLevel();
 
@@ -92,27 +93,34 @@ public class Main {
 		mySplayTree2.insert(10, null);
 		mySplayTree2.insert(0, null);
 
-//		System.out.println("Searching with ordinary rotation in the worst case");
-//		for (int i = 0; i < 100; i+=10) {
-//			System.out.println(String.format("rotate %d", i));
-//			mySplayTree2.search(i, false);
-//			mySplayTree2.traverseLevel();
-//		}
-//		System.out.println("");
-//		System.out.println("Searching with efficient rotation in the worst case");
-//		for (int i = 0; i < 100; i+=10) {
-//			System.out.println(String.format("rotate %d", i));
-//			mySplayTree2.search(i);
-//			mySplayTree2.traverseLevel();
-//		}
+		// System.out.println("Searching with ordinary rotation in the worst
+		// case");
+		// for (int i = 0; i < 100; i+=10) {
+		// System.out.println(String.format("rotate %d", i));
+		// mySplayTree2.search(i, false);
+		// mySplayTree2.traverseLevel();
+		// }
+		// System.out.println("");
+		// System.out.println("Searching with efficient rotation in the worst
+		// case");
+		// for (int i = 0; i < 100; i+=10) {
+		// System.out.println(String.format("rotate %d", i));
+		// mySplayTree2.search(i);
+		// mySplayTree2.traverseLevel();
+		// }
 
-		//insert
+		// insert
 		mySplayTree2.insert(15, null);
 		mySplayTree2.traverseLevel();
-		
-		//delete
+
+		// delete
 		mySplayTree1.remove(468);
 		mySplayTree1.traverseLevel();
+	}
+
+	private static void generateKeyPair() {
+		KeystoreManager km = new KeystoreManager();
+		km.generateKeyPair();
 	}
 
 	public static void testAVLTree() {
