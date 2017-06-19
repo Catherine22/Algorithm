@@ -8,6 +8,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -37,6 +38,7 @@ import com.catherine.sort.SortableStackPermutation;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.KeystoreManager;
+import com.catherine.utils.KeystoreManager.RSARule;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
@@ -69,7 +71,7 @@ public class Main {
 		// testBST();
 		// testAVLTree();
 		// testSplayTree();
-		generateKeyPair();
+		testCryptography();
 	}
 
 	public static void testSplayTree() {
@@ -130,25 +132,57 @@ public class Main {
 		mySplayTree1.traverseLevel();
 	}
 
-	private static void generateKeyPair() {
-		KeystoreManager km = new KeystoreManager();
-		km.generateKeyPair();
-		byte[] msg = null;
+	private static void testCryptography() {
 		try {
-			msg = km.encrypty("你好啊！");
+			KeystoreManager km = new KeystoreManager();
+			Analysis analysis = new Analysis();
+
+			TrackLog log1 = new TrackLog("General a single key");
+			analysis.startTracking(log1);
+			String secretKey = km.generateKey();
+			analysis.endTracking(log1);
+			analysis.printTrack(log1);
+
+			TrackLog log2 = new TrackLog("Decrypt the key");
+			analysis.startTracking(log2);
+			km.converStringToKey(secretKey);
+			analysis.endTracking(log2);
+			analysis.printTrack(log2);
+
+			TrackLog log3 = new TrackLog("General a keyPair");
+			analysis.startTracking(log3);
+			RSARule rsaRule = km.generateKeyPair();
+			analysis.endTracking(log3);
+			analysis.printTrack(log3);
+
+			TrackLog log4 = new TrackLog("Decrypt the keyPair");
+			analysis.startTracking(log4);
+			km.converStringToPublicKey(rsaRule);
+			analysis.endTracking(log4);
+			analysis.printTrack(log4);
+
+			TrackLog log5 = new TrackLog("General a keypair from the keystore");
+			analysis.startTracking(log5);
+			km.getKeyPairFromKeystore();
+			analysis.endTracking(log5);
+			analysis.printTrack(log5);
+
+			TrackLog log6 = new TrackLog("Encrypt a string from the keyPair");
+			analysis.startTracking(log6);
+			byte[] msg = km.encrypt("你好啊！");
 			System.out.println(msg);
-		} catch (InvalidKeyException | UnsupportedEncodingException | BadPaddingException | CertificateException
-				| FileNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException
-				| IllegalBlockSizeException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			System.out.println(km.decrypty(msg));
-		} catch (UnrecoverableKeyException | InvalidKeyException | KeyStoreException | NoSuchAlgorithmException
-				| CertificateException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException
-				| IOException e) {
-			e.printStackTrace();
+			analysis.endTracking(log6);
+			analysis.printTrack(log6);
+
+			TrackLog log7 = new TrackLog("Decrypt a string from the keyPair");
+			analysis.startTracking(log7);
+			System.out.println(km.decrypt(msg));
+			analysis.endTracking(log7);
+			analysis.printTrack(log7);
+		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
+				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
+				| IOException | InvalidKeySpecException | ClassNotFoundException e1) {
+			e1.printStackTrace();
 		}
 	}
 
