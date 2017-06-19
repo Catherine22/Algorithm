@@ -1,11 +1,13 @@
 package com.catherine;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.KeyPair;
 import java.security.KeyStoreException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
@@ -37,11 +39,12 @@ import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
-import com.catherine.utils.KeystoreManager;
-import com.catherine.utils.KeystoreManager.RSARule;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
+import com.catherine.utils.security.KeystoreManager;
+import com.catherine.utils.security.MessageDigestKit;
+import com.catherine.utils.security.RSARule;
 
 public class Main {
 
@@ -134,54 +137,64 @@ public class Main {
 
 	private static void testCryptography() {
 		try {
-			KeystoreManager km = new KeystoreManager();
 			Analysis analysis = new Analysis();
+			KeystoreManager.printCertificatesInfo();
+			KeystoreManager.printKeyStoreInfo();
 
 			TrackLog log1 = new TrackLog("General a single key");
 			analysis.startTracking(log1);
-			String secretKey = km.generateKey();
+			String secretKey = KeystoreManager.generateKeyString();
 			analysis.endTracking(log1);
 			analysis.printTrack(log1);
 
 			TrackLog log2 = new TrackLog("Decrypt the key");
 			analysis.startTracking(log2);
-			km.converStringToKey(secretKey);
+			KeystoreManager.converStringToKey(secretKey);
 			analysis.endTracking(log2);
 			analysis.printTrack(log2);
 
 			TrackLog log3 = new TrackLog("General a keyPair");
 			analysis.startTracking(log3);
-			RSARule rsaRule = km.generateKeyPair();
+			RSARule rsaRule = KeystoreManager.generateRSAKeyPair();
 			analysis.endTracking(log3);
 			analysis.printTrack(log3);
 
 			TrackLog log4 = new TrackLog("Decrypt the keyPair");
 			analysis.startTracking(log4);
-			km.converStringToPublicKey(rsaRule);
+			KeystoreManager.converStringToPublicKey(rsaRule);
 			analysis.endTracking(log4);
 			analysis.printTrack(log4);
 
 			TrackLog log5 = new TrackLog("General a keypair from the keystore");
 			analysis.startTracking(log5);
-			km.getKeyPairFromKeystore();
+			KeystoreManager.getKeyPairFromKeystore();
 			analysis.endTracking(log5);
 			analysis.printTrack(log5);
 
 			TrackLog log6 = new TrackLog("Encrypt a string from the keyPair");
 			analysis.startTracking(log6);
-			byte[] msg = km.encrypt("你好啊！");
+			byte[] msg = KeystoreManager.encrypt("你好啊！");
 			System.out.println(msg);
 			analysis.endTracking(log6);
 			analysis.printTrack(log6);
 
 			TrackLog log7 = new TrackLog("Decrypt a string from the keyPair");
 			analysis.startTracking(log7);
-			System.out.println(km.decrypt(msg));
+			System.out.println(KeystoreManager.decrypt(msg));
 			analysis.endTracking(log7);
 			analysis.printTrack(log7);
+
+			// verify files
+			RSARule rule = KeystoreManager.generateRSAKeyPair();
+			byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", rule.getPrivateKey());
+			boolean islegel = MessageDigestKit.verifySignature(signature, "assets/metals.jpg",
+					(PublicKey) KeystoreManager.converStringToPublicKey(rule));
+			System.out.println("Signature: " + KeystoreManager.bytesToHexString(signature));
+			System.out.println("Signature: This file is legel?" + " " + islegel);
+
 		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
 				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
-				| IOException | InvalidKeySpecException | ClassNotFoundException e1) {
+				| IOException | InvalidKeySpecException | ClassNotFoundException | SignatureException e1) {
 			e1.printStackTrace();
 		}
 	}
