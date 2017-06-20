@@ -45,8 +45,6 @@ import javax.crypto.spec.SecretKeySpec;
  *
  */
 public class KeystoreManager {
-	private final static String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
-	private final static String CHARSET = "UTF8";
 
 	/**
 	 * KeyStore里边存储的东西可分为两种类型——Key Entry(KE)和Certificate Entry(CE)。<br>
@@ -160,75 +158,12 @@ public class KeystoreManager {
 	}
 
 	/**
-	 * 用KeyStore生成的证书提取公钥加密。
-	 * 
-	 * 
-	 * @param message
-	 * @return
-	 * @throws UnsupportedEncodingException
-	 * @throws BadPaddingException
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws NoSuchAlgorithmException
-	 * @throws NoSuchPaddingException
-	 * @throws InvalidKeyException
-	 * @throws IllegalBlockSizeException
-	 */
-	public static byte[] encrypt(String message)
-			throws UnsupportedEncodingException, BadPaddingException, CertificateException, FileNotFoundException,
-			NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException {
-
-		byte[] msg = message.getBytes(CHARSET); // 待加解密的消息
-		// 用证书的公钥加密
-		CertificateFactory cff = CertificateFactory.getInstance("X.509");
-		FileInputStream fis1 = new FileInputStream(KeySet.CERTIFICATION_PATH); // 证书文件
-		Certificate cf = cff.generateCertificate(fis1);
-		PublicKey pk1 = cf.getPublicKey(); // 得到证书文件携带的公钥
-		Cipher c1 = Cipher.getInstance(TRANSFORMATION); // 定义算法：RSA
-		c1.init(Cipher.ENCRYPT_MODE, pk1);
-		byte[] msg1 = c1.doFinal(msg); // 加密后的数据
-		return msg1;
-	}
-
-	/**
-	 * 用同一KeyStore解密
-	 * 
-	 * @param message
-	 * @return
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws IOException
-	 * @throws UnrecoverableKeyException
-	 * @throws NoSuchPaddingException
-	 * @throws InvalidKeyException
-	 * @throws IllegalBlockSizeException
-	 * @throws BadPaddingException
-	 */
-	public static String decrypt(byte[] message) throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, IOException, UnrecoverableKeyException, NoSuchPaddingException, InvalidKeyException,
-			IllegalBlockSizeException, BadPaddingException {
-		// 用证书的私钥解密 - 该私钥存在生成该证书的密钥库中
-		FileInputStream fis = new FileInputStream(KeySet.KEYSTORE_PATH);
-		KeyStore ks = KeyStore.getInstance(KeySet.KEYSTORE_TYPE);
-		ks.load(fis, KeySet.KEYSTORE_PW.toCharArray());
-		PrivateKey pk2 = (PrivateKey) ks.getKey(KeySet.KEYSTORE_ALIAS, KeySet.KEY_PW.toCharArray()); // 获取证书私钥
-		fis.close();
-		Cipher c2 = Cipher.getInstance(TRANSFORMATION);
-		c2.init(Cipher.DECRYPT_MODE, pk2);
-		byte[] msg2 = c2.doFinal(message);
-		return new String(msg2, CHARSET);
-	}
-
-	private final static String SINGLE_KEY_ALGORITHM = "DES";
-
-	/**
 	 * 生成对称密钥
 	 * 
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static Key generateKey() throws NoSuchAlgorithmException {
-		KeyGenerator kGenerator = KeyGenerator.getInstance(SINGLE_KEY_ALGORITHM);
+		KeyGenerator kGenerator = KeyGenerator.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
 		// 设置密钥长度。注意，每种算法所支持的密钥长度都是不一样的。（也许是算法本身的限制，或者是不同Provider的限制，或者是政府管制的限制）
 		kGenerator.init(56);
 		SecretKey secretKey = kGenerator.generateKey();
@@ -241,7 +176,7 @@ public class KeystoreManager {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static String generateKeyString() throws NoSuchAlgorithmException {
-		KeyGenerator kGenerator = KeyGenerator.getInstance(SINGLE_KEY_ALGORITHM);
+		KeyGenerator kGenerator = KeyGenerator.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
 		// 设置密钥长度。注意，每种算法所支持的密钥长度都是不一样的。（也许是算法本身的限制，或者是不同Provider的限制，或者是政府管制的限制）
 		kGenerator.init(56);
 		SecretKey secretKey = kGenerator.generateKey();
@@ -266,9 +201,9 @@ public class KeystoreManager {
 		// 假设对方收到了base64编码后的密钥，首先要得到其二进制表达式
 		byte[] tmp = Base64.getDecoder().decode(secretKey);
 		// 用二进制数组构造KeySpec对象。对称key使用SecretKeySpec类
-		SecretKeySpec secretKeySpec = new SecretKeySpec(tmp, SINGLE_KEY_ALGORITHM);
+		SecretKeySpec secretKeySpec = new SecretKeySpec(tmp, Algorithm.SINGLE_KEY_ALGORITHM);
 		// 创建对称Key导入用的SecretKeyFactory
-		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(SINGLE_KEY_ALGORITHM);
+		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
 		SecretKey sk = secretKeyFactory.generateSecret(secretKeySpec);
 		// 获取二进制的书面表达
 		byte[] keyData = sk.getEncoded();
@@ -279,18 +214,12 @@ public class KeystoreManager {
 	}
 
 	/**
-	 * 在Android平台的JCE中，非对称Key的常用算法有“RSA”、“DSA”、“Diffie−Hellman”、“Elliptic Curve
-	 * (EC)”等。
-	 */
-	private final static String KEYPAIR_ALGORITHM = "RSA";
-
-	/**
 	 * 生成非對稱密钥
 	 * 
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(KEYPAIR_ALGORITHM);
+		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		// 限制长度
 		kpGenerator.initialize(1024);
 		// 创建非对称密钥对，即KeyPair对象
@@ -308,7 +237,7 @@ public class KeystoreManager {
 	 */
 	public static RSARule generateRSAKeyPair()
 			throws NoSuchAlgorithmException, InvalidKeySpecException, ClassNotFoundException {
-		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(KEYPAIR_ALGORITHM);
+		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		// 限制长度
 		kpGenerator.initialize(1024);
 		// 创建非对称密钥对，即KeyPair对象
@@ -322,7 +251,7 @@ public class KeystoreManager {
 
 		// SecretKeySpec没有提供类似对称密钥的方法直接从二进制数值还原
 		Class clazz = Class.forName("java.security.spec.RSAPublicKeySpec");
-		KeyFactory kFactory = KeyFactory.getInstance(KEYPAIR_ALGORITHM);
+		KeyFactory kFactory = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		RSAPublicKeySpec rsaPublicKeySpec = (RSAPublicKeySpec) kFactory.getKeySpec(publicKey, clazz);
 		// 对RSA算法来说，只要获取modulus和exponent这两个RSA算法特定的参数就可以了
 		RSARule rule = new RSARule();
@@ -352,7 +281,7 @@ public class KeystoreManager {
 		RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(new BigInteger(modulusByteArry),
 				new BigInteger(exponentByteArry));
 		// 根据RSAPublicKeySpec对象获取公钥对象
-		KeyFactory kFactory = KeyFactory.getInstance(KEYPAIR_ALGORITHM);
+		KeyFactory kFactory = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		PublicKey publicKey = kFactory.generatePublic(rsaPublicKeySpec);
 		System.out.println("==>public key: " + bytesToHexString(publicKey.getEncoded()));
 		return publicKey;

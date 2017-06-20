@@ -178,10 +178,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Put or get the secret key/keyPair from a keyStore
   - Encrypt or decrypt messages by the secret key/keyPair
   - [KeystoreManager]
-
-  
-  - Verify files with its message digest or signature.
-  - [MessageDigestKit]
+  - Verify files with its message digest or signature, see more in [MessageDigestKit].
 
 ## Reference
   - [Algorithms, 4th Edition]
