@@ -142,8 +142,8 @@ public class Main {
 	private static void testCryptography() {
 		try {
 			Analysis analysis = new Analysis();
-			KeystoreManager.printCertificatesInfo();
-			KeystoreManager.printKeyStoreInfo();
+//			KeystoreManager.printCertificatesInfo();
+//			KeystoreManager.printKeyStoreInfo();
 
 			TrackLog log1 = new TrackLog("General a single key");
 			analysis.startTracking(log1);
@@ -178,7 +178,6 @@ public class Main {
 			TrackLog log6 = new TrackLog("Encrypt a string from the keyPair");
 			analysis.startTracking(log6);
 			byte[] msg = CipherKit.encrypt("你好啊！");
-			System.out.println(msg);
 			analysis.endTracking(log6);
 			analysis.printTrack(log6);
 
@@ -191,13 +190,13 @@ public class Main {
 			TrackLog log8 = new TrackLog("Encrypt a string from the secretKey key");
 			analysis.startTracking(log8);
 			Key sKey = KeystoreManager.generateKey();
-			DESRule desRule = CipherKit.encrypt(sKey, "你好啊！");
+			DESRule desRule = CipherKit.encryptDES(sKey, "Hi there!");
 			analysis.endTracking(log8);
 			analysis.printTrack(log8);
 
 			TrackLog log9 = new TrackLog("Decrypt a string from the secretKey key");
 			analysis.startTracking(log9);
-			System.out.println(CipherKit.decrypt(sKey, desRule));
+			System.out.println(CipherKit.decryptDES(sKey, desRule));
 			analysis.endTracking(log9);
 			analysis.printTrack(log9);
 

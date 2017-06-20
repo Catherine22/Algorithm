@@ -174,11 +174,15 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Catalan
 
 ### Cryptography
+**[KeystoreManager]**
   - Generate a secret key or a keyPair
   - Put or get the secret key/keyPair from a keyStore
+
+**[MessageDigestKit]**
+  - Verify files with its message digest or signature.
+
+**[CipherKit]**
   - Encrypt or decrypt messages by the secret key/keyPair
-  - [KeystoreManager]
-  - Verify files with its message digest or signature, see more in [MessageDigestKit].
 
 ## Reference
   - [Algorithms, 4th Edition]
@@ -228,6 +232,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
    [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
    [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
+   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
 
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png

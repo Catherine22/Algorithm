@@ -97,7 +97,7 @@ public class CipherKit {
 	}
 
 	/**
-	 * 用对称密钥加密
+	 * 用DES对称密钥加密
 	 * 
 	 * @param key
 	 * @param message
@@ -109,26 +109,22 @@ public class CipherKit {
 	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
 	 */
-	public static DESRule encrypt(Key key, String message)
+	public static DESRule encryptDES(Key key, String message)
 			throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException {
 		byte[] msg = message.getBytes(Algorithm.CHARSET); // 待加解密的消息
-		String type = key.getAlgorithm().toUpperCase();
-		Cipher c1 = Cipher.getInstance(Algorithm.rules.get(type)); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
+		Cipher c1 = Cipher.getInstance(Algorithm.rules.get("DES")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
 		c1.init(Cipher.ENCRYPT_MODE, key);
-		if (type.equals("DES")) {
-			DESRule rule = new DESRule();
-			byte[] decryptedData = c1.doFinal(msg);
-			rule.setMessage(decryptedData); // 加密后的数据
-			rule.setIv(c1.getIV()); // 获取本次加密时使用的初始向量。初始向量属于加密算法使用的一组参数。使用不同的加密算法时，需要保存的参数不完全相同。Cipher会提供相应的API
-			return rule;
-		} else
-			return null;
+		DESRule rule = new DESRule();
+		byte[] decryptedData = c1.doFinal(msg);
+		rule.setMessage(decryptedData); // 加密后的数据
+		rule.setIv(c1.getIV()); // 获取本次加密时使用的初始向量。初始向量属于加密算法使用的一组参数。使用不同的加密算法时，需要保存的参数不完全相同。Cipher会提供相应的API
+		return rule;
 	}
 
 	/**
 	 * 解密时，需要把加密后的数据，密钥和初始向量发给解密方。<br>
-	 * 再次强调，不同算法加解密时，可能需要加密对象当初加密时使用的其他算法参数
+	 * 再次强调，不同算法加解密时，可能需要加密对象当初加密时使用的其他算法参数<br>
 	 * 
 	 * @param key
 	 * @param rule
@@ -141,17 +137,13 @@ public class CipherKit {
 	 * @throws UnsupportedEncodingException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String decrypt(Key key, DESRule rule)
+	public static String decryptDES(Key key, DESRule rule)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
 			BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
-		String type = key.getAlgorithm().toUpperCase();
-		Cipher c2 = Cipher.getInstance(Algorithm.rules.get(type)); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
-		if (type.equals("DES")) {
-			IvParameterSpec ips = new IvParameterSpec(rule.getIv());
-			c2.init(Cipher.DECRYPT_MODE, key, ips); // 设置Cipher为解密工作模式，需要把Key和算法参数传进去
-			byte[] decryptedData = c2.doFinal(rule.getMessage());
-			return new String(decryptedData, Algorithm.CHARSET);
-		} else
-			return null;
+		Cipher c2 = Cipher.getInstance(Algorithm.rules.get("DES")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
+		IvParameterSpec ips = new IvParameterSpec(rule.getIv());
+		c2.init(Cipher.DECRYPT_MODE, key, ips); // 设置Cipher为解密工作模式，需要把Key和算法参数传进去
+		byte[] decryptedData = c2.doFinal(rule.getMessage());
+		return new String(decryptedData, Algorithm.CHARSET);
 	}
 }
