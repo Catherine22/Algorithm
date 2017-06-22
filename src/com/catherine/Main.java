@@ -1,8 +1,25 @@
 package com.catherine;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyStoreException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
@@ -24,10 +41,14 @@ import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
-import com.catherine.utils.KeystoreManager;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
+import com.catherine.utils.security.CipherKit;
+import com.catherine.utils.security.DESRule;
+import com.catherine.utils.security.KeystoreManager;
+import com.catherine.utils.security.MessageDigestKit;
+import com.catherine.utils.security.RSARule;
 
 public class Main {
 
@@ -56,8 +77,8 @@ public class Main {
 		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
-		testSplayTree();
-		// generateKeyPair();
+		// testSplayTree();
+		testCryptography();
 	}
 
 	public static void testSplayTree() {
@@ -118,9 +139,88 @@ public class Main {
 		mySplayTree1.traverseLevel();
 	}
 
-	private static void generateKeyPair() {
-		KeystoreManager km = new KeystoreManager();
-		km.generateKeyPair();
+	private static void testCryptography() {
+		try {
+			Analysis analysis = new Analysis();
+//			KeystoreManager.printCertificatesInfo();
+//			KeystoreManager.printKeyStoreInfo();
+
+			TrackLog log1 = new TrackLog("General a single key");
+			analysis.startTracking(log1);
+			String secretKey = KeystoreManager.generateKeyString();
+			analysis.endTracking(log1);
+			analysis.printTrack(log1);
+
+			TrackLog log2 = new TrackLog("Decrypt the key");
+			analysis.startTracking(log2);
+			KeystoreManager.converStringToKey(secretKey);
+			analysis.endTracking(log2);
+			analysis.printTrack(log2);
+
+			TrackLog log3 = new TrackLog("General a keyPair");
+			analysis.startTracking(log3);
+			RSARule rsaRule = KeystoreManager.generateRSAKeyPair();
+			analysis.endTracking(log3);
+			analysis.printTrack(log3);
+
+			TrackLog log4 = new TrackLog("Decrypt the keyPair");
+			analysis.startTracking(log4);
+			KeystoreManager.converStringToPublicKey(rsaRule);
+			analysis.endTracking(log4);
+			analysis.printTrack(log4);
+
+			TrackLog log5 = new TrackLog("General a keypair from the keystore");
+			analysis.startTracking(log5);
+			KeystoreManager.getKeyPairFromKeystore();
+			analysis.endTracking(log5);
+			analysis.printTrack(log5);
+
+			TrackLog log6 = new TrackLog("Encrypt a string from the keyPair");
+			analysis.startTracking(log6);
+			byte[] msg = CipherKit.encrypt("你好啊！");
+			analysis.endTracking(log6);
+			analysis.printTrack(log6);
+
+			TrackLog log7 = new TrackLog("Decrypt a string from the keyPair");
+			analysis.startTracking(log7);
+			System.out.println(CipherKit.decrypt(msg));
+			analysis.endTracking(log7);
+			analysis.printTrack(log7);
+
+			TrackLog log8 = new TrackLog("Encrypt a string from the secretKey key");
+			analysis.startTracking(log8);
+			Key sKey = KeystoreManager.generateKey();
+			DESRule desRule = CipherKit.encryptDES(sKey, "Hi there!");
+			analysis.endTracking(log8);
+			analysis.printTrack(log8);
+
+			TrackLog log9 = new TrackLog("Decrypt a string from the secretKey key");
+			analysis.startTracking(log9);
+			System.out.println(CipherKit.decryptDES(sKey, desRule));
+			analysis.endTracking(log9);
+			analysis.printTrack(log9);
+
+			// verify files
+			TrackLog log10 = new TrackLog("Signing the file ");
+			analysis.startTracking(log10);
+			RSARule rsaRule2 = KeystoreManager.generateRSAKeyPair();
+			byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", rsaRule2.getPrivateKey());
+			analysis.endTracking(log10);
+			analysis.printTrack(log10);
+
+			TrackLog log11 = new TrackLog("verifing the file with signature ");
+			analysis.startTracking(log11);
+			boolean islegel = MessageDigestKit.verifySignature(signature, "assets/metals.jpg",
+					(PublicKey) KeystoreManager.converStringToPublicKey(rsaRule2));
+			System.out.println("Signature: " + KeystoreManager.bytesToHexString(signature));
+			System.out.println("Signature: Is this file legel? " + islegel);
+			analysis.endTracking(log11);
+			analysis.printTrack(log11);
+		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
+				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
+				| IOException | InvalidKeySpecException | ClassNotFoundException | SignatureException | InvalidAlgorithmParameterException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public static void testAVLTree() {

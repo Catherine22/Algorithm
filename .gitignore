@@ -12,6 +12,7 @@ local.properties
 
 # Specific purposes
 assets/productiongg.keystore
+assets/productiongg.cer
 assets/productiongg.jks
 src/com/catherine/utils/KeySet.java
 

@@ -178,11 +178,21 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Fibonacci
   - Catalan
 
+### Cryptography
+**[KeystoreManager]**
+  - Generate a secret key or a keyPair
+  - Put or get the secret key/keyPair from a keyStore
+
+**[MessageDigestKit]**
+  - Verify files with its message digest or signature.
+
+**[CipherKit]**
+  - Encrypt or decrypt messages by the secret key/keyPair
 
 ## Reference
   - [Algorithms, 4th Edition]
-  - [数据结构学习网]
   - 邓俊辉《数据结构 C++语言版》第三版
+  - [深入理解Android之Java Security]
 
 ## License
 
@@ -224,7 +234,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
-   [数据结构学习网]:<http://www.xiaohuanglv.com/list/course-list_all.html>
+   [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
+   [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
+   [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
+   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
 
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
