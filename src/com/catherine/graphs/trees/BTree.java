@@ -1,7 +1,6 @@
 package com.catherine.graphs.trees;
 
-import com.catherine.graphs.trees.nodes.BNode;
-import com.catherine.graphs.trees.nodes.Node;
+import com.catherine.graphs.trees.nodes.B_Node;
 
 public interface BTree<E> {
 	/**
@@ -9,7 +8,7 @@ public interface BTree<E> {
 	 * 
 	 * @return 根节点
 	 */
-	public Node<E> getRoot();
+	public B_Node<E> getRoot();
 
 	/**
 	 * 是否为空树（没有节点）
@@ -31,7 +30,7 @@ public interface BTree<E> {
 	 * @param 指定节点
 	 * @return 子节点数
 	 */
-	public int size(Node<E> node);
+	public int size(B_Node<E> node);
 
 	/**
 	 * 节点高度定义：<br>
@@ -43,7 +42,13 @@ public interface BTree<E> {
 	 */
 	public int getHeight();
 
-	public BNode<E> search(E e);
+	/**
+	 * 失败查找比终止于外部节点。<br>
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public B_Node<E> search(E e);
 
 	public boolean insert(E e);
 
@@ -54,12 +59,12 @@ public interface BTree<E> {
 	 * 
 	 * @param node
 	 */
-	public void solveOverflow(BNode<E> node);
+	public void solveOverflow(B_Node<E> node);
 
 	/**
 	 * 因删除而下溢后的合并处理
 	 * 
 	 * @param node
 	 */
-	public void solveUnderfolw(BNode<E> node);
+	public void solveUnderfolw(B_Node<E> node);
 }

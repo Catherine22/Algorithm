@@ -1,18 +1,22 @@
 package com.catherine.graphs.trees.nodes;
 
-import java.util.Arrays;
+import java.util.List;
 
 //B-tree
 public class B_Node<E> {
 	private B_Node<E> parent;
 	/**
+	 * 关键码向量位置（不重复）
+	 */
+	private List<Integer> key;
+	/**
 	 * 关键码向量
 	 */
-	private E[] key;
+	private List<E> data;
 	/**
-	 * 孩子向量（其长度总比key夗一）
+	 * 孩子向量（其总长度比key多一）
 	 */
-	private B_Node<E>[] child;
+	private List<B_Node<E>> child;
 
 	public B_Node<E> getParent() {
 		return parent;
@@ -22,24 +26,28 @@ public class B_Node<E> {
 		this.parent = parent;
 	}
 
-	public E[] getKey() {
+	public List<Integer> getKey() {
 		return key;
 	}
 
-	public void setKey(E[] key) {
+	public void setKey(List<Integer> key) {
 		this.key = key;
 	}
 
-	public B_Node<E>[] getChild() {
+	public List<E> getData() {
+		return data;
+	}
+
+	public void setData(List<E> data) {
+		this.data = data;
+	}
+
+	public List<B_Node<E>> getChild() {
 		return child;
 	}
 
-	public void setChild(B_Node<E>[] child) {
+	public void setChild(List<B_Node<E>> child) {
 		this.child = child;
 	}
 
-	@Override
-	public String toString() {
-		return "B_Node [parent=" + parent + ", key=" + Arrays.toString(key) + ", child=" + Arrays.toString(child) + "]";
-	}
 }

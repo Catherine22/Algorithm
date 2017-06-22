@@ -1,7 +1,9 @@
 package com.catherine.graphs.trees;
 
-import com.catherine.graphs.trees.nodes.BNode;
-import com.catherine.graphs.trees.nodes.Node;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.catherine.graphs.trees.nodes.B_Node;
 
 /**
  * “B-Tree”——平衡的多路搜索树。<br>
@@ -54,11 +56,55 @@ public class MyBTree<E> implements BTree<E> {
 	/**
 	 * 最后访问的非空节点。
 	 */
-	private BNode<E> hot;
-	private BNode<E> root;
+	private B_Node<E> hot;
+	private B_Node<E> root;
+
+	public MyBTree() {
+		this(null);
+	}
+
+	public MyBTree(E rootData) {
+		this(rootData, null, null);
+	}
+
+	public MyBTree(E rootData, E lcData, E rcData) {
+		root = new B_Node<E>();
+		root.setParent(null);
+
+		List<Integer> rootKeys = new ArrayList<>();
+		rootKeys.add(0); // 只有一个关键码
+		root.setKey(rootKeys);
+
+		List<E> rootValues = new ArrayList<>();
+		rootValues.add(rootData); // 只有一个关键码
+		root.setData(rootValues);
+
+		List<B_Node<E>> child = new ArrayList<>();// 两个孩子
+		List<E> lcDatas = new ArrayList<>();
+		lcDatas.add(lcData);
+		List<E> rcDatas = new ArrayList<>();
+		rcDatas.add(rcData);
+		List<Integer> lcKeys = new ArrayList<>();
+		lcKeys.add(1);
+		List<Integer> rcKeys = new ArrayList<>();
+		rcKeys.add(2);
+
+		B_Node<E> lc = new B_Node<>();
+		lc.setParent(root);
+		lc.setKey(lcKeys);
+		lc.setData(lcDatas);
+		B_Node<E> rc = new B_Node<>();
+		rc.setParent(root);
+		rc.setKey(rcKeys);
+		rc.setData(rcDatas);
+
+		child.add(0, lc);// 左孩子
+		child.add(1, rc);// 右孩子
+		root.setChild(child);
+	}
 
 	@Override
-	public Node<E> getRoot() {
+	public B_Node<E> getRoot() {
 		return null;
 	}
 
@@ -73,7 +119,7 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public int size(Node<E> node) {
+	public int size(B_Node<E> node) {
 		return 0;
 	}
 
@@ -83,7 +129,7 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public BNode<E> search(E e) {
+	public B_Node<E> search(E e) {
 		return null;
 	}
 
@@ -98,12 +144,12 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public void solveOverflow(BNode<E> node) {
+	public void solveOverflow(B_Node<E> node) {
 
 	}
 
 	@Override
-	public void solveUnderfolw(BNode<E> node) {
+	public void solveUnderfolw(B_Node<E> node) {
 
 	}
 }
