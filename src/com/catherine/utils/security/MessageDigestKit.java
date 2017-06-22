@@ -11,6 +11,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Base64;
 
 import javax.crypto.Mac;
 
@@ -231,5 +232,15 @@ public class MessageDigestKit {
 			sb.append(str);
 		}
 		return sb.toString();
+	}
+
+	public static String byteArrayToString(byte[] bytes) {
+		bytes = Base64.getEncoder().encode(bytes);
+		return new String(bytes);
+	}
+
+	public static byte[] StringToByteArray(String string) {
+		byte[] bytes = string.getBytes();
+		return Base64.getDecoder().decode(bytes);
 	}
 }

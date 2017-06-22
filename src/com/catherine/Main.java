@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.KeyPair;
 import java.security.KeyStoreException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
@@ -142,8 +140,8 @@ public class Main {
 	private static void testCryptography() {
 		try {
 			Analysis analysis = new Analysis();
-//			KeystoreManager.printCertificatesInfo();
-//			KeystoreManager.printKeyStoreInfo();
+			// KeystoreManager.printCertificatesInfo();
+			// KeystoreManager.printKeyStoreInfo();
 
 			TrackLog log1 = new TrackLog("General a single key");
 			analysis.startTracking(log1);
@@ -208,17 +206,21 @@ public class Main {
 			analysis.endTracking(log10);
 			analysis.printTrack(log10);
 
+			String signatureString = MessageDigestKit.byteArrayToString(signature);
+			byte[] signaturebytes = MessageDigestKit.StringToByteArray(signatureString);
+			
 			TrackLog log11 = new TrackLog("verifing the file with signature ");
 			analysis.startTracking(log11);
-			boolean islegel = MessageDigestKit.verifySignature(signature, "assets/metals.jpg",
+			boolean islegel = MessageDigestKit.verifySignature(signaturebytes, "assets/metals.jpg",
 					(PublicKey) KeystoreManager.converStringToPublicKey(rsaRule2));
-			System.out.println("Signature: " + KeystoreManager.bytesToHexString(signature));
+			System.out.println("Signature: " + signatureString);
 			System.out.println("Signature: Is this file legel? " + islegel);
 			analysis.endTracking(log11);
 			analysis.printTrack(log11);
 		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
 				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
-				| IOException | InvalidKeySpecException | ClassNotFoundException | SignatureException | InvalidAlgorithmParameterException e1) {
+				| IOException | InvalidKeySpecException | ClassNotFoundException | SignatureException
+				| InvalidAlgorithmParameterException e1) {
 			e1.printStackTrace();
 		}
 	}

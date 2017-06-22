@@ -287,7 +287,7 @@ public class KeystoreManager {
 	 * @param bArray
 	 * @return
 	 */
-	public static final String bytesToHexString(byte[] bArray) {
+	private static final String bytesToHexString(byte[] bArray) {
 		StringBuffer sb = new StringBuffer(bArray.length);
 		String sTemp;
 		for (int i = 0; i < bArray.length; i++) {
