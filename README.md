@@ -169,9 +169,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 >If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
 
 ### B-Tree
-
 -
 
+![B-tree][8]
 
 ## [Others]
   - Hailstone
@@ -247,3 +247,4 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   [5]: https://github.com/Catherine22/Algorithms/blob/master/res/i_d.png
   [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
   [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
+  [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png

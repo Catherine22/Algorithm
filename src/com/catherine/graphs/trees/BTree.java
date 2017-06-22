@@ -1,22 +1,65 @@
 package com.catherine.graphs.trees;
 
-/**
- * 实践证明，分级存储才是行之有效的方法。在由内存与外存（磁盘）组成的二级存储系统中，
- * 数据全集往往存放于外存中，计算过程中则可将内存作为外存的高速缓存，存放最常用数据项的
- * 复本。借助高效的调度算法，如此便可将内存的“高速度”与外存的“大容量”结合起来。 <br>
- * 两个相邻存储级别之间的数据传输，统称I/O操作。各级存储器的访问速度相差悬殊，故应 尽可能地减少I/O操作。 <br>
- * 为此，需要充分利用磁盘之类外部存储器的另一特性：就时间成本而言，读取物理地址连续
- * 的一千个字节，与读取单个字节几乎没有区别。既然外部存储器更适宜于批量式访问，不妨通过
- * 时间成本相对极低的多次内存操作，来替代时间成本相对极高的单次外存操作。相应地，需要将
- * 通常的二叉搜索树，改造为多路搜索树在中序遍历的意义下，这也是一种等价变换。 <br>
- * <br>
- * 比如一个BST，把两层合并成一层，如此三个节点假想成一个大节点，每个大节点至多能有四条分支，成为四路搜索树。每个大节点就是每次和外存访问取得的数据量，
- * 减少跨级访问次数， 降低时间成本。 <br>
- * 所谓的B-Tree就是n路平衡搜索树。
- * 
- * @author Catherine
- *
- */
-public class BTree {
+import com.catherine.graphs.trees.nodes.BNode;
+import com.catherine.graphs.trees.nodes.Node;
 
+public interface BTree<E> {
+	/**
+	 * 返回根节点
+	 * 
+	 * @return 根节点
+	 */
+	public Node<E> getRoot();
+
+	/**
+	 * 是否为空树（没有节点）
+	 * 
+	 * @return boolean
+	 */
+	public boolean isEmpty();
+
+	/**
+	 * 子树规模
+	 * 
+	 * @return 子节点数
+	 */
+	public int size();
+
+	/**
+	 * 当前节点的子树规模
+	 * 
+	 * @param 指定节点
+	 * @return 子节点数
+	 */
+	public int size(Node<E> node);
+
+	/**
+	 * 节点高度定义：<br>
+	 * 1. 只有单一节点：0<br>
+	 * 2. 无节点，也就是空树：-1<br>
+	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
+	 * 
+	 * @return 高度
+	 */
+	public int getHeight();
+
+	public BNode<E> search(E e);
+
+	public boolean insert(E e);
+
+	public boolean remove(E e);
+
+	/**
+	 * 因插入而上溢后的分裂处理
+	 * 
+	 * @param node
+	 */
+	public void solveOverflow(BNode<E> node);
+
+	/**
+	 * 因删除而下溢后的合并处理
+	 * 
+	 * @param node
+	 */
+	public void solveUnderfolw(BNode<E> node);
 }
