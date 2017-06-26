@@ -16,6 +16,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -143,6 +144,55 @@ public class CipherKit {
 		Cipher c2 = Cipher.getInstance(Algorithm.rules.get("DES")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
 		IvParameterSpec ips = new IvParameterSpec(rule.getIv());
 		c2.init(Cipher.DECRYPT_MODE, key, ips); // 设置Cipher为解密工作模式，需要把Key和算法参数传进去
+		byte[] decryptedData = c2.doFinal(rule.getMessage());
+		return new String(decryptedData, Algorithm.CHARSET);
+	}
+	
+	/**
+	 * 用RSA对称密钥加密
+	 * 
+	 * @param key
+	 * @param message
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 */
+	public static RSARule encryptRSA(RSARule rule, String message)
+			throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
+			IllegalBlockSizeException, BadPaddingException {
+		byte[] msg = message.getBytes(Algorithm.CHARSET); // 待加解密的消息
+		Cipher c1 = Cipher.getInstance(Algorithm.rules.get("RSA")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
+		c1.init(Cipher.ENCRYPT_MODE, rule.getPrivateKey());
+		byte[] decryptedData = c1.doFinal(msg);
+		rule.setMessage(decryptedData); // 加密后的数据
+		return rule;
+	}
+
+	/**
+	 * 解密时，需要把加密后的数据，密钥和初始向量发给解密方。<br>
+	 * 再次强调，不同算法加解密时，可能需要加密对象当初加密时使用的其他算法参数<br>
+	 * 
+	 * @param rule
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchPaddingException
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 * @throws UnsupportedEncodingException
+	 * @throws InvalidAlgorithmParameterException
+	 * @throws InvalidKeySpecException 
+	 * @throws ClassNotFoundException 
+	 */
+	public static String decryptRSA(RSARule rule)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
+			BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, ClassNotFoundException, InvalidKeySpecException {
+		Cipher c2 = Cipher.getInstance(Algorithm.rules.get("RSA")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
+		c2.init(Cipher.DECRYPT_MODE, KeystoreManager.converStringToPublicKey(rule)); // 设置Cipher为解密工作模式，需要把Key传进去
 		byte[] decryptedData = c2.doFinal(rule.getMessage());
 		return new String(decryptedData, Algorithm.CHARSET);
 	}

@@ -13,6 +13,15 @@ public class RSARule {
 	private PrivateKey privateKey;
 	private BigInteger modulus;
 	private BigInteger exponent;
+	private byte[] message;
+
+	public byte[] getMessage() {
+		return message;
+	}
+
+	public void setMessage(byte[] message) {
+		this.message = message;
+	}
 
 	public PrivateKey getPrivateKey() {
 		return privateKey;
