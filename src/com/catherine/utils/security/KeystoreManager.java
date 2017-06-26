@@ -79,16 +79,17 @@ public class KeystoreManager {
 				System.out.println("I am a certificate:");
 				System.out.println("Subjecte DN:" + myCert.getSubjectDN().getName());
 				System.out.println("Issuer DN:" + myCert.getIssuerDN().getName());
-				System.out.println("Public Key:" + bytesToHexString(myCert.getPublicKey().getEncoded()));
+				System.out.println(
+						"Public Key:" + Base64.getEncoder().encodeToString(myCert.getPublicKey().getEncoded()));
 			}
 			// 取出别名对应的Key信息，一般取出的是私钥或者SecretKey。
 			// 注意，不同的别名可能对应不同的Entry。本例中，KE和CE都使用一样的别名
 			Key myKey = keystore.getKey(alias, KeySet.KEY_PW.toCharArray());
 			if (myKey instanceof PrivateKey) {
-				System.out.println("I am a private key:" + bytesToHexString(myKey.getEncoded()));
+				System.out.println("I am a private key:" + Base64.getEncoder().encodeToString(myKey.getEncoded()));
 			} else if (keystore instanceof SecretKey) {
 				if (keystore instanceof PrivateKey) {
-					System.out.println("I am a secret key:" + bytesToHexString(myKey.getEncoded()));
+					System.out.println("I am a secret key:" + Base64.getEncoder().encodeToString(myKey.getEncoded()));
 				}
 			}
 		}
@@ -146,8 +147,8 @@ public class KeystoreManager {
 			// Return a key pair
 			KeyPair kp = new KeyPair(publicKey, (PrivateKey) key);
 
-			System.out.println("==>private key: " + bytesToHexString(kp.getPrivate().getEncoded()));
-			System.out.println("==>public key: " + bytesToHexString(kp.getPublic().getEncoded()));
+			System.out.println("==>private key: " + Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded()));
+			System.out.println("==>public key: " + Base64.getEncoder().encodeToString(kp.getPublic().getEncoded()));
 		}
 	}
 
@@ -178,8 +179,7 @@ public class KeystoreManager {
 		byte[] keyData = secretKey.getEncoded();
 		// 日常使用时，一般会把上面的二进制数组通过Base64编码转换成字符串，然后发给使用者
 		String keyInBase64 = Base64.getEncoder().encodeToString(keyData);
-		System.out.println("==>secret key: (encrpted data) " + bytesToHexString(keyData));
-		System.out.println("==>secret key: (keyInBase64) " + keyInBase64);
+		System.out.println("==>secret key: (encrypted) " + keyInBase64);
 		System.out.println("==>secret key: (Algorithm) " + secretKey.getAlgorithm());
 		return keyInBase64;
 	}
@@ -202,7 +202,8 @@ public class KeystoreManager {
 		// 获取二进制的书面表达
 		byte[] keyData = sk.getEncoded();
 		// 这里获取的值和通过上述generateKey()生成的值一样
-		System.out.println("==>secret key: (decrpted data) " + bytesToHexString(keyData));
+		String keyInBase64 = Base64.getEncoder().encodeToString(keyData);
+		System.out.println("==>secret key: (decrpted data) " + keyInBase64);
 		System.out.println("==>secret key: (Algorithm) " + sk.getAlgorithm());
 		return sk;
 	}
@@ -224,12 +225,12 @@ public class KeystoreManager {
 	/**
 	 * 生成非對稱密钥
 	 * 
-	 * @return RSARule
+	 * @param callback
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 * @throws ClassNotFoundException
 	 */
-	public static RSARule generateRSAKeyPair()
+	public static void generateRSAKeyPair(RSACallback callback)
 			throws NoSuchAlgorithmException, InvalidKeySpecException, ClassNotFoundException {
 		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		// 限制长度
@@ -240,36 +241,37 @@ public class KeystoreManager {
 		PublicKey publicKey = keyPair.getPublic();
 		PrivateKey privateKey = keyPair.getPrivate();
 		// 打印base64编码后的公钥和私钥值，每次都不一样
-		System.out.println("==>public key: " + bytesToHexString(publicKey.getEncoded()));
-		System.out.println("==>private key: " + bytesToHexString(privateKey.getEncoded()));
+		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
+		System.out.println("==>private key: " + Base64.getEncoder().encodeToString(privateKey.getEncoded()));
 
 		// SecretKeySpec没有提供类似对称密钥的方法直接从二进制数值还原
 		Class clazz = Class.forName("java.security.spec.RSAPublicKeySpec");
 		KeyFactory kFactory = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		RSAPublicKeySpec rsaPublicKeySpec = (RSAPublicKeySpec) kFactory.getKeySpec(publicKey, clazz);
 		// 对RSA算法来说，只要获取modulus和exponent这两个RSA算法特定的参数就可以了
-		RSARule rule = new RSARule();
-		rule.setPrivateKey(privateKey);
-		rule.setModulus(rsaPublicKeySpec.getModulus());
-		rule.setExponent(rsaPublicKeySpec.getPublicExponent());
+		String modulus = Base64.getEncoder().encodeToString(rsaPublicKeySpec.getModulus().toByteArray());
+		String exponent = Base64.getEncoder().encodeToString(rsaPublicKeySpec.getPublicExponent().toByteArray());
 
-		System.out.println("==>rsa public Key spec: (modulus)" + bytesToHexString(rule.getModulus().toByteArray()));
-		System.out.println("==>rsa public Key spec: (exponent)" + bytesToHexString(rule.getExponent().toByteArray()));
-		return rule;
+		System.out.println("==>rsa public Key spec: (modulus)" + modulus);
+		System.out.println("==>rsa public Key spec: (exponent)" + exponent);
+
+		callback.onResponse(privateKey);
+		callback.onResponse(modulus, exponent);
 	}
 
 	/**
 	 * 获取非对称密钥的modulus和exponent并还原成PublicKey
 	 * 
-	 * @param RSARule
+	 * @param modulus
+	 * @param exponent
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public static Key converStringToPublicKey(RSARule rule)
+	public static Key converStringToPublicKey(String modulus, String exponent)
 			throws ClassNotFoundException, NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] modulusByteArry = rule.getModulus().toByteArray();
-		byte[] exponentByteArry = rule.getExponent().toByteArray();
+		byte[] modulusByteArry = Base64.getDecoder().decode(modulus);
+		byte[] exponentByteArry = Base64.getDecoder().decode(exponent);
 
 		// 由接收到的参数构造RSAPublicKeySpec对象
 		RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(new BigInteger(modulusByteArry),
@@ -277,25 +279,7 @@ public class KeystoreManager {
 		// 根据RSAPublicKeySpec对象获取公钥对象
 		KeyFactory kFactory = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		PublicKey publicKey = kFactory.generatePublic(rsaPublicKeySpec);
-		System.out.println("==>public key: " + bytesToHexString(publicKey.getEncoded()));
+		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 		return publicKey;
-	}
-
-	/**
-	 * 把字节数组转换成16进制字符串
-	 * 
-	 * @param bArray
-	 * @return
-	 */
-	public static final String bytesToHexString(byte[] bArray) {
-		StringBuffer sb = new StringBuffer(bArray.length);
-		String sTemp;
-		for (int i = 0; i < bArray.length; i++) {
-			sTemp = Integer.toHexString(0xFF & bArray[i]);
-			if (sTemp.length() < 2)
-				sb.append(0);
-			sb.append(sTemp.toUpperCase());
-		}
-		return sb.toString();
 	}
 }
