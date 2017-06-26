@@ -102,6 +102,7 @@ public class CipherKit {
 	 * 
 	 * @param key
 	 * @param message
+	 * @param callback
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 * @throws NoSuchPaddingException
@@ -110,17 +111,17 @@ public class CipherKit {
 	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
 	 */
-	public static DESRule encryptDES(Key key, String message)
+	public static void encryptDES(Key key, String message, DESCallback callback)
 			throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException {
 		byte[] msg = message.getBytes(Algorithm.CHARSET); // 待加解密的消息
 		Cipher c1 = Cipher.getInstance(Algorithm.rules.get("DES")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
 		c1.init(Cipher.ENCRYPT_MODE, key);
-		DESRule rule = new DESRule();
 		byte[] decryptedData = c1.doFinal(msg);
-		rule.setMessage(decryptedData); // 加密后的数据
-		rule.setIv(c1.getIV()); // 获取本次加密时使用的初始向量。初始向量属于加密算法使用的一组参数。使用不同的加密算法时，需要保存的参数不完全相同。Cipher会提供相应的API
-		return rule;
+		// iv:
+		// 获取本次加密时使用的初始向量。初始向量属于加密算法使用的一组参数。使用不同的加密算法时，需要保存的参数不完全相同。Cipher会提供相应的API
+		// decryptedData: 加密后的数据
+		callback.onResponse(c1.getIV(), decryptedData);
 	}
 
 	/**
@@ -128,7 +129,9 @@ public class CipherKit {
 	 * 再次强调，不同算法加解密时，可能需要加密对象当初加密时使用的其他算法参数<br>
 	 * 
 	 * @param key
-	 * @param rule
+	 * @param iv
+	 *            初始向量，呼叫Cipher的加密后会产生
+	 * @param message
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws NoSuchPaddingException
@@ -138,16 +141,16 @@ public class CipherKit {
 	 * @throws UnsupportedEncodingException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String decryptDES(Key key, DESRule rule)
+	public static String decryptDES(Key key, byte[] iv, byte[] message)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
 			BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException {
 		Cipher c2 = Cipher.getInstance(Algorithm.rules.get("DES")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
-		IvParameterSpec ips = new IvParameterSpec(rule.getIv());
+		IvParameterSpec ips = new IvParameterSpec(iv);
 		c2.init(Cipher.DECRYPT_MODE, key, ips); // 设置Cipher为解密工作模式，需要把Key和算法参数传进去
-		byte[] decryptedData = c2.doFinal(rule.getMessage());
+		byte[] decryptedData = c2.doFinal(message);
 		return new String(decryptedData, Algorithm.CHARSET);
 	}
-	
+
 	/**
 	 * 用RSA对称密钥加密
 	 * 
@@ -161,15 +164,14 @@ public class CipherKit {
 	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
 	 */
-	public static RSARule encryptRSA(RSARule rule, String message)
+	public static byte[] encryptRSA(PrivateKey key, String message)
 			throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException {
 		byte[] msg = message.getBytes(Algorithm.CHARSET); // 待加解密的消息
 		Cipher c1 = Cipher.getInstance(Algorithm.rules.get("RSA")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
-		c1.init(Cipher.ENCRYPT_MODE, rule.getPrivateKey());
+		c1.init(Cipher.ENCRYPT_MODE, key);
 		byte[] decryptedData = c1.doFinal(msg);
-		rule.setMessage(decryptedData); // 加密后的数据
-		return rule;
+		return decryptedData;// 加密后的数据
 	}
 
 	/**
@@ -185,15 +187,16 @@ public class CipherKit {
 	 * @throws BadPaddingException
 	 * @throws UnsupportedEncodingException
 	 * @throws InvalidAlgorithmParameterException
-	 * @throws InvalidKeySpecException 
-	 * @throws ClassNotFoundException 
+	 * @throws InvalidKeySpecException
+	 * @throws ClassNotFoundException
 	 */
-	public static String decryptRSA(RSARule rule)
+	public static String decryptRSA(String modulus, String exponent, byte[] message)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException,
-			BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, ClassNotFoundException, InvalidKeySpecException {
+			BadPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException,
+			ClassNotFoundException, InvalidKeySpecException {
 		Cipher c2 = Cipher.getInstance(Algorithm.rules.get("RSA")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
-		c2.init(Cipher.DECRYPT_MODE, KeystoreManager.converStringToPublicKey(rule)); // 设置Cipher为解密工作模式，需要把Key传进去
-		byte[] decryptedData = c2.doFinal(rule.getMessage());
+		c2.init(Cipher.DECRYPT_MODE, KeystoreManager.converStringToPublicKey(modulus, exponent)); // 设置Cipher为解密工作模式，需要把Key传进去
+		byte[] decryptedData = c2.doFinal(message);
 		return new String(decryptedData, Algorithm.CHARSET);
 	}
 }
