@@ -28,6 +28,7 @@ import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.graphs.trees.Callback;
 import com.catherine.graphs.trees.MyAVLTree;
+import com.catherine.graphs.trees.MyBTree;
 import com.catherine.graphs.trees.MyBinarySearchTree;
 import com.catherine.graphs.trees.MyBinaryTree;
 import com.catherine.graphs.trees.MySplayTree;
@@ -75,8 +76,16 @@ public class Main {
 		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
+
+		 testCryptography();
+
 		// testSplayTree();
-		testCryptography();
+//		testBTree();
+	}
+
+	public static void testBTree() {
+		MyBTree<String> myBTree = new MyBTree<>(53, null);
+		myBTree.insert(1, null);
 	}
 
 	public static void testSplayTree() {
@@ -198,25 +207,38 @@ public class Main {
 			analysis.endTracking(log9);
 			analysis.printTrack(log9);
 
-			// verify files
-			TrackLog log10 = new TrackLog("Signing the file ");
+			TrackLog log10 = new TrackLog("Encrypt a string from the keyPair");
 			analysis.startTracking(log10);
 			RSARule rsaRule2 = KeystoreManager.generateRSAKeyPair();
-			byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", rsaRule2.getPrivateKey());
+			CipherKit.encryptRSA(rsaRule2, "Hi there!");
 			analysis.endTracking(log10);
 			analysis.printTrack(log10);
 
-			String signatureString = MessageDigestKit.byteArrayToString(signature);
-			byte[] signaturebytes = MessageDigestKit.StringToByteArray(signatureString);
-			
-			TrackLog log11 = new TrackLog("verifing the file with signature ");
+			TrackLog log11 = new TrackLog("Decrypt a string from the keyPair");
 			analysis.startTracking(log11);
-			boolean islegel = MessageDigestKit.verifySignature(signaturebytes, "assets/metals.jpg",
-					(PublicKey) KeystoreManager.converStringToPublicKey(rsaRule2));
-			System.out.println("Signature: " + signatureString);
-			System.out.println("Signature: Is this file legel? " + islegel);
+			System.out.println(CipherKit.decryptRSA(rsaRule2));
 			analysis.endTracking(log11);
 			analysis.printTrack(log11);
+
+			// verify files
+			TrackLog log12 = new TrackLog("Signing the file ");
+			analysis.startTracking(log12);
+			RSARule rsaRule3 = KeystoreManager.generateRSAKeyPair();
+			byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", rsaRule3.getPrivateKey());
+			analysis.endTracking(log12);
+			analysis.printTrack(log12);
+
+			String signatureString = MessageDigestKit.byteArrayToString(signature);
+			byte[] signaturebytes = MessageDigestKit.StringToByteArray(signatureString);
+
+			TrackLog log13 = new TrackLog("verifing the file with signature ");
+			analysis.startTracking(log13);
+			boolean islegel = MessageDigestKit.verifySignature(signaturebytes, "assets/metals.jpg",
+					(PublicKey) KeystoreManager.converStringToPublicKey(rsaRule3));
+			System.out.println("Signature: " + signatureString);
+			System.out.println("Signature: Is this file legel? " + islegel);
+			analysis.endTracking(log13);
+			analysis.printTrack(log13);
 		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
 				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
 				| IOException | InvalidKeySpecException | ClassNotFoundException | SignatureException

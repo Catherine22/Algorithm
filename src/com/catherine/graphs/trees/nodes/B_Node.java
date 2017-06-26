@@ -10,7 +10,7 @@ public class B_Node<E> {
 	 */
 	private List<Integer> key;
 	/**
-	 * 关键码向量
+	 * 关键码向量值（这边是我自定义）
 	 */
 	private List<E> data;
 	/**

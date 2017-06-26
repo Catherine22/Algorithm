@@ -32,8 +32,8 @@ import com.catherine.graphs.trees.nodes.B_Node;
  * B-Tree定义：<br>
  * 1. n路平衡搜索树(n >= 2)<br>
  * 2. 所有的叶节点的深度相等。<br>
- * 3. 所有的外部节点的深度相等。（在很多树中，外部节点等同于叶节点，在B-Tree中，外部节点代表叶节点不存在的子节点）。 4. 树高 h =
- * 外部节点的深度。（一般的树高是最大的叶节点高度）<br>
+ * 3. 所有的外部节点的深度相等。（在很多树中，外部节点等同于叶节点，在B-Tree中，外部节点代表叶节点不存在的子节点）。<br>
+ * 4. 树高 h = 外部节点的深度。（一般的树高是最大的叶节点高度）<br>
  * <br>
  * 内部节点的分支数限制：<br>
  * 树根： 2 <= n+1<br>
@@ -49,30 +49,36 @@ public class MyBTree<E> implements BTree<E> {
 	 */
 	private int size;
 	/**
-	 * 前次
+	 * B-树的阶次，至少为3，创建时指定，一般不能修改
 	 */
 	private int order;
 
 	/**
-	 * 最后访问的非空节点。
+	 * search()最后访问的非空(除非树空)的节点位置
 	 */
 	private B_Node<E> hot;
 	private B_Node<E> root;
 
-	public MyBTree() {
-		this(null);
+	public MyBTree(int order) {
+		this(order, null);
 	}
 
-	public MyBTree(E rootData) {
-		this(rootData, null, null);
+	public MyBTree(int order, E rootData) {
+		this(order, 0, rootData, null, null);
 	}
 
-	public MyBTree(E rootData, E lcData, E rcData) {
+	public MyBTree(int order, int rootKey, E rootData) {
+		this(order, rootKey, rootData, null, null);
+	}
+
+	public MyBTree(int order, int rootKey, E rootData, E lcData, E rcData) {
+		this.order = (order < 3) ? 3 : order;
+
 		root = new B_Node<E>();
 		root.setParent(null);
 
 		List<Integer> rootKeys = new ArrayList<>();
-		rootKeys.add(0); // 只有一个关键码
+		rootKeys.add(rootKey); // 只有一个关键码
 		root.setKey(rootKeys);
 
 		List<E> rootValues = new ArrayList<>();
@@ -105,21 +111,26 @@ public class MyBTree<E> implements BTree<E> {
 
 	@Override
 	public B_Node<E> getRoot() {
-		return null;
+		return root;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return false;
+		return size == 0;
 	}
 
 	@Override
 	public int size() {
-		return 0;
+		return size;
 	}
 
 	@Override
 	public int size(B_Node<E> node) {
+		return 0;
+	}
+
+	@Override
+	public int order() {
 		return 0;
 	}
 
@@ -129,12 +140,56 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public B_Node<E> search(E e) {
+	public int getLargestHeight(int level) {
+		int n = (int) Math.ceil((size / 2));
+		return 2 * n ^ (level - 1);
+	}
+
+	@Override
+	public E search(int key) {
+		checkElementIndex(key);
+
+		B_Node<E> header = root;
+		boolean stop = false;
+		while (!stop) {
+			// 第一层是预先载到RAM的，所以不用loadToRAM()
+			for (int i = 0; i < header.getKey().size(); i++) {
+				if (key == header.getKey().get(i))
+					return header.getData().get(i);
+			}
+			loadToRAM();
+			// 往下一层
+			header = goToNextLevel(key, header.getChild());
+		}
+
+		return null;
+	}
+
+	private B_Node<E> goToNextLevel(int key, List<B_Node<E>> children) {
+		for (int i = 0; i < children.size() - 1; i++) {
+			// 先找每个超级子节点的第一个值，找到目标超级节点
+			if (children.get(i - 1).getKey().get(0) < key && children.get(i).getKey().get(0) >= key) {
+				for (int j = 0; j < children.get(i).getKey().size(); j++) {
+					// 检查超级节点内的每个节点
+					if (children.get(i).getKey().get(j) > key)
+						return children.get(i);
+				}
+				return children.get(i - 1);
+			}
+			return null;
+		}
 		return null;
 	}
 
 	@Override
-	public boolean insert(E e) {
+	public boolean insert(int key, E e) {
+		root.getKey().add(75);
+		List<B_Node<E>> n19 = new ArrayList<>();
+		return false;
+	}
+
+	@Override
+	public boolean remove(int key) {
 		return false;
 	}
 
@@ -150,6 +205,56 @@ public class MyBTree<E> implements BTree<E> {
 
 	@Override
 	public void solveUnderfolw(B_Node<E> node) {
+
+	}
+
+	/**
+	 * 检查位置是否合法并扔出Exception
+	 * 
+	 * @param index
+	 *            指定索引
+	 * @throws IndexOutOfBoundsException
+	 *             {@inheritDoc}
+	 */
+	private void checkElementIndex(int index) {
+		if (!isElementIndex(index))
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+	}
+
+	/**
+	 * 检查位置是否合法
+	 * 
+	 * @param index
+	 *            指定索引
+	 * @return 是否合法
+	 */
+	private boolean isElementIndex(int index) {
+		return (index >= 0) || (index <= size);
+	}
+
+	/**
+	 * Constructs an IndexOutOfBoundsException detail message. Of the many
+	 * possible refactorings of the error handling code, this "outlining"
+	 * performs best with both server and client VMs.
+	 */
+	private String outOfBoundsMsg(int index) {
+		return "Index: " + index + ", Size: " + size;
+	}
+
+	/**
+	 * 模拟把数据载到内存里，每次跨级别存储，都需要花费大量时间。
+	 */
+	private void loadToRAM() {
+		try {
+			System.out.println("Load to memory...");
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void release() {
 
 	}
 }
