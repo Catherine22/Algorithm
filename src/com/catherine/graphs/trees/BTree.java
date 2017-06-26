@@ -64,7 +64,7 @@ public interface BTree<E> {
 	 * @param key
 	 * @return
 	 */
-	public E search(int key);
+	public B_Node<E> search(int key);
 
 	public boolean insert(int key, E e);
 

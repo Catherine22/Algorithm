@@ -146,39 +146,26 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public E search(int key) {
+	public B_Node<E> search(int key) {
 		checkElementIndex(key);
-
-		B_Node<E> header = root;
-		boolean stop = false;
-		while (!stop) {
-			// 第一层是预先载到RAM的，所以不用loadToRAM()
-			for (int i = 0; i < header.getKey().size(); i++) {
-				if (key == header.getKey().get(i))
-					return header.getData().get(i);
-			}
-			loadToRAM();
-			// 往下一层
-			header = goToNextLevel(key, header.getChild());
-		}
-
-		return null;
+		return search(key, root);
 	}
 
-	private B_Node<E> goToNextLevel(int key, List<B_Node<E>> children) {
-		for (int i = 0; i < children.size() - 1; i++) {
-			// 先找每个超级子节点的第一个值，找到目标超级节点
-			if (children.get(i - 1).getKey().get(0) < key && children.get(i).getKey().get(0) >= key) {
-				for (int j = 0; j < children.get(i).getKey().size(); j++) {
-					// 检查超级节点内的每个节点
-					if (children.get(i).getKey().get(j) > key)
-						return children.get(i);
-				}
-				return children.get(i - 1);
-			}
-			return null;
+	private B_Node<E> search(int key, B_Node<E> target) {
+		if (target == null)
+			return null;// 失败，抵达外部节点
+
+		B_Node<E> header = target;
+		int rank = 0;
+
+		while (header.getKey().get(rank++) <= key) {
+			if (header.getKey().get(rank) == key)
+				return header;
 		}
-		return null;
+
+		hot = header;
+		loadToRAM();
+		return search(key, hot.getChild().get(rank));
 	}
 
 	@Override
@@ -196,6 +183,11 @@ public class MyBTree<E> implements BTree<E> {
 	@Override
 	public boolean remove(E e) {
 		return false;
+	}
+
+	@Override
+	public void release() {
+
 	}
 
 	@Override
@@ -251,10 +243,5 @@ public class MyBTree<E> implements BTree<E> {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void release() {
-
 	}
 }
