@@ -92,6 +92,12 @@ public class Main {
 		myBTree.insert(15);
 		myBTree.insert(20);
 		System.out.println(myBTree.toString());
+		myBTree.insert(1);
+		System.out.println(myBTree.toString());
+//		myBTree.insert(2);
+//		System.out.println(myBTree.toString());
+//		myBTree.insert(25);
+//		System.out.println(myBTree.toString());
 		
 	}
 

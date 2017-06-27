@@ -46,6 +46,7 @@ import com.catherine.graphs.trees.nodes.B_Node;
  *
  */
 public class MyBTree_Integer implements BTree {
+	private final static boolean SHOW_LOG = true;
 	/**
 	 * 关键码总数
 	 */
@@ -59,8 +60,10 @@ public class MyBTree_Integer implements BTree {
 	 * search()最后访问的非空(除非树空)的节点位置
 	 */
 	private B_Node hot;
+	/**
+	 * 根节点
+	 */
 	private B_Node root;
-	private final static boolean SHOW_LOG = true;
 
 	public MyBTree_Integer(int order) {
 		this(order, 0);
@@ -152,7 +155,7 @@ public class MyBTree_Integer implements BTree {
 				|| hot.getChild().get(rank).getKey() == null)
 			return null;// 失败，最终抵达外部节点
 
-		loadToRAM();
+		loadToRAM(hot);
 		return search(hot.getChild().get(rank), key);
 	}
 
@@ -200,18 +203,21 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public void solveOverflow(B_Node node) {
-		if (size <= (order - 1))
+		if (node.getKey().size() <= (order - 1))
 			return;
 
 		if (SHOW_LOG)
-			System.out.print("overflow" + node.getKey());
+			System.out.print("overflow, divided " + node.getKey());
 		// 假设上溢节点的关键码依次为 k0, k1...k(m-1)
 		int median = (int) Math.floor(node.getKey().size() / 2);// 取中位数（无条件进位）为分界
 		// k0~k(median-1), k(median), k(median+1)~k(m-1)
 		// 将 k(median)上升一层，并将刚才左右两组关键码分裂成k(median)的左右孩子。
 		int key = node.getKey().get(median);
 
-		// 调整左孩子
+		// key范围分别是k0~k(median-1)和k(median+1)~k(size-1)
+		// 节点的孩子范围分别是k0~k(median)和k(median+1)~k(size-1)
+
+		// 分裂后的左孩子
 		List<Integer> lKeys = new ArrayList<>();
 		for (int i = 0; i < median; i++) {
 			lKeys.add(node.getKey().get(i));
@@ -224,7 +230,7 @@ public class MyBTree_Integer implements BTree {
 		lChild.setKey(lKeys);
 		lChild.setChild(lChildren);
 
-		// 调整右孩子
+		// 分裂后的右孩子
 		List<Integer> rKeys = new ArrayList<>();
 		for (int i = median + 1; i < node.getKey().size(); i++) {
 			rKeys.add(node.getKey().get(i));
@@ -237,37 +243,40 @@ public class MyBTree_Integer implements BTree {
 		rChild.setKey(rKeys);
 		rChild.setChild(rChildren);
 
+		if (SHOW_LOG) {
+			System.out.print(" into " + lChild.getKey());
+			System.out.print(", [" + node.getKey().get(median));
+			System.out.println("] and " + rChild.getKey());
+		}
+
 		// 移除节点
 		node.getKey().remove(median);
 
-		if (SHOW_LOG) {
-			System.out.print(" split to " + lChild.getKey());
-			System.out.println(" & " + rChild.getKey());
-		}
-		// 当上溢发生在根节点时，指定k(median)为新的根节点，并且具有两分支，k0~k(median-1)的左孩子和k(median+1)~k(m-1)的右孩子
+		// 当上溢发生在根节点时，指定k(median)为新的根节点，并且具有两分支
 		if (node.getParent() == null) {
 			lChild.setParent(root);
 			rChild.setParent(root);
 
+			// insert
 			root.getKey().clear();
 			root.getKey().add(key);
 
 			root.getChild().clear();
 			root.getChild().add(lChild);
 			root.getChild().add(rChild);
+			// 不再上溢
 		} else {
+			// insert
 			lChild.setParent(node.getParent());
 			rChild.setParent(node.getParent());
 
-			// insert
-			search(node.getParent(), key);
+			hot = node.getParent();
 			int pos = searchPosi(hot, key);
-			System.out.println("pos:" + pos);
 			hot.getKey().add(pos + 1, key);
 			hot.getChild().set(pos + 1, lChild);
-			hot.getChild().set(pos + 2, rChild);
-			solveOverflow(hot);// 若发生上溢，做分裂处理
+			hot.getChild().add(pos + 2, rChild);
 
+			solveOverflow(hot);// 若发生上溢，做分裂处理
 		}
 
 	}
@@ -311,12 +320,27 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	/**
+	 * 当前是第几级存储，测试用
+	 */
+	private int getLevel(B_Node node) {
+		int level = 1;
+		if (node.getParent() != null) {
+			B_Node parent = node.getParent();
+			while (parent != null) {
+				level++;
+				parent = parent.getParent();
+			}
+		}
+		return level;
+	}
+
+	/**
 	 * 模拟把数据载到内存里，每次跨级别存储，都需要花费大量时间。
 	 */
-	private void loadToRAM() {
+	private void loadToRAM(B_Node node) {
 		try {
-			System.out.println("Loading to memory...");
-			Thread.sleep(2000);
+			System.out.println(String.format("Loading data from level %d to memory...", getLevel(node)));
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -324,50 +348,74 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder();
-		int level = 0;
-		B_Node header = root;
-		Queue<B_Node> history = new LinkedList<>();
-		if (header != null) {
-			result.append(String.format("level %d:[", level++));
-			if (header.getKey() != null) {
-				if (header.getKey().size() == 0) {
-					result.append("[]\n");
-				} else {
-					for (int k : header.getKey())
-						result.append(String.format("%d, ", k));
-					result.delete(result.length() - 2, result.length());
-					result.append("]\n");
-				}
-			}
-		}
-		StringBuilder tmp = new StringBuilder();
-		boolean keepTmp = false;
-		if (header.getChild() != null) {
-			history.addAll(header.getChild());
-			tmp.append(String.format("level %d:", level++));
-			while (history.size() > 0) {
-				header = history.poll();
-				if (header != null && header.getKey() != null) {
-					keepTmp = true;
-					tmp.append(String.format("[", level++));
-					if (header.getKey().size() == 0) {
-						tmp.append("[]\n");
-					} else {
-						for (int k : header.getKey())
-							tmp.append(String.format("%d, ", k));
-						tmp.delete(tmp.length() - 2, tmp.length());
-						tmp.append("] ");
-					}
-				} else
-					keepTmp = false;
-			}
-			tmp.delete(tmp.length() - 1, tmp.length());
-			tmp.append("\n");
-		}
-		if (keepTmp)
-			result.append(tmp);
+		if (root == null)
+			return "null root";
 
-		return result.toString();
+		StringBuilder log = new StringBuilder();
+		int level = 0;
+		int totalKeys = 0;// 该阶层全部key的数量
+		int runKeys = 0;// 执行过的key的数量
+		B_Node header = root;
+		B_Node previousParent = new B_Node();
+		Queue<B_Node> history = new LinkedList<>();
+		List<Integer> keysInLayers = new LinkedList<>();
+		history.add(header);
+		keysInLayers.add(header.getKey().size());
+		log.append(String.format("level %d:", level++));
+
+		while (history.size() > 0) {
+			header = history.poll();
+			if (header != null && header.getKey() != null) {
+				if (header.getKey().size() == 0) {
+					log.append("[] ");
+				} else {
+					log.append("[");
+					for (int k : header.getKey())
+						log.append(String.format("%d, ", k));
+					runKeys += header.getKey().size();
+					log.delete(log.length() - 2, log.length());
+					log.append("] ");
+					// System.out.println("**" + log.toString() + "**");
+					if (keysInLayers.size() > 0 && keysInLayers.get(0) == runKeys) {
+						runKeys = 0;
+						keysInLayers.remove(0);
+						log.delete(log.length() - 1, log.length());
+						log.append("\n");
+						log.append(String.format("level %d:", level++));
+					}
+				}
+				if (header.getChild() != null) {
+					history.addAll(header.getChild());
+					if (header.getParent() != previousParent) {
+						totalKeys = 0;
+						for (int i = 0; i < header.getChild().size(); i++) {
+							B_Node child = header.getChild().get(i);
+							if (child != null && child.getKey() != null) {
+								totalKeys++;
+							}
+						}
+						if (totalKeys != 0)
+							keysInLayers.add(totalKeys);
+					} else {
+						for (int i = 0; i < header.getChild().size(); i++) {
+							B_Node child = header.getChild().get(i);
+							if (child != null && child.getKey() != null) {
+								totalKeys++;
+							}
+						}
+						if (keysInLayers.size() > 0)
+							keysInLayers.set(keysInLayers.size() - 1, totalKeys);
+					}
+				}
+				previousParent = header.getParent();
+			}
+		}
+		// System.out.print(root.getChild().get(0).getKey());
+		// System.out.println(" "+root.getChild().get(1).getKey());
+		if (log.charAt(log.length() - 1) == ':') {
+			String rubbish = String.format("level %d:", level - 1);
+			log.delete(log.length() - rubbish.length(), log.length());
+		}
+		return log.toString();
 	}
 }
