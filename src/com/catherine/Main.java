@@ -88,9 +88,11 @@ public class Main {
 
 	public static void testBTree() {
 		MyBTree_Integer myBTree = new MyBTree_Integer(3, 10);
-		myBTree.insert(1);
-		myBTree.insert(2);
+		myBTree.insert(5);
+		myBTree.insert(15);
+		myBTree.insert(20);
 		System.out.println(myBTree.toString());
+		
 	}
 
 	public static void testSplayTree() {

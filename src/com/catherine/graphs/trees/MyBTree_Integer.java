@@ -60,6 +60,7 @@ public class MyBTree_Integer implements BTree {
 	 */
 	private B_Node hot;
 	private B_Node root;
+	private final static boolean SHOW_LOG = true;
 
 	public MyBTree_Integer(int order) {
 		this(order, 0);
@@ -187,18 +188,6 @@ public class MyBTree_Integer implements BTree {
 		return true;
 	}
 
-	private boolean insert(B_Node node, int key) {
-		if (search(node, key) != null)
-			return false;// 已经存在关键码，直接返回。
-
-		int pos = searchPosi(hot, key);
-		hot.getKey().add(pos + 1, key);
-		hot.getChild().add(pos + 2, null);// 因为关键码向量(x)与孩子向量(o)的位置应对齐
-		size++;
-		solveOverflow(hot);// 若发生上溢，做分裂处理
-		return true;
-	}
-
 	@Override
 	public boolean remove(int key) {
 		return false;
@@ -211,15 +200,76 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public void solveOverflow(B_Node node) {
-		if (size > (order - 1)) {
-			// 假设上溢节点的关键码依次为 k0, k1...k(m-1)
-			int median = (int) Math.floor(node.getKey().size() / 2);// 取中位数为分界
-			// k0~k(median-1), k(median), k(median+1)~k(m-1)
-			// 将 k(median)上升一层，并将刚才左右两组关键码分裂成k(median)的左右孩子。
-			int key = node.getKey().get(median);
-			node.getKey().remove(median);
-			insert(node.getParent(), key);
+		if (size <= (order - 1))
+			return;
+
+		if (SHOW_LOG)
+			System.out.print("overflow" + node.getKey());
+		// 假设上溢节点的关键码依次为 k0, k1...k(m-1)
+		int median = (int) Math.floor(node.getKey().size() / 2);// 取中位数（无条件进位）为分界
+		// k0~k(median-1), k(median), k(median+1)~k(m-1)
+		// 将 k(median)上升一层，并将刚才左右两组关键码分裂成k(median)的左右孩子。
+		int key = node.getKey().get(median);
+
+		// 调整左孩子
+		List<Integer> lKeys = new ArrayList<>();
+		for (int i = 0; i < median; i++) {
+			lKeys.add(node.getKey().get(i));
 		}
+		List<B_Node> lChildren = new ArrayList<>();
+		for (int i = 0; i <= median; i++) {
+			lChildren.add(node.getChild().get(i));
+		}
+		B_Node lChild = new B_Node();
+		lChild.setKey(lKeys);
+		lChild.setChild(lChildren);
+
+		// 调整右孩子
+		List<Integer> rKeys = new ArrayList<>();
+		for (int i = median + 1; i < node.getKey().size(); i++) {
+			rKeys.add(node.getKey().get(i));
+		}
+		List<B_Node> rChildren = new ArrayList<>();
+		for (int i = median + 1; i < node.getChild().size(); i++) {
+			rChildren.add(node.getChild().get(i));
+		}
+		B_Node rChild = new B_Node();
+		rChild.setKey(rKeys);
+		rChild.setChild(rChildren);
+
+		// 移除节点
+		node.getKey().remove(median);
+
+		if (SHOW_LOG) {
+			System.out.print(" split to " + lChild.getKey());
+			System.out.println(" & " + rChild.getKey());
+		}
+		// 当上溢发生在根节点时，指定k(median)为新的根节点，并且具有两分支，k0~k(median-1)的左孩子和k(median+1)~k(m-1)的右孩子
+		if (node.getParent() == null) {
+			lChild.setParent(root);
+			rChild.setParent(root);
+
+			root.getKey().clear();
+			root.getKey().add(key);
+
+			root.getChild().clear();
+			root.getChild().add(lChild);
+			root.getChild().add(rChild);
+		} else {
+			lChild.setParent(node.getParent());
+			rChild.setParent(node.getParent());
+
+			// insert
+			search(node.getParent(), key);
+			int pos = searchPosi(hot, key);
+			System.out.println("pos:" + pos);
+			hot.getKey().add(pos + 1, key);
+			hot.getChild().set(pos + 1, lChild);
+			hot.getChild().set(pos + 2, rChild);
+			solveOverflow(hot);// 若发生上溢，做分裂处理
+
+		}
+
 	}
 
 	@Override
@@ -265,7 +315,7 @@ public class MyBTree_Integer implements BTree {
 	 */
 	private void loadToRAM() {
 		try {
-			System.out.println("Load to memory...");
+			System.out.println("Loading to memory...");
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
