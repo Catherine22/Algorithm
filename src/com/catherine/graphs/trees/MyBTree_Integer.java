@@ -340,7 +340,7 @@ public class MyBTree_Integer implements BTree {
 	private void loadToRAM(B_Node node) {
 		try {
 			System.out.println(String.format("Loading data from level %d to memory...", getLevel(node)));
-			Thread.sleep(100);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -352,13 +352,13 @@ public class MyBTree_Integer implements BTree {
 			return "null root";
 
 		StringBuilder log = new StringBuilder();
-		int level = 0;
+		int level = 0;// 目前阶层
 		int totalKeys = 0;// 该阶层全部key的数量
 		int runKeys = 0;// 执行过的key的数量
 		B_Node header = root;
-		B_Node previousParent = new B_Node();
-		Queue<B_Node> history = new LinkedList<>();
-		List<Integer> keysInLayers = new LinkedList<>();
+		B_Node previousParent = new B_Node();// 记录上一个节点的父节点
+		Queue<B_Node> history = new LinkedList<>();// 待处理节点
+		List<Integer> keysInLayers = new LinkedList<>();// 每一层全部key数量
 		history.add(header);
 		keysInLayers.add(header.getKey().size());
 		log.append(String.format("level %d:", level++));
@@ -375,7 +375,6 @@ public class MyBTree_Integer implements BTree {
 					runKeys += header.getKey().size();
 					log.delete(log.length() - 2, log.length());
 					log.append("] ");
-					// System.out.println("**" + log.toString() + "**");
 					if (keysInLayers.size() > 0 && keysInLayers.get(0) == runKeys) {
 						runKeys = 0;
 						keysInLayers.remove(0);
@@ -391,7 +390,7 @@ public class MyBTree_Integer implements BTree {
 						for (int i = 0; i < header.getChild().size(); i++) {
 							B_Node child = header.getChild().get(i);
 							if (child != null && child.getKey() != null) {
-								totalKeys++;
+								totalKeys += child.getKey().size();
 							}
 						}
 						if (totalKeys != 0)
@@ -400,7 +399,7 @@ public class MyBTree_Integer implements BTree {
 						for (int i = 0; i < header.getChild().size(); i++) {
 							B_Node child = header.getChild().get(i);
 							if (child != null && child.getKey() != null) {
-								totalKeys++;
+								totalKeys += child.getKey().size();
 							}
 						}
 						if (keysInLayers.size() > 0)
@@ -410,6 +409,7 @@ public class MyBTree_Integer implements BTree {
 				previousParent = header.getParent();
 			}
 		}
+
 		// System.out.print(root.getChild().get(0).getKey());
 		// System.out.println(" "+root.getChild().get(1).getKey());
 		if (log.charAt(log.length() - 1) == ':') {
