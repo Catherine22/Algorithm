@@ -31,7 +31,7 @@ import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.graphs.trees.Callback;
 import com.catherine.graphs.trees.MyAVLTree;
-import com.catherine.graphs.trees.MyBTree;
+import com.catherine.graphs.trees.MyBTree_Integer;
 import com.catherine.graphs.trees.MyBinarySearchTree;
 import com.catherine.graphs.trees.MyBinaryTree;
 import com.catherine.graphs.trees.MySplayTree;
@@ -80,15 +80,17 @@ public class Main {
 		// testBST();
 		// testAVLTree();
 
-		testCryptography();
+		// testCryptography();
 
 		// testSplayTree();
-		// testBTree();
+		testBTree();
 	}
 
 	public static void testBTree() {
-		MyBTree<String> myBTree = new MyBTree<>(53, null);
-		myBTree.insert(1, null);
+		MyBTree_Integer myBTree = new MyBTree_Integer(3, 10);
+		myBTree.insert(1);
+		myBTree.insert(2);
+		System.out.println(myBTree.toString());
 	}
 
 	public static void testSplayTree() {

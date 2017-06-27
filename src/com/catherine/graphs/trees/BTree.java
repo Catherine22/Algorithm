@@ -2,13 +2,13 @@ package com.catherine.graphs.trees;
 
 import com.catherine.graphs.trees.nodes.B_Node;
 
-public interface BTree<E> {
+public interface BTree {
 	/**
 	 * 返回根节点
 	 * 
 	 * @return 根节点
 	 */
-	public B_Node<E> getRoot();
+	public B_Node getRoot();
 
 	/**
 	 * 是否为空树（没有节点）
@@ -30,7 +30,7 @@ public interface BTree<E> {
 	 * @param 指定节点
 	 * @return 子节点数
 	 */
-	public int size(B_Node<E> node);
+	public int size(B_Node node);
 
 	/**
 	 * 阶次
@@ -55,20 +55,27 @@ public interface BTree<E> {
 	 * 
 	 * @return
 	 */
-	public int getLargestHeight(int level);
+	public int getLargestHeight();
 
 	/**
-	 * 一层一层往下找，直觉会想到用binary search加速，但以整个内外存来看，这样的加速未必有效，甚至可能会花上更多时间。<br>
+	 * 取最小高度（表示每个超级节点应尽可能胖），但分枝数不可超过order
+	 * 
+	 * @return
+	 */
+	public int getSmallestHeight();
+
+	/**
+	 * 一层一层往下找，直觉会想到用二分查找算法加速，但以整个内外存来看，这样的加速未必有效，甚至可能会花上更多时间。<br>
 	 * 失败查找会终止于外部节点。<br>
+	 * 由于每一层都只会查找一组key列表，所以会影响速度的是树的高度。<br>
+	 * 时间花在：1. 载入下一层次节点（IO操作）2. 每一层的顺序查找<br>
 	 * 
 	 * @param key
 	 * @return
 	 */
-	public B_Node<E> search(int key);
+	public B_Node search(int key);
 
-	public boolean insert(int key, E e);
-
-	public boolean remove(E e);
+	public boolean insert(int key);
 
 	public boolean remove(int key);
 
@@ -78,16 +85,17 @@ public interface BTree<E> {
 	public void release();
 
 	/**
-	 * 因插入而上溢后的分裂处理
+	 * 上溢：关键码总数超过阶次m-1，即违反B-tree定义<br>
+	 * 因插入而上溢后的分裂处理，分裂处理后，可能导致父节点也发生上溢，以此类推最多到根节点。
 	 * 
 	 * @param node
 	 */
-	public void solveOverflow(B_Node<E> node);
+	public void solveOverflow(B_Node node);
 
 	/**
 	 * 因删除而下溢后的合并处理
 	 * 
 	 * @param node
 	 */
-	public void solveUnderfolw(B_Node<E> node);
+	public void solveUnderfolw(B_Node node);
 }

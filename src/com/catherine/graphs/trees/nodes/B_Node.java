@@ -14,26 +14,22 @@ import java.util.List;
  *
  * @param <E>
  */
-public class B_Node<E> {
-	private B_Node<E> parent;
+public class B_Node {
+	private B_Node parent;
 	/**
 	 * 关键码向量位置（不重复）
 	 */
 	private List<Integer> key;
 	/**
-	 * 关键码向量值（这边是我自定义）
-	 */
-	private List<E> data;
-	/**
 	 * 孩子向量（其总长度比关键码向量多一）
 	 */
-	private List<B_Node<E>> child;
+	private List<B_Node> child;
 
-	public B_Node<E> getParent() {
+	public B_Node getParent() {
 		return parent;
 	}
 
-	public void setParent(B_Node<E> parent) {
+	public void setParent(B_Node parent) {
 		this.parent = parent;
 	}
 
@@ -45,19 +41,11 @@ public class B_Node<E> {
 		this.key = key;
 	}
 
-	public List<E> getData() {
-		return data;
-	}
-
-	public void setData(List<E> data) {
-		this.data = data;
-	}
-
-	public List<B_Node<E>> getChild() {
+	public List<B_Node> getChild() {
 		return child;
 	}
 
-	public void setChild(List<B_Node<E>> child) {
+	public void setChild(List<B_Node> child) {
 		this.child = child;
 	}
 
