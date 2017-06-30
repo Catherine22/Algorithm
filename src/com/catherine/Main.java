@@ -97,8 +97,11 @@ public class Main {
 		System.out.println(myBTree.toString());
 		myBTree.insert(2);
 		System.out.println(myBTree.toString());
-		myBTree.insert(25);
+		myBTree.remove(2);
 		System.out.println(myBTree.toString());
+//		myBTree.insert(25);
+//		System.out.println(myBTree.toString());
+//		myBTree.remove(20);
 
 	}
 
@@ -167,8 +170,8 @@ public class Main {
 	private static void testCryptography() {
 		try {
 			final Analysis analysis = new Analysis();
-			// KeystoreManager.printCertificatesInfo();
-			// KeystoreManager.printKeyStoreInfo();
+			KeystoreManager.printCertificatesInfo();
+			KeystoreManager.printKeyStoreInfo();
 
 			TrackLog log1 = new TrackLog("General a single key");
 			analysis.startTracking(log1);

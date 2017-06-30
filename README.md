@@ -169,7 +169,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 >If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
 
 ### B-Tree
--
+
+- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node so B-tree looks flatter or wider.
+- There are 2 tips about memory you must know -- First, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from internal memory 100 times than external memory once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
+
 
 ![B-tree][8]
 
@@ -233,12 +236,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
-   [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
-   [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
    [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
    [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
    [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
 
+   [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
+   [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png

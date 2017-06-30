@@ -25,14 +25,6 @@ public interface BTree {
 	public int size();
 
 	/**
-	 * 当前节点的子树规模
-	 * 
-	 * @param 指定节点
-	 * @return 子节点数
-	 */
-	public int size(B_Node node);
-
-	/**
 	 * 阶次
 	 * 
 	 * @return
@@ -75,8 +67,21 @@ public interface BTree {
 	 */
 	public B_Node search(int key);
 
+	/**
+	 * 须考虑插入key后导致的上溢情形。
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public boolean insert(int key);
 
+	/**
+	 * 删除时希望目标节点是叶节点，如果不是叶节点就和后继（一定会是叶节点）交换位置后再移除。<br>
+	 * 删除须考虑下溢。
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public boolean remove(int key);
 
 	/**

@@ -106,11 +106,6 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public int size(B_Node node) {
-		return 0;
-	}
-
-	@Override
 	public int order() {
 		return order;
 	}
@@ -193,7 +188,49 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public boolean remove(int key) {
+		B_Node target = search(key);
+		if (target == null)
+			return false;// 不存在关键码，直接返回。
+
+		int pos = 0;// key位于节点位置
+		while (pos < target.getKey().size()) {
+			if (target.getKey().get(pos) == key)
+				break;
+
+			pos++;
+		}
+
+		if (target.getChild().get(pos + 1) == null) {
+			// 当前节点为叶节点，直接移除
+			target.getKey().remove(pos);
+			System.out.println("直接移除");
+		} else {
+			// 找出后继节点
+			B_Node succ = target.getChild().get(pos + 1);
+			System.out.println("后继节点:" + succ.getKey());
+			swap(target, succ);
+			System.out.println("succ"+ succ.getKey());
+			succ.getKey().remove(pos);
+		}
+		System.out.println("pos:" + pos);
+
 		return false;
+	}
+
+	private void swap(B_Node n1, B_Node n2) {
+		B_Node tmp = n1;
+		n1.setKey(n2.getKey());
+		n1.setChild(n2.getChild());
+		for (B_Node b : n2.getChild()) {
+			if (b != null)
+				b.setParent(n1);
+		}
+		n2.setKey(tmp.getKey());
+		n2.setChild(tmp.getChild());
+		for (B_Node b : tmp.getChild()) {
+			if (b != null)
+				b.setParent(n2);
+		}
 	}
 
 	@Override
@@ -320,7 +357,7 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	/**
-	 * 当前是第几级存储，测试用
+	 * 模拟当前是第几级存储，测试用
 	 */
 	private int getLevel(B_Node node) {
 		int level = 1;
@@ -339,8 +376,8 @@ public class MyBTree_Integer implements BTree {
 	 */
 	private void loadToRAM(B_Node node) {
 		try {
-			System.out.println(String.format("Loading data from level %d to memory...", getLevel(node)));
-			Thread.sleep(2000);
+			System.out.println(String.format("Loading data from level %d external memory...", getLevel(node)));
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
