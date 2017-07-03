@@ -209,8 +209,8 @@ public class MyBTree_Integer implements BTree {
 			B_Node succ = target.getChild().get(pos + 1);
 			System.out.println("后继节点:" + succ.getKey());
 			swap(target, succ);
-			System.out.println("succ"+ succ.getKey());
-			succ.getKey().remove(pos);
+			System.out.println("后继节点:" + succ.getKey());
+//			succ.getKey().remove(pos);
 		}
 		System.out.println("pos:" + pos);
 
@@ -218,16 +218,18 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	private void swap(B_Node n1, B_Node n2) {
-		B_Node tmp = n1;
+		final List<Integer> n2NewKey = n1.getKey();
+		final List<B_Node> n2NewChild = n1.getChild();
+
 		n1.setKey(n2.getKey());
 		n1.setChild(n2.getChild());
 		for (B_Node b : n2.getChild()) {
 			if (b != null)
 				b.setParent(n1);
 		}
-		n2.setKey(tmp.getKey());
-		n2.setChild(tmp.getChild());
-		for (B_Node b : tmp.getChild()) {
+		n2.setKey(n2NewKey);
+		n2.setChild(n2NewChild);
+		for (B_Node b : n2NewChild) {
 			if (b != null)
 				b.setParent(n2);
 		}
