@@ -11,7 +11,6 @@ import java.security.cert.X509Certificate;
  */
 public class CertificateExtensionsHelper {
 	public static CoarseGrainedExtensions getExtensions(X509Certificate cert) throws CertificateException, IOException {
-		CoarseGrainedExtensions coarseGrainedExtensions = new CoarseGrainedExtensions(cert);
-		return coarseGrainedExtensions;
+		return new CoarseGrainedExtensions(cert);
 	}
 }

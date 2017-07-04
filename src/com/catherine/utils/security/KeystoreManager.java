@@ -37,6 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.catherine.utils.security.certificate_extensions.CertificateExtensionsHelper;
 import com.catherine.utils.security.certificate_extensions.CoarseGrainedExtensions;
+import com.catherine.utils.security.certificate_extensions.OIDMap;
 
 /**
  * Java Cryptography Extension（简写为JCE），JCE所包含的内容有加解密，密钥交换，消息摘要（Message
@@ -145,7 +146,7 @@ public class KeystoreManager {
 			su.append("null");
 		System.out.println(String.format("主体:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", su,
 				subjectDN.getOrDefault("CN", ""), subjectDN.getOrDefault("OU", ""), subjectDN.getOrDefault("O", ""),
-				subjectDN.getOrDefault("L", ""), subjectDN.getOrDefault("S", ""), subjectDN.getOrDefault("C", "")));
+				subjectDN.getOrDefault("L", ""), subjectDN.getOrDefault("ST", ""), subjectDN.getOrDefault("C", "")));
 
 		Map<String, String> issuerDN = new HashMap<>();
 		pairs = cf.getIssuerDN().getName().split(", ");
@@ -166,11 +167,11 @@ public class KeystoreManager {
 			i.append("null");
 		System.out.println(String.format("签发者:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", i,
 				issuerDN.getOrDefault("CN", ""), issuerDN.getOrDefault("OU", ""), issuerDN.getOrDefault("O", ""),
-				issuerDN.getOrDefault("L", ""), issuerDN.getOrDefault("S", ""), issuerDN.getOrDefault("C", "")));
+				issuerDN.getOrDefault("L", ""), issuerDN.getOrDefault("ST", ""), issuerDN.getOrDefault("C", "")));
 
 		System.out.println("签名算法:" + cf.getSigAlgName());
-		System.out.println("签名算法OID:" + cf.getSigAlgOID());
-		String sigAlgParams = (cf.getSigAlgParams() == null) ? ""
+		System.out.println(String.format("签名算法OID:%s (%s)", cf.getSigAlgOID(), OIDMap.getName(cf.getSigAlgOID())));
+		String sigAlgParams = (cf.getSigAlgParams() == null) ? "null"
 				: Base64.getEncoder().encodeToString(cf.getSigAlgParams());
 		System.out.println("签名参数:" + sigAlgParams);
 		System.out.println("签名:" + Base64.getEncoder().encodeToString(cf.getSignature()));
@@ -197,7 +198,7 @@ public class KeystoreManager {
 			e.printStackTrace();
 		}
 		System.out.println("]");
-		System.out.println("==>X509Certificate: " + cf.toString());
+		// System.out.println("==>X509Certificate: " + cf.toString());
 	}
 
 	/**
