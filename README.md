@@ -193,9 +193,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Encrypt or decrypt messages by the secret key/keyPair
   
 **[CertificatesManager]**
-  - Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate.
+  - Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate.
   - Get data by OID
-  - Vaild a certificate
+  - Validate a certificate
 
 ## Reference
   - [Algorithms, 4th Edition]
