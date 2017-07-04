@@ -35,6 +35,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.catherine.utils.security.certificate_extensions.CertificateExtensionsHelper;
+import com.catherine.utils.security.certificate_extensions.CoarseGrainedExtensions;
+
 /**
  * Java Cryptography Extension（简写为JCE），JCE所包含的内容有加解密，密钥交换，消息摘要（Message
  * Digest，比如MD5等），密钥管理等。<br>
@@ -59,9 +62,8 @@ public class KeystoreManager {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static void printKeyStoreInfo() throws UnrecoverableKeyException,
-			KeyStoreException, NoSuchAlgorithmException, CertificateException,
-			FileNotFoundException, IOException {
+	public static void printKeyStoreInfo() throws UnrecoverableKeyException, KeyStoreException,
+			NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
 		KeyStore keystore = KeyStore.getInstance(KeySet.KEYSTORE_TYPE);
 		File kf = new File(KeySet.KEYSTORE_PATH);
 		// System.out.println(kf.getAbsolutePath());
@@ -76,8 +78,7 @@ public class KeystoreManager {
 			boolean bCE = keystore.isCertificateEntry(alias);
 			boolean bKE = keystore.isKeyEntry(alias);
 			// 本例中，存储的是KE信息
-			System.out.println("==>KeyStoreInfo: (alias) " + alias
-					+ " (is CE) " + bCE + " (is KE) " + bKE);
+			System.out.println("==>KeyStoreInfo: (alias) " + alias + " (is CE) " + bCE + " (is KE) " + bKE);
 			// 从KeyStore中取出别名对应的证书链
 			Certificate[] certificates = keystore.getCertificateChain(alias);
 
@@ -85,26 +86,19 @@ public class KeystoreManager {
 			for (Certificate cert : certificates) {
 				X509Certificate myCert = (X509Certificate) cert;
 				System.out.println("I am a certificate:");
-				System.out.println("Subjecte DN:"
-						+ myCert.getSubjectDN().getName());
-				System.out.println("Issuer DN:"
-						+ myCert.getIssuerDN().getName());
-				System.out.println("Public Key:"
-						+ Base64.getEncoder().encodeToString(
-								myCert.getPublicKey().getEncoded()));
+				System.out.println("Subjecte DN:" + myCert.getSubjectDN().getName());
+				System.out.println("Issuer DN:" + myCert.getIssuerDN().getName());
+				System.out.println(
+						"Public Key:" + Base64.getEncoder().encodeToString(myCert.getPublicKey().getEncoded()));
 			}
 			// 取出别名对应的Key信息，一般取出的是私钥或者SecretKey。
 			// 注意，不同的别名可能对应不同的Entry。本例中，KE和CE都使用一样的别名
 			Key myKey = keystore.getKey(alias, KeySet.KEY_PW.toCharArray());
 			if (myKey instanceof PrivateKey) {
-				System.out.println("I am a private key:"
-						+ Base64.getEncoder()
-								.encodeToString(myKey.getEncoded()));
+				System.out.println("I am a private key:" + Base64.getEncoder().encodeToString(myKey.getEncoded()));
 			} else if (keystore instanceof SecretKey) {
 				if (keystore instanceof PrivateKey) {
-					System.out.println("I am a secret key:"
-							+ Base64.getEncoder().encodeToString(
-									myKey.getEncoded()));
+					System.out.println("I am a secret key:" + Base64.getEncoder().encodeToString(myKey.getEncoded()));
 				}
 			}
 		}
@@ -125,14 +119,12 @@ public class KeystoreManager {
 	 * @throws CertificateException
 	 * @throws FileNotFoundException
 	 */
-	public static void printCertificatesInfo(X509Certificate cf)
-			throws CertificateException, FileNotFoundException {
+	public static void printCertificatesInfo(X509Certificate cf) throws CertificateException, FileNotFoundException {
 
 		System.out.println("证书序列号:" + cf.getSerialNumber());
 		System.out.println("版本:" + cf.getVersion());
 		System.out.println("证书类型:" + cf.getType());
-		System.out.println(String.format("有效期限:%s 到 %s", cf.getNotBefore(),
-				cf.getNotAfter()));
+		System.out.println(String.format("有效期限:%s 到 %s", cf.getNotBefore(), cf.getNotAfter()));
 
 		Map<String, String> subjectDN = new HashMap<>();
 		String[] pairs = cf.getSubjectDN().getName().split(", ");
@@ -151,15 +143,9 @@ public class KeystoreManager {
 			}
 		} else
 			su.append("null");
-		System.out
-				.println(String
-						.format("主体:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]",
-								su, subjectDN.getOrDefault("CN", ""),
-								subjectDN.getOrDefault("OU", ""),
-								subjectDN.getOrDefault("O", ""),
-								subjectDN.getOrDefault("L", ""),
-								subjectDN.getOrDefault("S", ""),
-								subjectDN.getOrDefault("C", "")));
+		System.out.println(String.format("主体:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", su,
+				subjectDN.getOrDefault("CN", ""), subjectDN.getOrDefault("OU", ""), subjectDN.getOrDefault("O", ""),
+				subjectDN.getOrDefault("L", ""), subjectDN.getOrDefault("S", ""), subjectDN.getOrDefault("C", "")));
 
 		Map<String, String> issuerDN = new HashMap<>();
 		pairs = cf.getIssuerDN().getName().split(", ");
@@ -178,23 +164,16 @@ public class KeystoreManager {
 			}
 		} else
 			i.append("null");
-		System.out
-				.println(String
-						.format("签发者:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]",
-								i, issuerDN.getOrDefault("CN", ""),
-								issuerDN.getOrDefault("OU", ""),
-								issuerDN.getOrDefault("O", ""),
-								issuerDN.getOrDefault("L", ""),
-								issuerDN.getOrDefault("S", ""),
-								issuerDN.getOrDefault("C", "")));
+		System.out.println(String.format("签发者:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", i,
+				issuerDN.getOrDefault("CN", ""), issuerDN.getOrDefault("OU", ""), issuerDN.getOrDefault("O", ""),
+				issuerDN.getOrDefault("L", ""), issuerDN.getOrDefault("S", ""), issuerDN.getOrDefault("C", "")));
 
 		System.out.println("签名算法:" + cf.getSigAlgName());
 		System.out.println("签名算法OID:" + cf.getSigAlgOID());
 		String sigAlgParams = (cf.getSigAlgParams() == null) ? ""
 				: Base64.getEncoder().encodeToString(cf.getSigAlgParams());
 		System.out.println("签名参数:" + sigAlgParams);
-		System.out.println("签名:"
-				+ Base64.getEncoder().encodeToString(cf.getSignature()));
+		System.out.println("签名:" + Base64.getEncoder().encodeToString(cf.getSignature()));
 
 		System.out.println("证书的限制路径长度:" + cf.getBasicConstraints());
 
@@ -207,24 +186,16 @@ public class KeystoreManager {
 			System.out.println("Exponent:" + rsaPublicKey.getPublicExponent());
 
 		}
-		System.out.println("公鑰:"
-				+ Base64.getEncoder().encodeToString(publicKey.getEncoded()));
+		System.out.println("公鑰:" + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 
-		System.out.println("扩展:[");
-try {
-	CertificateExtensionsHelper.getAuthorityInformation(cf);
-	CertificateExtensionsHelper.getKeyIdentifier(cf);
-	CertificateExtensionsHelper.getBasicConstraints(cf);
-} catch (IOException e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-}
-//		try {
-//			System.out.println("SubjectType:"+CertificateExtensionsHelper.getSubjectType(cf));
-//			System.out.println(CertificateExtensionsHelper.getCertificatePolicyId(cf, 0, 0));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		System.out.println("扩展(Certificate Extensions):[");
+		try {
+			CoarseGrainedExtensions coarseGrainedExtensions = CertificateExtensionsHelper.getExtensions(cf);
+			System.out.println(coarseGrainedExtensions.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("]");
 		System.out.println("==>X509Certificate: " + cf.toString());
 	}
@@ -239,16 +210,14 @@ try {
 	 * @throws UnrecoverableKeyException
 	 * @throws KeyStoreException
 	 */
-	public static void getKeyPairFromKeystore() throws FileNotFoundException,
-			IOException, CertificateException, NoSuchAlgorithmException,
-			UnrecoverableKeyException, KeyStoreException {
+	public static void getKeyPairFromKeystore() throws FileNotFoundException, IOException, CertificateException,
+			NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException {
 
 		KeyStore keystore = KeyStore.getInstance(KeySet.KEYSTORE_TYPE);
 		File kf = new File(KeySet.KEYSTORE_PATH);
 		// System.out.println(kf.getAbsolutePath());
 		keystore.load(new FileInputStream(kf), KeySet.KEYSTORE_PW.toCharArray());
-		Key key = keystore.getKey(KeySet.KEYSTORE_ALIAS,
-				KeySet.KEY_PW.toCharArray());
+		Key key = keystore.getKey(KeySet.KEYSTORE_ALIAS, KeySet.KEY_PW.toCharArray());
 		if (key instanceof PrivateKey) {
 
 			// Get certificate of public key
@@ -260,12 +229,8 @@ try {
 			// Return a key pair
 			KeyPair kp = new KeyPair(publicKey, (PrivateKey) key);
 
-			System.out.println("==>private key: "
-					+ Base64.getEncoder().encodeToString(
-							kp.getPrivate().getEncoded()));
-			System.out.println("==>public key: "
-					+ Base64.getEncoder().encodeToString(
-							kp.getPublic().getEncoded()));
+			System.out.println("==>private key: " + Base64.getEncoder().encodeToString(kp.getPrivate().getEncoded()));
+			System.out.println("==>public key: " + Base64.getEncoder().encodeToString(kp.getPublic().getEncoded()));
 		}
 	}
 
@@ -275,8 +240,7 @@ try {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static Key generateKey() throws NoSuchAlgorithmException {
-		KeyGenerator kGenerator = KeyGenerator
-				.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
+		KeyGenerator kGenerator = KeyGenerator.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
 		// 设置密钥长度。注意，每种算法所支持的密钥长度都是不一样的。（也许是算法本身的限制，或者是不同Provider的限制，或者是政府管制的限制）
 		kGenerator.init(56);
 		SecretKey secretKey = kGenerator.generateKey();
@@ -289,8 +253,7 @@ try {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static String generateKeyString() throws NoSuchAlgorithmException {
-		KeyGenerator kGenerator = KeyGenerator
-				.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
+		KeyGenerator kGenerator = KeyGenerator.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
 		// 设置密钥长度。注意，每种算法所支持的密钥长度都是不一样的。（也许是算法本身的限制，或者是不同Provider的限制，或者是政府管制的限制）
 		kGenerator.init(56);
 		SecretKey secretKey = kGenerator.generateKey();
@@ -299,8 +262,7 @@ try {
 		// 日常使用时，一般会把上面的二进制数组通过Base64编码转换成字符串，然后发给使用者
 		String keyInBase64 = Base64.getEncoder().encodeToString(keyData);
 		System.out.println("==>secret key: (encrypted) " + keyInBase64);
-		System.out.println("==>secret key: (Algorithm) "
-				+ secretKey.getAlgorithm());
+		System.out.println("==>secret key: (Algorithm) " + secretKey.getAlgorithm());
 		return keyInBase64;
 	}
 
@@ -311,16 +273,13 @@ try {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public static Key converStringToKey(String secretKey)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
+	public static Key converStringToKey(String secretKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		// 假设对方收到了base64编码后的密钥，首先要得到其二进制表达式
 		byte[] tmp = Base64.getDecoder().decode(secretKey);
 		// 用二进制数组构造KeySpec对象。对称key使用SecretKeySpec类
-		SecretKeySpec secretKeySpec = new SecretKeySpec(tmp,
-				Algorithm.SINGLE_KEY_ALGORITHM);
+		SecretKeySpec secretKeySpec = new SecretKeySpec(tmp, Algorithm.SINGLE_KEY_ALGORITHM);
 		// 创建对称Key导入用的SecretKeyFactory
-		SecretKeyFactory secretKeyFactory = SecretKeyFactory
-				.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
+		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(Algorithm.SINGLE_KEY_ALGORITHM);
 		SecretKey sk = secretKeyFactory.generateSecret(secretKeySpec);
 		// 获取二进制的书面表达
 		byte[] keyData = sk.getEncoded();
@@ -337,8 +296,7 @@ try {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-		KeyPairGenerator kpGenerator = KeyPairGenerator
-				.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		// 限制长度
 		kpGenerator.initialize(1024);
 		// 创建非对称密钥对，即KeyPair对象
@@ -355,10 +313,8 @@ try {
 	 * @throws ClassNotFoundException
 	 */
 	public static void generateRSAKeyPair(RSACallback callback)
-			throws NoSuchAlgorithmException, InvalidKeySpecException,
-			ClassNotFoundException {
-		KeyPairGenerator kpGenerator = KeyPairGenerator
-				.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+			throws NoSuchAlgorithmException, InvalidKeySpecException, ClassNotFoundException {
+		KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		// 限制长度
 		kpGenerator.initialize(1024);
 		// 创建非对称密钥对，即KeyPair对象
@@ -367,22 +323,16 @@ try {
 		PublicKey publicKey = keyPair.getPublic();
 		PrivateKey privateKey = keyPair.getPrivate();
 		// 打印base64编码后的公钥和私钥值，每次都不一样
-		System.out.println("==>public key: "
-				+ Base64.getEncoder().encodeToString(publicKey.getEncoded()));
-		System.out.println("==>private key: "
-				+ Base64.getEncoder().encodeToString(privateKey.getEncoded()));
+		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
+		System.out.println("==>private key: " + Base64.getEncoder().encodeToString(privateKey.getEncoded()));
 
 		// SecretKeySpec没有提供类似对称密钥的方法直接从二进制数值还原
 		Class clazz = Class.forName("java.security.spec.RSAPublicKeySpec");
-		KeyFactory kFactory = KeyFactory
-				.getInstance(Algorithm.KEYPAIR_ALGORITHM);
-		RSAPublicKeySpec rsaPublicKeySpec = (RSAPublicKeySpec) kFactory
-				.getKeySpec(publicKey, clazz);
+		KeyFactory kFactory = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+		RSAPublicKeySpec rsaPublicKeySpec = (RSAPublicKeySpec) kFactory.getKeySpec(publicKey, clazz);
 		// 对RSA算法来说，只要获取modulus和exponent这两个RSA算法特定的参数就可以了
-		String modulus = Base64.getEncoder().encodeToString(
-				rsaPublicKeySpec.getModulus().toByteArray());
-		String exponent = Base64.getEncoder().encodeToString(
-				rsaPublicKeySpec.getPublicExponent().toByteArray());
+		String modulus = Base64.getEncoder().encodeToString(rsaPublicKeySpec.getModulus().toByteArray());
+		String exponent = Base64.getEncoder().encodeToString(rsaPublicKeySpec.getPublicExponent().toByteArray());
 
 		System.out.println("==>rsa public Key spec: (modulus)" + modulus);
 		System.out.println("==>rsa public Key spec: (exponent)" + exponent);
@@ -401,21 +351,17 @@ try {
 	 * @throws InvalidKeySpecException
 	 */
 	public static Key converStringToPublicKey(String modulus, String exponent)
-			throws ClassNotFoundException, NoSuchAlgorithmException,
-			InvalidKeySpecException {
+			throws ClassNotFoundException, NoSuchAlgorithmException, InvalidKeySpecException {
 		byte[] modulusByteArry = Base64.getDecoder().decode(modulus);
 		byte[] exponentByteArry = Base64.getDecoder().decode(exponent);
 
 		// 由接收到的参数构造RSAPublicKeySpec对象
-		RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(
-				new BigInteger(modulusByteArry), new BigInteger(
-						exponentByteArry));
+		RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(new BigInteger(modulusByteArry),
+				new BigInteger(exponentByteArry));
 		// 根据RSAPublicKeySpec对象获取公钥对象
-		KeyFactory kFactory = KeyFactory
-				.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+		KeyFactory kFactory = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
 		PublicKey publicKey = kFactory.generatePublic(rsaPublicKeySpec);
-		System.out.println("==>public key: "
-				+ Base64.getEncoder().encodeToString(publicKey.getEncoded()));
+		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 		return publicKey;
 	}
 
@@ -431,8 +377,7 @@ try {
 			throws CertificateException, FileNotFoundException {
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		return (X509Certificate) cf
-				.generateCertificate(new ByteArrayInputStream(Base64
-						.getDecoder().decode(certificates)));
+				.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(certificates)));
 	}
 
 	/**
@@ -442,8 +387,7 @@ try {
 	 * @throws CertificateException
 	 * @throws FileNotFoundException
 	 */
-	public static X509Certificate getX509Certificate()
-			throws CertificateException, FileNotFoundException {
+	public static X509Certificate getX509Certificate() throws CertificateException, FileNotFoundException {
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		FileInputStream fis = new FileInputStream(KeySet.CERTIFICATION_PATH); // 证书文件
 		return (X509Certificate) cf.generateCertificate(fis);
