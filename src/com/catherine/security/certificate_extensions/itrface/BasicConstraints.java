@@ -1,4 +1,4 @@
-package com.catherine.utils.security.certificate_extensions.itrface;
+package com.catherine.security.certificate_extensions.itrface;
 
 import java.math.BigInteger;
 

@@ -1,4 +1,4 @@
-package com.catherine.utils.security.certificate_extensions;
+package com.catherine.security.certificate_extensions;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -8,14 +8,14 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
-import com.catherine.utils.security.certificate_extensions.itrface.AuthorityInformation;
-import com.catherine.utils.security.certificate_extensions.itrface.BasicConstraints;
-import com.catherine.utils.security.certificate_extensions.itrface.CRLDistributionPoints;
-import com.catherine.utils.security.certificate_extensions.itrface.CertificatePolicies;
-import com.catherine.utils.security.certificate_extensions.itrface.ExtendedKeyUsage;
-import com.catherine.utils.security.certificate_extensions.itrface.KeyIdentifier;
-import com.catherine.utils.security.certificate_extensions.itrface.SubjectAlternativeName;
-import com.catherine.utils.security.certificate_extensions.itrface.SubjectKeyIdentifier;
+import com.catherine.security.certificate_extensions.itrface.AuthorityInformation;
+import com.catherine.security.certificate_extensions.itrface.BasicConstraints;
+import com.catherine.security.certificate_extensions.itrface.CRLDistributionPoints;
+import com.catherine.security.certificate_extensions.itrface.CertificatePolicies;
+import com.catherine.security.certificate_extensions.itrface.ExtendedKeyUsage;
+import com.catherine.security.certificate_extensions.itrface.KeyIdentifier;
+import com.catherine.security.certificate_extensions.itrface.SubjectAlternativeName;
+import com.catherine.security.certificate_extensions.itrface.SubjectKeyIdentifier;
 
 /**
  * 

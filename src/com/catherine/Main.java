@@ -48,12 +48,13 @@ import com.catherine.utils.Analysis;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
-import com.catherine.utils.security.CertificatesManager;
-import com.catherine.utils.security.CipherKit;
-import com.catherine.utils.security.DESCallback;
-import com.catherine.utils.security.KeystoreManager;
-import com.catherine.utils.security.MessageDigestKit;
-import com.catherine.utils.security.RSACallback;
+import com.catherine.security.CertificatesManager;
+import com.catherine.security.CipherKit;
+import com.catherine.security.DESCallback;
+import com.catherine.security.KeySet;
+import com.catherine.security.KeystoreManager;
+import com.catherine.security.MessageDigestKit;
+import com.catherine.security.RSACallback;
 
 public class Main {
 
@@ -175,7 +176,8 @@ public class Main {
 	private static void testCertificates() {
 		try {
 			X509Certificate cert = CertificatesManager.getX509Certificate(attesCertificate);
-			CertificatesManager.vaild(cert);
+			X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
+			CertificatesManager.validate(cert, rootCert);
 			CertificatesManager.printCertificatesInfo(cert);
 		} catch (Exception e) {
 			e.printStackTrace();

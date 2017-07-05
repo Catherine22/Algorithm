@@ -1,11 +1,15 @@
-package com.catherine.utils.security;
+package com.catherine.security;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
@@ -16,8 +20,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.catherine.utils.security.certificate_extensions.CertificateExtensionsHelper;
-import com.catherine.utils.security.certificate_extensions.OIDMap;
+import com.catherine.security.certificate_extensions.CertificateExtensionsHelper;
+import com.catherine.security.certificate_extensions.OIDMap;
 
 /**
  * 
@@ -46,13 +50,7 @@ public class CertificatesManager {
 		System.out.println("证书类型:" + cf.getType());
 		System.out.println(String.format("有效期限:%s 到 %s", cf.getNotBefore(), cf.getNotAfter()));
 
-		Map<String, String> subjectDN = new HashMap<>();
-		String[] pairs = cf.getSubjectDN().getName().split(", ");
-		for (int i = 0; i < pairs.length; i++) {
-			String pair = pairs[i];
-			String[] keyValue = pair.split("=");
-			subjectDN.put(keyValue[0], keyValue[1]);
-		}
+		Map<String, String> subjectDN = refactorDN(cf.getSubjectDN().getName());
 
 		StringBuilder su = new StringBuilder();
 		boolean[] subjectUniqueID = cf.getSubjectUniqueID();
@@ -67,13 +65,7 @@ public class CertificatesManager {
 				subjectDN.getOrDefault("CN", ""), subjectDN.getOrDefault("OU", ""), subjectDN.getOrDefault("O", ""),
 				subjectDN.getOrDefault("L", ""), subjectDN.getOrDefault("ST", ""), subjectDN.getOrDefault("C", "")));
 
-		Map<String, String> issuerDN = new HashMap<>();
-		pairs = cf.getIssuerDN().getName().split(", ");
-		for (int i = 0; i < pairs.length; i++) {
-			String pair = pairs[i];
-			String[] keyValue = pair.split("=");
-			issuerDN.put(keyValue[0], keyValue[1]);
-		}
+		Map<String, String> issuerDN = refactorDN(cf.getIssuerDN().getName());
 
 		StringBuilder i = new StringBuilder();
 		if (subjectUniqueID != null) {
@@ -137,9 +129,9 @@ public class CertificatesManager {
 	 * @throws CertificateException
 	 * @throws FileNotFoundException
 	 */
-	public static X509Certificate getX509Certificate() throws CertificateException, FileNotFoundException {
+	public static X509Certificate loadX509Certificate(String path) throws CertificateException, FileNotFoundException {
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
-		FileInputStream fis = new FileInputStream(KeySet.CERTIFICATION_PATH); // 证书文件
+		FileInputStream fis = new FileInputStream(path); // 证书文件
 		return (X509Certificate) cf.generateCertificate(fis);
 	}
 
@@ -151,7 +143,7 @@ public class CertificatesManager {
 	 * @throws CertificateException
 	 * @throws IOException
 	 */
-	public X509Certificate getCaIssuersCert(String urlString) throws CertificateException, IOException {
+	public static X509Certificate downloadCaIssuersCert(String urlString) throws CertificateException, IOException {
 		URL url = new URL(urlString);
 		CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 		return (X509Certificate) certificateFactory.generateCertificate(url.openStream());
@@ -159,23 +151,77 @@ public class CertificatesManager {
 
 	/**
 	 * 验证证书<br>
-	 * 1. 首先检查期限
-	 * 2. 
+	 * 1. 首先检查期限 <br>
+	 * 2. 检查发布机构是否可信任<br>
+	 * 3. 利用证书发布机构的公钥验证当前证书的签名<br>
+	 * 4. 验证证书的SAN的DNSName来自可信任host<br>
+	 * <br>
+	 * <br>
+	 * 验证证书链<br>
 	 * 
 	 * @param cert
 	 * @return
 	 */
-	public static boolean vaild(X509Certificate cert) {
+	public static boolean validate(X509Certificate cert, X509Certificate rootCert) {
 		try {
+			// 1. Is today's date within validity period?
 			cert.checkValidity();
 			System.out.println("Certificate is active for current date");
+
+			// 2. Is the issuing CA a trusted CA?
+			if (!cert.getIssuerDN().getName().equals(KeySet.TRUSTED_CA)) {
+				System.out.println("This certificate published by a untrusted CA.");
+				return false;
+			}
+
+			// 3. Does the issuing CA’s public key validate the issuer’s digital
+			// signature?
+			cert.verify(rootCert.getPublicKey());
+
+			// 4. Does the domain name in the server’s certificate match the
+			// domain name of the server itself?
+			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cert);
+			if (!KeySet.TRUSTED_SSL_HOSTNAME.equals(coarseGrainedExtensions.getDNSNames())) {
+				System.out.println("");
+				return false;
+			}
+
 			return true;
-		} catch (CertificateExpiredException cee) {
+		} catch (CertificateExpiredException e) {
 			System.out.println("Certificate is expired");
-			return false;
+			e.printStackTrace();
 		} catch (CertificateNotYetValidException e) {
 			System.out.println("Certificate is not yet valid.");
-			return false;
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			System.out.println("InvalidKeyException on incorrect key.");
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			System.out.println("CertificateException on encoding errors.");
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println("NoSuchProviderException if there's no default provider.");
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			System.out.println("NoSuchProviderException if there's no default provider.");
+			e.printStackTrace();
+		} catch (SignatureException e) {
+			System.out.println("SignatureException on signature errors.");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		return false;
+	}
+
+	private static Map<String, String> refactorDN(String name) {
+		Map<String, String> map = new HashMap<>();
+		String[] pairs = name.split(", ");
+		for (int i = 0; i < pairs.length; i++) {
+			String pair = pairs[i];
+			String[] keyValue = pair.split("=");
+			map.put(keyValue[0], keyValue[1]);
+		}
+		return map;
 	}
 }

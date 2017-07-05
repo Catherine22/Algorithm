@@ -1,4 +1,4 @@
-package com.catherine.utils.security.certificate_extensions;
+package com.catherine.security.certificate_extensions;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,7 +15,7 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
-import com.catherine.utils.security.certificate_extensions.itrface.CRLDistributionPoints;
+import com.catherine.security.certificate_extensions.itrface.CRLDistributionPoints;
 
 /**
  * 

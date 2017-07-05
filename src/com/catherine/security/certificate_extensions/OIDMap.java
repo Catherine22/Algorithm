@@ -1,4 +1,4 @@
-package com.catherine.utils.security.certificate_extensions;
+package com.catherine.security.certificate_extensions;
 
 import java.util.HashMap;
 import java.util.Map;

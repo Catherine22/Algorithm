@@ -1,4 +1,4 @@
-package com.catherine.utils.security;
+package com.catherine.security;
 
 import java.security.PrivateKey;
 

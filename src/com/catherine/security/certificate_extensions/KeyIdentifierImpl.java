@@ -1,4 +1,4 @@
-package com.catherine.utils.security.certificate_extensions;
+package com.catherine.security.certificate_extensions;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -9,7 +9,7 @@ import org.bouncycastle.asn1.x509.AuthorityKeyIdentifier;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
-import com.catherine.utils.security.certificate_extensions.itrface.KeyIdentifier;
+import com.catherine.security.certificate_extensions.itrface.KeyIdentifier;
 
 /**
  * 
