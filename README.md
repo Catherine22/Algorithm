@@ -245,7 +245,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
    [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
    [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
-   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CertificatesManager.java>
+   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
+   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CertificatesManager.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
