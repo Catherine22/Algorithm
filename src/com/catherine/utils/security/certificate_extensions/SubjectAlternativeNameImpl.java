@@ -10,6 +10,8 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
+import com.catherine.utils.security.certificate_extensions.itrface.SubjectAlternativeName;
+
 /**
  * 
  * @author Catherine
@@ -21,6 +23,8 @@ public class SubjectAlternativeNameImpl implements SubjectAlternativeName {
 	public SubjectAlternativeNameImpl(X509Certificate cert) throws IOException {
 		DNSNames = new ArrayList<>();
 		byte[] extVal = cert.getExtensionValue(Extension.subjectAlternativeName.getId());
+		if (extVal == null)
+			return;
 		GeneralNames gn = GeneralNames.getInstance(X509ExtensionUtil.fromExtensionValue(extVal));
 		GeneralName[] names = gn.getNames();
 		for (GeneralName name : names) {

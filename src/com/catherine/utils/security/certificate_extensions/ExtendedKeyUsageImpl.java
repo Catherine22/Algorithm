@@ -9,6 +9,8 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
+import com.catherine.utils.security.certificate_extensions.itrface.ExtendedKeyUsage;
+
 /**
  * 
  * @author Catherine
@@ -20,6 +22,8 @@ public class ExtendedKeyUsageImpl implements ExtendedKeyUsage{
 	public ExtendedKeyUsageImpl(X509Certificate cert) throws IOException {
 		keyPurposeIds = new ArrayList<>();
 		byte[] extVal = cert.getExtensionValue(Extension.extendedKeyUsage.getId());
+		if (extVal == null)
+			return;
 		org.bouncycastle.asn1.x509.ExtendedKeyUsage usage = org.bouncycastle.asn1.x509.ExtendedKeyUsage
 				.getInstance(X509ExtensionUtil.fromExtensionValue(extVal));
 		KeyPurposeId[] usages = usage.getUsages();

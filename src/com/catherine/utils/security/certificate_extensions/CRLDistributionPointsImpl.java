@@ -15,6 +15,8 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
+import com.catherine.utils.security.certificate_extensions.itrface.CRLDistributionPoints;
+
 /**
  * 
  * @author Catherine
@@ -26,6 +28,8 @@ public class CRLDistributionPointsImpl implements CRLDistributionPoints {
 	public CRLDistributionPointsImpl(X509Certificate cert) throws CertificateException, IOException {
 		URINames = new ArrayList<>();
 		byte[] extVal = cert.getExtensionValue(Extension.cRLDistributionPoints.getId());
+		if (extVal == null)
+			return;
 		CRLDistPoint crlDistPoint = CRLDistPoint.getInstance(X509ExtensionUtil.fromExtensionValue(extVal));
 		DistributionPoint[] points = crlDistPoint.getDistributionPoints();
 		for (DistributionPoint p : points) {

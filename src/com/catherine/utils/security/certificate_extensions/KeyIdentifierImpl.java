@@ -9,6 +9,8 @@ import org.bouncycastle.asn1.x509.AuthorityKeyIdentifier;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
+import com.catherine.utils.security.certificate_extensions.itrface.KeyIdentifier;
+
 /**
  * 
  * @author Catherine
@@ -16,9 +18,14 @@ import org.bouncycastle.x509.extension.X509ExtensionUtil;
  */
 public class KeyIdentifierImpl implements KeyIdentifier {
 	private byte[] keyIdentifier;
+	private boolean lock;
 
 	public KeyIdentifierImpl(X509Certificate cert) throws CertificateException, IOException {
 		byte[] extVal = cert.getExtensionValue(Extension.authorityKeyIdentifier.getId());
+		if (extVal == null) {
+			lock = true;
+			return;
+		}
 		AuthorityKeyIdentifier aki = AuthorityKeyIdentifier.getInstance(X509ExtensionUtil.fromExtensionValue(extVal));
 		keyIdentifier = aki.getKeyIdentifier();
 	}
@@ -33,8 +40,11 @@ public class KeyIdentifierImpl implements KeyIdentifier {
 		StringBuilder sb = new StringBuilder();
 		sb.append(OIDMap.getName(Extension.authorityKeyIdentifier.getId()));
 		sb.append(" [\n");
-		sb.append(Base64.getEncoder().encodeToString(keyIdentifier));
-		sb.append("\n]\n");
+		if (!lock) {
+			sb.append(Base64.getEncoder().encodeToString(keyIdentifier));
+			sb.append("\n");
+		}
+		sb.append("]\n");
 		return sb.toString();
 	}
 }

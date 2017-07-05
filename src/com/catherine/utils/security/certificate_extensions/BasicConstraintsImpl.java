@@ -8,6 +8,8 @@ import java.security.cert.X509Certificate;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
+import com.catherine.utils.security.certificate_extensions.itrface.BasicConstraints;
+
 /**
  * 
  * @author Catherine
@@ -25,6 +27,8 @@ public class BasicConstraintsImpl implements BasicConstraints {
 
 	public BasicConstraintsImpl(X509Certificate cert) throws CertificateException, IOException {
 		byte[] extVal = cert.getExtensionValue(Extension.basicConstraints.getId());
+		if (extVal == null)
+			return;
 		org.bouncycastle.asn1.x509.BasicConstraints bc = org.bouncycastle.asn1.x509.BasicConstraints
 				.getInstance(X509ExtensionUtil.fromExtensionValue(extVal));
 		isCA = bc.isCA();

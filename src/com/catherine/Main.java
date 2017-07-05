@@ -1,5 +1,6 @@
 package com.catherine;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -12,6 +13,7 @@ import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -46,6 +48,7 @@ import com.catherine.utils.Analysis;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
+import com.catherine.utils.security.CertificatesManager;
 import com.catherine.utils.security.CipherKit;
 import com.catherine.utils.security.DESCallback;
 import com.catherine.utils.security.KeystoreManager;
@@ -80,10 +83,11 @@ public class Main {
 		// testBST();
 		// testAVLTree();
 
-		 testCryptography();
+		// testCryptography();
+		testCertificates();
 
 		// testSplayTree();
-//		testBTree();
+		// testBTree();
 	}
 
 	public static void testBTree() {
@@ -99,9 +103,9 @@ public class Main {
 		System.out.println(myBTree.toString());
 		myBTree.remove(2);
 		System.out.println(myBTree.toString());
-//		myBTree.insert(25);
-//		System.out.println(myBTree.toString());
-//		myBTree.remove(20);
+		// myBTree.insert(25);
+		// System.out.println(myBTree.toString());
+		// myBTree.remove(20);
 
 	}
 
@@ -166,12 +170,21 @@ public class Main {
 	private static boolean lock;
 	private static PublicKey signatureKey;
 	private static byte[] signature;
-	private static String eString = "MIIEiDCCA3CgAwIBAgIINBcRBbJCIlAwDQYJKoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRlcm5ldCBBdXRob3JpdHkgRzIwHhcNMTcwNTE3MTA0MDM4WhcNMTcxMjI3MDAwMDAwWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEbMBkGA1UEAwwSYXR0ZXN0LmFuZHJvaWQuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/WOdZTFRe7oEPXnRCV9Semlk4jgrFRwKEFx8waQMC+SssJWyuHiHsMtF607NpTu0+mlPJ8C9NHankdPIsKtK6btzc+x0esg5U/IRD4+bQ5ZRH0kOPq2fiwX5Zbgd5+8R39b2bLfWGC2bdWYqlpoMK5mxEYmAUWHoBx3bGRWBGNA2//4zZKLjsIEHWEbK18NJoL7VRNhLD6Y/reWTICuCGw5khDolBpaL4GLBjFoHEAzShf1eS8naAEpjsCvyeaBW34dbaPRZtTHUaAD4mavBghmkFvyTE/owIBEkJUjIbG1iP9gvushBaNlc8r0k/mGY5jmn56aUdUgRgZ1pv+jDQIDAQABo4IBTzCCAUswHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdEQQWMBSCEmF0dGVzdC5hbmRyb2lkLmNvbTBoBggrBgEFBQcBAQRcMFowKwYIKwYBBQUHMAKGH2h0dHA6Ly9wa2kuZ29vZ2xlLmNvbS9HSUFHMi5jcnQwKwYIKwYBBQUHMAGGH2h0dHA6Ly9jbGllbnRzMS5nb29nbGUuY29tL29jc3AwHQYDVR0OBBYEFBJ+VKpLJSZ+uq91+ioQxtS79LW7MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUSt0GFhu89mi1dvWBtrtiGrpagS8wIQYDVR0gBBowGDAMBgorBgEEAdZ5AgUBMAgGBmeBDAECAjAwBgNVHR8EKTAnMCWgI6Ahhh9odHRwOi8vcGtpLmdvb2dsZS5jb20vR0lBRzIuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQCXh27m4mudK74L13qRZiy+Bksfnvbs/GDiokkApt5oyA/2MtM1E0lGckD/ccUjn5AuEly7qdtbg3cNNOAliVzlgUaGY6W6WTZxk4ivQW0njp9AkZE7ccuT2USM40Jtu/VAlFaFPWSwEphkrzUCcCc7r1SHjrkQqzDFRw9vetWUY1aIfl7VIFpmQvfM2uwLYgytlnPLlsl1Wk0PUmclsiD1H72kKzVKxNrJAnZMBx/7IpJcD7jXMLhgxin+qUPPm71u3jqKeRgKU+qeN7/JrNoWeIr+GY+m14TYcK8aZCZwzxVG3ywUyB7SVsGKQLKFFMTH1uOyR/YgJ3vrh2OT/1wb";
+	private static String attesCertificate = "MIIEiDCCA3CgAwIBAgIINBcRBbJCIlAwDQYJKoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRlcm5ldCBBdXRob3JpdHkgRzIwHhcNMTcwNTE3MTA0MDM4WhcNMTcxMjI3MDAwMDAwWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEbMBkGA1UEAwwSYXR0ZXN0LmFuZHJvaWQuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/WOdZTFRe7oEPXnRCV9Semlk4jgrFRwKEFx8waQMC+SssJWyuHiHsMtF607NpTu0+mlPJ8C9NHankdPIsKtK6btzc+x0esg5U/IRD4+bQ5ZRH0kOPq2fiwX5Zbgd5+8R39b2bLfWGC2bdWYqlpoMK5mxEYmAUWHoBx3bGRWBGNA2//4zZKLjsIEHWEbK18NJoL7VRNhLD6Y/reWTICuCGw5khDolBpaL4GLBjFoHEAzShf1eS8naAEpjsCvyeaBW34dbaPRZtTHUaAD4mavBghmkFvyTE/owIBEkJUjIbG1iP9gvushBaNlc8r0k/mGY5jmn56aUdUgRgZ1pv+jDQIDAQABo4IBTzCCAUswHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdEQQWMBSCEmF0dGVzdC5hbmRyb2lkLmNvbTBoBggrBgEFBQcBAQRcMFowKwYIKwYBBQUHMAKGH2h0dHA6Ly9wa2kuZ29vZ2xlLmNvbS9HSUFHMi5jcnQwKwYIKwYBBQUHMAGGH2h0dHA6Ly9jbGllbnRzMS5nb29nbGUuY29tL29jc3AwHQYDVR0OBBYEFBJ+VKpLJSZ+uq91+ioQxtS79LW7MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUSt0GFhu89mi1dvWBtrtiGrpagS8wIQYDVR0gBBowGDAMBgorBgEEAdZ5AgUBMAgGBmeBDAECAjAwBgNVHR8EKTAnMCWgI6Ahhh9odHRwOi8vcGtpLmdvb2dsZS5jb20vR0lBRzIuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQCXh27m4mudK74L13qRZiy+Bksfnvbs/GDiokkApt5oyA/2MtM1E0lGckD/ccUjn5AuEly7qdtbg3cNNOAliVzlgUaGY6W6WTZxk4ivQW0njp9AkZE7ccuT2USM40Jtu/VAlFaFPWSwEphkrzUCcCc7r1SHjrkQqzDFRw9vetWUY1aIfl7VIFpmQvfM2uwLYgytlnPLlsl1Wk0PUmclsiD1H72kKzVKxNrJAnZMBx/7IpJcD7jXMLhgxin+qUPPm71u3jqKeRgKU+qeN7/JrNoWeIr+GY+m14TYcK8aZCZwzxVG3ywUyB7SVsGKQLKFFMTH1uOyR/YgJ3vrh2OT/1wb";
+
+	private static void testCertificates() {
+		try {
+			X509Certificate cert = CertificatesManager.getX509Certificate(attesCertificate);
+			CertificatesManager.vaild(cert);
+			CertificatesManager.printCertificatesInfo(cert);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static void testCryptography() {
 		try {
 			final Analysis analysis = new Analysis();
-			KeystoreManager.printCertificatesInfo(KeystoreManager.getX509Certificate(eString));
 			KeystoreManager.printKeyStoreInfo();
 
 			TrackLog log1 = new TrackLog("General a single key");

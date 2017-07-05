@@ -18,6 +18,8 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.X509ObjectIdentifiers;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 
+import com.catherine.utils.security.certificate_extensions.itrface.AuthorityInformation;
+
 /**
  * 
  * @author Catherine
@@ -38,8 +40,10 @@ public class AuthorityInformationImpl implements AuthorityInformation {
 		accessIDs = new ArrayList<>();
 		accessMethods = new ArrayList<>();
 		accessLocations = new ArrayList<>();
-
 		byte[] extVal = cert.getExtensionValue(Extension.authorityInfoAccess.getId());
+		if (extVal == null)
+			return;
+
 		AuthorityInformationAccess aia = AuthorityInformationAccess
 				.getInstance(X509ExtensionUtil.fromExtensionValue(extVal));
 		// check if there is a URL to issuer's certificate
