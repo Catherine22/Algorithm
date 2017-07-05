@@ -10,6 +10,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
@@ -204,11 +205,12 @@ public class Main {
 					isJwsHeaderLegel = true;
 			}
 			
-			boolean isJwsSignatureLegel = false;
+			boolean isJwsSignatureLegel = jwsHelper.verifySignature("SHA256withRSA");
 			
 			
 
-			if (isJwsHeaderLegel)
+			System.out.println("isJwsSignatureLegel:"+isJwsSignatureLegel);
+			if (isJwsHeaderLegel && isJwsSignatureLegel)
 				System.out.println("Android attestion JWS 通過驗證！");
 			else
 				System.out.println("Android attestion JWS 驗證失败！");
