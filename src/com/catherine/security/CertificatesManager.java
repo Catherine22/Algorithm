@@ -48,8 +48,7 @@ public class CertificatesManager {
 		System.out.println("证书序列号:" + cf.getSerialNumber());
 		System.out.println("版本:" + cf.getVersion());
 		System.out.println("证书类型:" + cf.getType());
-		System.out.println(String.format("有效期限:%s 到 %s", cf.getNotBefore(),
-				cf.getNotAfter()));
+		System.out.println(String.format("有效期限:%s 到 %s", cf.getNotBefore(), cf.getNotAfter()));
 
 		Map<String, String> subjectDN = refactorDN(cf.getSubjectDN().getName());
 
@@ -62,15 +61,9 @@ public class CertificatesManager {
 			}
 		} else
 			su.append("null");
-		System.out
-				.println(String
-						.format("主体:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]",
-								su, subjectDN.getOrDefault("CN", ""),
-								subjectDN.getOrDefault("OU", ""),
-								subjectDN.getOrDefault("O", ""),
-								subjectDN.getOrDefault("L", ""),
-								subjectDN.getOrDefault("ST", ""),
-								subjectDN.getOrDefault("C", "")));
+		System.out.println(String.format("主体:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", su,
+				subjectDN.getOrDefault("CN", ""), subjectDN.getOrDefault("OU", ""), subjectDN.getOrDefault("O", ""),
+				subjectDN.getOrDefault("L", ""), subjectDN.getOrDefault("ST", ""), subjectDN.getOrDefault("C", "")));
 
 		Map<String, String> issuerDN = refactorDN(cf.getIssuerDN().getName());
 
@@ -83,24 +76,16 @@ public class CertificatesManager {
 			}
 		} else
 			i.append("null");
-		System.out
-				.println(String
-						.format("签发者:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]",
-								i, issuerDN.getOrDefault("CN", ""),
-								issuerDN.getOrDefault("OU", ""),
-								issuerDN.getOrDefault("O", ""),
-								issuerDN.getOrDefault("L", ""),
-								issuerDN.getOrDefault("ST", ""),
-								issuerDN.getOrDefault("C", "")));
+		System.out.println(String.format("签发者:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", i,
+				issuerDN.getOrDefault("CN", ""), issuerDN.getOrDefault("OU", ""), issuerDN.getOrDefault("O", ""),
+				issuerDN.getOrDefault("L", ""), issuerDN.getOrDefault("ST", ""), issuerDN.getOrDefault("C", "")));
 
 		System.out.println("签名算法:" + cf.getSigAlgName());
-		System.out.println(String.format("签名算法OID:%s (%s)", cf.getSigAlgOID(),
-				OIDMap.getName(cf.getSigAlgOID())));
-		String sigAlgParams = (cf.getSigAlgParams() == null) ? "null" : Base64
-				.getEncoder().encodeToString(cf.getSigAlgParams());
+		System.out.println(String.format("签名算法OID:%s (%s)", cf.getSigAlgOID(), OIDMap.getName(cf.getSigAlgOID())));
+		String sigAlgParams = (cf.getSigAlgParams() == null) ? "null"
+				: Base64.getEncoder().encodeToString(cf.getSigAlgParams());
 		System.out.println("签名参数:" + sigAlgParams);
-		System.out.println("签名:"
-				+ Base64.getEncoder().encodeToString(cf.getSignature()));
+		System.out.println("签名:" + Base64.getEncoder().encodeToString(cf.getSignature()));
 
 		System.out.println("证书的限制路径长度:" + cf.getBasicConstraints());
 
@@ -113,15 +98,13 @@ public class CertificatesManager {
 			System.out.println("Exponent:" + rsaPublicKey.getPublicExponent());
 
 		}
-		System.out.println("公鑰:"
-				+ Base64.getEncoder().encodeToString(publicKey.getEncoded()));
+		System.out.println("公鑰:" + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 
 		System.out.println("扩展(Certificate Extensions):[");
-		CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(
-				cf);
+		CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cf);
 		System.out.println(coarseGrainedExtensions.toString());
 		System.out.println("]");
-//		System.out.println("==>X509Certificate: " + cf.toString());
+		// System.out.println("==>X509Certificate: " + cf.toString());
 	}
 
 	/**
@@ -136,8 +119,7 @@ public class CertificatesManager {
 			throws CertificateException, FileNotFoundException {
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		return (X509Certificate) cf
-				.generateCertificate(new ByteArrayInputStream(Base64
-						.getDecoder().decode(certificates)));
+				.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(certificates)));
 	}
 
 	/**
@@ -147,8 +129,7 @@ public class CertificatesManager {
 	 * @throws CertificateException
 	 * @throws FileNotFoundException
 	 */
-	public static X509Certificate loadX509Certificate(String path)
-			throws CertificateException, FileNotFoundException {
+	public static X509Certificate loadX509Certificate(String path) throws CertificateException, FileNotFoundException {
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		FileInputStream fis = new FileInputStream(path); // 证书文件
 		return (X509Certificate) cf.generateCertificate(fis);
@@ -162,13 +143,10 @@ public class CertificatesManager {
 	 * @throws CertificateException
 	 * @throws IOException
 	 */
-	public static X509Certificate downloadCaIssuersCert(String urlString)
-			throws CertificateException, IOException {
+	public static X509Certificate downloadCaIssuersCert(String urlString) throws CertificateException, IOException {
 		URL url = new URL(urlString);
-		CertificateFactory certificateFactory = CertificateFactory
-				.getInstance("X.509");
-		return (X509Certificate) certificateFactory.generateCertificate(url
-				.openStream());
+		CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+		return (X509Certificate) certificateFactory.generateCertificate(url.openStream());
 	}
 
 	/**
@@ -184,16 +162,14 @@ public class CertificatesManager {
 	 * @param cert
 	 * @return
 	 */
-	public static boolean validate(X509Certificate cert,
-			X509Certificate rootCert) {
+	public static boolean validate(X509Certificate cert, X509Certificate rootCert) {
 		try {
 			// 1. Is today's date within validity period?
 			cert.checkValidity();// Certificate is active for current date
 
 			// 2. Is the issuing CA a trusted CA?
 			if (!cert.getIssuerDN().getName().equals(KeySet.TRUSTED_CA)) {
-				System.out
-						.println("This certificate published by a untrusted CA.");
+				System.out.println("This certificate published by a untrusted CA.");
 				return false;
 			}
 
@@ -203,15 +179,10 @@ public class CertificatesManager {
 
 			// 4. Does the domain name in the server’s certificate match the
 			// domain name of the server itself?
-			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(
-					cert);
+			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cert);
 
-			if (!coarseGrainedExtensions.getDNSNames().contains(
-					KeySet.TRUSTED_SSL_HOSTNAME)) {
-				System.out.println("Untruthed domain name:"
-						+ coarseGrainedExtensions.getDNSNames());
-				return false;
-			}
+			if (!coarseGrainedExtensions.getDNSNames().contains(KeySet.TRUSTED_SSL_HOSTNAME))
+				System.out.println("Untruthed domain name:" + coarseGrainedExtensions.getDNSNames());
 
 			return true;
 		} catch (CertificateExpiredException e) {
@@ -236,6 +207,7 @@ public class CertificatesManager {
 			System.out.println("SignatureException on signature errors.");
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.out.println("Failed to read certificate");
 			e.printStackTrace();
 		}
 		return false;
