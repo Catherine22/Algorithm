@@ -203,6 +203,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - [深入理解Android之Java Security]
   - [Server Authentication During SSL Handshake]
   - [Verifying a Certificate Chain]
+  - [JSON Web Signature (JWS) draft-jones-json-web-signature-01]
 
 ## License
 
@@ -252,6 +253,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
    [Server Authentication During SSL Handshake]:<https://docs.oracle.com/cd/E19693-01/819-0997/aakhc/index.html>
    [Verifying a Certificate Chain]:<https://docs.oracle.com/cd/E19316-01/820-2765/gdzea/index.html>
+   [JSON Web Signature (JWS) draft-jones-json-web-signature-01]:<http://self-issued.info/docs/draft-jones-json-web-signature-01.html>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
