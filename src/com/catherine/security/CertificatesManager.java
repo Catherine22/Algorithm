@@ -182,7 +182,7 @@ public class CertificatesManager {
 			// domain name of the server itself?
 			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cert);
 			if (!KeySet.TRUSTED_SSL_HOSTNAME.equals(coarseGrainedExtensions.getDNSNames())) {
-				System.out.println("");
+				System.out.println("This certificate's domain name isn't specified by the domain name you defined.");
 				return false;
 			}
 
@@ -209,6 +209,7 @@ public class CertificatesManager {
 			System.out.println("SignatureException on signature errors.");
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.out.println("Failed to read certificate");
 			e.printStackTrace();
 		}
 		return false;
