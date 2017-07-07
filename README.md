@@ -170,7 +170,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### B-Tree
 
-- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node so B-tree looks flatter or wider.
+- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.
 - There are 2 tips about memory you must know -- First, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from internal memory 100 times than external memory once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
 
@@ -191,6 +191,11 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 **[CipherKit]**
   - Encrypt or decrypt messages by the secret key/keyPair
+  
+**[CertificatesManager]**
+  - Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate.
+  - Get data by OID
+  - Validate a certificate
 
 **[CertificatesManager]**
   - Analysis and retrieve data such like certificate extensions, the signature and so on from a certificate.
