@@ -191,7 +191,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 **[CipherKit]**
   - Encrypt or decrypt messages by the secret key/keyPair
-  
+
 **[CertificatesManager]**
   - Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate.
   - Get data by OID
@@ -293,10 +293,11 @@ private void testJWS() {
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
-   [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
-   [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
-   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
-   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CertificatesManager.java>
+   [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/KeystoreManager.java>
+   [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/MessageDigestKit.java>
+   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
+   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
+   [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
