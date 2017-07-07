@@ -1,4 +1,4 @@
-package com.catherine.utils.security;
+package com.catherine.security;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,10 +17,10 @@ import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Enumeration;
 
@@ -95,27 +95,6 @@ public class KeystoreManager {
 		}
 		System.out.println("==>KeyStoreInfo: END");
 
-	}
-
-	/**
-	 * X.509是数字证书的规范，X.509只能携带公钥信息。<br>
-	 * 另外还有PKCS#7和12包含更多的一些信息。PKCS#12由于可包含私钥信息，而且文件本身还可通过密码保护，所以更适合信息交换。<br>
-	 * 常见的证书文件格式：".pem", ".cer", ".crt", ".der", ".p7b", ".p7c", ".p12"<br>
-	 * 总结：<br>
-	 * 1. 证书包含很多信息，但一般就是各种Key的内容。<br>
-	 * 2. 证书由CA签发。为了校验某个证书是否可信，往往需要把一整条证书链都校验一把，直到根证书。<br>
-	 * 3. 系统一般会集成很多根证书，这样免得使用者自己去下载根证书了。<br>
-	 * 4. 证书自己的格式通用为X.509，但是证书文件的格式却有很多。不同的系统可能支持不同的证书文件。
-	 * 
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 */
-	public static void printCertificatesInfo() throws CertificateException, FileNotFoundException {
-		CertificateFactory cff = CertificateFactory.getInstance("X.509");
-		FileInputStream fis1 = new FileInputStream(KeySet.CERTIFICATION_PATH); // 证书文件
-		X509Certificate cf = (X509Certificate) cff.generateCertificate(fis1);
-
-		System.out.println("==>X509Certificate: " + cf.toString());
 	}
 
 	/**
@@ -257,6 +236,7 @@ public class KeystoreManager {
 
 		callback.onResponse(privateKey);
 		callback.onResponse(modulus, exponent);
+		callback.onResponse(privateKey, publicKey);
 	}
 
 	/**
@@ -282,4 +262,20 @@ public class KeystoreManager {
 		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 		return publicKey;
 	}
+
+	/**
+	 * byte数组公钥转换成PublicKey类
+	 * 
+	 * @param encodedPublicKey
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	public static PublicKey converBytesToPublicKey(byte[] encodedPublicKey)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedPublicKey);
+		KeyFactory kf = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+		return kf.generatePublic(spec);
+	}
+
 }

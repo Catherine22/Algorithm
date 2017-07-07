@@ -168,6 +168,14 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 >If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
 
+### B-Tree
+
+- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node so B-tree looks flatter or wider.
+- There are 2 tips about memory you must know -- First, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from internal memory 100 times than external memory once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
+
+
+![B-tree][8]
+
 ## [Others]
   - Hailstone
   - Fibonacci
@@ -184,10 +192,18 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 **[CipherKit]**
   - Encrypt or decrypt messages by the secret key/keyPair
 
+**[CertificatesManager]**
+  - Analysis and retrieve data such like certificate extensions, the signature and so on from a certificate.
+  - Get data by OID
+  - Validate a certificate
+
 ## Reference
   - [Algorithms, 4th Edition]
-  - 邓俊辉《数据结构》
+  - 邓俊辉《数据结构 C++语言版》第三版
   - [深入理解Android之Java Security]
+  - [Server Authentication During SSL Handshake]
+  - [Verifying a Certificate Chain]
+  - [JSON Web Signature (JWS) draft-jones-json-web-signature-01]
 
 ## License
 
@@ -228,12 +244,16 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
-   [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
-   [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
    [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
    [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
    [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
+   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CertificatesManager.java>
 
+   [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
+   [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
+   [Server Authentication During SSL Handshake]:<https://docs.oracle.com/cd/E19693-01/819-0997/aakhc/index.html>
+   [Verifying a Certificate Chain]:<https://docs.oracle.com/cd/E19316-01/820-2765/gdzea/index.html>
+   [JSON Web Signature (JWS) draft-jones-json-web-signature-01]:<http://self-issued.info/docs/draft-jones-json-web-signature-01.html>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
@@ -242,3 +262,4 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   [5]: https://github.com/Catherine22/Algorithms/blob/master/res/i_d.png
   [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
   [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
+  [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png

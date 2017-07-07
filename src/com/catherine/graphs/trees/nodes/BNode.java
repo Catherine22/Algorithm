@@ -1,5 +1,5 @@
 package com.catherine.graphs.trees.nodes;
-
+//Binary tree
 public class BNode<E> implements Node<E> {
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）

@@ -1,5 +1,5 @@
 package com.catherine.graphs.trees.nodes;
-
+//Binary search tree
 public class BSTNode<E> implements Node<E> {
 
 	/**
