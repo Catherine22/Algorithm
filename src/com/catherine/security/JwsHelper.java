@@ -2,7 +2,6 @@ package com.catherine.security;
 
 import java.io.FileNotFoundException;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.SignatureException;
