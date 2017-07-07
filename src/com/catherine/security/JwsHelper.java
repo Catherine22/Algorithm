@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
@@ -74,16 +73,17 @@ public class JwsHelper {
 	 * reference:http://self-issued.info/docs/draft-jones-json-web-signature-01.
 	 * html
 	 * 
-	 * @param SignatureAlg
+	 * @param alg
 	 * @return
 	 */
-	public boolean verifySignature(String SignatureAlg) {
+	public boolean verifySignature(String alg) {
 		try {
-			Signature sig = Signature.getInstance("SHA256withRSA");
+			Signature sig = Signature.getInstance(alg);
 			sig.initVerify(getX5CCertificates().get(0));
 			byte[] signature = org.apache.commons.codec.binary.Base64.decodeBase64(getSignature());
-
-			return sig.verify(hash(signature));
+			String content = jws[0] + "." + jws[1];
+			sig.update(content.getBytes());
+			return sig.verify(signature);
 		} catch (SignatureException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
@@ -99,28 +99,5 @@ public class JwsHelper {
 		}
 		return false;
 
-	}
-
-	/**
-	 * Created SHA256 of input
-	 *
-	 * @param input
-	 * @return
-	 */
-	public byte[] hash(byte[] input) {
-		if (input != null) {
-			final MessageDigest digest;
-			try {
-				digest = MessageDigest.getInstance("SHA-256");
-				byte[] hashedBytes = input;
-				digest.update(hashedBytes, 0, hashedBytes.length);
-				return hashedBytes;
-			} catch (NoSuchAlgorithmException e) {
-				System.out.println("problem hashing \"" + input + "\" " + e.getMessage());
-			}
-		} else {
-			System.out.println("hash called with null input byte[]");
-		}
-		return null;
 	}
 }

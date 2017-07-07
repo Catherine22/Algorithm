@@ -9,7 +9,6 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
@@ -148,22 +147,6 @@ public class CertificatesManager {
 		URL url = new URL(urlString);
 		CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 		return (X509Certificate) certificateFactory.generateCertificate(url.openStream());
-	}
-
-	/**
-	 * 取得签名
-	 * 
-	 * @param data
-	 *            欲签名字串
-	 * @param alg
-	 *            签名算法
-	 * @param key
-	 *            私钥
-	 * @return
-	 */
-	public static byte[] getSignature(String data, String alg, PrivateKey key) {
-		
-		return null;
 	}
 
 	/**

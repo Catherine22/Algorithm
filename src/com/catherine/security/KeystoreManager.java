@@ -20,6 +20,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Enumeration;
 
@@ -235,6 +236,7 @@ public class KeystoreManager {
 
 		callback.onResponse(privateKey);
 		callback.onResponse(modulus, exponent);
+		callback.onResponse(privateKey, publicKey);
 	}
 
 	/**
@@ -259,6 +261,21 @@ public class KeystoreManager {
 		PublicKey publicKey = kFactory.generatePublic(rsaPublicKeySpec);
 		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 		return publicKey;
+	}
+
+	/**
+	 * byte数组公钥转换成PublicKey类
+	 * 
+	 * @param encodedPublicKey
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	public static PublicKey converBytesToPublicKey(byte[] encodedPublicKey)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedPublicKey);
+		KeyFactory kf = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+		return kf.generatePublic(spec);
 	}
 
 }

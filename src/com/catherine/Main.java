@@ -51,6 +51,7 @@ import com.catherine.utils.Analysis;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
+import com.catherine.security.Algorithm;
 import com.catherine.security.CertificatesManager;
 import com.catherine.security.CipherKit;
 import com.catherine.security.DESCallback;
@@ -63,15 +64,13 @@ import com.catherine.security.jws_object.AttestationResult;
 
 public class Main {
 
-	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3,
-			5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7,
-			1, 4, 2, 10, 4, -10 };
+	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
+			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
 	private static int[] input2 = new int[] { 38, 29, 28, 11, 4, 5, 2 };
 	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static int[] input4 = null;
 	private static int[] input5 = new int[] { 1 };
-	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12,
-			14, 10 };
+	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
@@ -175,41 +174,31 @@ public class Main {
 		mySplayTree1.traverseLevel();
 	}
 
-	private static boolean lock;
-	private static PublicKey signatureKey;
-	private static byte[] signature;
 	private static String attestationJws = "eyJhbGciOiJSUzI1NiIsIng1YyI6WyJNSUlFaURDQ0EzQ2dBd0lCQWdJSU5CY1JCYkpDSWxBd0RRWUpLb1pJaHZjTkFRRUxCUUF3U1RFTE1Ba0dBMVVFQmhNQ1ZWTXhFekFSQmdOVkJBb1RDa2R2YjJkc1pTQkpibU14SlRBakJnTlZCQU1USEVkdmIyZHNaU0JKYm5SbGNtNWxkQ0JCZFhSb2IzSnBkSGtnUnpJd0hoY05NVGN3TlRFM01UQTBNRE00V2hjTk1UY3hNakkzTURBd01EQXdXakJzTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHQTFVRUNBd0tRMkZzYVdadmNtNXBZVEVXTUJRR0ExVUVCd3dOVFc5MWJuUmhhVzRnVm1sbGR6RVRNQkVHQTFVRUNnd0tSMjl2WjJ4bElFbHVZekViTUJrR0ExVUVBd3dTWVhSMFpYTjBMbUZ1WkhKdmFXUXVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF2L1dPZFpURlJlN29FUFhuUkNWOVNlbWxrNGpnckZSd0tFRng4d2FRTUMrU3NzSld5dUhpSHNNdEY2MDdOcFR1MCttbFBKOEM5TkhhbmtkUElzS3RLNmJ0emMreDBlc2c1VS9JUkQ0K2JRNVpSSDBrT1BxMmZpd1g1WmJnZDUrOFIzOWIyYkxmV0dDMmJkV1lxbHBvTUs1bXhFWW1BVVdIb0J4M2JHUldCR05BMi8vNHpaS0xqc0lFSFdFYksxOE5Kb0w3VlJOaExENlkvcmVXVElDdUNHdzVraERvbEJwYUw0R0xCakZvSEVBelNoZjFlUzhuYUFFcGpzQ3Z5ZWFCVzM0ZGJhUFJadFRIVWFBRDRtYXZCZ2hta0Z2eVRFL293SUJFa0pVakliRzFpUDlndnVzaEJhTmxjOHIway9tR1k1am1uNTZhVWRVZ1JnWjFwditqRFFJREFRQUJvNElCVHpDQ0FVc3dIUVlEVlIwbEJCWXdGQVlJS3dZQkJRVUhBd0VHQ0NzR0FRVUZCd01DTUIwR0ExVWRFUVFXTUJTQ0VtRjBkR1Z6ZEM1aGJtUnliMmxrTG1OdmJUQm9CZ2dyQmdFRkJRY0JBUVJjTUZvd0t3WUlLd1lCQlFVSE1BS0dIMmgwZEhBNkx5OXdhMmt1WjI5dloyeGxMbU52YlM5SFNVRkhNaTVqY25Rd0t3WUlLd1lCQlFVSE1BR0dIMmgwZEhBNkx5OWpiR2xsYm5Sek1TNW5iMjluYkdVdVkyOXRMMjlqYzNBd0hRWURWUjBPQkJZRUZCSitWS3BMSlNaK3VxOTEraW9ReHRTNzlMVzdNQXdHQTFVZEV3RUIvd1FDTUFBd0h3WURWUjBqQkJnd0ZvQVVTdDBHRmh1ODltaTFkdldCdHJ0aUdycGFnUzh3SVFZRFZSMGdCQm93R0RBTUJnb3JCZ0VFQWRaNUFnVUJNQWdHQm1lQkRBRUNBakF3QmdOVkhSOEVLVEFuTUNXZ0k2QWhoaDlvZEhSd09pOHZjR3RwTG1kdmIyZHNaUzVqYjIwdlIwbEJSekl1WTNKc01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ1hoMjdtNG11ZEs3NEwxM3FSWml5K0Jrc2ZudmJzL0dEaW9ra0FwdDVveUEvMk10TTFFMGxHY2tEL2NjVWpuNUF1RWx5N3FkdGJnM2NOTk9BbGlWemxnVWFHWTZXNldUWnhrNGl2UVcwbmpwOUFrWkU3Y2N1VDJVU000MEp0dS9WQWxGYUZQV1N3RXBoa3J6VUNjQ2M3cjFTSGpya1FxekRGUnc5dmV0V1VZMWFJZmw3VklGcG1RdmZNMnV3TFlneXRsblBMbHNsMVdrMFBVbWNsc2lEMUg3MmtLelZLeE5ySkFuWk1CeC83SXBKY0Q3alhNTGhneGluK3FVUFBtNzF1M2pxS2VSZ0tVK3FlTjcvSnJOb1dlSXIrR1krbTE0VFljSzhhWkNad3p4VkczeXdVeUI3U1ZzR0tRTEtGRk1USDF1T3lSL1lnSjN2cmgyT1QvMXdiIiwiTUlJRDhEQ0NBdGlnQXdJQkFnSURBanFTTUEwR0NTcUdTSWIzRFFFQkN3VUFNRUl4Q3pBSkJnTlZCQVlUQWxWVE1SWXdGQVlEVlFRS0V3MUhaVzlVY25WemRDQkpibU11TVJzd0dRWURWUVFERXhKSFpXOVVjblZ6ZENCSGJHOWlZV3dnUTBFd0hoY05NVFV3TkRBeE1EQXdNREF3V2hjTk1UY3hNak14TWpNMU9UVTVXakJKTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHQTFVRUNoTUtSMjl2WjJ4bElFbHVZekVsTUNNR0ExVUVBeE1jUjI5dloyeGxJRWx1ZEdWeWJtVjBJRUYxZEdodmNtbDBlU0JITWpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSndxQkhkYzJGQ1JPZ2FqZ3VEWVVFaThpVC94R1hBYWlFWis0SS9GOFluT0llNWEvbUVOdHpKRWlhQjBDMU5QVmFUT2dtS1Y3dXRaWDhiaEJZQVN4RjZVUDd4YlNEajBVL2NrNXZ1UjZSWEV6L1JURGZSSy9KOVUzbjIrb0d0dmg4RFFVQjhvTUFOQTJnaHpVV3gvL3pvOHB6Y0dqcjFMRVFUcmZTVGU1dm44TVhIN2xOVmc4eTVLcjBMU3krckVhaHF5ekZQZEZVdUxIOGdaWVIvTm5hZytZeXVFTldsbGhNZ1p4VVlpK0ZPVnZ1T0FTaERHS3V5Nmx5QVJ4em1aRUFTZzhHRjZsU1dNVGxKMTRyYnRDTW9VL000aWFyTk96MFlEbDVjRGZzQ3gzbnV2UlRQUHVqNXh0OTcwSlNYQ0RUV0puWjM3RGhGNWlSNDN4YStPY21rQ0F3RUFBYU9CNXpDQjVEQWZCZ05WSFNNRUdEQVdnQlRBZXBob2pZbjdxd1ZrREJGOXFuMWx1TXJNVGpBZEJnTlZIUTRFRmdRVVN0MEdGaHU4OW1pMWR2V0J0cnRpR3JwYWdTOHdEZ1lEVlIwUEFRSC9CQVFEQWdFR01DNEdDQ3NHQVFVRkJ3RUJCQ0l3SURBZUJnZ3JCZ0VGQlFjd0FZWVNhSFIwY0RvdkwyY3VjM2x0WTJRdVkyOXRNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUF3TlFZRFZSMGZCQzR3TERBcW9DaWdKb1lrYUhSMGNEb3ZMMmN1YzNsdFkySXVZMjl0TDJOeWJITXZaM1JuYkc5aVlXd3VZM0pzTUJjR0ExVWRJQVFRTUE0d0RBWUtLd1lCQkFIV2VRSUZBVEFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBQ0U0RXA0Qi9FQlpEWGdLdDEwS0E5TENPMHE2ejZ4RjlrSVFZZmVlUUZmdEpmNmlaQlpHN2VzbldQRGNZQ1pxMng1SWdCelV6Q2VRb1kzSU50T0F5bkllWXhCdDJpV2ZCVUZpd0U2b1RHaHN5cGI3cUVaVk1TR05KNlpsZElEZk0vaXBwVVJhVlM2bmVTWUxBRUhEMExQUHN2Q1FrMEU2c3BkbGVIbTJTd2Flc1NEV0IrZVhrbkdWcHpZZWtRVkEvTGxlbGtWRVNXQTZNQ2FHc2VxUVNwU2Z6bWhDWGZWVURCdmRtV0Y5ZlpPR3JYVzJsT1VoMW1Fd3BXanFOMHl2S25GVUV2L1RtRk5XQXJDYnRGNG1tazJ4Y3BNeTQ4R2FPWk9OOW11SUFzMG5INUFxcTNWdUR4M0NRUms2KzBOdFpsbXd1OVJZMjNuSE1BY0lTd1NIR0ZnPT0iXX0.eyJub25jZSI6ImFuWU1GVndXYy9Vcms4U280R252SFVPNXgxeHo1Z3QyaThkRnJzUmI5WEU9IiwidGltZXN0YW1wTXMiOjE0OTkwNjU4NjkyMTMsImFwa1BhY2thZ2VOYW1lIjoiY29tLmNhdGhlcmluZS5zZWN1cml0eXNhbXBsZSIsImFwa0RpZ2VzdFNoYTI1NiI6InFOQTZ0UWo1MnZ5cGlTV0NVTTJaVkVyekpkeVRSMlovTUVjRFhGYU1iVlU9IiwiY3RzUHJvZmlsZU1hdGNoIjp0cnVlLCJleHRlbnNpb24iOiJDYlNsSFZOd21KZ20iLCJhcGtDZXJ0aWZpY2F0ZURpZ2VzdFNoYTI1NiI6WyI5bUxGUzNlSFdPQmNIbEE0TW1PRG1mR3Z6Z2tiZzJZU1Eyei93dzlsQ2Z3PSJdLCJiYXNpY0ludGVncml0eSI6dHJ1ZX0.rrRFPRWVLIk6DYo81UysVcWp40ql8wIhmmIehRDZA9QDknlE5lya4wMDFvvMmpMuN7uS5bKBJdz9kSjdxpmDruoLZNHRDqyXQBX_N3OdTzv4Hta3fCBEVzroz_L3qR_je2IM5KIdQHiSo2ssZOTahLdij3eTCzJx5bJXIcxfleQ2AoXh1ONDyE7qIQFSQhQ_QMYPCMUkzTi1vJaiV5EPCQVrnGFk1XClBtZnVPSudM-61PmcLnQr7OvJYeSvxwclSr7BEhHrhZXxg-Vp5cCAGINAoeop7zfrXdU0SK-9P891JyoGE2XZB3yEcR0l_j8zJpPWfjTGBpKDqIQwa-y32g";
 
 	private static void testCertificates() {
-
 		try {
 			JwsHelper jwsHelper = new JwsHelper(attestationJws);
 			System.out.println("alg:" + jwsHelper.getAlg());
-			AttestationResult result = new AttestationResult(
-					jwsHelper.getDecodedPayload());
+			AttestationResult result = new AttestationResult(jwsHelper.getDecodedPayload());
 			System.out.println(result);
 
 			List<X509Certificate> certs = jwsHelper.getX5CCertificates();
 
-			X509Certificate rootCert = CertificatesManager
-					.downloadCaIssuersCert(KeySet.GIAG2_URL);
+			X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
 
-			//Just verify one of the certificates  which is belonged to "attest.android.com" in this case.
+			// Just verify one of the certificates which is belonged to
+			// "attest.android.com" in this case.
 			boolean isJwsHeaderLegel = false;
 			for (X509Certificate cert : certs) {
 				boolean isValid = CertificatesManager.validate(cert, rootCert);
-				System.out.println("validate:" + isValid);
 				CertificatesManager.printCertificatesInfo(cert);
-
 				if (isValid == true)
 					isJwsHeaderLegel = true;
 			}
-			
-			boolean isJwsSignatureLegel = jwsHelper.verifySignature("SHA256withRSA");
-			
-			
 
-			System.out.println("isJwsSignatureLegel:"+isJwsSignatureLegel);
+			// Verify the signature of JWS
+			boolean isJwsSignatureLegel = jwsHelper.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
 			if (isJwsHeaderLegel && isJwsSignatureLegel)
 				System.out.println("Android attestion JWS 通過驗證！");
 			else
@@ -249,8 +238,7 @@ public class Main {
 					try {
 						TrackLog log4 = new TrackLog("Decrypt the RSA keyPair");
 						analysis.startTracking(log4);
-						KeystoreManager.converStringToPublicKey(modulus,
-								exponent);
+						KeystoreManager.converStringToPublicKey(modulus, exponent);
 						analysis.endTracking(log4);
 						analysis.printTrack(log4);
 					} catch (ClassNotFoundException e) {
@@ -264,6 +252,11 @@ public class Main {
 
 				@Override
 				public void onResponse(PrivateKey privateKey) {
+				}
+
+				@Override
+				public void onResponse(PrivateKey privateKey, PublicKey publicKey) {
+
 				}
 			});
 
@@ -285,8 +278,7 @@ public class Main {
 			analysis.endTracking(log7);
 			analysis.printTrack(log7);
 
-			final TrackLog log8 = new TrackLog(
-					"Encrypt a string from the secretKey key");
+			final TrackLog log8 = new TrackLog("Encrypt a string from the secretKey key");
 			analysis.startTracking(log8);
 			final Key sKey = KeystoreManager.generateKey();
 			CipherKit.encryptDES(sKey, "Hi there!", new DESCallback() {
@@ -297,11 +289,9 @@ public class Main {
 					analysis.printTrack(log8);
 
 					try {
-						TrackLog log9 = new TrackLog(
-								"Decrypt a string from the secretKey key");
+						TrackLog log9 = new TrackLog("Decrypt a string from the secretKey key");
 						analysis.startTracking(log9);
-						System.out.println(CipherKit.decryptDES(sKey, iv,
-								message));
+						System.out.println(CipherKit.decryptDES(sKey, iv, message));
 						analysis.endTracking(log9);
 						analysis.printTrack(log9);
 					} catch (InvalidKeyException e) {
@@ -325,89 +315,63 @@ public class Main {
 			// verify files
 			final TrackLog log10 = new TrackLog("Signing the file ");
 			analysis.startTracking(log10);
-			lock = true;
 			KeystoreManager.generateRSAKeyPair(new RSACallback() {
 
 				@Override
 				public void onResponse(String modulus, String exponent) {
-					try {
-						signatureKey = (PublicKey) KeystoreManager
-								.converStringToPublicKey(modulus, exponent);
-						if (!lock) {
-							TrackLog log11 = new TrackLog(
-									"verifing the file with signature ");
-							analysis.startTracking(log11);
-							boolean islegel = MessageDigestKit.verifySignature(
-									signature, "assets/metals.jpg",
-									signatureKey);
-							System.out.println("Signature: "
-									+ Base64.getEncoder().encodeToString(
-											signature));
-							System.out
-									.println("Signature: Is this file legel? "
-											+ islegel);
-							analysis.endTracking(log11);
-							analysis.printTrack(log11);
-						}
-						lock = false;
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					} catch (NoSuchAlgorithmException e) {
-						e.printStackTrace();
-					} catch (InvalidKeySpecException e) {
-						e.printStackTrace();
-					} catch (InvalidKeyException e) {
-						e.printStackTrace();
-					} catch (SignatureException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
 
 				@Override
 				public void onResponse(PrivateKey privateKey) {
+				}
+
+				@Override
+				public void onResponse(PrivateKey privateKey, PublicKey publicKey) {
+
 					try {
-						signature = MessageDigestKit.signFiles(
-								"assets/metals.jpg", privateKey);
+						byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", Algorithm.ALG_MD5_WITH_RSA,
+								privateKey);
 						analysis.endTracking(log10);
 						analysis.printTrack(log10);
 
-						if (!lock) {
-							TrackLog log11 = new TrackLog(
-									"verifing the file with signature ");
-							analysis.startTracking(log11);
-							boolean islegel = MessageDigestKit.verifySignature(
-									signature, "assets/metals.jpg",
-									signatureKey);
-							System.out.println("Signature: "
-									+ Base64.getEncoder().encodeToString(
-											signature));
-							System.out
-									.println("Signature: Is this file legel? "
-											+ islegel);
-							analysis.endTracking(log11);
-							analysis.printTrack(log11);
-						}
-						lock = false;
+						TrackLog log11 = new TrackLog("verifing the file with signature ");
+						analysis.startTracking(log11);
+						boolean islegel = MessageDigestKit.verifyFileSignature(signature, Algorithm.ALG_MD5_WITH_RSA,
+								"assets/metals.jpg", publicKey);
+
+						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
+						System.out.println("Signature: Is this file legel? " + islegel);
+						analysis.endTracking(log11);
+						analysis.printTrack(log11);
+
+						signature = MessageDigestKit.sign(attestationJws.getBytes(), Algorithm.ALG_SHA256_WITH_RSA,
+								privateKey);
+						islegel = MessageDigestKit.verifySignature(signature, Algorithm.ALG_SHA256_WITH_RSA, publicKey,
+								attestationJws.getBytes());
+
+						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
+						System.out.println("Signature: Is this file legel? " + islegel);
 					} catch (InvalidKeyException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (SignatureException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
 				}
 			});
 
-		} catch (IllegalBlockSizeException | NoSuchPaddingException
-				| BadPaddingException | InvalidKeyException
-				| UnrecoverableKeyException | CertificateException
-				| NoSuchAlgorithmException | KeyStoreException | IOException
-				| InvalidKeySpecException | ClassNotFoundException e1) {
+		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
+				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
+				| IOException | InvalidKeySpecException |
+
+				ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
 	}
@@ -431,8 +395,7 @@ public class Main {
 					@Override
 					public void onResponse(boolean result) {
 						myAVLTree1.traverseLevel();
-						System.out.println("Is that still an AVL tree? "
-								+ result);
+						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
 			}
@@ -457,8 +420,7 @@ public class Main {
 					@Override
 					public void onResponse(boolean result) {
 						myAVLTree2.traverseLevel();
-						System.out.println("Is that still an AVL tree? "
-								+ result);
+						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
 			}
@@ -482,8 +444,7 @@ public class Main {
 					@Override
 					public void onResponse(boolean result) {
 						myAVLTree3.traverseLevel();
-						System.out.println("Is that still an AVL tree? "
-								+ result);
+						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
 			}
@@ -511,8 +472,7 @@ public class Main {
 					@Override
 					public void onResponse(boolean result) {
 						myAVLTree4.traverseLevel();
-						System.out.println("Is that still an AVL tree? "
-								+ result);
+						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
 			}
@@ -539,8 +499,7 @@ public class Main {
 					@Override
 					public void onResponse(boolean result) {
 						myAVLTree5.traverseLevel();
-						System.out.println("Is that still an AVL tree? "
-								+ result);
+						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
 			}
@@ -673,8 +632,8 @@ public class Main {
 		System.out.println(ns.convertDecimalToOthers(33646, 35));
 		System.out.println(Integer.toString(33646, 35));
 		Others other = new Others();
-		boolean b = other
-				.isBracketsCorrect("(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -Math.pow(((1 - Math.sqrt(5))/2), n))");
+		boolean b = other.isBracketsCorrect(
+				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -Math.pow(((1 - Math.sqrt(5))/2), n))");
 		System.out.println(b + "");
 		SortableStackPermutation ssp = new SortableStackPermutation();
 		Stack<Integer> oriS = new Stack<>();
@@ -731,12 +690,9 @@ public class Main {
 
 	public static void testSearch() {
 		Search search = new Search();
-		System.out.println("binSearch:"
-				+ search.binSearch(input6, 1, 0, input6.length - 1));
-		System.out.println("binSearch2:"
-				+ search.binSearch2(input6, 1, 0, input6.length - 1));
-		System.out.println("fibSearch:"
-				+ search.fibSearch(input6, 1, 0, input6.length - 1));
+		System.out.println("binSearch:" + search.binSearch(input6, 1, 0, input6.length - 1));
+		System.out.println("binSearch2:" + search.binSearch2(input6, 1, 0, input6.length - 1));
+		System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0, input6.length - 1));
 	}
 
 	public static void testSequence() {
@@ -754,18 +710,15 @@ public class Main {
 		}));
 
 		printArray("removeDuplicates", sequence.removeDuplicates(input1));
-		printArray("removeDuplicatesAndSort1",
-				sequence.removeDuplicatesAndSort1(input6));
-		printArray("removeDuplicatesAndSort2",
-				sequence.removeDuplicatesAndSort2(input6));
+		printArray("removeDuplicatesAndSort1", sequence.removeDuplicatesAndSort1(input6));
+		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input6));
 
 	}
 
 	public static void testTuringMachine() {
 		// Increment on Turing Machine
 		TuringMachine tMachine = new TuringMachine();
-		printArray("TuringMachine",
-				tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
+		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
 
 		Sequence sequence = new Sequence();
 		// 2 ways to increase the capacity
@@ -813,8 +766,7 @@ public class Main {
 	}
 
 	public static void printArray(String title, int[] array) {
-		System.out
-				.println("--------------------------------------------------------");
+		System.out.println("--------------------------------------------------------");
 		if (array == null)
 			System.out.println("null");
 		else {
@@ -827,13 +779,11 @@ public class Main {
 					System.out.println("]");
 			}
 		}
-		System.out
-				.println("--------------------------------------------------------");
+		System.out.println("--------------------------------------------------------");
 	}
 
 	public static void printList(String title, List<Integer> list) {
-		System.out
-				.println("--------------------------------------------------------");
+		System.out.println("--------------------------------------------------------");
 		if (list == null)
 			System.out.println("null");
 		else {
@@ -846,8 +796,7 @@ public class Main {
 					System.out.println("]");
 			}
 		}
-		System.out
-				.println("--------------------------------------------------------");
+		System.out.println("--------------------------------------------------------");
 	}
 
 }

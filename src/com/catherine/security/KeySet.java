@@ -1,8 +1,8 @@
 package com.catherine.security;
 
 public class KeySet {
-	// or KeyStore.getDefaultType() for .keystore
-	public final static String KEYSTORE_TYPE = "JKS";
+	
+	public final static String KEYSTORE_TYPE = "JKS";// or KeyStore.getDefaultType() for .keystore
 	public final static String KEYSTORE_PATH = "assets/productiongg.jks";
 	public final static String KEYSTORE_PW = "ggcompany123!";
 	public final static String KEYSTORE_ALIAS = "productiongg";
