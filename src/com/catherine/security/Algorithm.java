@@ -2,7 +2,11 @@ package com.catherine.security;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * 
+ * @author Catherine
+ *
+ */
 public class Algorithm {
 	public final static String CHARSET = "UTF8";
 	/**

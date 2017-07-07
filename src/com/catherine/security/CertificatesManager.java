@@ -168,7 +168,8 @@ public class CertificatesManager {
 			cert.checkValidity();// Certificate is active for current date
 
 			// 2. Is the issuing CA a trusted CA?
-			if (!cert.getIssuerDN().getName().equals(KeySet.TRUSTED_CA)) {
+            Map<String, String> issuerDN = refactorDN(cert.getIssuerDN().getName());
+            if (!issuerDN.getOrDefault("CN", "").trim().equals(KeySet.TRUSTED_CA.trim())) {
 				System.out.println("This certificate published by a untrusted CA.");
 				return false;
 			}
@@ -182,7 +183,7 @@ public class CertificatesManager {
 			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cert);
 
 			if (!coarseGrainedExtensions.getDNSNames().contains(KeySet.TRUSTED_SSL_HOSTNAME))
-				System.out.println("Untruthed domain name:" + coarseGrainedExtensions.getDNSNames());
+				System.out.println("Untrusted domain name:" + coarseGrainedExtensions.getDNSNames());
 
 			return true;
 		} catch (CertificateExpiredException e) {
@@ -215,7 +216,7 @@ public class CertificatesManager {
 
 	private static Map<String, String> refactorDN(String name) {
 		Map<String, String> map = new HashMap<>();
-		String[] pairs = name.split(", ");
+		String[] pairs = name.split(",");
 		for (int i = 0; i < pairs.length; i++) {
 			String pair = pairs[i];
 			String[] keyValue = pair.split("=");
