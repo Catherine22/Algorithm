@@ -10,6 +10,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
@@ -23,6 +24,8 @@ import java.util.Stack;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import org.json.JSONException;
 
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
@@ -48,13 +51,16 @@ import com.catherine.utils.Analysis;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
 import com.catherine.utils.TrackLog;
+import com.catherine.security.Algorithm;
 import com.catherine.security.CertificatesManager;
 import com.catherine.security.CipherKit;
 import com.catherine.security.DESCallback;
+import com.catherine.security.JwsHelper;
 import com.catherine.security.KeySet;
 import com.catherine.security.KeystoreManager;
 import com.catherine.security.MessageDigestKit;
 import com.catherine.security.RSACallback;
+import com.catherine.security.jws_object.AttestationResult;
 
 public class Main {
 
@@ -168,17 +174,36 @@ public class Main {
 		mySplayTree1.traverseLevel();
 	}
 
-	private static boolean lock;
-	private static PublicKey signatureKey;
-	private static byte[] signature;
-	private static String attesCertificate = "MIIEiDCCA3CgAwIBAgIINBcRBbJCIlAwDQYJKoZIhvcNAQELBQAwSTELMAkGA1UEBhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRlcm5ldCBBdXRob3JpdHkgRzIwHhcNMTcwNTE3MTA0MDM4WhcNMTcxMjI3MDAwMDAwWjBsMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEbMBkGA1UEAwwSYXR0ZXN0LmFuZHJvaWQuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/WOdZTFRe7oEPXnRCV9Semlk4jgrFRwKEFx8waQMC+SssJWyuHiHsMtF607NpTu0+mlPJ8C9NHankdPIsKtK6btzc+x0esg5U/IRD4+bQ5ZRH0kOPq2fiwX5Zbgd5+8R39b2bLfWGC2bdWYqlpoMK5mxEYmAUWHoBx3bGRWBGNA2//4zZKLjsIEHWEbK18NJoL7VRNhLD6Y/reWTICuCGw5khDolBpaL4GLBjFoHEAzShf1eS8naAEpjsCvyeaBW34dbaPRZtTHUaAD4mavBghmkFvyTE/owIBEkJUjIbG1iP9gvushBaNlc8r0k/mGY5jmn56aUdUgRgZ1pv+jDQIDAQABo4IBTzCCAUswHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMB0GA1UdEQQWMBSCEmF0dGVzdC5hbmRyb2lkLmNvbTBoBggrBgEFBQcBAQRcMFowKwYIKwYBBQUHMAKGH2h0dHA6Ly9wa2kuZ29vZ2xlLmNvbS9HSUFHMi5jcnQwKwYIKwYBBQUHMAGGH2h0dHA6Ly9jbGllbnRzMS5nb29nbGUuY29tL29jc3AwHQYDVR0OBBYEFBJ+VKpLJSZ+uq91+ioQxtS79LW7MAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUSt0GFhu89mi1dvWBtrtiGrpagS8wIQYDVR0gBBowGDAMBgorBgEEAdZ5AgUBMAgGBmeBDAECAjAwBgNVHR8EKTAnMCWgI6Ahhh9odHRwOi8vcGtpLmdvb2dsZS5jb20vR0lBRzIuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQCXh27m4mudK74L13qRZiy+Bksfnvbs/GDiokkApt5oyA/2MtM1E0lGckD/ccUjn5AuEly7qdtbg3cNNOAliVzlgUaGY6W6WTZxk4ivQW0njp9AkZE7ccuT2USM40Jtu/VAlFaFPWSwEphkrzUCcCc7r1SHjrkQqzDFRw9vetWUY1aIfl7VIFpmQvfM2uwLYgytlnPLlsl1Wk0PUmclsiD1H72kKzVKxNrJAnZMBx/7IpJcD7jXMLhgxin+qUPPm71u3jqKeRgKU+qeN7/JrNoWeIr+GY+m14TYcK8aZCZwzxVG3ywUyB7SVsGKQLKFFMTH1uOyR/YgJ3vrh2OT/1wb";
+	private static String attestationJws = "eyJhbGciOiJSUzI1NiIsIng1YyI6WyJNSUlFaURDQ0EzQ2dBd0lCQWdJSU5CY1JCYkpDSWxBd0RRWUpLb1pJaHZjTkFRRUxCUUF3U1RFTE1Ba0dBMVVFQmhNQ1ZWTXhFekFSQmdOVkJBb1RDa2R2YjJkc1pTQkpibU14SlRBakJnTlZCQU1USEVkdmIyZHNaU0JKYm5SbGNtNWxkQ0JCZFhSb2IzSnBkSGtnUnpJd0hoY05NVGN3TlRFM01UQTBNRE00V2hjTk1UY3hNakkzTURBd01EQXdXakJzTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHQTFVRUNBd0tRMkZzYVdadmNtNXBZVEVXTUJRR0ExVUVCd3dOVFc5MWJuUmhhVzRnVm1sbGR6RVRNQkVHQTFVRUNnd0tSMjl2WjJ4bElFbHVZekViTUJrR0ExVUVBd3dTWVhSMFpYTjBMbUZ1WkhKdmFXUXVZMjl0TUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF2L1dPZFpURlJlN29FUFhuUkNWOVNlbWxrNGpnckZSd0tFRng4d2FRTUMrU3NzSld5dUhpSHNNdEY2MDdOcFR1MCttbFBKOEM5TkhhbmtkUElzS3RLNmJ0emMreDBlc2c1VS9JUkQ0K2JRNVpSSDBrT1BxMmZpd1g1WmJnZDUrOFIzOWIyYkxmV0dDMmJkV1lxbHBvTUs1bXhFWW1BVVdIb0J4M2JHUldCR05BMi8vNHpaS0xqc0lFSFdFYksxOE5Kb0w3VlJOaExENlkvcmVXVElDdUNHdzVraERvbEJwYUw0R0xCakZvSEVBelNoZjFlUzhuYUFFcGpzQ3Z5ZWFCVzM0ZGJhUFJadFRIVWFBRDRtYXZCZ2hta0Z2eVRFL293SUJFa0pVakliRzFpUDlndnVzaEJhTmxjOHIway9tR1k1am1uNTZhVWRVZ1JnWjFwditqRFFJREFRQUJvNElCVHpDQ0FVc3dIUVlEVlIwbEJCWXdGQVlJS3dZQkJRVUhBd0VHQ0NzR0FRVUZCd01DTUIwR0ExVWRFUVFXTUJTQ0VtRjBkR1Z6ZEM1aGJtUnliMmxrTG1OdmJUQm9CZ2dyQmdFRkJRY0JBUVJjTUZvd0t3WUlLd1lCQlFVSE1BS0dIMmgwZEhBNkx5OXdhMmt1WjI5dloyeGxMbU52YlM5SFNVRkhNaTVqY25Rd0t3WUlLd1lCQlFVSE1BR0dIMmgwZEhBNkx5OWpiR2xsYm5Sek1TNW5iMjluYkdVdVkyOXRMMjlqYzNBd0hRWURWUjBPQkJZRUZCSitWS3BMSlNaK3VxOTEraW9ReHRTNzlMVzdNQXdHQTFVZEV3RUIvd1FDTUFBd0h3WURWUjBqQkJnd0ZvQVVTdDBHRmh1ODltaTFkdldCdHJ0aUdycGFnUzh3SVFZRFZSMGdCQm93R0RBTUJnb3JCZ0VFQWRaNUFnVUJNQWdHQm1lQkRBRUNBakF3QmdOVkhSOEVLVEFuTUNXZ0k2QWhoaDlvZEhSd09pOHZjR3RwTG1kdmIyZHNaUzVqYjIwdlIwbEJSekl1WTNKc01BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ1hoMjdtNG11ZEs3NEwxM3FSWml5K0Jrc2ZudmJzL0dEaW9ra0FwdDVveUEvMk10TTFFMGxHY2tEL2NjVWpuNUF1RWx5N3FkdGJnM2NOTk9BbGlWemxnVWFHWTZXNldUWnhrNGl2UVcwbmpwOUFrWkU3Y2N1VDJVU000MEp0dS9WQWxGYUZQV1N3RXBoa3J6VUNjQ2M3cjFTSGpya1FxekRGUnc5dmV0V1VZMWFJZmw3VklGcG1RdmZNMnV3TFlneXRsblBMbHNsMVdrMFBVbWNsc2lEMUg3MmtLelZLeE5ySkFuWk1CeC83SXBKY0Q3alhNTGhneGluK3FVUFBtNzF1M2pxS2VSZ0tVK3FlTjcvSnJOb1dlSXIrR1krbTE0VFljSzhhWkNad3p4VkczeXdVeUI3U1ZzR0tRTEtGRk1USDF1T3lSL1lnSjN2cmgyT1QvMXdiIiwiTUlJRDhEQ0NBdGlnQXdJQkFnSURBanFTTUEwR0NTcUdTSWIzRFFFQkN3VUFNRUl4Q3pBSkJnTlZCQVlUQWxWVE1SWXdGQVlEVlFRS0V3MUhaVzlVY25WemRDQkpibU11TVJzd0dRWURWUVFERXhKSFpXOVVjblZ6ZENCSGJHOWlZV3dnUTBFd0hoY05NVFV3TkRBeE1EQXdNREF3V2hjTk1UY3hNak14TWpNMU9UVTVXakJKTVFzd0NRWURWUVFHRXdKVlV6RVRNQkVHQTFVRUNoTUtSMjl2WjJ4bElFbHVZekVsTUNNR0ExVUVBeE1jUjI5dloyeGxJRWx1ZEdWeWJtVjBJRUYxZEdodmNtbDBlU0JITWpDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBSndxQkhkYzJGQ1JPZ2FqZ3VEWVVFaThpVC94R1hBYWlFWis0SS9GOFluT0llNWEvbUVOdHpKRWlhQjBDMU5QVmFUT2dtS1Y3dXRaWDhiaEJZQVN4RjZVUDd4YlNEajBVL2NrNXZ1UjZSWEV6L1JURGZSSy9KOVUzbjIrb0d0dmg4RFFVQjhvTUFOQTJnaHpVV3gvL3pvOHB6Y0dqcjFMRVFUcmZTVGU1dm44TVhIN2xOVmc4eTVLcjBMU3krckVhaHF5ekZQZEZVdUxIOGdaWVIvTm5hZytZeXVFTldsbGhNZ1p4VVlpK0ZPVnZ1T0FTaERHS3V5Nmx5QVJ4em1aRUFTZzhHRjZsU1dNVGxKMTRyYnRDTW9VL000aWFyTk96MFlEbDVjRGZzQ3gzbnV2UlRQUHVqNXh0OTcwSlNYQ0RUV0puWjM3RGhGNWlSNDN4YStPY21rQ0F3RUFBYU9CNXpDQjVEQWZCZ05WSFNNRUdEQVdnQlRBZXBob2pZbjdxd1ZrREJGOXFuMWx1TXJNVGpBZEJnTlZIUTRFRmdRVVN0MEdGaHU4OW1pMWR2V0J0cnRpR3JwYWdTOHdEZ1lEVlIwUEFRSC9CQVFEQWdFR01DNEdDQ3NHQVFVRkJ3RUJCQ0l3SURBZUJnZ3JCZ0VGQlFjd0FZWVNhSFIwY0RvdkwyY3VjM2x0WTJRdVkyOXRNQklHQTFVZEV3RUIvd1FJTUFZQkFmOENBUUF3TlFZRFZSMGZCQzR3TERBcW9DaWdKb1lrYUhSMGNEb3ZMMmN1YzNsdFkySXVZMjl0TDJOeWJITXZaM1JuYkc5aVlXd3VZM0pzTUJjR0ExVWRJQVFRTUE0d0RBWUtLd1lCQkFIV2VRSUZBVEFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBQ0U0RXA0Qi9FQlpEWGdLdDEwS0E5TENPMHE2ejZ4RjlrSVFZZmVlUUZmdEpmNmlaQlpHN2VzbldQRGNZQ1pxMng1SWdCelV6Q2VRb1kzSU50T0F5bkllWXhCdDJpV2ZCVUZpd0U2b1RHaHN5cGI3cUVaVk1TR05KNlpsZElEZk0vaXBwVVJhVlM2bmVTWUxBRUhEMExQUHN2Q1FrMEU2c3BkbGVIbTJTd2Flc1NEV0IrZVhrbkdWcHpZZWtRVkEvTGxlbGtWRVNXQTZNQ2FHc2VxUVNwU2Z6bWhDWGZWVURCdmRtV0Y5ZlpPR3JYVzJsT1VoMW1Fd3BXanFOMHl2S25GVUV2L1RtRk5XQXJDYnRGNG1tazJ4Y3BNeTQ4R2FPWk9OOW11SUFzMG5INUFxcTNWdUR4M0NRUms2KzBOdFpsbXd1OVJZMjNuSE1BY0lTd1NIR0ZnPT0iXX0.eyJub25jZSI6ImFuWU1GVndXYy9Vcms4U280R252SFVPNXgxeHo1Z3QyaThkRnJzUmI5WEU9IiwidGltZXN0YW1wTXMiOjE0OTkwNjU4NjkyMTMsImFwa1BhY2thZ2VOYW1lIjoiY29tLmNhdGhlcmluZS5zZWN1cml0eXNhbXBsZSIsImFwa0RpZ2VzdFNoYTI1NiI6InFOQTZ0UWo1MnZ5cGlTV0NVTTJaVkVyekpkeVRSMlovTUVjRFhGYU1iVlU9IiwiY3RzUHJvZmlsZU1hdGNoIjp0cnVlLCJleHRlbnNpb24iOiJDYlNsSFZOd21KZ20iLCJhcGtDZXJ0aWZpY2F0ZURpZ2VzdFNoYTI1NiI6WyI5bUxGUzNlSFdPQmNIbEE0TW1PRG1mR3Z6Z2tiZzJZU1Eyei93dzlsQ2Z3PSJdLCJiYXNpY0ludGVncml0eSI6dHJ1ZX0.rrRFPRWVLIk6DYo81UysVcWp40ql8wIhmmIehRDZA9QDknlE5lya4wMDFvvMmpMuN7uS5bKBJdz9kSjdxpmDruoLZNHRDqyXQBX_N3OdTzv4Hta3fCBEVzroz_L3qR_je2IM5KIdQHiSo2ssZOTahLdij3eTCzJx5bJXIcxfleQ2AoXh1ONDyE7qIQFSQhQ_QMYPCMUkzTi1vJaiV5EPCQVrnGFk1XClBtZnVPSudM-61PmcLnQr7OvJYeSvxwclSr7BEhHrhZXxg-Vp5cCAGINAoeop7zfrXdU0SK-9P891JyoGE2XZB3yEcR0l_j8zJpPWfjTGBpKDqIQwa-y32g";
 
 	private static void testCertificates() {
 		try {
-			X509Certificate cert = CertificatesManager.getX509Certificate(attesCertificate);
+			JwsHelper jwsHelper = new JwsHelper(attestationJws);
+			System.out.println("alg:" + jwsHelper.getAlg());
+			AttestationResult result = new AttestationResult(jwsHelper.getDecodedPayload());
+			System.out.println(result);
+
+			List<X509Certificate> certs = jwsHelper.getX5CCertificates();
+
 			X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
-			CertificatesManager.validate(cert, rootCert);
-			CertificatesManager.printCertificatesInfo(cert);
+
+			// Just verify one of the certificates which is belonged to
+			// "attest.android.com" in this case.
+			boolean isJwsHeaderLegel = false;
+			for (X509Certificate cert : certs) {
+				boolean isValid = CertificatesManager.validate(cert, rootCert);
+				CertificatesManager.printCertificatesInfo(cert);
+				if (isValid == true)
+					isJwsHeaderLegel = true;
+			}
+
+			// Verify the signature of JWS
+			boolean isJwsSignatureLegel = jwsHelper.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
+			if (isJwsHeaderLegel && isJwsSignatureLegel)
+				System.out.println("Android attestion JWS 通過驗證！");
+			else
+				System.out.println("Android attestion JWS 驗證失败！");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -227,6 +252,11 @@ public class Main {
 
 				@Override
 				public void onResponse(PrivateKey privateKey) {
+				}
+
+				@Override
+				public void onResponse(PrivateKey privateKey, PublicKey publicKey) {
+
 				}
 			});
 
@@ -285,73 +315,63 @@ public class Main {
 			// verify files
 			final TrackLog log10 = new TrackLog("Signing the file ");
 			analysis.startTracking(log10);
-			lock = true;
 			KeystoreManager.generateRSAKeyPair(new RSACallback() {
 
 				@Override
 				public void onResponse(String modulus, String exponent) {
-					try {
-						signatureKey = (PublicKey) KeystoreManager.converStringToPublicKey(modulus, exponent);
-						if (!lock) {
-							TrackLog log11 = new TrackLog("verifing the file with signature ");
-							analysis.startTracking(log11);
-							boolean islegel = MessageDigestKit.verifySignature(signature, "assets/metals.jpg",
-									signatureKey);
-							System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
-							System.out.println("Signature: Is this file legel? " + islegel);
-							analysis.endTracking(log11);
-							analysis.printTrack(log11);
-						}
-						lock = false;
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					} catch (NoSuchAlgorithmException e) {
-						e.printStackTrace();
-					} catch (InvalidKeySpecException e) {
-						e.printStackTrace();
-					} catch (InvalidKeyException e) {
-						e.printStackTrace();
-					} catch (SignatureException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
 				}
 
 				@Override
 				public void onResponse(PrivateKey privateKey) {
+				}
+
+				@Override
+				public void onResponse(PrivateKey privateKey, PublicKey publicKey) {
+
 					try {
-						signature = MessageDigestKit.signFiles("assets/metals.jpg", privateKey);
+						byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", Algorithm.ALG_MD5_WITH_RSA,
+								privateKey);
 						analysis.endTracking(log10);
 						analysis.printTrack(log10);
 
-						if (!lock) {
-							TrackLog log11 = new TrackLog("verifing the file with signature ");
-							analysis.startTracking(log11);
-							boolean islegel = MessageDigestKit.verifySignature(signature, "assets/metals.jpg",
-									signatureKey);
-							System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
-							System.out.println("Signature: Is this file legel? " + islegel);
-							analysis.endTracking(log11);
-							analysis.printTrack(log11);
-						}
-						lock = false;
+						TrackLog log11 = new TrackLog("verifing the file with signature ");
+						analysis.startTracking(log11);
+						boolean islegel = MessageDigestKit.verifyFileSignature(signature, Algorithm.ALG_MD5_WITH_RSA,
+								"assets/metals.jpg", publicKey);
+
+						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
+						System.out.println("Signature: Is this file legel? " + islegel);
+						analysis.endTracking(log11);
+						analysis.printTrack(log11);
+
+						signature = MessageDigestKit.sign(attestationJws.getBytes(), Algorithm.ALG_SHA256_WITH_RSA,
+								privateKey);
+						islegel = MessageDigestKit.verifySignature(signature, Algorithm.ALG_SHA256_WITH_RSA, publicKey,
+								attestationJws.getBytes());
+
+						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
+						System.out.println("Signature: Is this file legel? " + islegel);
 					} catch (InvalidKeyException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (SignatureException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
 				}
 			});
 
 		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
 				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
-				| IOException | InvalidKeySpecException | ClassNotFoundException e1) {
+				| IOException | InvalidKeySpecException |
+
+				ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
 	}

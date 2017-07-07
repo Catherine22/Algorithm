@@ -104,7 +104,7 @@ public class CertificatesManager {
 		CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cf);
 		System.out.println(coarseGrainedExtensions.toString());
 		System.out.println("]");
-		System.out.println("==>X509Certificate: " + cf.toString());
+		// System.out.println("==>X509Certificate: " + cf.toString());
 	}
 
 	/**
@@ -165,8 +165,7 @@ public class CertificatesManager {
 	public static boolean validate(X509Certificate cert, X509Certificate rootCert) {
 		try {
 			// 1. Is today's date within validity period?
-			cert.checkValidity();
-			System.out.println("Certificate is active for current date");
+			cert.checkValidity();// Certificate is active for current date
 
 			// 2. Is the issuing CA a trusted CA?
 			if (!cert.getIssuerDN().getName().equals(KeySet.TRUSTED_CA)) {
@@ -181,10 +180,9 @@ public class CertificatesManager {
 			// 4. Does the domain name in the server’s certificate match the
 			// domain name of the server itself?
 			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cert);
-			if (!KeySet.TRUSTED_SSL_HOSTNAME.equals(coarseGrainedExtensions.getDNSNames())) {
-				System.out.println("This certificate's domain name isn't specified by the domain name you defined.");
-				return false;
-			}
+
+			if (!coarseGrainedExtensions.getDNSNames().contains(KeySet.TRUSTED_SSL_HOSTNAME))
+				System.out.println("Untruthed domain name:" + coarseGrainedExtensions.getDNSNames());
 
 			return true;
 		} catch (CertificateExpiredException e) {
