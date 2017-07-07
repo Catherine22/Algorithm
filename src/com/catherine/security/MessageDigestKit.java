@@ -1,4 +1,4 @@
-package com.catherine.utils.security;
+package com.catherine.security;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +12,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Base64;
-
 import javax.crypto.Mac;
 
 /**
@@ -98,14 +97,11 @@ public class MessageDigestKit {
 	}
 
 	/**
-	 * MD5表示MD的计算方法，RSA表示加密的计算方法。常用的签名算法还有“SHA1withRSA”、“SHA256withRSA”
-	 */
-	private final static String SIGNATURE_ALGORITHM = "MD5withRSA";
-
-	/**
 	 * 把消息摘要用私钥生成一个签名，之后用此签名对文件进行验证。
 	 * 
 	 * @param path
+	 * @param alg
+	 *            签名算法
 	 * @param privateKey
 	 * @return
 	 * @throws NoSuchAlgorithmException
@@ -113,9 +109,9 @@ public class MessageDigestKit {
 	 * @throws SignatureException
 	 * @throws IOException
 	 */
-	public static byte[] signFiles(String path, PrivateKey privateKey)
+	public static byte[] signFiles(String path, String alg, PrivateKey privateKey)
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, IOException {
-		Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+		Signature signature = Signature.getInstance(alg);
 		// 计算签名时，需要调用initSign，并传入一个私钥
 		signature.initSign(privateKey);
 
@@ -131,9 +127,48 @@ public class MessageDigestKit {
 	}
 
 	/**
+	 * 签名
+	 * 
+	 * @param data
+	 *            欲签名字串
+	 * @param alg
+	 *            签名算法
+	 * @param privateKey
+	 *            私钥
+	 * @return signature 签名
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws SignatureException
+	 */
+	public static byte[] sign(byte[] data, String alg, PrivateKey privateKey)
+			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+		Signature sig = Signature.getInstance(alg);
+		sig.initSign(privateKey);
+		sig.update(data);
+		return sig.sign();
+	}
+
+	/**
+	 * 验证签名
+	 * 
+	 * @param signature
+	 * @param alg
+	 * @param publicKey
+	 * @return
+	 */
+	public static boolean verifySignature(byte[] signature, String alg, PublicKey publicKey, byte[] content)
+			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+		Signature sig = Signature.getInstance(alg);
+		sig.initVerify(publicKey);
+		sig.update(content);
+		return sig.verify(signature);
+	}
+
+	/**
 	 * 签名时用KeyPair的私钥，验证时则是用该KeyPair的公钥。
 	 * 
-	 * @param SIGNATURE
+	 * @param signature
+	 * @param alg
 	 * @param path
 	 * @param publicKey
 	 * @return
@@ -142,19 +177,19 @@ public class MessageDigestKit {
 	 * @throws SignatureException
 	 * @throws IOException
 	 */
-	public static boolean verifySignature(byte[] SIGNATURE, String path, PublicKey publicKey)
+	public static boolean verifyFileSignature(byte[] signature, String alg, String path, PublicKey publicKey)
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, IOException {
-		Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+		Signature sig = Signature.getInstance(alg);
 		// 校验时候需要调用initVerify，并传入公钥对象
-		signature.initVerify(publicKey);
+		sig.initVerify(publicKey);
 
 		FileInputStream fis = new FileInputStream(path);
 		byte[] buffer = new byte[1024];
 		int len = -1;// 读到末尾
 		while ((len = fis.read(buffer)) != -1) {// 说明没有读到流的末尾
-			signature.update(buffer, 0, len);
+			sig.update(buffer, 0, len);
 		}
-		return signature.verify(SIGNATURE);
+		return sig.verify(signature);
 	}
 
 	/**

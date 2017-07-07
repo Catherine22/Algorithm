@@ -1,6 +1,5 @@
-package com.catherine.utils.security;
+package com.catherine.security;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,26 +17,17 @@ import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.DERObject;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERUTF8String;
 
 /**
  * Java Cryptography Extension（简写为JCE），JCE所包含的内容有加解密，密钥交换，消息摘要（Message
@@ -105,113 +95,6 @@ public class KeystoreManager {
 		}
 		System.out.println("==>KeyStoreInfo: END");
 
-	}
-
-	/**
-	 * X.509是数字证书的规范，X.509只能携带公钥信息。<br>
-	 * 另外还有PKCS#7和12包含更多的一些信息。PKCS#12由于可包含私钥信息，而且文件本身还可通过密码保护，所以更适合信息交换。<br>
-	 * 常见的证书文件格式：".pem", ".cer", ".crt", ".der", ".p7b", ".p7c", ".p12"<br>
-	 * 总结：<br>
-	 * 1. 证书包含很多信息，但一般就是各种Key的内容。<br>
-	 * 2. 证书由CA签发。为了校验某个证书是否可信，往往需要把一整条证书链都校验一把，直到根证书。<br>
-	 * 3. 系统一般会集成很多根证书，这样免得使用者自己去下载根证书了。<br>
-	 * 4. 证书自己的格式通用为X.509，但是证书文件的格式却有很多。不同的系统可能支持不同的证书文件。
-	 * 
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 */
-	public static void printCertificatesInfo() throws CertificateException, FileNotFoundException {
-		CertificateFactory cff = CertificateFactory.getInstance("X.509");
-		FileInputStream fis1 = new FileInputStream(KeySet.CERTIFICATION_PATH); // 证书文件
-		X509Certificate cf = (X509Certificate) cff.generateCertificate(fis1);
-
-		System.out.println("证书序列号:" + cf.getSerialNumber());
-		System.out.println("版本:" + cf.getVersion());
-		System.out.println("证书类型:" + cf.getType());
-		System.out.println(String.format("有效期限:%s 到 %s", cf.getNotBefore(), cf.getNotAfter()));
-
-		Map<String, String> subjectDN = new HashMap<>();
-		String[] pairs = cf.getSubjectDN().getName().split(", ");
-		for (int i = 0; i < pairs.length; i++) {
-			String pair = pairs[i];
-			String[] keyValue = pair.split("=");
-			subjectDN.put(keyValue[0], keyValue[1]);
-		}
-
-		StringBuilder su = new StringBuilder();
-		boolean[] subjectUniqueID = cf.getSubjectUniqueID();
-		if (subjectUniqueID != null) {
-			for (boolean b : subjectUniqueID) {
-				int myInt = (b) ? 1 : 0;
-				su.append(myInt);
-			}
-		} else
-			su.append("null");
-		System.out.println(String.format("主体:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", su,
-				subjectDN.getOrDefault("CN", ""), subjectDN.getOrDefault("OU", ""), subjectDN.getOrDefault("O", ""),
-				subjectDN.getOrDefault("L", ""), subjectDN.getOrDefault("S", ""), subjectDN.getOrDefault("C", "")));
-
-		Map<String, String> issuerDN = new HashMap<>();
-		pairs = cf.getIssuerDN().getName().split(", ");
-		for (int i = 0; i < pairs.length; i++) {
-			String pair = pairs[i];
-			String[] keyValue = pair.split("=");
-			issuerDN.put(keyValue[0], keyValue[1]);
-		}
-
-		StringBuilder i = new StringBuilder();
-		if (subjectUniqueID != null) {
-			boolean[] issuerUniqueID = cf.getIssuerUniqueID();
-			for (boolean b : issuerUniqueID) {
-				int myInt = (b) ? 1 : 0;
-				i.append(myInt);
-			}
-		} else
-			i.append("null");
-		System.out.println(String.format("签发者:[唯一标识符:%s, 通用名称:%s, 机构单元名称:%s, 机构名:%s, 地理位置:%s, 州/省名:%s, 国名:%s]", i,
-				issuerDN.getOrDefault("CN", ""), issuerDN.getOrDefault("OU", ""), issuerDN.getOrDefault("O", ""),
-				issuerDN.getOrDefault("L", ""), issuerDN.getOrDefault("S", ""), issuerDN.getOrDefault("C", "")));
-
-		System.out.println("签名算法:" + cf.getSigAlgName());
-		System.out.println("签名算法OID:" + cf.getSigAlgOID());
-		String sigAlgParams = (cf.getSigAlgParams() == null) ? ""
-				: Base64.getEncoder().encodeToString(cf.getSigAlgParams());
-		System.out.println("签名参数:" + sigAlgParams);
-		System.out.println("签名:" + Base64.getEncoder().encodeToString(cf.getSignature()));
-		System.out.println("扩展:[");
-		System.out.println("BasicConstraints:" + getExtensionValue(cf, "1.3.6.1.5.5.7.1.1"));
-		System.out.println("]");
-		System.out.println("==>X509Certificate: " + cf.toString());
-	}
-
-	private static String getExtensionValue(X509Certificate X509Certificate, String oid) {
-		String decoded = null;
-		byte[] extensionValue = X509Certificate.getExtensionValue(oid);
-		try {
-			if (extensionValue != null) {
-				DERObject derObject = toDERObject(extensionValue);
-				if (derObject instanceof DEROctetString) {
-					DEROctetString derOctetString = (DEROctetString) derObject;
-
-					derObject = toDERObject(derOctetString.getOctets());
-					if (derObject instanceof DERUTF8String) {
-						DERUTF8String s = DERUTF8String.getInstance(derObject);
-						decoded = s.getString();
-					}
-
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return decoded;
-	}
-
-	private static DERObject toDERObject(byte[] data) throws IOException {
-		ByteArrayInputStream inStream = new ByteArrayInputStream(data);
-		ASN1InputStream asnInputStream = new ASN1InputStream(inStream);
-
-		return asnInputStream.readObject();
 	}
 
 	/**
@@ -353,6 +236,7 @@ public class KeystoreManager {
 
 		callback.onResponse(privateKey);
 		callback.onResponse(modulus, exponent);
+		callback.onResponse(privateKey, publicKey);
 	}
 
 	/**
@@ -378,4 +262,20 @@ public class KeystoreManager {
 		System.out.println("==>public key: " + Base64.getEncoder().encodeToString(publicKey.getEncoded()));
 		return publicKey;
 	}
+
+	/**
+	 * byte数组公钥转换成PublicKey类
+	 * 
+	 * @param encodedPublicKey
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	public static PublicKey converBytesToPublicKey(byte[] encodedPublicKey)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedPublicKey);
+		KeyFactory kf = KeyFactory.getInstance(Algorithm.KEYPAIR_ALGORITHM);
+		return kf.generatePublic(spec);
+	}
+
 }
