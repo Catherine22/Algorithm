@@ -170,7 +170,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### B-Tree
 
-- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node so B-tree looks flatter or wider.
+- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.
 - There are 2 tips about memory you must know -- First, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from internal memory 100 times than external memory once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
 
@@ -193,9 +193,58 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Encrypt or decrypt messages by the secret key/keyPair
 
 **[CertificatesManager]**
-  - Analysis and retrieve data such like certificate extensions, the signature and so on from a certificate.
+  - Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate.
   - Get data by OID
   - Validate a certificate
+
+**[CertificatesManager]**
+  - Analysis and retrieve data such like certificate extensions, the signature and so on from a certificate.
+  - Get data by OID
+  - Validate certificates
+
+**[JwsHelper]**
+  - Split JWS into 3 parts and decode them.
+  - Take Android SafetyNet attestation JWS result for example, validate the certificates and the JWS signature.
+
+>Follow these steps:
+>1. Extract the SSL certificate chain from the JWS message.
+>2. Validate the SSL certificate chain and use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com.
+>3. Use the certificate to verify the signature of the JWS message.
+
+```Java
+private static String attestationJws = "Fill in your jws response from SafetyNetApi.AttestationResult";
+
+private void testJWS() {
+  try {
+    JwsHelper jwsHelper = new JwsHelper(attestationJws);
+    AttestationResult result = new AttestationResult(jwsHelper.getDecodedPayload());
+    System.out.println(result);
+
+    List<X509Certificate> certs = jwsHelper.getX5CCertificates();
+    X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
+
+    // Just verify one of the certificates which is belonged to "attest.android.com" in this case.
+    boolean isJwsHeaderLegel = false;
+    for (X509Certificate cert : certs) {
+      boolean isValid = CertificatesManager.validate(cert, rootCert);
+      CertificatesManager.printCertificatesInfo(cert);
+      if (isValid == true)
+        isJwsHeaderLegel = true;
+    }
+
+    // Verify the signature of JWS
+    boolean isJwsSignatureLegel = jwsHelper.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
+    if (isJwsHeaderLegel && isJwsSignatureLegel)
+      System.out.println("Your JWS is valid!");
+    else
+      System.out.println("Your JWS is not valid!");
+
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+}
+```
+  - There is a Android sample ([SecuritySample]) integrated attestation APIs and JWS validating.
 
 ## Reference
   - [Algorithms, 4th Edition]
@@ -244,16 +293,18 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
    [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
-   [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/KeystoreManager.java>
-   [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/MessageDigestKit.java>
-   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CipherKit.java>
-   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/security/CertificatesManager.java>
+   [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/KeystoreManager.java>
+   [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/MessageDigestKit.java>
+   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
+   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
+   [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
    [Server Authentication During SSL Handshake]:<https://docs.oracle.com/cd/E19693-01/819-0997/aakhc/index.html>
    [Verifying a Certificate Chain]:<https://docs.oracle.com/cd/E19316-01/820-2765/gdzea/index.html>
    [JSON Web Signature (JWS) draft-jones-json-web-signature-01]:<http://self-issued.info/docs/draft-jones-json-web-signature-01.html>
+   [SecuritySample]:<https://github.com/Catherine22/SecuritySample>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
