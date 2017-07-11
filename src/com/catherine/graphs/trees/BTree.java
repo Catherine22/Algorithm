@@ -4,7 +4,7 @@ import com.catherine.graphs.trees.nodes.B_Node;
 
 public interface BTree {
 	/**
-	 * 一个节点最多有2m-1个key值
+	 * 一个节点最多有m-1个key值
 	 * 
 	 * @return
 	 */
@@ -114,4 +114,6 @@ public interface BTree {
 	 * @param node
 	 */
 	public void solveUnderfolw(B_Node node);
+	
+	public void printInfo();
 }

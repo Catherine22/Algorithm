@@ -2,6 +2,7 @@ package com.catherine.graphs.trees;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,10 +33,10 @@ import com.catherine.graphs.trees.nodes.B_Node;
  * 每n代合并：2的m次方路（n条分支），有n-1个关键码。<br>
  * <br>
  * <br>
- * 一棵m阶的B-Tree定义：<br>
- * 1. 树中每个结点最多含有m个孩子（m>=2）。<br>
+ * 一棵m阶的B-Tree定义（m>=2）：<br>
+ * 1. 树中每个结点最多含有m个孩子／分支，最多有m-1个关键码。<br>
  * 2. 除根节点和叶子节点外，其它每个节点至少有[m / 2]个孩子。<br>
- * 3. 若根结点不是叶子结点，则至少有2个孩子。（特殊情况：整棵树只有一个节点，也就是根节点）。<br>
+ * 3. 根节点至少有2个孩子（1个关键码）。（特殊情况：整棵树只有一个节点，也就是根节点）。<br>
  * 4. 所有的外部节点的深度相等。（在很多树中，外部节点等同于叶节点，在B-Tree中，把外部节点理解成查询失败的节点，指针指向null）。<br>
  * <br>
  * <br>
@@ -86,15 +87,23 @@ public class MyBTree_Integer implements BTree {
 		rootKeys.add(rootKey); // 只有一个关键码
 		root.setKey(rootKeys);
 
-		B_Node lc = new B_Node();
-		lc.setParent(root);
-		B_Node rc = new B_Node();
-		rc.setParent(root);
+		// B_Node lc = new B_Node();
+		// lc.setParent(root);
+		// B_Node rc = new B_Node();
+		// rc.setParent(root);
 
 		List<B_Node> child = new ArrayList<>();
-		child.add(0, lc);// 左孩子
-		child.add(1, rc);// 右孩子
+		child.add(0, null);// 左孩子
+		child.add(1, null);// 右孩子
 		root.setChild(child);
+	}
+
+	@Override
+	public void printInfo() {
+		int a = (int) Math.ceil(order / 2.0f);
+		System.out.println(String.format(
+				"%d阶的B-Tree，或称为(%d, %d)树\n根节点节点的孩子或者分支数：n>=%d\n其余节点的孩子或者分支数：%d<=n<=%d\n根节点的key总数：n>=%d\n其余节点的key总数：%d<=n<=%d",
+				order, a, order, 2, a, order, 1, a - 1, order - 1));
 	}
 
 	@Override
@@ -240,8 +249,13 @@ public class MyBTree_Integer implements BTree {
 			// 找出后继节点
 			B_Node succ = target.getChild().get(pos + 1);
 			System.out.println("后继节点:" + succ.getKey());
-			swap(target, pos, target.getChild().get(pos + 1), -100);
-			System.out.println("后继节点:" + succ.getKey());
+			try {
+				swap(target, succ);
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			System.out.println("新target:" + target.getKey());
+			System.out.println("新后继:" + succ.getKey());
 			// succ.getKey().remove(pos);
 		}
 		System.out.println("pos:" + pos);
@@ -252,33 +266,63 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	/**
-	 * 两键值交换
+	 * 两节点交换位置
 	 * 
 	 * @param n1
 	 *            第一个节点
-	 * @param pos1
-	 *            欲交换键值位于第一个节点的位置
 	 * @param n2
 	 *            第二个节点
-	 * @param pos2
-	 *            欲交换键值位于第二个节点的位置
+	 * @throws CloneNotSupportedException
 	 */
-	private void swap(B_Node n1, int pos1, B_Node n2, int pos2) {
-		final List<Integer> n2NewKey = n1.getKey();
-		final List<B_Node> n2NewChild = n1.getChild();
+	private void swap(B_Node n1, B_Node n2) throws CloneNotSupportedException {
+
+		System.out.println("n1:" + n1.toString());
+		System.out.println("n2:" + n2.toString());
+		B_Node tmp = n1.clone();
+
+		if (n1.getChild() != null) {
+			for (B_Node b : n1.getChild()) {
+				if (b != null)
+					b.setParent(n2);
+			}
+		}
+
+		if (n1.getParent() != null) {
+			List<B_Node> newChild = n1.getParent().getChild();
+			for (int i = 0; i < newChild.size(); i++) {
+				if (newChild.get(i) == n1)
+					newChild.set(i, n2);
+			}
+		} else
+			root = n2;
 
 		n1.setKey(n2.getKey());
 		n1.setChild(n2.getChild());
-		for (B_Node b : n2.getChild()) {
-			if (b != null)
-				b.setParent(n1);
+		n1.setParent(n2.getParent());
+
+		if (n2.getChild() != null) {
+			for (B_Node b : n2.getChild()) {
+				if (b != null)
+					b.setParent(tmp);
+			}
 		}
-		n2.setKey(n2NewKey);
-		n2.setChild(n2NewChild);
-		for (B_Node b : n2NewChild) {
-			if (b != null)
-				b.setParent(n2);
-		}
+
+		if (n2.getParent() != null) {
+			List<B_Node> newChild = n2.getParent().getChild();
+			for (int i = 0; i < newChild.size(); i++) {
+				if (newChild.get(i) == n2)
+					newChild.set(i, tmp);
+			}
+		} else
+			root = tmp;
+
+		n2.setKey(tmp.getKey());
+		n2.setChild(tmp.getChild());
+		n2.setParent(tmp.getParent());
+
+		System.out.println("n1:" + n1.toString());
+		System.out.println("tmp:" + tmp.toString());
+		System.out.println("n2:" + n2.toString());
 	}
 
 	@Override
@@ -294,7 +338,7 @@ public class MyBTree_Integer implements BTree {
 		if (SHOW_LOG)
 			System.out.print("overflow, divided " + node.getKey());
 		// 假设上溢节点的关键码依次为 k0, k1...k(m-1)
-		int median = (int) Math.floor(node.getKey().size() / 2);// 取中位数（无条件进位）为分界
+		int median = (int) Math.ceil(node.getKey().size() / 2);// 取中位数（无条件进位）为分界
 		// k0~k(median-1), k(median), k(median+1)~k(m-1)
 		// 将 k(median)上升一层，并将刚才左右两组关键码分裂成k(median)的左右孩子。
 		int key = node.getKey().get(median);
