@@ -8,7 +8,13 @@ import java.util.List;
  * _x_x_x_<br>
  * o_o_o_o<br>
  * <br>
- * 所以初始时有一个关键码向量与两个孩子（左右孩子）向量。
+ * 所以初始时有一个关键码向量与两个孩子（左右孩子）向量。<br>
+ * <br>
+ * <br>
+ * 一棵m阶的B-Tree每个节点（外部节点除外），都会有：<br>
+ * 1. 一系列的key值，key(i)>key(i-1) <br>
+ * 2. key(i)的左孩子节点child(i-1)内每个key值都小于key(i)，同时也都大于key(i-1)。<br>
+ * 3. key的个数n必须满足 [m / 2]-1<= n <= m-1
  * 
  * @author Catherine
  *

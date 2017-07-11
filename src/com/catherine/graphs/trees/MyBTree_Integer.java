@@ -1,5 +1,6 @@
 package com.catherine.graphs.trees;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,34 +14,40 @@ import com.catherine.graphs.trees.nodes.B_Node;
  * 640K ought to be enough for anybody. —— B. Gates, 1981.<br>
  * 
  * 知识点1：<br>
- * 以内存和磁盘为例，两者访问速度为ms（10的-3秒） VS ns（10的-9秒），差至少10的-1，也就是一秒至于一天。<br>
+ * 以内存和磁盘为例，两者访问速度为ms（10的-3秒） vs. ns（10的-9秒），差至少10的-1，也就是一秒至于一天。<br>
  * 所以才会宁可访问内存10次、100次也要避免访问一次外存。 <br>
  * 两个相邻存储级别之间的数据传输，统称I/O操作。所以应该尽可能地减少I/O操作。 <br>
  * <br>
  * 知识点2：<br>
- * 从磁盘中读写1B与读写1KB几乎一样快。 <br>
+ * 从磁盘中读写1B与读写1KB几乎一样快。因为磁盘读取数据是以盘块(block)为基本单位的。位于同一盘块中的所有数据都能被一次性全部读取出来。<br>
  * 所以要嘛一次也不访问，要不就一次访问大量（批量式缓冲区：以page或block为单位，使用缓冲区）。 <br>
- * <br>
- * 经适当合并，得超级节点。<br>
- * 每2代合并：4路<br>
- * 每3代合并：8路<br>
- * 每n代合并：2的m次方路（n条分支），有n-1个关键码（每个超级节点有几个小节点）<br>
  * <br>
  * 利用外存批量访问的支持，加入B-tree的特性，每下降一层，都以超级节点为单位，读入一组关键码，具体一组大小视磁盘的数据块大小。<br>
  * 以AVL tree为例，每次查找要log(2, 10的-9) = 30次，每次只读一个关键码。
  * 以256个分支的B-tree为例，每次查找要log(256, 10的-9) = 4~5次。<br>
  * <br>
+ * 经适当合并，得超级节点。<br>
+ * 每2代合并：4路<br>
+ * 每3代合并：8路<br>
+ * 每n代合并：2的m次方路（n条分支），有n-1个关键码。<br>
  * <br>
- * B-Tree定义：<br>
- * 1. n路平衡搜索树(n >= 2)<br>
- * 2. 所有的叶节点的深度相等。<br>
- * 3. 所有的外部节点的深度相等。（在很多树中，外部节点等同于叶节点，在B-Tree中，外部节点代表叶节点不存在的子节点）。<br>
- * 4. 树高 h = 外部节点的深度。（一般的树高是最大的叶节点高度）<br>
+ * <br>
+ * 一棵m阶的B-Tree定义：<br>
+ * 1. 树中每个结点最多含有m个孩子（m>=2）。<br>
+ * 2. 除根节点和叶子节点外，其它每个节点至少有[m / 2]个孩子。<br>
+ * 3. 若根结点不是叶子结点，则至少有2个孩子。（特殊情况：整棵树只有一个节点，也就是根节点）。<br>
+ * 4. 所有的外部节点的深度相等。（在很多树中，外部节点等同于叶节点，在B-Tree中，把外部节点理解成查询失败的节点，指针指向null）。<br>
+ * <br>
+ * <br>
+ * B-Tree包含下列特性：<br>
+ * 1. 每个节点至多有m棵子树。<br>
+ * 2. 所有的叶节点的深度相等（都在同一层）。<br>
+ * 3. 树高 h = 外部节点的深度。（一般的树高是最大的叶节点高度）。 <br>
  * <br>
  * 内部节点的分支数限制：<br>
  * 树根： 2 <= n+1<br>
  * 其余： [m/2] <= n+1<br>
- * 称作([[m/2], m)-树，比如(3, 5)-tree, (4, 8)-tree<br>
+ * 称作([m/2], m)-树，比如(3, 5)-tree, (4, 8)-tree<br>
  * 
  * @author Catherine
  *
@@ -52,7 +59,7 @@ public class MyBTree_Integer implements BTree {
 	 */
 	private int size;
 	/**
-	 * B-树的阶次m，至少为3，创建时指定，一般不能修改
+	 * B-树的阶次m，至少为2，创建时指定，一般不能修改
 	 */
 	private int order;
 
@@ -70,7 +77,7 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	public MyBTree_Integer(int order, int rootKey) {
-		this.order = (order < 3) ? 3 : order;
+		this.order = (order < 2) ? 2 : order;
 
 		root = new B_Node();
 		root.setParent(null);
@@ -93,6 +100,31 @@ public class MyBTree_Integer implements BTree {
 	@Override
 	public B_Node getRoot() {
 		return root;
+	}
+
+	@Override
+	public boolean isFull() {
+		Queue<B_Node> line = new ArrayDeque<>();
+		line.add(root);
+		line.addAll(root.getChild());
+		boolean f = true;
+		while (line != null && line.size() > 0 && f) {
+			if (!isFull(line.poll()))
+				f = false;
+
+			if (line.peek() != null && line.peek().getChild() != null) {
+				List<B_Node> tmp = line.peek().getChild();
+				for (int i = 0; i < tmp.size(); i++) {
+					if (tmp.get(i) != null)
+						line.add(tmp.get(i));
+				}
+			}
+		}
+		return f;
+	}
+
+	private boolean isFull(B_Node node) {
+		return node.getKey() == null || node.getKey().size() == (order - 1);
 	}
 
 	@Override
@@ -192,7 +224,7 @@ public class MyBTree_Integer implements BTree {
 		if (target == null)
 			return false;// 不存在关键码，直接返回。
 
-		int pos = 0;// key位于节点位置
+		int pos = 0;// 找出key位于节点位置
 		while (pos < target.getKey().size()) {
 			if (target.getKey().get(pos) == key)
 				break;
@@ -208,16 +240,30 @@ public class MyBTree_Integer implements BTree {
 			// 找出后继节点
 			B_Node succ = target.getChild().get(pos + 1);
 			System.out.println("后继节点:" + succ.getKey());
-			swap(target, succ);
+			swap(target, pos, target.getChild().get(pos + 1), -100);
 			System.out.println("后继节点:" + succ.getKey());
-//			succ.getKey().remove(pos);
+			// succ.getKey().remove(pos);
 		}
 		System.out.println("pos:" + pos);
 
-		return false;
+		if (target.getKey().isEmpty())
+			target.setKey(null);
+		return true;
 	}
 
-	private void swap(B_Node n1, B_Node n2) {
+	/**
+	 * 两键值交换
+	 * 
+	 * @param n1
+	 *            第一个节点
+	 * @param pos1
+	 *            欲交换键值位于第一个节点的位置
+	 * @param n2
+	 *            第二个节点
+	 * @param pos2
+	 *            欲交换键值位于第二个节点的位置
+	 */
+	private void swap(B_Node n1, int pos1, B_Node n2, int pos2) {
 		final List<Integer> n2NewKey = n1.getKey();
 		final List<B_Node> n2NewChild = n1.getChild();
 

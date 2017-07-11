@@ -4,6 +4,13 @@ import com.catherine.graphs.trees.nodes.B_Node;
 
 public interface BTree {
 	/**
+	 * 一个节点最多有2m-1个key值
+	 * 
+	 * @return
+	 */
+	public boolean isFull();
+
+	/**
 	 * 返回根节点
 	 * 
 	 * @return 根节点
@@ -60,7 +67,9 @@ public interface BTree {
 	 * 一层一层往下找，直觉会想到用二分查找算法加速，但以整个内外存来看，这样的加速未必有效，甚至可能会花上更多时间。<br>
 	 * 失败查找会终止于外部节点。<br>
 	 * 由于每一层都只会查找一组key列表，所以会影响速度的是树的高度。<br>
-	 * 时间花在：1. 载入下一层次节点（IO操作）2. 每一层的顺序查找<br>
+	 * 时间花在：<br>
+	 * 1. 载入下一层次节点（IO操作），这边最耗时。<br>
+	 * 2. 每一层的顺序查找。 <br>
 	 * 
 	 * @param key
 	 * @return
