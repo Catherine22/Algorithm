@@ -97,20 +97,34 @@ public class Main {
 	}
 
 	public static void testBTree() {
-		MyBTree_Integer myBTree = new MyBTree_Integer(5, 10);
+		MyBTree_Integer myBTree = new MyBTree_Integer(5, 528);
 		// myBTree.printInfo();
-		myBTree.insert(5);
-		myBTree.insert(15);
-		myBTree.insert(25);
-		myBTree.insert(1);
-		myBTree.insert(2);
-		myBTree.insert(3);
-		myBTree.insert(20);
-		myBTree.insert(30);
-		myBTree.insert(6);
-		myBTree.insert(17);
+		myBTree.insert(192);
+		myBTree.insert(268);
+		myBTree.insert(703);
+		myBTree.insert(850);
+
+		myBTree.insert(57);
+		myBTree.insert(152);
+		myBTree.insert(249);
+		myBTree.insert(266);
+		myBTree.insert(315);
+		myBTree.insert(423);
+		myBTree.insert(468);
+		myBTree.insert(484);
+		myBTree.insert(619);
+		myBTree.insert(644);
+		myBTree.insert(758);
+		myBTree.insert(771);
+		myBTree.insert(865);
+		myBTree.insert(882);
+		myBTree.insert(936);
+		myBTree.insert(984);
+//		System.out.println(myBTree.toString());
+		myBTree.remove(249);
 		System.out.println(myBTree.toString());
-		myBTree.remove(10);
+
+		myBTree.remove(619);
 		System.out.println(myBTree.toString());
 
 	}

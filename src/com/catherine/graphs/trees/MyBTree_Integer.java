@@ -277,6 +277,8 @@ public class MyBTree_Integer implements BTree {
 			target.getKey().remove(pos);
 			if (target.getKey() != null)
 				solveUnderfolw(target);
+			else
+				target = null;
 		} else {
 			// 找出后继key（位于右节点）
 			B_Node succ = target.getChild().get(pos + 1);
@@ -286,6 +288,8 @@ public class MyBTree_Integer implements BTree {
 			succ.getKey().remove(0);
 			if (succ.getKey() != null)
 				solveUnderfolw(succ);
+			else
+				succ = null;
 		}
 		return true;
 	}
@@ -316,11 +320,13 @@ public class MyBTree_Integer implements BTree {
 		for (int i = 0; i < median; i++) {
 			lKeys.add(node.getKey().get(i));
 		}
+		B_Node lChild = new B_Node();
 		List<B_Node> lChildren = new ArrayList<>();
 		for (int i = 0; i <= median; i++) {
 			lChildren.add(node.getChild().get(i));
+			if (node.getChild().get(i) != null)
+				node.getChild().get(i).setParent(lChild);
 		}
-		B_Node lChild = new B_Node();
 		lChild.setKey(lKeys);
 		lChild.setChild(lChildren);
 
@@ -329,11 +335,13 @@ public class MyBTree_Integer implements BTree {
 		for (int i = median + 1; i < node.getKey().size(); i++) {
 			rKeys.add(node.getKey().get(i));
 		}
+		B_Node rChild = new B_Node();
 		List<B_Node> rChildren = new ArrayList<>();
 		for (int i = median + 1; i < node.getChild().size(); i++) {
 			rChildren.add(node.getChild().get(i));
+			if (node.getChild().get(i) != null)
+				node.getChild().get(i).setParent(rChild);
 		}
-		B_Node rChild = new B_Node();
 		rChild.setKey(rKeys);
 		rChild.setChild(rChildren);
 
@@ -372,12 +380,11 @@ public class MyBTree_Integer implements BTree {
 
 			solveOverflow(hot);// 若发生上溢，做分裂处理
 		}
-
 	}
 
 	@Override
 	public void solveUnderfolw(B_Node node) {
-		if (node.getKey().size() >= getMIN_KEYSET_SIZE())
+		if (node.getKey().size() >= getMIN_KEYSET_SIZE() || node.getParent() == null)
 			return;
 
 		if (SHOW_LOG)
@@ -397,7 +404,7 @@ public class MyBTree_Integer implements BTree {
 			B_Node bro;
 			boolean rotated = false;
 			// 找出左兄弟
-			if (header - 1 > 0) {
+			if (header > 0) {
 				bro = parent.getChild().get(header - 1);
 				// 如果兄弟节点有多余的key值，找出最大的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。
 				if (bro != null && bro.getKey().size() > (getMIN_KEYSET_SIZE() + 1)) {
@@ -416,7 +423,7 @@ public class MyBTree_Integer implements BTree {
 			// 假如没有兄弟或是兄弟节点没有多余key值
 			if (!rotated) {
 				// 找出左兄弟（兄弟节点没有多余key值）
-				if (header - 1 > 0) {
+				if (header > 0) {
 					bro = parent.getChild().get(header - 1);
 					if (bro != null && bro.getKey().size() == getMIN_KEYSET_SIZE()) {
 						// 同时node的key长度 < getMIN_KEYSET_SIZE()
@@ -480,7 +487,7 @@ public class MyBTree_Integer implements BTree {
 
 			if (!rotated) {
 				if (SHOW_LOG)
-					System.out.println("没有兄弟节点");
+					System.out.println("没有兄弟节点:" + node.toString());
 			}
 		}
 	}
