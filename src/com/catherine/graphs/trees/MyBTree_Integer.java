@@ -2,7 +2,6 @@ package com.catherine.graphs.trees;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -100,10 +99,10 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public void printInfo() {
-		int a = (int) Math.ceil(order / 2.0f);
 		System.out.println(String.format(
 				"%d阶的B-Tree，或称为(%d, %d)树\n根节点节点的孩子或者分支数：n>=%d\n其余节点的孩子或者分支数：%d<=n<=%d\n根节点的key总数：n>=%d\n其余节点的key总数：%d<=n<=%d",
-				order, a, order, 2, a, order, 1, a - 1, order - 1));
+				order, getMIN_BRANCHES_SIZE(), order, 2, getMIN_BRANCHES_SIZE(), order, 1, getMIN_KEYSET_SIZE(),
+				order - 1));
 	}
 
 	@Override
@@ -154,6 +153,34 @@ public class MyBTree_Integer implements BTree {
 	@Override
 	public int getHeight() {
 		return 0;
+	}
+
+	/**
+	 * 每个节点所含key最小长度
+	 */
+	public int getMIN_KEYSET_SIZE() {
+		return (int) Math.ceil(order / 2.0f) - 1;
+	}
+
+	/**
+	 * 每个节点所含key最大长度
+	 */
+	public int getMAX_KEYSET_SIZE() {
+		return order - 1;
+	}
+
+	/**
+	 * 每个节点所含分支或孩子最小个数
+	 */
+	public int getMIN_BRANCHES_SIZE() {
+		return (int) Math.ceil(order / 2.0f);
+	}
+
+	/**
+	 * 每个节点所含分支或孩子最大个数
+	 */
+	public int getMAX_BRANCHES_SIZE() {
+		return order;
 	}
 
 	@Override
@@ -244,7 +271,8 @@ public class MyBTree_Integer implements BTree {
 		if (target.getChild().get(pos + 1) == null) {
 			// 当前节点为叶节点，直接移除
 			target.getKey().remove(pos);
-			System.out.println("直接移除");
+			if (SHOW_LOG)
+				System.out.println("直接移除");
 		} else {
 			// 找出后继节点
 			B_Node succ = target.getChild().get(pos + 1);
@@ -253,12 +281,11 @@ public class MyBTree_Integer implements BTree {
 			swap(target, succ);
 			System.out.println("新target:" + target.toString());
 			System.out.println("新后继:" + succ.toString());
-			// succ.getKey().remove(pos);
+			succ.getKey().remove(pos);
 		}
-		System.out.println("pos:" + pos);
 
-		if (target.getKey().isEmpty())
-			target.setKey(null);
+		if (target.getKey() != null)
+			solveUnderfolw(target);
 		return true;
 	}
 
@@ -276,11 +303,6 @@ public class MyBTree_Integer implements BTree {
 		node2.setKey(key1);
 	}
 
-	class Nodepair {
-		public B_Node node1;
-		public B_Node node2;
-	}
-
 	@Override
 	public void release() {
 
@@ -288,7 +310,7 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public void solveOverflow(B_Node node) {
-		if (node.getKey().size() <= (order - 1))
+		if (node.getKey().size() <= (int) Math.ceil(order - 1))
 			return;
 
 		if (SHOW_LOG)
@@ -368,7 +390,99 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public void solveUnderfolw(B_Node node) {
+		if (node.getKey().size() >= getMIN_KEYSET_SIZE())
+			return;
 
+		if (SHOW_LOG)
+			System.out.println("下溢");
+
+		// 首先找出左右的兄弟，如果兄弟节点有多余的key值，找出最大或最小的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。
+		B_Node parent = node.getParent();
+		if (parent != null && parent.getChild() != null) {
+			int header = 0;
+			for (int i = 0; i < parent.getChild().size(); i++) {
+				if (parent.getChild().get(i) == node)
+					header = i;
+			}
+
+			B_Node bro;
+			boolean rotated = false;
+			if (header - 1 > 0) {
+				bro = parent.getChild().get(header - 1);
+				if (bro != null && bro.getKey().size() > (getMIN_KEYSET_SIZE() + 1)) {
+					rotated = rotateKeys(node, bro, true);
+				}
+			}
+			if (!rotated && header + 1 < parent.getChild().size()) {
+				bro = parent.getChild().get(header + 1);
+				if (bro != null && bro.getKey().size() > (getMIN_KEYSET_SIZE() + 1)) {
+					rotated = rotateKeys(node, bro, false);
+				}
+			}
+		}
+		// 假如没有兄弟或是兄弟节点没有多余key值
+		else {
+
+		}
+	}
+
+	/**
+	 * 兄弟节点转向父节点，父节点转向目标节点，须考虑key值由小到大排序，<br>
+	 * 所以右旋时会挑出兄弟节点最大（最右边）的key，左旋时会挑出兄弟节点最小（最左边）的key。
+	 * 
+	 * @param node
+	 *            目标节点
+	 * @param bro
+	 *            兄弟节点
+	 * @param isClockwise
+	 *            顺时针或逆时针旋转
+	 * @return 结果
+	 */
+	private boolean rotateKeys(B_Node node, B_Node bro, boolean isClockwise) {
+		if (bro.getParent() == null || bro.getParent().getKey() == null)
+			return false;
+
+		int header = 0;// 父节点的key位置
+		boolean stopLoop = false;
+		B_Node parent = bro.getParent();
+		if (isClockwise) {
+			if (SHOW_LOG)
+				System.out.println("Rotating clockwise");
+			// 找出父节点的key位置
+			while (header < parent.getKey().size() && !stopLoop) {
+				if (parent.getKey().get(header) > bro.getKey().get(bro.getKey().size() - 1))
+					stopLoop = true;
+				else
+					header++;
+			}
+
+			List<Integer> nodeKeys = node.getKey();
+			nodeKeys.add(0, parent.getKey().get(header));
+			List<Integer> broKeys = bro.getKey();
+			List<Integer> parentKeys = parent.getKey();
+			parentKeys.remove(header);
+			parentKeys.add(header, broKeys.get(broKeys.size() - 1));
+			broKeys.remove(broKeys.size() - 1);
+		} else {
+			if (SHOW_LOG)
+				System.out.println("Rotating counterclockwise");
+			// 找出父节点的key位置
+			while (header < parent.getKey().size() && !stopLoop) {
+				if (parent.getKey().get(header) < bro.getKey().get(bro.getKey().size() - 1))
+					stopLoop = true;
+				else
+					header++;
+			}
+
+			List<Integer> nodeKeys = node.getKey();
+			nodeKeys.add(0, parent.getKey().get(header));
+			List<Integer> broKeys = bro.getKey();
+			List<Integer> parentKeys = parent.getKey();
+			parentKeys.remove(header);
+			parentKeys.add(header, broKeys.get(0));
+			broKeys.remove(0);
+		}
+		return true;
 	}
 
 	/**

@@ -109,11 +109,15 @@ public interface BTree {
 	public void solveOverflow(B_Node node);
 
 	/**
-	 * 因删除而下溢后的合并处理
+	 * 因删除而下溢后的合并处理<br>
+	 * 下溢:关键码总数少于[m / 2]-1，即违反B-tree定义<br>
+	 * 第一种做法：旋转（首先找出左右的兄弟，如果兄弟节点有多余的key值，找出最大或最小的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。）
+	 * <br>
+	 * 第二种做法：假如没有兄弟或是兄弟节点没有多余key值适用，<br>
 	 * 
 	 * @param node
 	 */
 	public void solveUnderfolw(B_Node node);
-	
+
 	public void printInfo();
 }

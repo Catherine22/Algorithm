@@ -97,15 +97,19 @@ public class Main {
 	}
 
 	public static void testBTree() {
-		MyBTree_Integer myBTree = new MyBTree_Integer(3, 10);
-		// myBTree.printInfo();
+		MyBTree_Integer myBTree = new MyBTree_Integer(5, 10);
+		 myBTree.printInfo();
 		myBTree.insert(5);
 		myBTree.insert(15);
 		myBTree.insert(20);
 		myBTree.insert(1);
 		myBTree.insert(2);
+		myBTree.insert(3);
+		myBTree.insert(7);
+		myBTree.insert(9);
+		myBTree.insert(6);
 		System.out.println(myBTree.toString());
-		myBTree.remove(2);
+		myBTree.remove(20);
 		System.out.println(myBTree.toString());
 		// myBTree.insert(25);
 		// myBTree.remove(20);
