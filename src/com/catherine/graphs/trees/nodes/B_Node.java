@@ -1,6 +1,6 @@
 package com.catherine.graphs.trees.nodes;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 //B-tree
@@ -57,19 +57,16 @@ public class B_Node implements Cloneable {
 		this.child = child;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public B_Node clone() throws CloneNotSupportedException {
-		B_Node tmp = new B_Node();
-		List<B_Node> children = getChild();
-		List<Integer> keys = getKey();
-		Collections.copy(children, getChild());
-		Collections.copy(keys, getKey());
-		tmp.setChild(children);
-		tmp.setKey(keys);
-		if (getParent() != null)
-			tmp.setParent(getParent().clone());
-		else
-			tmp.setParent(null);
+		B_Node tmp = (B_Node) super.clone();
+		if (parent != null)
+			tmp.parent = (B_Node) this.parent.clone();
+		if (key != null)
+			tmp.key = (List<Integer>) ((ArrayList<Integer>) this.key).clone();
+		if (child != null)
+			tmp.child = (List<B_Node>) ((ArrayList<B_Node>) this.child).clone();
 		return tmp;
 	}
 

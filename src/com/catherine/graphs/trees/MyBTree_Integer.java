@@ -275,54 +275,10 @@ public class MyBTree_Integer implements BTree {
 	 * @throws CloneNotSupportedException
 	 */
 	private void swap(B_Node n1, B_Node n2) throws CloneNotSupportedException {
-
-		System.out.println("n1:" + n1.toString());
-		System.out.println("n2:" + n2.toString());
-		B_Node tmp = n1.clone();
-
-		if (n1.getChild() != null) {
-			for (B_Node b : n1.getChild()) {
-				if (b != null)
-					b.setParent(n2);
-			}
-		}
-
-		if (n1.getParent() != null) {
-			List<B_Node> newChild = n1.getParent().getChild();
-			for (int i = 0; i < newChild.size(); i++) {
-				if (newChild.get(i) == n1)
-					newChild.set(i, n2);
-			}
-		} else
-			root = n2;
-
-		n1.setKey(n2.getKey());
-		n1.setChild(n2.getChild());
-		n1.setParent(n2.getParent());
-
-		if (n2.getChild() != null) {
-			for (B_Node b : n2.getChild()) {
-				if (b != null)
-					b.setParent(tmp);
-			}
-		}
-
-		if (n2.getParent() != null) {
-			List<B_Node> newChild = n2.getParent().getChild();
-			for (int i = 0; i < newChild.size(); i++) {
-				if (newChild.get(i) == n2)
-					newChild.set(i, tmp);
-			}
-		} else
-			root = tmp;
-
-		n2.setKey(tmp.getKey());
-		n2.setChild(tmp.getChild());
-		n2.setParent(tmp.getParent());
-
-		System.out.println("n1:" + n1.toString());
-		System.out.println("tmp:" + tmp.toString());
-		System.out.println("n2:" + n2.toString());
+		B_Node tmp1 = n1.clone();
+		B_Node tmp2 = n2.clone();
+		n1 = tmp2;
+		n2 = tmp1;
 	}
 
 	@Override
