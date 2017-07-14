@@ -248,14 +248,11 @@ public class MyBTree_Integer implements BTree {
 		} else {
 			// 找出后继节点
 			B_Node succ = target.getChild().get(pos + 1);
-			System.out.println("后继节点:" + succ.getKey());
-			try {
-				swap(target, succ);
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-			System.out.println("新target:" + target.getKey());
-			System.out.println("新后继:" + succ.getKey());
+			System.out.println("target:" + target.toString());
+			System.out.println("后继节点:" + succ.toString());
+			swap(target, succ);
+			System.out.println("新target:" + target.toString());
+			System.out.println("新后继:" + succ.toString());
 			// succ.getKey().remove(pos);
 		}
 		System.out.println("pos:" + pos);
@@ -268,17 +265,20 @@ public class MyBTree_Integer implements BTree {
 	/**
 	 * 两节点交换位置
 	 * 
-	 * @param n1
-	 *            第一个节点
-	 * @param n2
-	 *            第二个节点
-	 * @throws CloneNotSupportedException
+	 * @param node1
+	 * @param node2
 	 */
-	private void swap(B_Node n1, B_Node n2) throws CloneNotSupportedException {
-		B_Node tmp1 = n1.clone();
-		B_Node tmp2 = n2.clone();
-		n1 = tmp2;
-		n2 = tmp1;
+	@SuppressWarnings("unchecked")
+	private void swap(B_Node node1, B_Node node2) {
+		List<Integer> key1 = (List<Integer>) ((ArrayList<Integer>) node1.getKey()).clone();
+		List<Integer> key2 = (List<Integer>) ((ArrayList<Integer>) node2.getKey()).clone();
+		node1.setKey(key2);
+		node2.setKey(key1);
+	}
+
+	class Nodepair {
+		public B_Node node1;
+		public B_Node node2;
 	}
 
 	@Override

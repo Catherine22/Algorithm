@@ -104,7 +104,7 @@ public class Main {
 		myBTree.insert(20);
 		myBTree.insert(1);
 		myBTree.insert(2);
-//		System.out.println(myBTree.toString());
+		System.out.println(myBTree.toString());
 		myBTree.remove(2);
 		System.out.println(myBTree.toString());
 		// myBTree.insert(25);
