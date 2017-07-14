@@ -92,27 +92,26 @@ public class Main {
 		// testSplayTree();
 		testBTree();
 
-//		 testCryptography();
+		// testCryptography();
 		// testJWS();
 	}
 
 	public static void testBTree() {
 		MyBTree_Integer myBTree = new MyBTree_Integer(5, 10);
-		 myBTree.printInfo();
+		// myBTree.printInfo();
 		myBTree.insert(5);
 		myBTree.insert(15);
-		myBTree.insert(20);
+		myBTree.insert(25);
 		myBTree.insert(1);
 		myBTree.insert(2);
 		myBTree.insert(3);
-		myBTree.insert(7);
-		myBTree.insert(9);
+		myBTree.insert(20);
+		myBTree.insert(30);
 		myBTree.insert(6);
+		myBTree.insert(17);
 		System.out.println(myBTree.toString());
-		myBTree.remove(20);
+		myBTree.remove(10);
 		System.out.println(myBTree.toString());
-		// myBTree.insert(25);
-		// myBTree.remove(20);
 
 	}
 

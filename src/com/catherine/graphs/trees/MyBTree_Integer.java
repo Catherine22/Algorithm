@@ -54,6 +54,7 @@ import com.catherine.graphs.trees.nodes.B_Node;
  */
 public class MyBTree_Integer implements BTree {
 	private final static boolean SHOW_LOG = true;
+	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = true;
 	/**
 	 * 关键码总数
 	 */
@@ -218,7 +219,7 @@ public class MyBTree_Integer implements BTree {
 				|| hot.getChild().get(rank).getKey() == null)
 			return null;// 失败，最终抵达外部节点
 
-		loadToRAM(hot);
+		loadToMainMemory(hot);
 		return search(hot.getChild().get(rank), key);
 	}
 
@@ -269,38 +270,24 @@ public class MyBTree_Integer implements BTree {
 		}
 
 		if (target.getChild().get(pos + 1) == null) {
-			// 当前节点为叶节点，直接移除
-			target.getKey().remove(pos);
 			if (SHOW_LOG)
 				System.out.println("直接移除");
+
+			// 当前节点为叶节点，直接移除
+			target.getKey().remove(pos);
+			if (target.getKey() != null)
+				solveUnderfolw(target);
 		} else {
-			// 找出后继节点
+			// 找出后继key（位于右节点）
 			B_Node succ = target.getChild().get(pos + 1);
-			System.out.println("target:" + target.toString());
-			System.out.println("后继节点:" + succ.toString());
-			swap(target, succ);
-			System.out.println("新target:" + target.toString());
-			System.out.println("新后继:" + succ.toString());
-			succ.getKey().remove(pos);
+			if (SHOW_LOG)
+				System.out.println("目标节点:" + target.getKey() + "\n后继节点:" + succ.getKey());
+			target.getKey().set(pos, succ.getKey().get(0));
+			succ.getKey().remove(0);
+			if (succ.getKey() != null)
+				solveUnderfolw(succ);
 		}
-
-		if (target.getKey() != null)
-			solveUnderfolw(target);
 		return true;
-	}
-
-	/**
-	 * 两节点交换位置
-	 * 
-	 * @param node1
-	 * @param node2
-	 */
-	@SuppressWarnings("unchecked")
-	private void swap(B_Node node1, B_Node node2) {
-		List<Integer> key1 = (List<Integer>) ((ArrayList<Integer>) node1.getKey()).clone();
-		List<Integer> key2 = (List<Integer>) ((ArrayList<Integer>) node2.getKey()).clone();
-		node1.setKey(key2);
-		node2.setKey(key1);
 	}
 
 	@Override
@@ -396,9 +383,11 @@ public class MyBTree_Integer implements BTree {
 		if (SHOW_LOG)
 			System.out.println("下溢");
 
-		// 首先找出左右的兄弟，如果兄弟节点有多余的key值，找出最大或最小的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。
 		B_Node parent = node.getParent();
-		if (parent != null && parent.getChild() != null) {
+		if (parent == null)
+			return;
+
+		if (parent.getChild() != null) {
 			int header = 0;
 			for (int i = 0; i < parent.getChild().size(); i++) {
 				if (parent.getChild().get(i) == node)
@@ -407,22 +396,92 @@ public class MyBTree_Integer implements BTree {
 
 			B_Node bro;
 			boolean rotated = false;
+			// 找出左兄弟
 			if (header - 1 > 0) {
 				bro = parent.getChild().get(header - 1);
+				// 如果兄弟节点有多余的key值，找出最大的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。
 				if (bro != null && bro.getKey().size() > (getMIN_KEYSET_SIZE() + 1)) {
 					rotated = rotateKeys(node, bro, true);
 				}
 			}
+			// 找出右兄弟
 			if (!rotated && header + 1 < parent.getChild().size()) {
 				bro = parent.getChild().get(header + 1);
+				// 如果兄弟节点有多余的key值，找出最小的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。
 				if (bro != null && bro.getKey().size() > (getMIN_KEYSET_SIZE() + 1)) {
 					rotated = rotateKeys(node, bro, false);
 				}
 			}
-		}
-		// 假如没有兄弟或是兄弟节点没有多余key值
-		else {
 
+			// 假如没有兄弟或是兄弟节点没有多余key值
+			if (!rotated) {
+				// 找出左兄弟（兄弟节点没有多余key值）
+				if (header - 1 > 0) {
+					bro = parent.getChild().get(header - 1);
+					if (bro != null && bro.getKey().size() == getMIN_KEYSET_SIZE()) {
+						// 同时node的key长度 < getMIN_KEYSET_SIZE()
+
+						boolean stopLoop = false;
+						int i = 0;// 父节点的key位置
+						// 找出父节点的key位置
+						while (i < parent.getKey().size() && !stopLoop) {
+							if (parent.getKey().get(i) > bro.getKey().get(bro.getKey().size() - 1))
+								stopLoop = true;
+							else
+								i++;
+						}
+
+						if (SHOW_LOG)
+							System.out.println("合并（左兄弟所有key+一个父key+目标节点所有key）");
+						// 合并（左兄弟所有key+一个父key+目标节点所有key）
+						List<Integer> compositeKeys = bro.getKey();
+						compositeKeys.add(parent.getKey().get(i));
+						compositeKeys.addAll(node.getKey());
+
+						parent.getChild().remove(node);
+
+						parent.getKey().remove(i);
+						solveUnderfolw(parent);
+						rotated = true;
+					}
+				}
+
+				// 找出右兄弟（兄弟节点没有多余key值）
+				if (!rotated && header + 1 < parent.getChild().size()) {
+					bro = parent.getChild().get(header + 1);
+					if (bro != null && bro.getKey().size() == getMIN_KEYSET_SIZE()) {
+						// 同时node的key长度 < getMIN_KEYSET_SIZE()
+
+						boolean stopLoop = false;
+						int i = 0;// 父节点的key位置
+						// 找出父节点的key位置
+						while (i >= 0 && !stopLoop) {
+							if (parent.getKey().get(i) < bro.getKey().get(bro.getKey().size() - 1))
+								stopLoop = true;
+							else
+								i--;
+						}
+
+						if (SHOW_LOG)
+							System.out.println("合并（目标节点所有key+一个父key+右兄弟所有key）");
+						// 合并（目标节点所有key+一个父key+右兄弟所有key）
+						List<Integer> compositeKeys = node.getKey();
+						compositeKeys.add(parent.getKey().get(i));
+						compositeKeys.addAll(bro.getKey());
+
+						parent.getChild().remove(bro);
+
+						parent.getKey().remove(i);
+						solveUnderfolw(parent);
+						rotated = true;
+					}
+				}
+			}
+
+			if (!rotated) {
+				if (SHOW_LOG)
+					System.out.println("没有兄弟节点");
+			}
 		}
 	}
 
@@ -442,12 +501,13 @@ public class MyBTree_Integer implements BTree {
 		if (bro.getParent() == null || bro.getParent().getKey() == null)
 			return false;
 
-		int header = 0;// 父节点的key位置
 		boolean stopLoop = false;
 		B_Node parent = bro.getParent();
 		if (isClockwise) {
 			if (SHOW_LOG)
 				System.out.println("Rotating clockwise");
+
+			int header = 0;// 父节点的key位置
 			// 找出父节点的key位置
 			while (header < parent.getKey().size() && !stopLoop) {
 				if (parent.getKey().get(header) > bro.getKey().get(bro.getKey().size() - 1))
@@ -455,7 +515,7 @@ public class MyBTree_Integer implements BTree {
 				else
 					header++;
 			}
-
+			// 旋转
 			List<Integer> nodeKeys = node.getKey();
 			nodeKeys.add(0, parent.getKey().get(header));
 			List<Integer> broKeys = bro.getKey();
@@ -466,16 +526,18 @@ public class MyBTree_Integer implements BTree {
 		} else {
 			if (SHOW_LOG)
 				System.out.println("Rotating counterclockwise");
+
+			int header = parent.getKey().size() - 1;
 			// 找出父节点的key位置
-			while (header < parent.getKey().size() && !stopLoop) {
+			while (header >= 0 && !stopLoop) {
 				if (parent.getKey().get(header) < bro.getKey().get(bro.getKey().size() - 1))
 					stopLoop = true;
 				else
-					header++;
+					header--;
 			}
-
+			// 旋转
 			List<Integer> nodeKeys = node.getKey();
-			nodeKeys.add(0, parent.getKey().get(header));
+			nodeKeys.add(parent.getKey().get(header));
 			List<Integer> broKeys = bro.getKey();
 			List<Integer> parentKeys = parent.getKey();
 			parentKeys.remove(header);
@@ -519,27 +581,23 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	/**
-	 * 模拟当前是第几级存储，测试用
-	 */
-	private int getLevel(B_Node node) {
-		int level = 1;
-		if (node.getParent() != null) {
-			B_Node parent = node.getParent();
-			while (parent != null) {
-				level++;
-				parent = parent.getParent();
-			}
-		}
-		return level;
-	}
-
-	/**
 	 * 模拟把数据载到内存里，每次跨级别存储，都需要花费大量时间。
 	 */
-	private void loadToRAM(B_Node node) {
+	private void loadToMainMemory(B_Node node) {
+		if (SKIP_LOADING_TO_MAIN_MEMORY)
+			return;
+
 		try {
-			System.out.println(String.format("Loading data from level %d external memory...", getLevel(node)));
-			Thread.sleep(100);
+			int level = 1;// 模拟当前是第几级存储
+			if (node.getParent() != null) {
+				B_Node parent = node.getParent();
+				while (parent != null) {
+					level++;
+					parent = parent.getParent();
+				}
+			}
+			System.out.println(String.format("Loading data from level %d external memory...", level));
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -609,8 +667,6 @@ public class MyBTree_Integer implements BTree {
 			}
 		}
 
-		// System.out.print(root.getChild().get(0).getKey());
-		// System.out.println(" "+root.getChild().get(1).getKey());
 		if (log.charAt(log.length() - 1) == ':') {
 			String rubbish = String.format("level %d:", level - 1);
 			log.delete(log.length() - rubbish.length(), log.length());
