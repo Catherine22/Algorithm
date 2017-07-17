@@ -384,8 +384,19 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public void solveUnderfolw(B_Node node) {
-		if (node.getKey().size() >= getMIN_KEYSET_SIZE() || node.getParent() == null)
+		if (node.getKey().size() >= getMIN_KEYSET_SIZE())
 			return;
+
+		// 根节点至少有一个关键码
+		if (node.getParent() == null && node.getKey().size() == 0) {
+			// 此时应该只会有0或1个孩子
+			if (node.getChild() == null || node.getChild().isEmpty())
+				root = null;
+			else
+				root = node.getChild().get(0);
+			node = null;
+			return;
+		}
 
 		if (SHOW_LOG)
 			System.out.println("下溢");
@@ -446,8 +457,10 @@ public class MyBTree_Integer implements BTree {
 						compositeKeys.addAll(node.getKey());
 
 						parent.getChild().remove(node);
-
 						parent.getKey().remove(i);
+
+						if (node.getChild() != null && node.getChild().size() != 0)
+							bro.getChild().addAll(node.getChild());
 						solveUnderfolw(parent);
 						rotated = true;
 					}
@@ -477,8 +490,10 @@ public class MyBTree_Integer implements BTree {
 						compositeKeys.addAll(bro.getKey());
 
 						parent.getChild().remove(bro);
-
 						parent.getKey().remove(i);
+
+						if (bro.getChild() != null && bro.getChild().size() != 0)
+							node.getChild().addAll(bro.getChild());
 						solveUnderfolw(parent);
 						rotated = true;
 					}
