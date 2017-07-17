@@ -1,6 +1,6 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
-import com.catherine.graphs.trees.nodes.Node;
+import com.catherine.trees.nodes.Node;
 
 public interface BinaryTree<E> {
 

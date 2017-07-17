@@ -1,4 +1,4 @@
-Algorithms
+trees/Algorithms
 ===================
 
 
@@ -21,7 +21,7 @@ Algorithms
 > - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1). <br>
 > If you need a large array, double the capacity of your array is more efficient. In general, it's better.
 
-  - Insert/remove/find a element
+  - Insertion/removing/searching
   - Shift continued-elements (It's also a high level method to remove continued-elements)
   - Update each element with an interface
   - Remove duplicates with/without sorting
@@ -171,13 +171,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ### B-Tree
 
 - Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.
-- There are 2 tips about memory you must know -- First of all, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory 100 times than external memory once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
-
+- There are 2 tips about memory you must know -- First of all, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
 ![B-tree][8]
 
-
-
+- Insertion/removing/searching
+- [MyBTree_Integer]
 
 ## [Others]
   - Hailstone
@@ -285,13 +284,13 @@ private void testJWS() {
    [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
    [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
    [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
-   [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinaryTree.java>
-   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyBinarySearchTree.java>
-   [BinarySearchTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/BinarySearchTreeImpl.java>
-   [MyAVLTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MyAVLTree.java>
-   [MySplayTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/MySplayTree.java>
-   [BSTNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BSTNode.java>
-   [BNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/trees/nodes/BNode.java>
+   [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBinaryTree.java>
+   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBinarySearchTree.java>
+   [BinarySearchTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/BinarySearchTreeImpl.java>
+   [MyAVLTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyAVLTree.java>
+   [MySplayTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MySplayTree.java>
+   [BSTNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/nodes/BSTNode.java>
+   [BNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/nodes/BNode.java>
    [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
    [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
    [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
@@ -301,6 +300,7 @@ private void testJWS() {
    [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
    [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
    [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
+   [MyBTree_Integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree_Integer.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

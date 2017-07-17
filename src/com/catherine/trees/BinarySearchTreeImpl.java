@@ -1,12 +1,12 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.catherine.graphs.trees.nodes.Node;
-import com.catherine.graphs.trees.nodes.NodeAdapter;
-import com.catherine.graphs.trees.nodes.Nodes;
+import com.catherine.trees.nodes.Node;
+import com.catherine.trees.nodes.NodeAdapter;
+import com.catherine.trees.nodes.Nodes;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.Others;
 

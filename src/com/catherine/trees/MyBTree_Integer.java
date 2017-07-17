@@ -1,4 +1,4 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import com.catherine.graphs.trees.nodes.B_Node;
+import com.catherine.trees.nodes.B_Node;
 
 /**
  * “B-Tree”——平衡的多路搜索树。<br>
@@ -54,7 +54,7 @@ import com.catherine.graphs.trees.nodes.B_Node;
  */
 public class MyBTree_Integer implements BTree {
 	private final static boolean SHOW_LOG = true;
-	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = true;
+	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = false;
 	/**
 	 * 关键码总数
 	 */
@@ -86,12 +86,7 @@ public class MyBTree_Integer implements BTree {
 		List<Integer> rootKeys = new ArrayList<>();
 		rootKeys.add(rootKey); // 只有一个关键码
 		root.setKey(rootKeys);
-
-		// B_Node lc = new B_Node();
-		// lc.setParent(root);
-		// B_Node rc = new B_Node();
-		// rc.setParent(root);
-
+		
 		List<B_Node> child = new ArrayList<>();
 		child.add(0, null);// 左孩子
 		child.add(1, null);// 右孩子
@@ -390,7 +385,7 @@ public class MyBTree_Integer implements BTree {
 		// 根节点至少有一个关键码
 		if (node.getParent() == null && node.getKey().size() == 0) {
 			// 此时应该只会有0或1个孩子
-			if (node.getChild() == null || node.getChild().isEmpty())
+			if (isListEmpty(node.getChild()))
 				root = null;
 			else
 				root = node.getChild().get(0);
@@ -459,7 +454,7 @@ public class MyBTree_Integer implements BTree {
 						parent.getChild().remove(node);
 						parent.getKey().remove(i);
 
-						if (node.getChild() != null && node.getChild().size() != 0)
+						if (!isListEmpty(node.getChild()))
 							bro.getChild().addAll(node.getChild());
 						solveUnderfolw(parent);
 						rotated = true;
@@ -492,7 +487,7 @@ public class MyBTree_Integer implements BTree {
 						parent.getChild().remove(bro);
 						parent.getKey().remove(i);
 
-						if (bro.getChild() != null && bro.getChild().size() != 0)
+						if (!isListEmpty(bro.getChild()))
 							node.getChild().addAll(bro.getChild());
 						solveUnderfolw(parent);
 						rotated = true;
@@ -520,7 +515,7 @@ public class MyBTree_Integer implements BTree {
 	 * @return 结果
 	 */
 	private boolean rotateKeys(B_Node node, B_Node bro, boolean isClockwise) {
-		if (bro.getParent() == null || bro.getParent().getKey() == null)
+		if (bro.getParent() == null || isListEmpty(bro.getParent().getKey()))
 			return false;
 
 		boolean stopLoop = false;
@@ -567,6 +562,10 @@ public class MyBTree_Integer implements BTree {
 			broKeys.remove(0);
 		}
 		return true;
+	}
+
+	private boolean isListEmpty(List<?> list) {
+		return list == null || list.size() == 0;
 	}
 
 	/**

@@ -1,6 +1,6 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
-import com.catherine.graphs.trees.nodes.B_Node;
+import com.catherine.trees.nodes.B_Node;
 
 public interface BTree {
 	/**

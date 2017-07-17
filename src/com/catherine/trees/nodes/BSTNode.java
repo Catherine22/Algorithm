@@ -1,6 +1,12 @@
-package com.catherine.graphs.trees.nodes;
-//Binary tree
-public class BNode<E> implements Node<E> {
+package com.catherine.trees.nodes;
+//Binary search tree
+public class BSTNode<E> implements Node<E> {
+
+	/**
+	 * key-value, key不重复
+	 */
+	private int key;
+
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 	 */
@@ -11,14 +17,15 @@ public class BNode<E> implements Node<E> {
 	 */
 	private int depth;
 	private E data;
-	private BNode<E> parent;
-	private BNode<E> lChild;
-	private BNode<E> rChild;
+	private BSTNode<E> parent;
+	private BSTNode<E> lChild;
+	private BSTNode<E> rChild;
 
-	public BNode(E data, BNode<E> parent, BNode<E> lChild, BNode<E> rChild, int height, int depth) {
+	public BSTNode(int key, E data, BSTNode<E> parent, BSTNode<E> lChild, BSTNode<E> rChild, int height, int depth) {
 		this.data = data;
 		this.depth = depth;
 		this.height = height;
+		this.key = key;
 		this.parent = parent;
 		this.lChild = lChild;
 		this.rChild = rChild;
@@ -26,27 +33,26 @@ public class BNode<E> implements Node<E> {
 
 	@Override
 	public String toString() {
-		if (parent != null)
-			return String.format(
-					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-					data, data, height, depth, parent.data);
-		else
-			return String.format(
-					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-					data, data, height, depth, "null parent");
-	}
+		String pkey = (parent != null) ? parent.key + "" : "null parent";
+		String lkey = (lChild != null) ? lChild.key + "" : "null lChild";
+		String rkey = (rChild != null) ? rChild.key + "" : "null rChild";
 
+		return String.format(
+				"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
+				key, data, height, depth, pkey, lkey, rkey);
+
+	}
 
 	@Override
 	public int getKey() {
-		//Do nothing
-		return -1;
+		return key;
 	}
 
 	@Override
 	public void setKey(int key) {
-		//Do nothing
+		this.key = key;
 	}
+
 	@Override
 	public int getHeight() {
 		return height;
@@ -79,40 +85,36 @@ public class BNode<E> implements Node<E> {
 
 	@Override
 	public Node<E> getParent() {
-		return (BNode<E>) parent;
+		return (BSTNode<E>) parent;
 	}
 
 	@Override
 	public void setParent(Node<E> parent) {
-		this.parent = (BNode<E>) parent;
+		this.parent = (BSTNode<E>) parent;
 	}
 
 	@Override
 	public Node<E> getlChild() {
-		return (BNode<E>) lChild;
+		return (BSTNode<E>) lChild;
 	}
 
 	@Override
 	public void setlChild(Node<E> lChild) {
-		this.lChild = (BNode<E>) lChild;
+		this.lChild = (BSTNode<E>) lChild;
 	}
 
 	@Override
 	public Node<E> getrChild() {
-		return (BNode<E>) rChild;
+		return (BSTNode<E>) rChild;
 	}
 
 	@Override
 	public void setrChild(Node<E> rChild) {
-		this.rChild = (BNode<E>) rChild;
+		this.rChild = (BSTNode<E>) rChild;
 	}
 
 	@Override
 	public String getInfo() {
-		if (data != null)
-			return data + " ";
-		else
-			return "null ";
-
+		return key + "(" + height + ") ";
 	}
 }

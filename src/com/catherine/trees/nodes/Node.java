@@ -1,4 +1,4 @@
-package com.catherine.graphs.trees.nodes;
+package com.catherine.trees.nodes;
 
 public interface Node<E> {
 
