@@ -1,4 +1,4 @@
-package com.catherine.graphs.trees.nodes;
+package com.catherine.trees.nodes;
 
 /**
  * 利用装饰者模式切换Node

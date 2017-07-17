@@ -1,8 +1,15 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
-import com.catherine.graphs.trees.nodes.B_Node;
+import com.catherine.trees.nodes.B_Node;
 
 public interface BTree {
+	/**
+	 * 一个节点最多有m-1个key值
+	 * 
+	 * @return
+	 */
+	public boolean isFull();
+
 	/**
 	 * 返回根节点
 	 * 
@@ -60,7 +67,9 @@ public interface BTree {
 	 * 一层一层往下找，直觉会想到用二分查找算法加速，但以整个内外存来看，这样的加速未必有效，甚至可能会花上更多时间。<br>
 	 * 失败查找会终止于外部节点。<br>
 	 * 由于每一层都只会查找一组key列表，所以会影响速度的是树的高度。<br>
-	 * 时间花在：1. 载入下一层次节点（IO操作）2. 每一层的顺序查找<br>
+	 * 时间花在：<br>
+	 * 1. 载入下一层次节点（IO操作），这边最耗时。<br>
+	 * 2. 每一层的顺序查找。 <br>
 	 * 
 	 * @param key
 	 * @return
@@ -100,9 +109,16 @@ public interface BTree {
 	public void solveOverflow(B_Node node);
 
 	/**
-	 * 因删除而下溢后的合并处理
+	 * 因删除而下溢后的合并处理<br>
+	 * 下溢:关键码总数少于[m / 2]-1，即违反B-tree定义<br>
+	 * 第一种做法：旋转（首先找出左右的兄弟，如果兄弟节点有多余的key值，找出最大或最小的key顶替父节点的值，然后再把父节点的key值挪给下溢节点。）
+	 * <br>
+	 * 第二种做法：合并。假如兄弟节点没有多余key值适用，此时兄弟节点的key长度为最小长度[m / 2]-1，目标节点key长度 < [m /
+	 * 2]-1，加上父节点的key值(1)合并（key值长度<=m-1）<br>
 	 * 
 	 * @param node
 	 */
 	public void solveUnderfolw(B_Node node);
+
+	public void printInfo();
 }

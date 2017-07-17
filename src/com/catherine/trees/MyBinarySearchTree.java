@@ -1,14 +1,14 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.catherine.graphs.trees.nodes.Node;
+import com.catherine.trees.nodes.Node;
 
 /**
- * {@link com.catherine.graphs.trees.BinarySearchTreeImpl}继承
- * {@link com.catherine.graphs.trees.MyBinaryTree}<br>
+ * {@link com.catherine.trees.BinarySearchTreeImpl}继承
+ * {@link com.catherine.trees.MyBinaryTree}<br>
  * 有一些从MyBinaryTree公开的方法不适用二叉搜索树（
  * 在MyBinarySearchTreeKernel内搜寻UnsupportedOperationException），所以另外定义一个客户端接口
  * 

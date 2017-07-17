@@ -1,4 +1,4 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
 public interface Callback {
 	/**

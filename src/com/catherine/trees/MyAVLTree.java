@@ -1,6 +1,6 @@
-package com.catherine.graphs.trees;
+package com.catherine.trees;
 
-import com.catherine.graphs.trees.nodes.Node;
+import com.catherine.trees.nodes.Node;
 
 /**
  * BST中每个节点的平衡因子都是1、0或-1则为AVL Tree
