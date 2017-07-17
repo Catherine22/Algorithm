@@ -290,11 +290,6 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public void release() {
-
-	}
-
-	@Override
 	public void solveOverflow(B_Node node) {
 		if (node.getKey().size() <= (int) Math.ceil(order - 1))
 			return;
