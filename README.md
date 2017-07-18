@@ -80,6 +80,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
   > An Edge<E> is a user-defined class, it contains data, weight and status.
 
+## Tree
 
 ### Binary Tree
 
@@ -159,6 +160,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - [MyAVLTree]
 
+## Classy tree
+
 ### Splay tree
 
 - Splay tree practices pretty well when the recently accessed node may be accessed again.
@@ -177,6 +180,11 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 - Insertion/removing/searching
 - [MyBTree_Integer]
+
+### Red-black BSTs
+
+- If you want to restore state of an object to a previous state, you might save every state with a version name. It seems not a good idea because you'd waste a lot of memory to keep it. There is a solution that you share same items to the last and the next version, and you store new items when it's been modified. Red-black binary search tree
+
 
 ## [Others]
   - Hailstone
@@ -300,7 +308,7 @@ private void testJWS() {
    [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
    [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
    [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
-   [MyBTree_Integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree_Integer.java>
+   [MyBTree_Integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
