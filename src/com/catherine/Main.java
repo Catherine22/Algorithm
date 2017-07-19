@@ -37,7 +37,7 @@ import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
 import com.catherine.trees.Callback;
 import com.catherine.trees.MyAVLTree;
-import com.catherine.trees.MyBTree_Integer;
+import com.catherine.trees.MyBTree;
 import com.catherine.trees.MyBinarySearchTree;
 import com.catherine.trees.MyBinaryTree;
 import com.catherine.trees.MyRedBlackBST;
@@ -97,33 +97,35 @@ public class Main {
 	private static void testRedBlackTree() {
 		MyRedBlackBST<String> rbTree = new MyRedBlackBST<String>(10, null);
 		rbTree.insert(5, null);
+		rbTree.insert(7, null);
+		rbTree.insert(6, null);
 		rbTree.traverseLevel();
 	}
 
 	public static void testBTree() {
-		MyBTree_Integer myBTree = new MyBTree_Integer(5, 528);
+		MyBTree<String> myBTree = new MyBTree<>(5, 528);
 		// myBTree.printInfo();
-		myBTree.insert(192);
-		myBTree.insert(268);
-		myBTree.insert(703);
-		myBTree.insert(850);
+		myBTree.insert(192, null);
+		myBTree.insert(268, null);
+		myBTree.insert(703, null);
+		myBTree.insert(850, null);
 
-		myBTree.insert(57);
-		myBTree.insert(152);
-		myBTree.insert(249);
-		myBTree.insert(266);
-		myBTree.insert(315);
-		myBTree.insert(423);
-		myBTree.insert(468);
-		myBTree.insert(484);
-		myBTree.insert(619);
-		myBTree.insert(644);
-		myBTree.insert(758);
-		myBTree.insert(771);
-		myBTree.insert(865);
-		myBTree.insert(882);
-		myBTree.insert(936);
-		myBTree.insert(984);
+		myBTree.insert(57, null);
+		myBTree.insert(152, null);
+		myBTree.insert(249, null);
+		myBTree.insert(266, null);
+		myBTree.insert(315, null);
+		myBTree.insert(423, null);
+		myBTree.insert(468, null);
+		myBTree.insert(484, null);
+		myBTree.insert(619, null);
+		myBTree.insert(644, null);
+		myBTree.insert(758, null);
+		myBTree.insert(771, null);
+		myBTree.insert(865, null);
+		myBTree.insert(882, null);
+		myBTree.insert(936, null);
+		myBTree.insert(984, null);
 		// System.out.println(myBTree.toString());
 		myBTree.remove(249);
 		System.out.println(myBTree.toString());

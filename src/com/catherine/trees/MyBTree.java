@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import com.catherine.trees.nodes.B_Node;
+import com.catherine.trees.nodes.BNode;
 
 /**
  * “B-Tree”——平衡的多路搜索树。<br>
@@ -52,7 +52,7 @@ import com.catherine.trees.nodes.B_Node;
  * @author Catherine
  *
  */
-public class MyBTree_Integer implements BTree {
+public class MyBTree<E> implements BTree<E> {
 	private final static boolean SHOW_LOG = true;
 	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = false;
 	/**
@@ -67,27 +67,35 @@ public class MyBTree_Integer implements BTree {
 	/**
 	 * search()最后访问的非空(除非树空)的节点位置
 	 */
-	private B_Node hot;
+	private BNode<E> hot;
 	/**
 	 * 根节点
 	 */
-	private B_Node root;
+	private BNode<E> root;
 
-	public MyBTree_Integer(int order) {
+	public MyBTree(int order) {
 		this(order, 0);
 	}
 
-	public MyBTree_Integer(int order, int rootKey) {
+	public MyBTree(int order, int rootKey) {
+		this(order, rootKey, null);
+	}
+
+	public MyBTree(int order, int rootKey, E rootValue) {
 		this.order = (order < 2) ? 2 : order;
 
-		root = new B_Node();
+		root = new BNode<E>();
 		root.setParent(null);
 
 		List<Integer> rootKeys = new ArrayList<>();
 		rootKeys.add(rootKey); // 只有一个关键码
 		root.setKey(rootKeys);
-		
-		List<B_Node> child = new ArrayList<>();
+
+		List<E> rootValues = new ArrayList<>();
+		rootValues.add(rootValue); // 只有一个关键码
+		root.setValue(rootValues);
+
+		List<BNode<E>> child = new ArrayList<>();
 		child.add(0, null);// 左孩子
 		child.add(1, null);// 右孩子
 		root.setChild(child);
@@ -102,13 +110,13 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public B_Node getRoot() {
+	public BNode<E> getRoot() {
 		return root;
 	}
 
 	@Override
 	public boolean isFull() {
-		Queue<B_Node> line = new ArrayDeque<>();
+		Queue<BNode<E>> line = new ArrayDeque<>();
 		line.add(root);
 		line.addAll(root.getChild());
 		boolean f = true;
@@ -117,7 +125,7 @@ public class MyBTree_Integer implements BTree {
 				f = false;
 
 			if (line.peek() != null && line.peek().getChild() != null) {
-				List<B_Node> tmp = line.peek().getChild();
+				List<BNode<E>> tmp = line.peek().getChild();
 				for (int i = 0; i < tmp.size(); i++) {
 					if (tmp.get(i) != null)
 						line.add(tmp.get(i));
@@ -127,7 +135,7 @@ public class MyBTree_Integer implements BTree {
 		return f;
 	}
 
-	private boolean isFull(B_Node node) {
+	private boolean isFull(BNode<E> node) {
 		return node.getKey() == null || node.getKey().size() == (order - 1);
 	}
 
@@ -192,13 +200,13 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public B_Node search(int key) {
+	public BNode<E> search(int key) {
 		checkElementIndex(key);
 		return search(root, key);
 	}
 
-	private B_Node search(B_Node target, int key) {
-		B_Node header = target;
+	private BNode<E> search(BNode<E> target, int key) {
+		BNode<E> header = target;
 		int rank = 0;
 		while (rank < header.getKey().size()) {
 			if (header.getKey().get(rank) < key)
@@ -225,8 +233,8 @@ public class MyBTree_Integer implements BTree {
 	 * @param key
 	 * @return
 	 */
-	private int searchPosi(B_Node target, int key) {
-		B_Node header = target;
+	private int searchPosi(BNode<E> target, int key) {
+		BNode<E> header = target;
 		int rank = 0;
 		while (rank < header.getKey().size()) {
 			if (header.getKey().get(rank) < key)
@@ -238,12 +246,13 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public boolean insert(int key) {
+	public boolean insert(int key, E value) {
 		if (search(key) != null)
 			return false;// 已经存在关键码，直接返回。
 
 		int pos = searchPosi(hot, key);
 		hot.getKey().add(pos + 1, key);
+		hot.getValue().add(pos + 1, value);
 		hot.getChild().add(pos + 2, null);// 因为关键码向量(x)与孩子向量(o)的位置应对齐
 		size++;
 		solveOverflow(hot);// 若发生上溢，做分裂处理
@@ -252,7 +261,7 @@ public class MyBTree_Integer implements BTree {
 
 	@Override
 	public boolean remove(int key) {
-		B_Node target = search(key);
+		BNode<E> target = search(key);
 		if (target == null)
 			return false;// 不存在关键码，直接返回。
 
@@ -270,17 +279,20 @@ public class MyBTree_Integer implements BTree {
 
 			// 当前节点为叶节点，直接移除
 			target.getKey().remove(pos);
+			target.getValue().remove(pos);
 			if (target.getKey() != null)
 				solveUnderfolw(target);
 			else
 				target = null;
 		} else {
 			// 找出后继key（位于右节点）
-			B_Node succ = target.getChild().get(pos + 1);
+			BNode<E> succ = target.getChild().get(pos + 1);
 			if (SHOW_LOG)
 				System.out.println("目标节点:" + target.getKey() + "\n后继节点:" + succ.getKey());
 			target.getKey().set(pos, succ.getKey().get(0));
+			target.getValue().set(pos, succ.getValue().get(0));
 			succ.getKey().remove(0);
+			succ.getValue().remove(0);
 			if (succ.getKey() != null)
 				solveUnderfolw(succ);
 			else
@@ -290,7 +302,7 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public void solveOverflow(B_Node node) {
+	public void solveOverflow(BNode<E> node) {
 		if (node.getKey().size() <= (int) Math.ceil(order - 1))
 			return;
 
@@ -301,38 +313,45 @@ public class MyBTree_Integer implements BTree {
 		// k0~k(median-1), k(median), k(median+1)~k(m-1)
 		// 将 k(median)上升一层，并将刚才左右两组关键码分裂成k(median)的左右孩子。
 		int key = node.getKey().get(median);
+		E value = node.getValue().get(median);
 
 		// key范围分别是k0~k(median-1)和k(median+1)~k(size-1)
 		// 节点的孩子范围分别是k0~k(median)和k(median+1)~k(size-1)
 
 		// 分裂后的左孩子
 		List<Integer> lKeys = new ArrayList<>();
+		List<E> lValues = new ArrayList<>();
 		for (int i = 0; i < median; i++) {
 			lKeys.add(node.getKey().get(i));
+			lValues.add(node.getValue().get(i));
 		}
-		B_Node lChild = new B_Node();
-		List<B_Node> lChildren = new ArrayList<>();
+		BNode<E> lChild = new BNode<E>();
+		List<BNode<E>> lChildren = new ArrayList<>();
 		for (int i = 0; i <= median; i++) {
 			lChildren.add(node.getChild().get(i));
 			if (node.getChild().get(i) != null)
 				node.getChild().get(i).setParent(lChild);
 		}
 		lChild.setKey(lKeys);
+		lChild.setValue(lValues);
 		lChild.setChild(lChildren);
 
 		// 分裂后的右孩子
 		List<Integer> rKeys = new ArrayList<>();
+		List<E> rValues = new ArrayList<>();
 		for (int i = median + 1; i < node.getKey().size(); i++) {
 			rKeys.add(node.getKey().get(i));
+			rValues.add(node.getValue().get(i));
 		}
-		B_Node rChild = new B_Node();
-		List<B_Node> rChildren = new ArrayList<>();
+		BNode<E> rChild = new BNode<E>();
+		List<BNode<E>> rChildren = new ArrayList<>();
 		for (int i = median + 1; i < node.getChild().size(); i++) {
 			rChildren.add(node.getChild().get(i));
 			if (node.getChild().get(i) != null)
 				node.getChild().get(i).setParent(rChild);
 		}
 		rChild.setKey(rKeys);
+		rChild.setValue(rValues);
 		rChild.setChild(rChildren);
 
 		if (SHOW_LOG) {
@@ -343,6 +362,7 @@ public class MyBTree_Integer implements BTree {
 
 		// 移除节点
 		node.getKey().remove(median);
+		node.getValue().remove(median);
 
 		// 当上溢发生在根节点时，指定k(median)为新的根节点，并且具有两分支
 		if (node.getParent() == null) {
@@ -351,7 +371,9 @@ public class MyBTree_Integer implements BTree {
 
 			// insert
 			root.getKey().clear();
+			root.getValue().clear();
 			root.getKey().add(key);
+			root.getValue().add(value);
 
 			root.getChild().clear();
 			root.getChild().add(lChild);
@@ -365,6 +387,7 @@ public class MyBTree_Integer implements BTree {
 			hot = node.getParent();
 			int pos = searchPosi(hot, key);
 			hot.getKey().add(pos + 1, key);
+			hot.getValue().add(pos + 1, value);
 			hot.getChild().set(pos + 1, lChild);
 			hot.getChild().add(pos + 2, rChild);
 
@@ -373,7 +396,7 @@ public class MyBTree_Integer implements BTree {
 	}
 
 	@Override
-	public void solveUnderfolw(B_Node node) {
+	public void solveUnderfolw(BNode<E> node) {
 		if (node.getKey().size() >= getMIN_KEYSET_SIZE())
 			return;
 
@@ -391,7 +414,7 @@ public class MyBTree_Integer implements BTree {
 		if (SHOW_LOG)
 			System.out.println("下溢");
 
-		B_Node parent = node.getParent();
+		BNode<E> parent = node.getParent();
 		if (parent == null)
 			return;
 
@@ -402,7 +425,7 @@ public class MyBTree_Integer implements BTree {
 					header = i;
 			}
 
-			B_Node bro;
+			BNode<E> bro;
 			boolean rotated = false;
 			// 找出左兄弟
 			if (header > 0) {
@@ -446,8 +469,13 @@ public class MyBTree_Integer implements BTree {
 						compositeKeys.add(parent.getKey().get(i));
 						compositeKeys.addAll(node.getKey());
 
+						List<E> compositeValues = bro.getValue();
+						compositeValues.add(parent.getValue().get(i));
+						compositeValues.addAll(node.getValue());
+
 						parent.getChild().remove(node);
 						parent.getKey().remove(i);
+						parent.getValue().remove(i);
 
 						if (!isListEmpty(node.getChild()))
 							bro.getChild().addAll(node.getChild());
@@ -479,8 +507,13 @@ public class MyBTree_Integer implements BTree {
 						compositeKeys.add(parent.getKey().get(i));
 						compositeKeys.addAll(bro.getKey());
 
+						List<E> compositeValues = node.getValue();
+						compositeValues.add(parent.getValue().get(i));
+						compositeValues.addAll(bro.getValue());
+
 						parent.getChild().remove(bro);
 						parent.getKey().remove(i);
+						parent.getValue().remove(i);
 
 						if (!isListEmpty(bro.getChild()))
 							node.getChild().addAll(bro.getChild());
@@ -509,12 +542,12 @@ public class MyBTree_Integer implements BTree {
 	 *            顺时针或逆时针旋转
 	 * @return 结果
 	 */
-	private boolean rotateKeys(B_Node node, B_Node bro, boolean isClockwise) {
+	private boolean rotateKeys(BNode<E> node, BNode<E> bro, boolean isClockwise) {
 		if (bro.getParent() == null || isListEmpty(bro.getParent().getKey()))
 			return false;
 
 		boolean stopLoop = false;
-		B_Node parent = bro.getParent();
+		BNode<E> parent = bro.getParent();
 		if (isClockwise) {
 			if (SHOW_LOG)
 				System.out.println("Rotating clockwise");
@@ -535,6 +568,14 @@ public class MyBTree_Integer implements BTree {
 			parentKeys.remove(header);
 			parentKeys.add(header, broKeys.get(broKeys.size() - 1));
 			broKeys.remove(broKeys.size() - 1);
+
+			List<E> nodeValues = node.getValue();
+			nodeValues.add(0, parent.getValue().get(header));
+			List<E> broValues = bro.getValue();
+			List<E> parentValues = parent.getValue();
+			parentValues.remove(header);
+			parentValues.add(header, broValues.get(broValues.size() - 1));
+			broValues.remove(broValues.size() - 1);
 		} else {
 			if (SHOW_LOG)
 				System.out.println("Rotating counterclockwise");
@@ -555,6 +596,15 @@ public class MyBTree_Integer implements BTree {
 			parentKeys.remove(header);
 			parentKeys.add(header, broKeys.get(0));
 			broKeys.remove(0);
+			
+
+			List<E> nodeValues = node.getValue();
+			nodeValues.add(parent.getValue().get(header));
+			List<E> broValues = bro.getValue();
+			List<E> parentValues = parent.getValue();
+			parentValues.remove(header);
+			parentValues.add(header, broValues.get(0));
+			broValues.remove(0);
 		}
 		return true;
 	}
@@ -599,14 +649,14 @@ public class MyBTree_Integer implements BTree {
 	/**
 	 * 模拟把数据载到内存里，每次跨级别存储，都需要花费大量时间。
 	 */
-	private void loadToMainMemory(B_Node node) {
+	private void loadToMainMemory(BNode<E> node) {
 		if (SKIP_LOADING_TO_MAIN_MEMORY)
 			return;
 
 		try {
 			int level = 1;// 模拟当前是第几级存储
 			if (node.getParent() != null) {
-				B_Node parent = node.getParent();
+				BNode<E> parent = node.getParent();
 				while (parent != null) {
 					level++;
 					parent = parent.getParent();
@@ -628,9 +678,9 @@ public class MyBTree_Integer implements BTree {
 		int level = 0;// 目前阶层
 		int totalKeys = 0;// 该阶层全部key的数量
 		int runKeys = 0;// 执行过的key的数量
-		B_Node header = root;
-		B_Node previousParent = new B_Node();// 记录上一个节点的父节点
-		Queue<B_Node> history = new LinkedList<>();// 待处理节点
+		BNode<E> header = root;
+		BNode<E> previousParent = new BNode<E>();// 记录上一个节点的父节点
+		Queue<BNode<E>> history = new LinkedList<>();// 待处理节点
 		List<Integer> keysInLayers = new LinkedList<>();// 每一层全部key数量
 		history.add(header);
 		keysInLayers.add(header.getKey().size());
@@ -661,7 +711,7 @@ public class MyBTree_Integer implements BTree {
 					if (header.getParent() != previousParent) {
 						totalKeys = 0;
 						for (int i = 0; i < header.getChild().size(); i++) {
-							B_Node child = header.getChild().get(i);
+							BNode<E> child = header.getChild().get(i);
 							if (child != null && child.getKey() != null) {
 								totalKeys += child.getKey().size();
 							}
@@ -670,7 +720,7 @@ public class MyBTree_Integer implements BTree {
 							keysInLayers.add(totalKeys);
 					} else {
 						for (int i = 0; i < header.getChild().size(); i++) {
-							B_Node child = header.getChild().get(i);
+							BNode<E> child = header.getChild().get(i);
 							if (child != null && child.getKey() != null) {
 								totalKeys += child.getKey().size();
 							}
@@ -688,5 +738,17 @@ public class MyBTree_Integer implements BTree {
 			log.delete(log.length() - rubbish.length(), log.length());
 		}
 		return log.toString();
+	}
+
+	/**
+	 * 只有(2, 4)-tree能转成红黑树。
+	 * 
+	 * @return
+	 */
+	public MyRedBlackBST<Object> convertToRedBlackBST() {
+		if (order != 2)
+			return null;
+
+		return null;
 	}
 }

@@ -23,22 +23,26 @@ import java.util.List;
  *
  * @param <E>
  */
-public class B_Node implements Cloneable {
-	private B_Node parent;
+public class BNode<E> implements Cloneable {
+	private BNode<E> parent;
 	/**
 	 * 关键码向量位置（不重复）
 	 */
 	private List<Integer> key;
 	/**
+	 * 关键码向量位置存的值
+	 */
+	private List<E> value;
+	/**
 	 * 孩子向量（其总长度比关键码向量多一）
 	 */
-	private List<B_Node> child;
+	private List<BNode<E>> child;
 
-	public B_Node getParent() {
+	public BNode<E> getParent() {
 		return parent;
 	}
 
-	public void setParent(B_Node parent) {
+	public void setParent(BNode<E> parent) {
 		this.parent = parent;
 	}
 
@@ -46,28 +50,38 @@ public class B_Node implements Cloneable {
 		return key;
 	}
 
+	public List<E> getValue() {
+		return value;
+	}
+
 	public void setKey(List<Integer> key) {
 		this.key = key;
 	}
 
-	public List<B_Node> getChild() {
+	public void setValue(List<E> value) {
+		this.value = value;
+	}
+
+	public List<BNode<E>> getChild() {
 		return child;
 	}
 
-	public void setChild(List<B_Node> child) {
+	public void setChild(List<BNode<E>> child) {
 		this.child = child;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public B_Node clone() throws CloneNotSupportedException {
-		B_Node tmp = (B_Node) super.clone();
+	public BNode<E> clone() throws CloneNotSupportedException {
+		BNode<E> tmp = (BNode<E>) super.clone();
 		if (parent != null)
-			tmp.parent = (B_Node) this.parent.clone();
+			tmp.parent = (BNode<E>) this.parent.clone();
 		if (key != null)
 			tmp.key = (List<Integer>) ((ArrayList<Integer>) this.key).clone();
+		if (value != null)
+			tmp.value = (List<E>) ((ArrayList<E>) this.value).clone();
 		if (child != null)
-			tmp.child = (List<B_Node>) ((ArrayList<B_Node>) this.child).clone();
+			tmp.child = (List<BNode<E>>) ((ArrayList<BNode<E>>) this.child).clone();
 		return tmp;
 	}
 

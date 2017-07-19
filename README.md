@@ -179,11 +179,13 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ![B-tree][8]
 
 - Insertion/removing/searching
-- [MyBTree_Integer]
+- [MyBTree]
 
 ### Red-black BSTs
 
-- If you want to restore state of an object to a previous state, you might save every state with a version name. It seems not a good idea because you'd waste a lot of memory to keep it. There is a solution that you share same items to the last and the next version, and you store new items when it's been modified. Red-black binary search tree
+-
+
+![Red-black-tree][9]
 
 
 ## [Others]
@@ -308,7 +310,9 @@ private void testJWS() {
    [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
    [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
    [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
-   [MyBTree_Integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
+   [MyBTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree.java>
+   [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
+   [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -325,3 +329,4 @@ private void testJWS() {
   [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
   [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
   [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png
+  [9]: https://github.com/Catherine22/Algorithms/blob/master/res/B_R_BST.png.png
