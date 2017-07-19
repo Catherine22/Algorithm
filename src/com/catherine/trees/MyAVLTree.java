@@ -41,7 +41,6 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 	 * 
 	 * @param ins
 	 */
-	@SuppressWarnings("unused")
 	public void insertAndBalance(int key, E data) {
 		final Node<E> newNode = insert(key, data);
 		Node<E> ancestor = newNode.getParent();
@@ -61,6 +60,7 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 				ancestor = ancestor.getParent();
 				tmp = child;
 			} else {
+				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
 				if (ancestor == null || child == null || grandchild == null)
 					break;
 
@@ -154,9 +154,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 				}
 
 				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
-				if (ancestor == null || child == null || grandchild == null) {
+				if (ancestor == null || child == null || grandchild == null)
 					break;
-				}
 
 				boolean isLeftChild = isLeftChild(child);
 				boolean isLeftGrandchild = isLeftChild(grandchild);
@@ -193,8 +192,6 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 					// 符合情况2，">"形
 					right_leftRotate(ancestor);
 				}
-				// System.out.println("hot:"+hot.getKey());
-				// traverseLevel();
 			}
 		}
 	}
