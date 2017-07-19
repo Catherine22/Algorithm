@@ -30,4 +30,11 @@ public interface RedBlackBST<E> {
 	 */
 	public void updateHeight();
 
+	/**
+	 * 转成(2,4)树
+	 * 
+	 * @return
+	 */
+	public MyBTree convertTo24Tree();
+
 }

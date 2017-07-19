@@ -15,12 +15,12 @@ public class RedBlackBSTNode<E> implements Node<E> {
 	private int key;
 
 	/**
-	 * 黑节点到叶子的长度（由下往上，从最下层孩子出发）
+	 * 到最末端黑节点的长度
 	 */
 	private int height;
 
 	/**
-	 * 根到节点的长度（由上往下，从根出发）
+	 * 节点到根的长度
 	 */
 	private int depth;
 	private E data;
@@ -129,7 +129,8 @@ public class RedBlackBSTNode<E> implements Node<E> {
 
 	@Override
 	public String getInfo() {
-		return key + "(" + height + ") ";
+		String color = isBlack ? "B" : "R";
+		return String.format("key(%d, %s) ", height, color);
 	}
 
 	@Override

@@ -133,4 +133,9 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 		rbTree.traversePost();
 	}
 
+	@Override
+	public MyBTree convertTo24Tree() {
+		return null;
+	}
+
 }

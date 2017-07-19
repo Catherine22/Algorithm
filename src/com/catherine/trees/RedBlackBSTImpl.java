@@ -18,7 +18,6 @@ import com.catherine.trees.nodes.Nodes;
  */
 public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBlackBST<E> {
 	private final static boolean SHOW_LOG = true;
-	protected NodeAdapter<E> adapter;
 
 	public RedBlackBSTImpl(int key, E root) {
 		super();
@@ -48,14 +47,55 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 		return root;
 	}
 
+	/**
+	 * 只返回黑节点的高度。<br>
+	 * 根到任意叶子的黑节点高度都一样。
+	 * 
+	 * @return
+	 */
 	@Override
-	public Node<E> search(int key) {
-		return super.search(key);
+	public int getHeight() {
+		if (root == null)
+			return -1;
+
+		// 检查任意一个孩子就行了，因为若只有一个孩子必为红孩子，不影响结果。
+		if (root.getlChild() == null)
+			return 1;
+
+		return getHeight(root);
+	}
+
+	/**
+	 * 到任意叶子的黑节点高度都一样。
+	 * 
+	 * @param node
+	 * @return
+	 */
+	protected int getHeight(Node<E> node) {
+		if (node == null)
+			return -1;
+
+		int height = 0;
+		boolean stop = false;
+		Node<E> header = root;
+		// 走访任意路径
+		while (!stop) {
+			if (header != null) {
+				if (header.isBlack())
+					height++;
+				// 随意一个孩子都行
+				header = header.getlChild();
+			} else
+				stop = true;
+		}
+		return height;
 	}
 
 	@Override
 	public Node<E> insert(int key, E data) {
-		return null;
+		Node<E> node = super.insert(key, data);
+		solveDoubleRed(node);
+		return node;
 	}
 
 	@Override
@@ -74,7 +114,17 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	}
 
 	@Override
+	protected void updateAboveHeight(Node<E> node) {
+
+	}
+
+	@Override
 	public void updateHeight() {
 
+	}
+
+	@Override
+	public MyBTree convertTo24Tree() {
+		return null;
 	}
 }
