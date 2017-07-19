@@ -27,6 +27,27 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 		setRoot(key, root);
 	}
 
+	/**
+	 * 设置根节点
+	 * 
+	 * @param 数值
+	 * @return 根节点
+	 */
+	public Node<E> setRoot(int key, E data) {
+		Node<E> n;
+		if (root == null) {
+			size++;
+			n = adapter.buildNode(key, data, null, null, null, 0, 0);
+		} else
+			n = adapter.buildNode(key, data, null, root.getlChild(), root.getrChild(), root.getHeight(),
+					root.getDepth());
+		root = n;
+		// 根节点比为黑色
+		root.setColor(false);
+		hot = root;
+		return root;
+	}
+
 	@Override
 	public Node<E> search(int key) {
 		return super.search(key);

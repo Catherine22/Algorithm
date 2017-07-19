@@ -1,7 +1,7 @@
 package com.catherine.trees.nodes;
 
 /**
- * Binary search tree
+ * Binary search tree(BST, Splay tree and AVL tree)
  * 
  * @author Catherine
  *
@@ -50,12 +50,10 @@ public class BSTNode<E> implements Node<E> {
 
 	}
 
-	@Override
 	public int getKey() {
 		return key;
 	}
 
-	@Override
 	public void setKey(int key) {
 		this.key = key;
 	}
@@ -92,7 +90,7 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public Node<E> getParent() {
-		return (BSTNode<E>) parent;
+		return parent;
 	}
 
 	@Override
@@ -102,7 +100,7 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public Node<E> getlChild() {
-		return (BSTNode<E>) lChild;
+		return lChild;
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public Node<E> getrChild() {
-		return (BSTNode<E>) rChild;
+		return rChild;
 	}
 
 	@Override
@@ -123,5 +121,23 @@ public class BSTNode<E> implements Node<E> {
 	@Override
 	public String getInfo() {
 		return key + "(" + height + ") ";
+	}
+
+	@Override
+	public boolean isBlack() {
+		// do nothing
+		return false;
+	}
+
+	@Override
+	public boolean isRed() {
+		// do nothing
+		return false;
+	}
+
+	@Override
+	public void setColor(boolean isRed) {
+		// do nothing
+
 	}
 }

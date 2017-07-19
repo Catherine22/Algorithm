@@ -31,4 +31,10 @@ public interface Node<E> {
 	public void setrChild(Node<E> rChild);
 
 	public String getInfo();
+
+	public boolean isBlack();
+
+	public boolean isRed();
+
+	public void setColor(boolean isRed);
 }

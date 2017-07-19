@@ -7,7 +7,7 @@ package com.catherine.trees.nodes;
  *
  * @param <E>
  */
-public class BNode<E> implements Node<E> {
+public class BinaryNode<E> implements Node<E> {
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 	 */
@@ -18,11 +18,11 @@ public class BNode<E> implements Node<E> {
 	 */
 	private int depth;
 	private E data;
-	private BNode<E> parent;
-	private BNode<E> lChild;
-	private BNode<E> rChild;
+	private BinaryNode<E> parent;
+	private BinaryNode<E> lChild;
+	private BinaryNode<E> rChild;
 
-	public BNode(E data, BNode<E> parent, BNode<E> lChild, BNode<E> rChild, int height, int depth) {
+	public BinaryNode(E data, BinaryNode<E> parent, BinaryNode<E> lChild, BinaryNode<E> rChild, int height, int depth) {
 		this.data = data;
 		this.depth = depth;
 		this.height = height;
@@ -41,17 +41,6 @@ public class BNode<E> implements Node<E> {
 			return String.format(
 					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
 					data, data, height, depth, "null parent");
-	}
-
-	@Override
-	public int getKey() {
-		// Do nothing
-		return -1;
-	}
-
-	@Override
-	public void setKey(int key) {
-		// Do nothing
 	}
 
 	@Override
@@ -86,32 +75,32 @@ public class BNode<E> implements Node<E> {
 
 	@Override
 	public Node<E> getParent() {
-		return (BNode<E>) parent;
+		return parent;
 	}
 
 	@Override
 	public void setParent(Node<E> parent) {
-		this.parent = (BNode<E>) parent;
+		this.parent = (BinaryNode<E>) parent;
 	}
 
 	@Override
 	public Node<E> getlChild() {
-		return (BNode<E>) lChild;
+		return lChild;
 	}
 
 	@Override
 	public void setlChild(Node<E> lChild) {
-		this.lChild = (BNode<E>) lChild;
+		this.lChild = (BinaryNode<E>) lChild;
 	}
 
 	@Override
 	public Node<E> getrChild() {
-		return (BNode<E>) rChild;
+		return rChild;
 	}
 
 	@Override
 	public void setrChild(Node<E> rChild) {
-		this.rChild = (BNode<E>) rChild;
+		this.rChild = (BinaryNode<E>) rChild;
 	}
 
 	@Override
@@ -120,6 +109,36 @@ public class BNode<E> implements Node<E> {
 			return data + " ";
 		else
 			return "null ";
+
+	}
+
+	@Override
+	public int getKey() {
+		// do nothing
+		return 0;
+	}
+
+	@Override
+	public void setKey(int key) {
+		// do nothing
+
+	}
+
+	@Override
+	public boolean isBlack() {
+		// do nothing
+		return false;
+	}
+
+	@Override
+	public boolean isRed() {
+		// do nothing
+		return false;
+	}
+
+	@Override
+	public void setColor(boolean isRed) {
+		// do nothing
 
 	}
 }
