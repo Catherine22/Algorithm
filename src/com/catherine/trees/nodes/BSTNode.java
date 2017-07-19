@@ -1,5 +1,12 @@
 package com.catherine.trees.nodes;
-//Binary search tree
+
+/**
+ * Binary search tree
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
 public class BSTNode<E> implements Node<E> {
 
 	/**

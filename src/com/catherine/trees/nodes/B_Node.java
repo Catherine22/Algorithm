@@ -3,8 +3,9 @@ package com.catherine.trees.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-//B-tree
 /**
+ * B-tree<br>
+ * <br>
  * 关键码向量(x)与孩子向量(o)的位置应对齐，孩子向量在关键码向量的左右两侧，比如：<br>
  * _x_x_x_<br>
  * o_o_o_o<br>

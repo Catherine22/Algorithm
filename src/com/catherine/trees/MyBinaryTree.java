@@ -24,7 +24,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	protected transient int size = 0;
 	protected Node<E> root;
 
-	public MyBinaryTree() {
+	protected MyBinaryTree() {
 	}
 
 	public MyBinaryTree(E root) {

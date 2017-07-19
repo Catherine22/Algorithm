@@ -1,5 +1,12 @@
 package com.catherine.trees.nodes;
-//Binary tree
+
+/**
+ * Binary tree
+ * 
+ * @author Catherine
+ *
+ * @param <E>
+ */
 public class BNode<E> implements Node<E> {
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
@@ -36,17 +43,17 @@ public class BNode<E> implements Node<E> {
 					data, data, height, depth, "null parent");
 	}
 
-
 	@Override
 	public int getKey() {
-		//Do nothing
+		// Do nothing
 		return -1;
 	}
 
 	@Override
 	public void setKey(int key) {
-		//Do nothing
+		// Do nothing
 	}
+
 	@Override
 	public int getHeight() {
 		return height;

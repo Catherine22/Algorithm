@@ -21,12 +21,19 @@ import com.catherine.utils.Others;
  *
  */
 class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTree<E> {
+	private final static boolean SHOW_LOG = false;
 
 	/**
 	 * 二叉搜寻中，有找到，hot则指向该节点的父节点；没找到指向最后访问的节点。<br>
 	 * 加入哨兵的概念后，hot永远代表目标节点的父节点。
 	 */
 	protected Node<E> hot;
+	// test
+	private final int ANALYSIS_ID = 23104987;
+
+	protected BinarySearchTreeImpl() {
+
+	}
 
 	public BinarySearchTreeImpl(int key, E root) {
 		super();
@@ -62,7 +69,7 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 
 		while (!stop) {
 			if (SHOW_LOG)
-				Analysis.count(23104987);
+				Analysis.count(ANALYSIS_ID);
 
 			if (key > hot.getKey()) {
 				if (hot.getrChild() == null)
@@ -82,7 +89,7 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 		}
 
 		if (SHOW_LOG)
-			Analysis.stopCounting(23104987);
+			Analysis.stopCounting(ANALYSIS_ID);
 
 		return node;
 	}
