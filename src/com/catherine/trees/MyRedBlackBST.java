@@ -134,7 +134,7 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 	}
 
 	@Override
-	public MyBTree convertTo24Tree() {
+	public MyBTree<E> convertTo24Tree() {
 		return null;
 	}
 

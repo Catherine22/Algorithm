@@ -130,7 +130,7 @@ public class RedBlackBSTNode<E> implements Node<E> {
 	@Override
 	public String getInfo() {
 		String color = isBlack ? "B" : "R";
-		return String.format("key(%d, %s) ", height, color);
+		return String.format("%d(%d, %s) ", key, height, color);
 	}
 
 	@Override

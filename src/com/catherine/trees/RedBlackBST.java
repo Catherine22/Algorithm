@@ -17,7 +17,17 @@ public interface RedBlackBST<E> {
 
 	/**
 	 * 目标节点为红节点，目标节点的父节点也是红色，称双红缺陷(double-red)。<br>
-	 * 考察目标节点的祖父节点和父节点的兄弟（叔父节点）。
+	 * 考察目标节点的祖父节点和父节点的兄弟（叔父节点）。<br>
+	 * <br>
+	 * 目标节点-父节点-祖父节点-叔父节点四点上升到同一排，想象成四个key，为(2,4)树的一个节点。<br>
+	 * 有四种组合：<br>
+	 * 目标-父-祖父-叔父<br>
+	 * 父-目标-祖父-叔父<br>
+	 * 叔父-祖父-目标-父<br>
+	 * 叔父-祖父-父-目标<br>
+	 * <br>
+	 * 情况1：红-红-黑-黑，不必改变拓扑结构，不必检查祖先，改成黑-红-黑-黑，耗时O(1)<br>
+	 * 情况2：红-红-黑-红<br>
 	 * 
 	 * @param node目标节点
 	 */
@@ -35,6 +45,6 @@ public interface RedBlackBST<E> {
 	 * 
 	 * @return
 	 */
-	public MyBTree convertTo24Tree();
+	public MyBTree<E> convertTo24Tree();
 
 }

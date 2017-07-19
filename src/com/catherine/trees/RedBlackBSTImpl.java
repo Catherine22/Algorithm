@@ -105,7 +105,42 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 	@Override
 	public void solveDoubleRed(Node<E> node) {
+		if (node == null || node.getParent() == null)
+			return;
 
+		if (node.isRed() && node.getParent().isRed()) {
+			Node<E> parent = node.getParent();
+			Node<E> grandPa = parent.getParent();
+
+			// 只有两节点的情况。
+			if (grandPa == null) {
+				if (SHOW_LOG)
+					System.out.println("两点双红");
+				parent.setColor(false);
+				node.setColor(true);
+				return;
+			}
+
+			Node<E> uncle = (parent == grandPa.getlChild()) ? grandPa.getrChild() : grandPa.getlChild();
+			if (uncle == null || uncle.isBlack()) {
+				if (SHOW_LOG)
+					System.out.println("双红情况1");
+				// 情况1，只需换色。
+				grandPa.setColor(false);
+				if (node == parent.getlChild()) {
+					parent.setColor(true);
+					node.setColor(false);
+				} else {
+					parent.setColor(false);
+					node.setColor(true);
+				}
+				return;
+			} else {
+				if (SHOW_LOG)
+					System.out.println("双红情况2");
+
+			}
+		}
 	}
 
 	@Override
@@ -124,7 +159,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	}
 
 	@Override
-	public MyBTree convertTo24Tree() {
+	public MyBTree<E> convertTo24Tree() {
 		return null;
 	}
 }
