@@ -114,7 +114,7 @@ public interface BTree<E> {
 	 * 
 	 * @param node
 	 */
-	public void solveUnderfolw(BNode<E> node);
+	public void solveUnderflow(BNode<E> node);
 
 	public void printInfo();
 }

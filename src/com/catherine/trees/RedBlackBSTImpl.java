@@ -1,8 +1,14 @@
 package com.catherine.trees;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.catherine.trees.nodes.BNode;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
+import com.catherine.trees.nodes.RedBlackBSTNode;
+import com.catherine.trees.nodes.RedBlackBSTNode.Color;
 
 /**
  * 四个规则：<br>
@@ -42,7 +48,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 					root.getDepth());
 		root = n;
 		// 根节点比为黑色
-		root.setColor(false);
+		root.setColor(RedBlackBSTNode.Color.BLACK);
 		hot = root;
 		return root;
 	}
@@ -80,7 +86,6 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			return 0;
 		}
 		return (child.isBlack()) ? child.getHeight() + 1 : child.getHeight();
-
 	}
 
 	@Override
@@ -105,34 +110,131 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			Node<E> grandP = parent.getParent();
 
 			// 只有两节点的情况。
-			if (grandP == null) {
-				if (SHOW_LOG)
-					System.out.println("两点双红");
-				parent.setColor(false);
-				node.setColor(true);
+			if (grandP == null)
 				return;
-			}
 
 			Node<E> uncle = (parent == grandP.getlChild()) ? grandP.getrChild() : grandP.getlChild();
+
+			// 情况1——挑出三个节点来看，无视叔父节点。B-tree中间节点变黑色，两边红色
 			if (uncle == null || uncle.isBlack()) {
-				if (SHOW_LOG)
-					System.out.println("双红情况1");
-				// 情况1，只需换色。
-				grandP.setColor(false);
-				if (node == parent.getlChild()) {
-					parent.setColor(true);
-					node.setColor(false);
+				boolean isLeftNode = (node == parent.getlChild());
+				boolean isLeftParent = (parent == grandP.getlChild());
+				if (isLeftNode == isLeftParent) {
+					if (SHOW_LOG)
+						System.out.println("双红缺陷1，三者一直线");
+					grandP.setColor(RedBlackBSTNode.Color.RED);
+					parent.setColor(RedBlackBSTNode.Color.BLACK);
 				} else {
-					parent.setColor(false);
-					node.setColor(true);
+					if (SHOW_LOG)
+						System.out.println("双红缺陷1，三者>或<");
+					grandP.setColor(RedBlackBSTNode.Color.RED);
+					node.setColor(RedBlackBSTNode.Color.BLACK);
 				}
 				return;
-			} else {
-				if (SHOW_LOG)
-					System.out.println("双红情况2");
-
 			}
+			// 情况2——四节点合起来看就是B-tree的上溢，最上面的节点为红色，两旁黑色，最下面红色。
+			else {
+				if (SHOW_LOG)
+					System.out.print("双红缺陷2，");
+
+				// 排列此四个节点的顺序，不论阶层。
+				Node<E> n0 = null;
+				Node<E> n1 = null;
+				Node<E> n2 = null;
+				Node<E> n3 = null;
+
+				if (uncle == grandP.getlChild()) {
+					n0 = uncle;
+					n1 = grandP;
+
+					if (node == parent.getlChild()) {
+						if (SHOW_LOG)
+							System.out.println("uncle-grandparent-node-parent");
+						n2 = node;
+						n3 = parent;
+					} else {
+						if (SHOW_LOG)
+							System.out.println("uucle-grandparent-parent-node");
+						n3 = node;
+						n2 = parent;
+					}
+
+					solveOverflow(n0, n1, n2, n3);
+				} else {
+					n3 = uncle;
+					n2 = grandP;
+
+					if (node == parent.getlChild()) {
+						if (SHOW_LOG)
+							System.out.println("node-parent-grandparent-uncle");
+						n0 = node;
+						n1 = parent;
+					} else {
+						if (SHOW_LOG)
+							System.out.println("parent-node-grandparent-uncle");
+						n0 = parent;
+						n1 = node;
+					}
+
+					// 此时的结构就像已经做过上溢处理，中位数n2已经是最高节点。
+				}
+
+				n2.setColor(Color.RED);
+				n1.setColor(Color.BLACK);
+				n3.setColor(Color.BLACK);
+				n0.setColor(Color.RED);
+				solveDoubleRed(n2);
+			}
+		} else // 没有双红缺陷
+			return;
+	}
+
+	/**
+	 * 不论阶层，依左到右顺序带入欲修正节点。
+	 * 
+	 * @param n0
+	 * @param n1
+	 * @param n2
+	 * @param n3
+	 */
+	private void solveOverflow(Node<E> n0, Node<E> n1, Node<E> n2, Node<E> n3) {
+		if (SHOW_LOG)
+			System.out.println(String.format("overflow, divided [%s, %s, %s, %s]", n0.getKey(), n1.getKey(),
+					n2.getKey(), n3.getKey()));
+
+		// 上溢节点依次为 n0, n1, n2, n3
+		// 取中位数n2（无条件进位）为分界
+		// n0~n1, n2, n3
+		// 将 n2上升一层，并将刚才左右两组关键码分裂成n2的左右孩子。
+
+		// 处理中位数节点及其父节点
+		Node<E> parent = n1.getParent();
+		if (parent != null) {
+			if (parent.getlChild() == n1)
+				parent.setlChild(n2);
+			else
+				parent.setrChild(n2);
+		} else {
+			root = n2;
 		}
+		n2.setParent(parent);
+
+		// 处理中位数节点左孩子
+		n1.setrChild(n2.getlChild());
+		if (n1.getrChild() != null)
+			n1.getrChild().setParent(n1);
+
+		n2.setlChild(n1);
+		n1.setParent(n2);
+
+		// 处理中位数节点右孩子
+		if (n3.getlChild() == n2) {
+			n3.setlChild(n2.getrChild());
+			if (n3.getlChild() != null)
+				n3.getlChild().setParent(n3);
+		}
+		n2.setrChild(n3);
+		n3.setParent(n2);
 	}
 
 	@Override

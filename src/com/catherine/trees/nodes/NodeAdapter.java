@@ -1,5 +1,7 @@
 package com.catherine.trees.nodes;
 
+import com.catherine.trees.nodes.RedBlackBSTNode.Color;
+
 /**
  * 利用装饰者模式切换Node
  * 
@@ -82,10 +84,10 @@ public class NodeAdapter<E> implements Node<E> {
 	}
 
 	@Override
-	public void setColor(boolean isRed) {
+	public void setColor(Color color) {
 		if (type == Nodes.RB) {
 			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
-			node.setColor(isRed);
+			node.setColor(color);
 		}
 	}
 

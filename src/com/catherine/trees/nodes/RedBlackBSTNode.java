@@ -8,6 +8,9 @@ package com.catherine.trees.nodes;
  * @param <E>
  */
 public class RedBlackBSTNode<E> implements Node<E> {
+	public enum Color {
+		RED, BLACK
+	}
 
 	/**
 	 * key-value, key不重复
@@ -52,7 +55,7 @@ public class RedBlackBSTNode<E> implements Node<E> {
 		String pkey = (getParent() != null) ? getParent().getKey() + "" : "null parent";
 		String lkey = (getlChild() != null) ? getlChild().getKey() + "" : "null lChild";
 		String rkey = (getrChild() != null) ? getrChild().getKey() + "" : "null rChild";
-		String color = isBlack ? "black" : "red";
+		String color = isBlack ? "B" : "R";
 		return String.format(
 				"{\"key\": \"%d\", \"data\": \"%s\", \"color\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
 				getKey(), getData(), color, getHeight(), getDepth(), pkey, lkey, rkey);
@@ -144,8 +147,8 @@ public class RedBlackBSTNode<E> implements Node<E> {
 	}
 
 	@Override
-	public void setColor(boolean isRed) {
-		isBlack = !isRed;
+	public void setColor(Color color) {
+		isBlack = (color == Color.BLACK);
 	}
 
 }

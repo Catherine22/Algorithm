@@ -179,14 +179,33 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ![B-tree][8]
 
 - Insertion/removing/searching
+- Underflow and overflow issues
 - [MyBTree]
+
 
 ### Red-black BSTs
 
--
+- When we talk about red-black binary search tree, you must figure it is very similar to B-tree, or 2-4 tree exactly. That's all that matters.
 
 ![Red-black-tree][9]
 
+- Double red issue
+
+How to solve this issue depends on what color uncle node is.    
+If uncle node is black, all you have to do is resetting colors of the nodes.    
+
+![Red-black-tree][10]   
+>Draw the center node to red and the others to black.
+
+But if you get a red uncle node, it could be a little bit tough to deal with this case when you take it as a normal Red-black BST.    
+What if you consider it to be a 2-4 tree, you'll find a powerful, clear B-tree way to solve the problem.    
+
+![Red-black-tree][11]   
+>It seems like a regular overflow case of a B-tree, fix it and change the colors of those four nodes.   
+>Set the top node red and its children black, then red for the bottom one.    
+>Check ancestors.
+
+- Double black issue
 
 ## [Others]
   - Hailstone
@@ -329,4 +348,6 @@ private void testJWS() {
   [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
   [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
   [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png
-  [9]: https://github.com/Catherine22/Algorithms/blob/master/res/B_R_BST.png.png
+  [9]: https://github.com/Catherine22/Algorithms/blob/master/res/B_R_BST.png
+  [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1.png.png
+  [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png

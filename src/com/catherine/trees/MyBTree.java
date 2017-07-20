@@ -281,7 +281,7 @@ public class MyBTree<E> implements BTree<E> {
 			target.getKey().remove(pos);
 			target.getValue().remove(pos);
 			if (target.getKey() != null)
-				solveUnderfolw(target);
+				solveUnderflow(target);
 			else
 				target = null;
 		} else {
@@ -294,7 +294,7 @@ public class MyBTree<E> implements BTree<E> {
 			succ.getKey().remove(0);
 			succ.getValue().remove(0);
 			if (succ.getKey() != null)
-				solveUnderfolw(succ);
+				solveUnderflow(succ);
 			else
 				succ = null;
 		}
@@ -396,7 +396,7 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public void solveUnderfolw(BNode<E> node) {
+	public void solveUnderflow(BNode<E> node) {
 		if (node.getKey().size() >= getMIN_KEYSET_SIZE())
 			return;
 
@@ -479,7 +479,7 @@ public class MyBTree<E> implements BTree<E> {
 
 						if (!isListEmpty(node.getChild()))
 							bro.getChild().addAll(node.getChild());
-						solveUnderfolw(parent);
+						solveUnderflow(parent);
 						rotated = true;
 					}
 				}
@@ -517,7 +517,7 @@ public class MyBTree<E> implements BTree<E> {
 
 						if (!isListEmpty(bro.getChild()))
 							node.getChild().addAll(bro.getChild());
-						solveUnderfolw(parent);
+						solveUnderflow(parent);
 						rotated = true;
 					}
 				}

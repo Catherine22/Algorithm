@@ -137,7 +137,7 @@ public class BinaryNode<E> implements Node<E> {
 	}
 
 	@Override
-	public void setColor(boolean isRed) {
+	public void setColor(RedBlackBSTNode.Color color) {
 		// do nothing
 
 	}

@@ -1,5 +1,7 @@
 package com.catherine.trees.nodes;
 
+import com.catherine.trees.nodes.RedBlackBSTNode.Color;
+
 public interface Node<E> {
 
 	public int getKey();
@@ -36,5 +38,5 @@ public interface Node<E> {
 
 	public boolean isRed();
 
-	public void setColor(boolean isRed);
+	public void setColor(Color color);
 }
