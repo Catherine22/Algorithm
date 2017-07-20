@@ -1,9 +1,4 @@
 package com.catherine.trees;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.catherine.trees.nodes.BNode;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
@@ -120,13 +115,25 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				boolean isLeftNode = (node == parent.getlChild());
 				boolean isLeftParent = (parent == grandP.getlChild());
 				if (isLeftNode == isLeftParent) {
-					if (SHOW_LOG)
-						System.out.println("双红缺陷1，三者一直线");
+					if (isLeftParent) {
+						if (SHOW_LOG)
+							System.out.println(String.format("n=%s, 双红缺陷1，三者一左下斜线", node.getKey()));
+
+					} else {
+						if (SHOW_LOG)
+							System.out.println(String.format("n=%s, 双红缺陷1，三者一右下斜线", node.getKey()));
+
+					}
+
 					grandP.setColor(RedBlackBSTNode.Color.RED);
 					parent.setColor(RedBlackBSTNode.Color.BLACK);
 				} else {
-					if (SHOW_LOG)
-						System.out.println("双红缺陷1，三者>或<");
+					if (SHOW_LOG) {
+						if (isLeftParent)
+							System.out.println(String.format("n=%s, 双红缺陷1，三者<", node.getKey()));
+						else
+							System.out.println(String.format("n=%s, 双红缺陷1，三者>", node.getKey()));
+					}
 					grandP.setColor(RedBlackBSTNode.Color.RED);
 					node.setColor(RedBlackBSTNode.Color.BLACK);
 				}
@@ -135,7 +142,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			// 情况2——四节点合起来看就是B-tree的上溢，最上面的节点为红色，两旁黑色，最下面红色。
 			else {
 				if (SHOW_LOG)
-					System.out.print("双红缺陷2，");
+					System.out.print(String.format("n=%s, 双红缺陷2，", node.getKey()));
 
 				// 排列此四个节点的顺序，不论阶层。
 				Node<E> n0 = null;
@@ -154,12 +161,16 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 						n3 = parent;
 					} else {
 						if (SHOW_LOG)
-							System.out.println("uucle-grandparent-parent-node");
+							System.out.println("uncle-grandparent-parent-node");
 						n3 = node;
 						n2 = parent;
 					}
-
 					solveOverflow(n0, n1, n2, n3);
+
+					n2.setColor(Color.RED);
+					n3.setColor(Color.BLACK);
+					n1.setColor(Color.BLACK);
+					n0.setColor(Color.RED);
 				} else {
 					n3 = uncle;
 					n2 = grandP;
@@ -169,20 +180,24 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 							System.out.println("node-parent-grandparent-uncle");
 						n0 = node;
 						n1 = parent;
+
+						n1.setColor(Color.BLACK);
+						n0.setColor(Color.RED);
 					} else {
 						if (SHOW_LOG)
 							System.out.println("parent-node-grandparent-uncle");
 						n0 = parent;
 						n1 = node;
+
+						n1.setColor(Color.RED);
+						n0.setColor(Color.BLACK);
 					}
 
-					// 此时的结构就像已经做过上溢处理，中位数n2已经是最高节点。
-				}
+					// 不必检查上溢，因为此时的结构就像已经做过上溢处理，中位数n2已经是最高节点。
 
-				n2.setColor(Color.RED);
-				n1.setColor(Color.BLACK);
-				n3.setColor(Color.BLACK);
-				n0.setColor(Color.RED);
+					n2.setColor(Color.RED);
+					n3.setColor(Color.BLACK);
+				}
 				solveDoubleRed(n2);
 			}
 		} else // 没有双红缺陷
@@ -235,6 +250,9 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 		}
 		n2.setrChild(n3);
 		n3.setParent(n2);
+
+		hot = n0;
+		updateAboveHeight(hot);
 	}
 
 	@Override

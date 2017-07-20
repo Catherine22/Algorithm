@@ -95,11 +95,10 @@ public class Main {
 	}
 
 	private static void testRedBlackTree() {
-		MyRedBlackBST<String> rbTree = new MyRedBlackBST<String>(10, null);
-		rbTree.insert(7, null);
-		rbTree.insert(13, null);
-		rbTree.insert(11, null);
-		rbTree.traverseLevel();
+		MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(10, null);
+		rbTree1.insert(9, null);
+		rbTree1.insert(8, null);
+		rbTree1.traverseLevel();
 	}
 
 	public static void testBTree() {
