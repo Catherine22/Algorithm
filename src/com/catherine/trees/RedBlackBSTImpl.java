@@ -66,29 +66,21 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	}
 
 	/**
-	 * 到任意叶子的黑节点高度都一样。
+	 * 目标节点到任意叶子的黑节点高度。<br>
+	 * 由于高度都一样，就采用任意路径。
 	 * 
 	 * @param node
 	 * @return
 	 */
+	@Override
 	protected int getHeight(Node<E> node) {
-		if (node == null)
-			return -1;
-
-		int height = 0;
-		boolean stop = false;
-		Node<E> header = root;
-		// 走访任意路径
-		while (!stop) {
-			if (header != null) {
-				if (header.isBlack())
-					height++;
-				// 随意一个孩子都行
-				header = header.getlChild();
-			} else
-				stop = true;
+		Node<E> child = (node.getlChild() == null) ? node.getrChild() : node.getlChild();
+		if (child == null) {
+			// 表示该节点为叶节点
+			return 0;
 		}
-		return height;
+		return (child.isBlack()) ? child.getHeight() + 1 : child.getHeight();
+
 	}
 
 	@Override
@@ -110,10 +102,10 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 		if (node.isRed() && node.getParent().isRed()) {
 			Node<E> parent = node.getParent();
-			Node<E> grandPa = parent.getParent();
+			Node<E> grandP = parent.getParent();
 
 			// 只有两节点的情况。
-			if (grandPa == null) {
+			if (grandP == null) {
 				if (SHOW_LOG)
 					System.out.println("两点双红");
 				parent.setColor(false);
@@ -121,12 +113,12 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				return;
 			}
 
-			Node<E> uncle = (parent == grandPa.getlChild()) ? grandPa.getrChild() : grandPa.getlChild();
+			Node<E> uncle = (parent == grandP.getlChild()) ? grandP.getrChild() : grandP.getlChild();
 			if (uncle == null || uncle.isBlack()) {
 				if (SHOW_LOG)
 					System.out.println("双红情况1");
 				// 情况1，只需换色。
-				grandPa.setColor(false);
+				grandP.setColor(false);
 				if (node == parent.getlChild()) {
 					parent.setColor(true);
 					node.setColor(false);
@@ -148,9 +140,18 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 	}
 
+	/**
+	 * 从最后面到叶节点到自身的黑节点树，每条路径都会是同样长度。<br>
+	 * 计算节点高度时，不考虑自身节点。
+	 */
 	@Override
 	protected void updateAboveHeight(Node<E> node) {
-
+		if (node.getParent() == null)
+			return;
+		int h1 = node.getHeight();
+		int newH = (node.isBlack()) ? h1 + 1 : h1;
+		node.getParent().setHeight(newH);
+		updateAboveHeight(node.getParent());
 	}
 
 	@Override
