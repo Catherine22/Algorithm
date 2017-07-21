@@ -195,12 +195,14 @@ How to solve this issue depends on what color uncle node is.
 If uncle node is black, all you have to do is resetting colors of the nodes.    
 
 ![Red-black-tree][10]   
+![Red-black-tree][11]   
 >Draw the center node to red and the others to black.
+>Move the center node to the top, make left node to
 
 But if you get a red uncle node, it could be a little bit tough to deal with this case when you take it as a normal Red-black BST.    
 What if you consider it to be a 2-4 tree, you'll find a powerful, clear B-tree way to solve the problem.    
 
-![Red-black-tree][11]   
+![Red-black-tree][12]   
 >It seems like a regular overflow case of a B-tree, fix it and change the colors of those four nodes.   
 >Set the top node red and its children black, then red for the bottom one.    
 >Check ancestors.
@@ -349,5 +351,6 @@ private void testJWS() {
   [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
   [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png
   [9]: https://github.com/Catherine22/Algorithms/blob/master/res/B_R_BST.png
-  [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1.png.png
-  [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png
+  [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_1.png.png
+  [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_2.png.png
+  [12]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png

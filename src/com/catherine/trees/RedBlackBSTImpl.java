@@ -1,4 +1,5 @@
 package com.catherine.trees;
+
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
@@ -110,32 +111,108 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 			Node<E> uncle = (parent == grandP.getlChild()) ? grandP.getrChild() : grandP.getlChild();
 
-			// 情况1——挑出三个节点来看，无视叔父节点。B-tree中间节点变黑色，两边红色
+			// 情况1——挑出三个节点来看，无视叔父节点。B-tree中间节点变黑色，两边红色。中间节点往上提，另外两节点变成左右孩子。
 			if (uncle == null || uncle.isBlack()) {
 				boolean isLeftNode = (node == parent.getlChild());
 				boolean isLeftParent = (parent == grandP.getlChild());
+				Node<E> ancestor = grandP.getParent();
 				if (isLeftNode == isLeftParent) {
+					// 中间节点边黑色，两旁红色
+					grandP.setColor(RedBlackBSTNode.Color.RED);
+					parent.setColor(RedBlackBSTNode.Color.BLACK);
+					// node.setColor(RedBlackBSTNode.Color.RED);//略，因为node本来就红色
+
+					// 新父节点
+					parent.setParent(ancestor);
+					if (ancestor != null) {
+						if (grandP == ancestor.getlChild())
+							ancestor.setlChild(parent);
+						else
+							ancestor.setrChild(parent);
+					} else {
+						root = parent;
+					}
+
 					if (isLeftParent) {
 						if (SHOW_LOG)
 							System.out.println(String.format("n=%s, 双红缺陷1，三者一左下斜线", node.getKey()));
 
+						// 左孩子不变
+						// 新右孩子
+						grandP.setlChild(parent.getrChild());
+						if (grandP.getlChild() != null)
+							grandP.getlChild().setParent(grandP);
+						parent.setrChild(grandP);
+						grandP.setParent(parent);
 					} else {
 						if (SHOW_LOG)
 							System.out.println(String.format("n=%s, 双红缺陷1，三者一右下斜线", node.getKey()));
 
+						// 右孩子不变
+						// 新左孩子
+						grandP.setrChild(parent.getlChild());
+						if (grandP.getrChild() != null) {
+							grandP.getrChild().setParent(parent);
+						}
+						parent.setlChild(grandP);
+						grandP.setParent(parent);
 					}
 
-					grandP.setColor(RedBlackBSTNode.Color.RED);
-					parent.setColor(RedBlackBSTNode.Color.BLACK);
 				} else {
-					if (SHOW_LOG) {
-						if (isLeftParent)
-							System.out.println(String.format("n=%s, 双红缺陷1，三者<", node.getKey()));
-						else
-							System.out.println(String.format("n=%s, 双红缺陷1，三者>", node.getKey()));
-					}
 					grandP.setColor(RedBlackBSTNode.Color.RED);
 					node.setColor(RedBlackBSTNode.Color.BLACK);
+					// parent.setColor(RedBlackBSTNode.Color.RED);//略，因为parent本来就红色
+
+					// 新父节点
+					node.setParent(ancestor);
+					if (ancestor != null) {
+						if (grandP == ancestor.getlChild())
+							ancestor.setlChild(node);
+						else
+							ancestor.setrChild(node);
+					} else {
+						root = node;
+					}
+
+					if (isLeftParent) {
+						if (SHOW_LOG)
+							System.out.println(String.format("n=%s, 双红缺陷1，三者<", node.getKey()));
+
+						// 新右节点
+						parent.setrChild(node.getlChild());
+						if (parent.getrChild() != null) {
+							parent.getrChild().setParent(parent);
+						}
+						node.setlChild(parent);
+						parent.setParent(node);
+
+						// 新左节点
+						grandP.setlChild(node.getrChild());
+						if (grandP.getlChild() != null) {
+							grandP.getlChild().setParent(grandP);
+						}
+						node.setrChild(grandP);
+						grandP.setParent(node);
+					} else {
+						if (SHOW_LOG)
+							System.out.println(String.format("n=%s, 双红缺陷1，三者>", node.getKey()));
+
+						// 新左节点
+						grandP.setrChild(node.getlChild());
+						if (grandP.getrChild() != null) {
+							grandP.getrChild().setParent(grandP);
+						}
+						node.setlChild(grandP);
+						grandP.setParent(node);
+
+						// 新右节点
+						parent.setlChild(node.getrChild());
+						if (parent.getlChild() != null) {
+							parent.getlChild().setParent(parent);
+						}
+						node.setrChild(parent);
+						parent.setParent(node);
+					}
 				}
 				return;
 			}
@@ -199,6 +276,9 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 					n3.setColor(Color.BLACK);
 				}
 				solveDoubleRed(n2);
+
+				if (root == n2)
+					n2.setColor(Color.BLACK);
 			}
 		} else // 没有双红缺陷
 			return;
