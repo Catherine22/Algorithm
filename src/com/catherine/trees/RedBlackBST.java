@@ -42,9 +42,11 @@ public interface RedBlackBST<E> {
 	public void solveDoubleBlack(Node<E> node);
 
 	/**
-	 * 红黑树的高度是指黑节点的高度。
+	 * 红黑树的高度是指黑节点的高度。 <br>
+	 * 从最后面到叶节点到自身的黑节点树，每条路径都会是同样长度。<br>
+	 * 计算节点高度时，不考虑自身节点。
 	 */
-	public void updateHeight();
+	public void updateHeight(Node<E> node);
 
 	/**
 	 * 转成(2,4)树

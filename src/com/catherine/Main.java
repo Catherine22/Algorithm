@@ -95,6 +95,7 @@ public class Main {
 	}
 
 	private static void testRedBlackTree() {
+
 		MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(10, null);
 		rbTree1.traverseLevel();
 		rbTree1.insert(12, null);
@@ -110,6 +111,8 @@ public class Main {
 		rbTree1.insert(55, null);
 		rbTree1.traverseLevel();
 		rbTree1.insert(16, null);
+		rbTree1.traverseLevel();
+		rbTree1.insert(19, null);
 		rbTree1.traverseLevel();
 	}
 

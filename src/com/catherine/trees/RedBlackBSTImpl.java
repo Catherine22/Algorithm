@@ -74,12 +74,16 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 */
 	@Override
 	protected int getHeight(Node<E> node) {
-		Node<E> child = (node.getlChild() == null) ? node.getrChild() : node.getlChild();
-		if (child == null) {
+		Node<E> lc = node.getlChild();
+		Node<E> rc = node.getrChild();
+		if (lc == null && rc == null)
 			// 表示该节点为叶节点
 			return 0;
-		}
-		return (child.isBlack()) ? child.getHeight() + 1 : child.getHeight();
+
+		if (lc != null)
+			return (lc.isBlack()) ? lc.getHeight() + 1 : lc.getHeight();
+		else
+			return (rc.isBlack()) ? rc.getHeight() + 1 : rc.getHeight();
 	}
 
 	@Override
@@ -158,7 +162,6 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 						parent.setlChild(grandP);
 						grandP.setParent(parent);
 					}
-
 				} else {
 					grandP.setColor(RedBlackBSTNode.Color.RED);
 					node.setColor(RedBlackBSTNode.Color.BLACK);
@@ -215,6 +218,13 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 						parent.setParent(node);
 					}
 				}
+
+				// 更新高度
+				node.setHeight(getHeight(node));
+				parent.setHeight(getHeight(parent));
+				grandP.setHeight(getHeight(grandP));
+				hot = grandP;
+				updateHeight(hot);
 				return;
 			}
 			// 情况2——四节点合起来看就是B-tree的上溢，最上面的节点为红色，两旁黑色，最下面红色。
@@ -242,6 +252,14 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				parent.setColor(Color.BLACK);
 				uncle.setColor(Color.BLACK);
 				node.setColor(Color.RED);
+
+				// 更新高度
+				node.setHeight(getHeight(node));
+				parent.setHeight(getHeight(parent));
+				grandP.setHeight(getHeight(grandP));
+				uncle.setHeight(getHeight(uncle));
+				hot = grandP;
+				updateHeight(hot);
 				solveDoubleRed(grandP);
 			}
 
@@ -257,22 +275,22 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	}
 
 	/**
-	 * 从最后面到叶节点到自身的黑节点树，每条路径都会是同样长度。<br>
-	 * 计算节点高度时，不考虑自身节点。
+	 * 做完{@link #solveDoubleBlack(Node)}或{@link #solveDoubleRed(Node)}再来做，功能写在
+	 * {@link #updateHeight(Node)}
 	 */
 	@Override
 	protected void updateAboveHeight(Node<E> node) {
+		// do nothing
+	}
+
+	@Override
+	public void updateHeight(Node<E> node) {
 		if (node.getParent() == null)
 			return;
 		int h1 = node.getHeight();
 		int newH = (node.isBlack()) ? h1 + 1 : h1;
 		node.getParent().setHeight(newH);
 		updateAboveHeight(node.getParent());
-	}
-
-	@Override
-	public void updateHeight() {
-
 	}
 
 	@Override

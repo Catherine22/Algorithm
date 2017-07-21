@@ -35,8 +35,8 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 	}
 
 	@Override
-	public void updateHeight() {
-		rbTree.updateHeight();
+	public void updateHeight(Node<E> node) {
+		rbTree.updateHeight(node);
 	}
 
 	@Override
