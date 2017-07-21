@@ -95,11 +95,42 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 	@Override
 	public void remove(int key) {
+		Node<E> node = search(key);
+		if (node == null)
+			return;
+		if (node.getParent() == null) {
+			remove(node);
+			return;
+		}
 
+		boolean rightNodeRemoved = (node.getParent().getrChild() == node);
+		remove(node);
+		solveDoubleBlack(hot, rightNodeRemoved);
 	}
 
-	@Override
-	public void solveDoubleRed(Node<E> node) {
+	/**
+	 * 一定要从B-tree的角度来看方便理解。<br>
+	 * 目标节点为红节点，目标节点的父节点也是红色，称双红缺陷(double-red)。<br>
+	 * 考察目标节点的祖父节点和父节点的兄弟（叔父节点）。<br>
+	 * <br>
+	 * 目标节点-父节点-祖父节点-叔父节点四点上升到同一排，想象成四个key，为(2,4)树的一个节点。<br>
+	 * 有四种组合：<br>
+	 * 目标-父-祖父-叔父<br>
+	 * 父-目标-祖父-叔父<br>
+	 * 叔父-祖父-目标-父<br>
+	 * 叔父-祖父-父-目标<br>
+	 * <br>
+	 * 情况1：黑叔父节点。中间节点往上搬，其它放两侧，中间节点黑色，其它红色。不必改变拓扑结构，不必检查原祖父的祖先，耗时O(1)。<br>
+	 * 1-1 目标-父-祖父成一直线，父节点为中间节点。<br>
+	 * 1-2 目标-父-祖父成"<"或">"型，目标节点为中间节点。<br>
+	 * <br>
+	 * 情况2：红叔父节点，要检查原祖父的祖先，至多耗时O(n)。<br>
+	 * 四节点合起来看就是B-tree的上溢，最上面的节点为红色，两旁黑色，最下层红色。 <br>
+	 * 因为最上面的节点为红色，做完后情况2节点可能会再度发生双红缺陷，情况2须检查祖先。
+	 * 
+	 * @param node目标节点
+	 */
+	private void solveDoubleRed(Node<E> node) {
 		if (node == null || node.getParent() == null)
 			return;
 
@@ -269,22 +300,57 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			return;
 	}
 
-	@Override
-	public void solveDoubleBlack(Node<E> node) {
+	/**
+	 * 双黑缺陷<br>
+	 * 情况1:移除节点后，其父节点连接黑孩子，另一边的孩子必须是黑孩子，且有至少一个红孩子。<br>
+	 * 做一次右旋，让新父节点成为红色，两孩子为黑色。
+	 * 
+	 * @param node
+	 *            经过移除操作后的hot节点
+	 * @param rightNodeRemoved
+	 *            被移除的节点是否为hot节点的右孩子
+	 */
+	private void solveDoubleBlack(Node<E> node, boolean rightNodeRemoved) {
+		if (node == null)
+			return;
 
+		if (rightNodeRemoved) {
+			Node<E> lp = node.getlChild();
+			if (lp == null) {
+				// 表示原树只有root和root的右孩子两节点。
+				root.setColor(Color.RED);
+				return;
+			}
+
+			if (lp.getlChild() == null && lp.getrChild() == null) {
+				if (SHOW_LOG)
+					System.out.println("###1");
+				return;
+			}
+
+			Node<E> redC;
+			if (lp.getlChild() != null && lp.getlChild().isRed())
+				redC = lp.getlChild();
+			else if (lp.getrChild() != null && lp.getrChild().isRed())
+				redC = lp.getrChild();
+		}
 	}
 
 	/**
-	 * 做完{@link #solveDoubleBlack(Node)}或{@link #solveDoubleRed(Node)}再来做，功能写在
-	 * {@link #updateHeight(Node)}
+	 * 让{@link #solveDoubleBlack(Node)}或{@link #solveDoubleRed(Node)}来做，功能写在
+	 * {@link #updateHeight(Node)}，提升效率。
 	 */
 	@Override
 	protected void updateAboveHeight(Node<E> node) {
 		// do nothing
 	}
 
-	@Override
-	public void updateHeight(Node<E> node) {
+	/**
+	 * 红黑树的高度是指黑节点的高度。 <br>
+	 * 从最后面到叶节点到自身的黑节点树，每条路径都会是同样长度。<br>
+	 * 计算节点高度时，不考虑自身节点。
+	 */
+	private void updateHeight(Node<E> node) {
 		if (node.getParent() == null)
 			return;
 		int h1 = node.getHeight();

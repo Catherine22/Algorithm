@@ -191,9 +191,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 - Double red issue
 
-There're two red nodes in a row when you add a new node, and it would against the rule of Red-black BSTs.   
-It looks like a regular overflow case of a B-tree.    
-How to solve this issue depends on what color uncle node is.    
+1. There're two red nodes in a row when you add a new node, and it would against the rule of Red-black BSTs.   
+2. It looks like a regular overflow case of a B-tree.    
+3. How to solve this issue depends on what color uncle node is.    
+4. Look at [Double red video] on youtube to learn more.
 
 When uncle node is black,
 ![Red-black-tree][10]   
@@ -340,6 +341,7 @@ private void testJWS() {
    [Verifying a Certificate Chain]:<https://docs.oracle.com/cd/E19316-01/820-2765/gdzea/index.html>
    [JSON Web Signature (JWS) draft-jones-json-web-signature-01]:<http://self-issued.info/docs/draft-jones-json-web-signature-01.html>
    [SecuritySample]:<https://github.com/Catherine22/SecuritySample>
+   [Double red video]:<https://www.youtube.com/watch?v=m9tse9Gr2pE>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png

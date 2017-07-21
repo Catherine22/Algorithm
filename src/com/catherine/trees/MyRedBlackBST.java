@@ -25,21 +25,6 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 	}
 
 	@Override
-	public void solveDoubleRed(Node<E> node) {
-		rbTree.solveDoubleRed(node);
-	}
-
-	@Override
-	public void solveDoubleBlack(Node<E> node) {
-		rbTree.solveDoubleBlack(node);
-	}
-
-	@Override
-	public void updateHeight(Node<E> node) {
-		rbTree.updateHeight(node);
-	}
-
-	@Override
 	public Node<E> getRoot() {
 		return rbTree.getRoot();
 	}
