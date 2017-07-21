@@ -191,21 +191,20 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 - Double red issue
 
+There're two red nodes in a row when you add a new node, and it would against the rule of Red-black BSTs.   
+It looks like a regular overflow case of a B-tree.    
 How to solve this issue depends on what color uncle node is.    
-If uncle node is black, all you have to do is resetting colors of the nodes.    
 
+When uncle node is black,
 ![Red-black-tree][10]   
+
+Here is a sample about how to switch nodes and replace colors.
 ![Red-black-tree][11]   
->Draw the center node to red and the others to black.
->Move the center node to the top, make left node to
 
-But if you get a red uncle node, it could be a little bit tough to deal with this case when you take it as a normal Red-black BST.    
-What if you consider it to be a 2-4 tree, you'll find a powerful, clear B-tree way to solve the problem.    
 
+When uncle node is red,
 ![Red-black-tree][12]   
->It seems like a regular overflow case of a B-tree, fix it and change the colors of those four nodes.   
->Set the top node red and its children black, then red for the bottom one.    
->Check ancestors.
+In this case, all you have to do is set the grandparent node and the target one to red, and the other two to black.
 
 - Double black issue
 

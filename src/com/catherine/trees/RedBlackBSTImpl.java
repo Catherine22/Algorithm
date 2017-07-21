@@ -8,7 +8,7 @@ import com.catherine.trees.nodes.RedBlackBSTNode.Color;
 
 /**
  * 四个规则：<br>
- * 1. 树根必为黑色<br>
+ * 1. 树根必为黑色，除了全树只有一个节点的情况外。<br>
  * 2. 外部节点均为黑色<br>
  * 3. 其余节点若为红色，则只能有黑孩子（也就是不可能出现同时为红的父子两代，也就是出现一个红节点，该节点的父子比为黑色。）<br>
  * 4. 外部节点到根，途中黑节点数目相等<br>
@@ -43,8 +43,6 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			n = adapter.buildNode(key, data, null, root.getlChild(), root.getrChild(), root.getHeight(),
 					root.getDepth());
 		root = n;
-		// 根节点比为黑色
-		root.setColor(RedBlackBSTNode.Color.BLACK);
 		hot = root;
 		return root;
 	}
@@ -106,8 +104,11 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			Node<E> grandP = parent.getParent();
 
 			// 只有两节点的情况。
-			if (grandP == null)
+			if (grandP == null) {
+				root.setColor(Color.BLACK);
+				node.setColor(Color.RED);
 				return;
+			}
 
 			Node<E> uncle = (parent == grandP.getlChild()) ? grandP.getrChild() : grandP.getlChild();
 
@@ -120,7 +121,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 					// 中间节点边黑色，两旁红色
 					grandP.setColor(RedBlackBSTNode.Color.RED);
 					parent.setColor(RedBlackBSTNode.Color.BLACK);
-					// node.setColor(RedBlackBSTNode.Color.RED);//略，因为node本来就红色
+					node.setColor(RedBlackBSTNode.Color.RED);
 
 					// 新父节点
 					parent.setParent(ancestor);
@@ -161,7 +162,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				} else {
 					grandP.setColor(RedBlackBSTNode.Color.RED);
 					node.setColor(RedBlackBSTNode.Color.BLACK);
-					// parent.setColor(RedBlackBSTNode.Color.RED);//略，因为parent本来就红色
+					parent.setColor(RedBlackBSTNode.Color.RED);
 
 					// 新父节点
 					node.setParent(ancestor);
@@ -218,121 +219,36 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			}
 			// 情况2——四节点合起来看就是B-tree的上溢，最上面的节点为红色，两旁黑色，最下面红色。
 			else {
-				if (SHOW_LOG)
-					System.out.print(String.format("n=%s, 双红缺陷2，", node.getKey()));
+				if (SHOW_LOG) {
+					boolean isLeftNode = (node == parent.getlChild());
+					boolean isLeftParent = (parent == grandP.getlChild());
+					if (isLeftNode == isLeftParent) {
 
-				// 排列此四个节点的顺序，不论阶层。
-				Node<E> n0 = null;
-				Node<E> n1 = null;
-				Node<E> n2 = null;
-				Node<E> n3 = null;
+						if (isLeftParent)
+							System.out.println(String.format("n=%s, 双红缺陷2，叔父在右边，祖孙三代一左下斜线", node.getKey()));
+						else
+							System.out.println(String.format("n=%s, 双红缺陷2，叔父在左边，祖孙三代一右下斜线", node.getKey()));
 
-				if (uncle == grandP.getlChild()) {
-					n0 = uncle;
-					n1 = grandP;
-
-					if (node == parent.getlChild()) {
-						if (SHOW_LOG)
-							System.out.println("uncle-grandparent-node-parent");
-						n2 = node;
-						n3 = parent;
 					} else {
-						if (SHOW_LOG)
-							System.out.println("uncle-grandparent-parent-node");
-						n3 = node;
-						n2 = parent;
+
+						if (isLeftParent)
+							System.out.println(String.format("n=%s, 双红缺陷2，叔父在右边，祖孙三代<形", node.getKey()));
+						else
+							System.out.println(String.format("n=%s, 双红缺陷2，叔父在左边，祖孙三代>形", node.getKey()));
+
 					}
-					solveOverflow(n0, n1, n2, n3);
-
-					n2.setColor(Color.RED);
-					n3.setColor(Color.BLACK);
-					n1.setColor(Color.BLACK);
-					n0.setColor(Color.RED);
-				} else {
-					n3 = uncle;
-					n2 = grandP;
-
-					if (node == parent.getlChild()) {
-						if (SHOW_LOG)
-							System.out.println("node-parent-grandparent-uncle");
-						n0 = node;
-						n1 = parent;
-
-						n1.setColor(Color.BLACK);
-						n0.setColor(Color.RED);
-					} else {
-						if (SHOW_LOG)
-							System.out.println("parent-node-grandparent-uncle");
-						n0 = parent;
-						n1 = node;
-
-						n1.setColor(Color.RED);
-						n0.setColor(Color.BLACK);
-					}
-
-					// 不必检查上溢，因为此时的结构就像已经做过上溢处理，中位数n2已经是最高节点。
-
-					n2.setColor(Color.RED);
-					n3.setColor(Color.BLACK);
 				}
-				solveDoubleRed(n2);
-
-				if (root == n2)
-					n2.setColor(Color.BLACK);
+				grandP.setColor(Color.RED);
+				parent.setColor(Color.BLACK);
+				uncle.setColor(Color.BLACK);
+				node.setColor(Color.RED);
+				solveDoubleRed(grandP);
 			}
+
+			if (root == grandP) // 情况2换完grandP都是红色
+				root.setColor(Color.BLACK);
 		} else // 没有双红缺陷
 			return;
-	}
-
-	/**
-	 * 不论阶层，依左到右顺序带入欲修正节点。
-	 * 
-	 * @param n0
-	 * @param n1
-	 * @param n2
-	 * @param n3
-	 */
-	private void solveOverflow(Node<E> n0, Node<E> n1, Node<E> n2, Node<E> n3) {
-		if (SHOW_LOG)
-			System.out.println(String.format("overflow, divided [%s, %s, %s, %s]", n0.getKey(), n1.getKey(),
-					n2.getKey(), n3.getKey()));
-
-		// 上溢节点依次为 n0, n1, n2, n3
-		// 取中位数n2（无条件进位）为分界
-		// n0~n1, n2, n3
-		// 将 n2上升一层，并将刚才左右两组关键码分裂成n2的左右孩子。
-
-		// 处理中位数节点及其父节点
-		Node<E> parent = n1.getParent();
-		if (parent != null) {
-			if (parent.getlChild() == n1)
-				parent.setlChild(n2);
-			else
-				parent.setrChild(n2);
-		} else {
-			root = n2;
-		}
-		n2.setParent(parent);
-
-		// 处理中位数节点左孩子
-		n1.setrChild(n2.getlChild());
-		if (n1.getrChild() != null)
-			n1.getrChild().setParent(n1);
-
-		n2.setlChild(n1);
-		n1.setParent(n2);
-
-		// 处理中位数节点右孩子
-		if (n3.getlChild() == n2) {
-			n3.setlChild(n2.getrChild());
-			if (n3.getlChild() != null)
-				n3.getlChild().setParent(n3);
-		}
-		n2.setrChild(n3);
-		n3.setParent(n2);
-
-		hot = n0;
-		updateAboveHeight(hot);
 	}
 
 	@Override
