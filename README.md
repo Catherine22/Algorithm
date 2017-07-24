@@ -185,30 +185,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Red-black BSTs
 
-- When we talk about red-black binary search tree, you must figure it is very similar to B-tree, or 2-4 tree exactly. That's all that matters.
-
-![Red-black-tree][9]
-
-- Double red issue
-
-1. There're two red nodes in a row when you add a new node, and it would against the rule of Red-black BSTs.   
-2. It looks like a regular overflow case of a B-tree.    
-3. How to solve this issue depends on what color uncle node is.    
-4. Look at [Double red video] on youtube to learn more.
-
-When uncle node is black,
-![Red-black-tree][10]   
-
-Here is a sample about how to switch nodes and replace colors.
-![Red-black-tree][11]   
-
-
-When uncle node is red,
-![Red-black-tree][12]   
-In this case, all you have to do is set the grandparent node and the target one to red, and the other two to black.
-
-- Double black issue
-
 ## [Others]
   - Hailstone
   - Fibonacci
