@@ -88,13 +88,14 @@ public class Main {
 		// testAVLTree();
 		// testSplayTree();
 		// testBTree();
-		testRedBlackTree();
+		// testRedBlackTree();
 
 		// testCryptography();
 		// testJWS();
 	}
 
 	private static void testRedBlackTree() {
+		// skip red-black BSTs
 
 		// MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(10, null);
 		// rbTree1.traverseLevel();
@@ -114,25 +115,6 @@ public class Main {
 		// rbTree1.traverseLevel();
 		// rbTree1.insert(19, null);
 		// rbTree1.traverseLevel();
-
-		MyRedBlackBST<String> rbTree2 = new MyRedBlackBST<String>(5, "A");
-		rbTree2.traverseLevel();
-		rbTree2.insert(25, "L");
-		rbTree2.traverseLevel();
-		rbTree2.insert(10, "G");
-		rbTree2.traverseLevel();
-		rbTree2.insert(30, "O");
-		rbTree2.traverseLevel();
-		rbTree2.insert(35, "R");
-		rbTree2.traverseLevel();
-		rbTree2.insert(20, "I");
-		rbTree2.traverseLevel();
-		rbTree2.insert(37, "T");
-		rbTree2.traverseLevel();
-		rbTree2.insert(15, "H");
-		rbTree2.traverseLevel();
-		rbTree2.insert(27, "M");
-		rbTree2.traverseLevel();
 	}
 
 	public static void testBTree() {
