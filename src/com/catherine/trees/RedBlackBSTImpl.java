@@ -302,37 +302,26 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 	/**
 	 * 双黑缺陷<br>
-	 * 情况1:移除节点后，其父节点连接黑孩子，另一边的孩子必须是黑孩子，且有至少一个红孩子。<br>
+	 * 就像在b-tree中发生下溢。<br>
+	 * 情况1:移除节点node后，其父节点连接黑孩子（node节点的后继和兄弟节点），兄弟节点必须是黑孩子，且有至少一个孩子节点为红色。<br>
 	 * 做一次右旋，让新父节点成为红色，两孩子为黑色。
 	 * 
-	 * @param node
+	 * @param parent
 	 *            经过移除操作后的hot节点
 	 * @param rightNodeRemoved
 	 *            被移除的节点是否为hot节点的右孩子
 	 */
-	private void solveDoubleBlack(Node<E> node, boolean rightNodeRemoved) {
-		if (node == null)
+	private void solveDoubleBlack(Node<E> parent, boolean rightNodeRemoved) {
+		System.out.println("solveDoubleBlack parent:" + parent.getKey());
+		if (parent == null)
 			return;
 
 		if (rightNodeRemoved) {
-			Node<E> lp = node.getlChild();
-			if (lp == null) {
+			if (parent.getlChild() == null) {
 				// 表示原树只有root和root的右孩子两节点。
 				root.setColor(Color.RED);
 				return;
 			}
-
-			if (lp.getlChild() == null && lp.getrChild() == null) {
-				if (SHOW_LOG)
-					System.out.println("###1");
-				return;
-			}
-
-			Node<E> redC;
-			if (lp.getlChild() != null && lp.getlChild().isRed())
-				redC = lp.getlChild();
-			else if (lp.getrChild() != null && lp.getrChild().isRed())
-				redC = lp.getrChild();
 		}
 	}
 
