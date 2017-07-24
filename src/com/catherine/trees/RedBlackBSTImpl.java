@@ -43,6 +43,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 			n = adapter.buildNode(key, data, null, root.getlChild(), root.getrChild(), root.getHeight(),
 					root.getDepth());
 		root = n;
+		root.setColor(Color.BLACK);
 		hot = root;
 		return root;
 	}
@@ -303,14 +304,18 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	/**
 	 * 双黑缺陷<br>
 	 * 就像在b-tree中发生下溢。<br>
-	 * 情况1:移除节点node后，其父节点连接黑孩子（node节点的后继和兄弟节点），后继节点只能有一个孩子，左右都行，兄弟节点必须是黑色，
+	 * 情况1:移除节点node后，其parent节点连接黑孩子（node节点的后继和兄弟节点），后继节点只能有一个孩子，左右都行，兄弟节点必须是黑色，
 	 * 兄弟节点的左孩子节点为红色，耗时O(1)。<br>
 	 * 做一次右旋，parent变成后继节点的父节点，兄弟节点成为新parent，parent的左孩子为原本兄弟节点的左孩子（红），让新父节点成为红色，
 	 * 两孩子为黑色。<br>
 	 * <br>
-	 * 情况2:parent为红色，两孩子（兄弟节点和后继节点）都是黑色，耗时O(1).此前处理只需将parent转黑色、兄弟节点转红色。<br>
+	 * 情况2:parent为红色，两孩子（兄弟节点和后继节点）都是黑色，耗时O(1)。此前处理只需将parent转黑色、兄弟节点转红色。<br>
 	 * <br>
-	 * 情况3:
+	 * 情况3:同情况1，但是涉及的四个节点（parent, succ, sibling, child of
+	 * sibling）都是黑色。解决：兄弟节点转红色，其它都黑色，双黑缺陷向上传播直到树根，必须递归判断，耗时O(n)。<br>
+	 * <br>
+	 * 情况4:当兄弟节点为红，其它节点为黑色时，做一次旋转，让兄弟节点变成新parent，原parent变成孩子，此时还是double
+	 * black，再做一次判断，此时必不会有情况3和情况4，也就是情况4总共需要做两次double black处理，耗时O(1)。
 	 * 
 	 * @param parent
 	 *            经过移除操作后的hot节点
@@ -320,13 +325,13 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	private void solveDoubleBlack(Node<E> parent, boolean rightNodeRemoved) {
 		if (parent == null)
 			return;
-		System.out.println("solveDoubleBlack parent:" + parent.getKey());
+		System.out.println("solveDoubleBlack parent:" + parent.getKey() + " " + rightNodeRemoved);
 
 		if (rightNodeRemoved) {
-			Node<E> lc = parent.getlChild();
+			Node<E> lc = parent.getlChild(); // sibling
 			if (lc == null) {
 				// 表示原树只有root和root的右孩子两节点。
-				root.setColor(Color.RED);
+				root.setColor(Color.BLACK);
 				return;
 			}
 			Node<E> succ = parent.getrChild();
@@ -347,11 +352,43 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 					return;
 				}
 			}
-			if (parent.isRed() && lc.isBlack() && succ.isBlack()) {
+			if (parent.isRed()) {// 不用判断lc.isBlack() && succ.isBlack()
+				// ，因为红节点比为黑孩子
 				// 情况2
+				System.out.println(String.format("parent=%s, 双黑缺陷2，红parent，兄弟节点和后继节点黑色。", parent.getKey()));
 				parent.setColor(Color.BLACK);
 				lc.setColor(Color.RED);
 				succ.setColor(Color.BLACK);
+				return;
+			}
+
+			if (lc.isRed()) {
+				// 情况4
+				System.out.println(String.format("parent=%s, 双黑缺陷4，兄弟节点(%s)为红节点。", parent.getKey(), lc.getKey()));
+				Node<E> grandp = parent.getParent();
+				lc.setParent(grandp);
+				if (grandp != null) {
+					if (parent == grandp.getlChild())
+						grandp.setlChild(lc);
+					else
+						grandp.setrChild(lc);
+				} else
+					root = lc;
+
+				parent.setlChild(lc.getrChild());
+				if (parent.getlChild() != null)
+					parent.getlChild().setParent(parent);
+				parent.setlChild(lc.getrChild());
+				if (parent.getlChild() != null) {
+					parent.getlChild().setParent(parent);
+				}
+
+				lc.setrChild(parent);
+				parent.setParent(lc);
+
+				parent.setColor(Color.RED);
+				lc.setColor(Color.BLACK);
+				solveDoubleBlack(lc, rightNodeRemoved);
 				return;
 			}
 			if (lc.getlChild() != null && lc.getlChild().isRed()) {
@@ -373,10 +410,6 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				parent.setrChild(childOfSucc);
 				if (parent.getrChild() != null)
 					parent.getrChild().setParent(parent);
-				parent.setlChild(lc.getrChild());
-				if (parent.getlChild() != null) {
-					parent.getlChild().setParent(parent);
-				}
 
 				lc.setrChild(parent);
 				parent.setParent(lc);
@@ -384,14 +417,23 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				lc.setColor(Color.RED);
 				parent.setColor(Color.BLACK);
 				childOfSucc.setColor(Color.BLACK);
-				return;
+			} else {
+				// 情况3
+				System.out.println(String.format("parent=%s, 全黑。", parent.getKey()));
+				parent.setColor(Color.BLACK);
+				succ.setColor(Color.BLACK);
+				lc.setColor(Color.RED);
+				if (lc.getlChild() != null)
+					lc.getlChild().setColor(Color.BLACK);
+				if (lc.getrChild() != null)
+					lc.getrChild().setColor(Color.BLACK);
 			}
-
+			return;
 		} else {
-			Node<E> rc = parent.getlChild();
+			Node<E> rc = parent.getrChild();// sibling
 			if (rc == null) {
 				// 表示原树只有root和root的左孩子两节点。
-				root.setColor(Color.RED);
+				root.setColor(Color.BLACK);
 				return;
 			}
 
@@ -413,11 +455,39 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 					return;
 				}
 			}
-			if (parent.isRed() && rc.isBlack() && succ.isBlack()) {
+			if (parent.isRed()) {// 不用判断rc.isBlack() && succ.isBlack()
+									// ，因为红节点比为黑孩子
 				// 情况2
+				System.out.println(String.format("parent=%s, 双黑缺陷2，红parent，兄弟节点和后继节点黑色。", parent.getKey()));
 				parent.setColor(Color.BLACK);
 				rc.setColor(Color.RED);
 				succ.setColor(Color.BLACK);
+				return;
+			}
+
+			if (rc.isRed()) {
+				// 情况4
+				System.out.println(String.format("parent=%s, 双黑缺陷4，兄弟节点(%s)为红节点。", parent.getKey(), rc.getKey()));
+				Node<E> grandp = parent.getParent();
+				rc.setParent(grandp);
+				if (grandp != null) {
+					if (parent == grandp.getlChild())
+						grandp.setlChild(rc);
+					else
+						grandp.setrChild(rc);
+				} else
+					root = rc;
+
+				parent.setrChild(rc.getlChild());
+				if (parent.getrChild() != null)
+					parent.getrChild().setParent(parent);
+
+				rc.setlChild(parent);
+				parent.setParent(rc);
+
+				parent.setColor(Color.RED);
+				rc.setColor(Color.BLACK);
+				solveDoubleBlack(rc, rightNodeRemoved);
 				return;
 			}
 			if (rc.getrChild() != null && rc.getrChild().isRed()) {
@@ -450,10 +520,19 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				rc.setColor(Color.RED);
 				parent.setColor(Color.BLACK);
 				childOfSucc.setColor(Color.BLACK);
-				return;
+			} else {
+				// 情况3
+				System.out.println(String.format("parent=%s, 全黑。", parent.getKey()));
+				parent.setColor(Color.BLACK);
+				succ.setColor(Color.BLACK);
+				rc.setColor(Color.RED);
+				if (rc.getlChild() != null)
+					rc.getlChild().setColor(Color.BLACK);
+				if (rc.getrChild() != null)
+					rc.getrChild().setColor(Color.BLACK);
 			}
+			return;
 		}
-
 	}
 
 	/**
