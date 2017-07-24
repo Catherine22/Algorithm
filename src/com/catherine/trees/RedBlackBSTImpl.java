@@ -303,8 +303,14 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	/**
 	 * 双黑缺陷<br>
 	 * 就像在b-tree中发生下溢。<br>
-	 * 情况1:移除节点node后，其父节点连接黑孩子（node节点的后继和兄弟节点），兄弟节点必须是黑孩子，且有至少一个孩子节点为红色。<br>
-	 * 做一次右旋，让新父节点成为红色，两孩子为黑色。
+	 * 情况1:移除节点node后，其父节点连接黑孩子（node节点的后继和兄弟节点），后继节点只能有一个孩子，左右都行，兄弟节点必须是黑色，
+	 * 兄弟节点的左孩子节点为红色，耗时O(1)。<br>
+	 * 做一次右旋，parent变成后继节点的父节点，兄弟节点成为新parent，parent的左孩子为原本兄弟节点的左孩子（红），让新父节点成为红色，
+	 * 两孩子为黑色。<br>
+	 * <br>
+	 * 情况2:parent为红色，两孩子（兄弟节点和后继节点）都是黑色，耗时O(1).此前处理只需将parent转黑色、兄弟节点转红色。<br>
+	 * <br>
+	 * 情况3:
 	 * 
 	 * @param parent
 	 *            经过移除操作后的hot节点
@@ -312,17 +318,142 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 *            被移除的节点是否为hot节点的右孩子
 	 */
 	private void solveDoubleBlack(Node<E> parent, boolean rightNodeRemoved) {
-		System.out.println("solveDoubleBlack parent:" + parent.getKey());
 		if (parent == null)
 			return;
+		System.out.println("solveDoubleBlack parent:" + parent.getKey());
 
 		if (rightNodeRemoved) {
-			if (parent.getlChild() == null) {
+			Node<E> lc = parent.getlChild();
+			if (lc == null) {
 				// 表示原树只有root和root的右孩子两节点。
 				root.setColor(Color.RED);
 				return;
 			}
+			Node<E> succ = parent.getrChild();
+			if (succ == null) {
+				System.out.println("没有后继节点");
+				// test
+				return;
+			}
+			// Node<E> redNode;
+			Node<E> childOfSucc = succ.getlChild();
+			if (childOfSucc == null) {
+				childOfSucc = succ.getrChild();
+			} else {
+				if (succ.getrChild() != null) {
+					// 非情况1
+					System.out.println("后继节点有两个孩子");
+					// test
+					return;
+				}
+			}
+			if (parent.isRed() && lc.isBlack() && succ.isBlack()) {
+				// 情况2
+				parent.setColor(Color.BLACK);
+				lc.setColor(Color.RED);
+				succ.setColor(Color.BLACK);
+				return;
+			}
+			if (lc.getlChild() != null && lc.getlChild().isRed()) {
+				// 情况1
+				System.out.println(String.format("parent=%s, 双黑缺陷1，左孩子的左孩子为红节点。", parent.getKey()));
+				// redNode = lc.getlChild();
+
+				// 旋转
+				Node<E> grandp = parent.getParent();
+				lc.setParent(grandp);
+				if (grandp != null) {
+					if (parent == grandp.getlChild())
+						grandp.setlChild(lc);
+					else
+						grandp.setrChild(lc);
+				} else
+					root = lc;
+
+				parent.setrChild(childOfSucc);
+				if (parent.getrChild() != null)
+					parent.getrChild().setParent(parent);
+				parent.setlChild(lc.getrChild());
+				if (parent.getlChild() != null) {
+					parent.getlChild().setParent(parent);
+				}
+
+				lc.setrChild(parent);
+				parent.setParent(lc);
+
+				lc.setColor(Color.RED);
+				parent.setColor(Color.BLACK);
+				childOfSucc.setColor(Color.BLACK);
+				return;
+			}
+
+		} else {
+			Node<E> rc = parent.getlChild();
+			if (rc == null) {
+				// 表示原树只有root和root的左孩子两节点。
+				root.setColor(Color.RED);
+				return;
+			}
+
+			Node<E> succ = parent.getrChild();
+			if (succ == null) {
+				System.out.println("没有后继节点");
+				// test
+				return;
+			}
+			// Node<E> redNode;
+			Node<E> childOfSucc = succ.getlChild();
+			if (childOfSucc == null) {
+				childOfSucc = succ.getrChild();
+			} else {
+				if (succ.getrChild() != null) {
+					// 非情况1
+					System.out.println("后继节点有两个孩子");
+					// test
+					return;
+				}
+			}
+			if (parent.isRed() && rc.isBlack() && succ.isBlack()) {
+				// 情况2
+				parent.setColor(Color.BLACK);
+				rc.setColor(Color.RED);
+				succ.setColor(Color.BLACK);
+				return;
+			}
+			if (rc.getrChild() != null && rc.getrChild().isRed()) {
+				// 情况1
+				System.out.println(String.format("parent=%s, 双黑缺陷1，右孩子的右孩子为红节点。", parent.getKey()));
+				// redNode = rc.getlChild();
+
+				// 旋转
+				Node<E> grandp = parent.getParent();
+				rc.setParent(grandp);
+				if (grandp != null) {
+					if (parent == grandp.getlChild())
+						grandp.setlChild(rc);
+					else
+						grandp.setrChild(rc);
+				} else
+					root = rc;
+
+				parent.setlChild(childOfSucc);
+				if (parent.getlChild() != null)
+					parent.getlChild().setParent(parent);
+				parent.setrChild(rc.getrChild());
+				if (parent.getrChild() != null) {
+					parent.getrChild().setParent(parent);
+				}
+
+				rc.setlChild(parent);
+				parent.setParent(rc);
+
+				rc.setColor(Color.RED);
+				parent.setColor(Color.BLACK);
+				childOfSucc.setColor(Color.BLACK);
+				return;
+			}
 		}
+
 	}
 
 	/**
