@@ -1,5 +1,7 @@
 package com.catherine.trees.nodes;
 
+import com.catherine.trees.nodes.RedBlackBSTNode.Color;
+
 /**
  * 利用装饰者模式切换Node
  * 
@@ -11,25 +13,28 @@ public class NodeAdapter<E> implements Node<E> {
 	private Nodes type;
 	private Node<E> aNode;
 
-	public NodeAdapter() {
-	}
-
 	public void setType(Nodes type) {
 		this.type = type;
 	}
 
 	public Node<E> buildNode(E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
 		if (type == Nodes.STANDARD)
-			aNode = new BNode<E>(data, (BNode<E>) parent, (BNode<E>) lChild, (BNode<E>) rChild, height, depth);
+			aNode = new BinaryNode<E>(data, (BinaryNode<E>) parent, (BinaryNode<E>) lChild, (BinaryNode<E>) rChild,
+					height, depth);
 		return aNode;
 	}
 
 	public Node<E> buildNode(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
 		if (type == Nodes.STANDARD)
-			aNode = new BNode<E>(data, (BNode<E>) parent, (BNode<E>) lChild, (BNode<E>) rChild, height, depth);
+			aNode = new BinaryNode<E>(data, (BinaryNode<E>) parent, (BinaryNode<E>) lChild, (BinaryNode<E>) rChild,
+					height, depth);
 		else if (type == Nodes.BST)
 			aNode = new BSTNode<E>(key, data, (BSTNode<E>) parent, (BSTNode<E>) lChild, (BSTNode<E>) rChild, height,
 					depth);
+		else if (type == Nodes.RB)
+			aNode = new RedBlackBSTNode<E>(key, data, (RedBlackBSTNode<E>) parent, (RedBlackBSTNode<E>) lChild,
+					(RedBlackBSTNode<E>) rChild, height, depth);
+
 		return aNode;
 	}
 
@@ -42,9 +47,11 @@ public class NodeAdapter<E> implements Node<E> {
 		if (type == Nodes.BST) {
 			BSTNode<E> node = (BSTNode<E>) aNode;
 			return node.getKey();
+		} else if (type == Nodes.RB) {
+			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
+			return node.getKey();
 		} else
 			return -1;
-
 	}
 
 	@Override
@@ -52,6 +59,35 @@ public class NodeAdapter<E> implements Node<E> {
 		if (type == Nodes.BST) {
 			BSTNode<E> node = (BSTNode<E>) aNode;
 			node.setKey(key);
+		} else if (type == Nodes.RB) {
+			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
+			node.setKey(key);
+		}
+	}
+
+	@Override
+	public boolean isBlack() {
+		if (type == Nodes.RB) {
+			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
+			return node.isBlack();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isRed() {
+		if (type == Nodes.RB) {
+			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
+			return node.isRed();
+		}
+		return false;
+	}
+
+	@Override
+	public void setColor(Color color) {
+		if (type == Nodes.RB) {
+			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
+			node.setColor(color);
 		}
 	}
 

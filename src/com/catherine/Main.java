@@ -1,6 +1,5 @@
 package com.catherine;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -10,7 +9,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
@@ -24,8 +22,6 @@ import java.util.Stack;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
-import org.json.JSONException;
 
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
@@ -41,9 +37,10 @@ import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
 import com.catherine.trees.Callback;
 import com.catherine.trees.MyAVLTree;
-import com.catherine.trees.MyBTree_Integer;
+import com.catherine.trees.MyBTree;
 import com.catherine.trees.MyBinarySearchTree;
 import com.catherine.trees.MyBinaryTree;
+import com.catherine.trees.MyRedBlackBST;
 import com.catherine.trees.MySplayTree;
 import com.catherine.trees.nodes.Node;
 import com.catherine.turing_machine.TuringMachine;
@@ -90,36 +87,60 @@ public class Main {
 		// testBST();
 		// testAVLTree();
 		// testSplayTree();
-		testBTree();
+		// testBTree();
+		// testRedBlackTree();
 
 		// testCryptography();
 		// testJWS();
 	}
 
-	public static void testBTree() {
-		MyBTree_Integer myBTree = new MyBTree_Integer(5, 528);
-		// myBTree.printInfo();
-		myBTree.insert(192);
-		myBTree.insert(268);
-		myBTree.insert(703);
-		myBTree.insert(850);
+	private static void testRedBlackTree() {
+		// skip red-black BSTs
 
-		myBTree.insert(57);
-		myBTree.insert(152);
-		myBTree.insert(249);
-		myBTree.insert(266);
-		myBTree.insert(315);
-		myBTree.insert(423);
-		myBTree.insert(468);
-		myBTree.insert(484);
-		myBTree.insert(619);
-		myBTree.insert(644);
-		myBTree.insert(758);
-		myBTree.insert(771);
-		myBTree.insert(865);
-		myBTree.insert(882);
-		myBTree.insert(936);
-		myBTree.insert(984);
+		// MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(10, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(12, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(11, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(100, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(95, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(25, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(55, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(16, null);
+		// rbTree1.traverseLevel();
+		// rbTree1.insert(19, null);
+		// rbTree1.traverseLevel();
+	}
+
+	public static void testBTree() {
+		MyBTree<String> myBTree = new MyBTree<>(5, 528);
+		// myBTree.printInfo();
+		myBTree.insert(192, null);
+		myBTree.insert(268, null);
+		myBTree.insert(703, null);
+		myBTree.insert(850, null);
+
+		myBTree.insert(57, null);
+		myBTree.insert(152, null);
+		myBTree.insert(249, null);
+		myBTree.insert(266, null);
+		myBTree.insert(315, null);
+		myBTree.insert(423, null);
+		myBTree.insert(468, null);
+		myBTree.insert(484, null);
+		myBTree.insert(619, null);
+		myBTree.insert(644, null);
+		myBTree.insert(758, null);
+		myBTree.insert(771, null);
+		myBTree.insert(865, null);
+		myBTree.insert(882, null);
+		myBTree.insert(936, null);
+		myBTree.insert(984, null);
 		// System.out.println(myBTree.toString());
 		myBTree.remove(249);
 		System.out.println(myBTree.toString());
@@ -224,36 +245,35 @@ public class Main {
 
 	private static void testCryptography() {
 		try {
-			final Analysis analysis = new Analysis();
 			KeystoreManager.printKeyStoreInfo();
 
 			TrackLog log1 = new TrackLog("General a single key");
-			analysis.startTracking(log1);
+			Analysis.startTracking(log1);
 			String secretKeyString = KeystoreManager.generateKeyString();
-			analysis.endTracking(log1);
-			analysis.printTrack(log1);
+			Analysis.endTracking(log1);
+			Analysis.printTrack(log1);
 
 			TrackLog log2 = new TrackLog("Decrypt the key");
-			analysis.startTracking(log2);
+			Analysis.startTracking(log2);
 			KeystoreManager.converStringToKey(secretKeyString);
-			analysis.endTracking(log2);
-			analysis.printTrack(log2);
+			Analysis.endTracking(log2);
+			Analysis.printTrack(log2);
 
 			final TrackLog log3 = new TrackLog("General a RSA keyPair");
-			analysis.startTracking(log3);
+			Analysis.startTracking(log3);
 			KeystoreManager.generateRSAKeyPair(new RSACallback() {
 
 				@Override
 				public void onResponse(String modulus, String exponent) {
-					analysis.endTracking(log3);
-					analysis.printTrack(log3);
+					Analysis.endTracking(log3);
+					Analysis.printTrack(log3);
 
 					try {
 						TrackLog log4 = new TrackLog("Decrypt the RSA keyPair");
-						analysis.startTracking(log4);
+						Analysis.startTracking(log4);
 						KeystoreManager.converStringToPublicKey(modulus, exponent);
-						analysis.endTracking(log4);
-						analysis.printTrack(log4);
+						Analysis.endTracking(log4);
+						Analysis.printTrack(log4);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					} catch (NoSuchAlgorithmException e) {
@@ -274,39 +294,39 @@ public class Main {
 			});
 
 			TrackLog log5 = new TrackLog("General a keypair from the keystore");
-			analysis.startTracking(log5);
+			Analysis.startTracking(log5);
 			KeystoreManager.getKeyPairFromKeystore();
-			analysis.endTracking(log5);
-			analysis.printTrack(log5);
+			Analysis.endTracking(log5);
+			Analysis.printTrack(log5);
 
 			TrackLog log6 = new TrackLog("Encrypt a string from the keyPair");
-			analysis.startTracking(log6);
+			Analysis.startTracking(log6);
 			byte[] msg = CipherKit.encrypt("你好啊！");
-			analysis.endTracking(log6);
-			analysis.printTrack(log6);
+			Analysis.endTracking(log6);
+			Analysis.printTrack(log6);
 
 			TrackLog log7 = new TrackLog("Decrypt a string from the keyPair");
-			analysis.startTracking(log7);
+			Analysis.startTracking(log7);
 			System.out.println(CipherKit.decrypt(msg));
-			analysis.endTracking(log7);
-			analysis.printTrack(log7);
+			Analysis.endTracking(log7);
+			Analysis.printTrack(log7);
 
 			final TrackLog log8 = new TrackLog("Encrypt a string from the secretKey key");
-			analysis.startTracking(log8);
+			Analysis.startTracking(log8);
 			final Key sKey = KeystoreManager.generateKey();
 			CipherKit.encryptDES(sKey, "Hi there!", new DESCallback() {
 
 				@Override
 				public void onResponse(byte[] iv, byte[] message) {
-					analysis.endTracking(log8);
-					analysis.printTrack(log8);
+					Analysis.endTracking(log8);
+					Analysis.printTrack(log8);
 
 					try {
 						TrackLog log9 = new TrackLog("Decrypt a string from the secretKey key");
-						analysis.startTracking(log9);
+						Analysis.startTracking(log9);
 						System.out.println(CipherKit.decryptDES(sKey, iv, message));
-						analysis.endTracking(log9);
-						analysis.printTrack(log9);
+						Analysis.endTracking(log9);
+						Analysis.printTrack(log9);
 					} catch (InvalidKeyException e) {
 						e.printStackTrace();
 					} catch (NoSuchAlgorithmException e) {
@@ -327,7 +347,7 @@ public class Main {
 			});
 			// verify files
 			final TrackLog log10 = new TrackLog("Signing the file ");
-			analysis.startTracking(log10);
+			Analysis.startTracking(log10);
 			KeystoreManager.generateRSAKeyPair(new RSACallback() {
 
 				@Override
@@ -344,18 +364,18 @@ public class Main {
 					try {
 						byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", Algorithm.ALG_MD5_WITH_RSA,
 								privateKey);
-						analysis.endTracking(log10);
-						analysis.printTrack(log10);
+						Analysis.endTracking(log10);
+						Analysis.printTrack(log10);
 
 						TrackLog log11 = new TrackLog("verifing the file with signature ");
-						analysis.startTracking(log11);
+						Analysis.startTracking(log11);
 						boolean islegel = MessageDigestKit.verifyFileSignature(signature, Algorithm.ALG_MD5_WITH_RSA,
 								"assets/metals.jpg", publicKey);
 
 						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
 						System.out.println("Signature: Is this file legel? " + islegel);
-						analysis.endTracking(log11);
-						analysis.printTrack(log11);
+						Analysis.endTracking(log11);
+						Analysis.printTrack(log11);
 
 						signature = MessageDigestKit.sign(attestationJws.getBytes(), Algorithm.ALG_SHA256_WITH_RSA,
 								privateKey);

@@ -1,8 +1,8 @@
 package com.catherine.trees;
 
-import com.catherine.trees.nodes.B_Node;
+import com.catherine.trees.nodes.BNode;
 
-public interface BTree {
+public interface BTree<E> {
 	/**
 	 * 一个节点最多有m-1个key值
 	 * 
@@ -15,7 +15,7 @@ public interface BTree {
 	 * 
 	 * @return 根节点
 	 */
-	public B_Node getRoot();
+	public BNode<E> getRoot();
 
 	/**
 	 * 是否为空树（没有节点）
@@ -74,15 +74,16 @@ public interface BTree {
 	 * @param key
 	 * @return
 	 */
-	public B_Node search(int key);
+	public BNode<E> search(int key);
 
 	/**
 	 * 须考虑插入key后导致的上溢情形。
 	 * 
 	 * @param key
+	 * @param value
 	 * @return
 	 */
-	public boolean insert(int key);
+	public boolean insert(int key, E value);
 
 	/**
 	 * 删除时希望目标节点是叶节点，如果不是叶节点就和后继（一定会是叶节点）交换位置后再移除。<br>
@@ -101,7 +102,7 @@ public interface BTree {
 	 * 
 	 * @param node
 	 */
-	public void solveOverflow(B_Node node);
+	public void solveOverflow(BNode<E> node);
 
 	/**
 	 * 因删除而下溢后的合并处理<br>
@@ -113,7 +114,7 @@ public interface BTree {
 	 * 
 	 * @param node
 	 */
-	public void solveUnderfolw(B_Node node);
+	public void solveUnderflow(BNode<E> node);
 
 	public void printInfo();
 }

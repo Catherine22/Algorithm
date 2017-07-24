@@ -80,6 +80,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
   > An Edge<E> is a user-defined class, it contains data, weight and status.
 
+## Tree
 
 ### Binary Tree
 
@@ -159,6 +160,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - [MyAVLTree]
 
+## Classy tree
+
 ### Splay tree
 
 - Splay tree practices pretty well when the recently accessed node may be accessed again.
@@ -176,7 +179,35 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ![B-tree][8]
 
 - Insertion/removing/searching
-- [MyBTree_Integer]
+- Underflow and overflow issues
+- [MyBTree]
+
+
+### Red-black BSTs
+
+- When we talk about red-black binary search tree, you must figure it is very similar to B-tree, or 2-4 tree exactly. That's all that matters.
+
+![Red-black-tree][9]
+
+- Double red issue
+
+1. There're two red nodes in a row when you add a new node, and it would against the rule of Red-black BSTs.   
+2. It looks like a regular overflow case of a B-tree.    
+3. How to solve this issue depends on what color uncle node is.    
+4. Look at [Double red video] on youtube to learn more.
+
+When uncle node is black,
+![Red-black-tree][10]   
+
+Here is a sample about how to switch nodes and replace colors.
+![Red-black-tree][11]   
+
+
+When uncle node is red,
+![Red-black-tree][12]   
+In this case, all you have to do is set the grandparent node and the target one to red, and the other two to black.
+
+- Double black issue
 
 ## [Others]
   - Hailstone
@@ -300,7 +331,9 @@ private void testJWS() {
    [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
    [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
    [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
-   [MyBTree_Integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree_Integer.java>
+   [MyBTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree.java>
+   [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
+   [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -308,6 +341,7 @@ private void testJWS() {
    [Verifying a Certificate Chain]:<https://docs.oracle.com/cd/E19316-01/820-2765/gdzea/index.html>
    [JSON Web Signature (JWS) draft-jones-json-web-signature-01]:<http://self-issued.info/docs/draft-jones-json-web-signature-01.html>
    [SecuritySample]:<https://github.com/Catherine22/SecuritySample>
+   [Double red video]:<https://www.youtube.com/watch?v=m9tse9Gr2pE>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
@@ -317,3 +351,7 @@ private void testJWS() {
   [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
   [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
   [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png
+  [9]: https://github.com/Catherine22/Algorithms/blob/master/res/B_R_BST.png
+  [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_1.png.png
+  [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_2.png.png
+  [12]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png

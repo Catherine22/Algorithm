@@ -1,19 +1,13 @@
 package com.catherine.trees.nodes;
 
 /**
- * Binary search tree(BST, Splay tree and AVL tree)
+ * Binary tree
  * 
  * @author Catherine
  *
  * @param <E>
  */
-public class BSTNode<E> implements Node<E> {
-
-	/**
-	 * key-value, key不重复
-	 */
-	private int key;
-
+public class BinaryNode<E> implements Node<E> {
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 	 */
@@ -24,15 +18,14 @@ public class BSTNode<E> implements Node<E> {
 	 */
 	private int depth;
 	private E data;
-	private BSTNode<E> parent;
-	private BSTNode<E> lChild;
-	private BSTNode<E> rChild;
+	private BinaryNode<E> parent;
+	private BinaryNode<E> lChild;
+	private BinaryNode<E> rChild;
 
-	public BSTNode(int key, E data, BSTNode<E> parent, BSTNode<E> lChild, BSTNode<E> rChild, int height, int depth) {
+	public BinaryNode(E data, BinaryNode<E> parent, BinaryNode<E> lChild, BinaryNode<E> rChild, int height, int depth) {
 		this.data = data;
 		this.depth = depth;
 		this.height = height;
-		this.key = key;
 		this.parent = parent;
 		this.lChild = lChild;
 		this.rChild = rChild;
@@ -40,22 +33,14 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public String toString() {
-		String pkey = (parent != null) ? parent.key + "" : "null parent";
-		String lkey = (lChild != null) ? lChild.key + "" : "null lChild";
-		String rkey = (rChild != null) ? rChild.key + "" : "null rChild";
-
-		return String.format(
-				"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
-				key, data, height, depth, pkey, lkey, rkey);
-
-	}
-
-	public int getKey() {
-		return key;
-	}
-
-	public void setKey(int key) {
-		this.key = key;
+		if (parent != null)
+			return String.format(
+					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
+					data, data, height, depth, parent.data);
+		else
+			return String.format(
+					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
+					data, data, height, depth, "null parent");
 	}
 
 	@Override
@@ -95,7 +80,7 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public void setParent(Node<E> parent) {
-		this.parent = (BSTNode<E>) parent;
+		this.parent = (BinaryNode<E>) parent;
 	}
 
 	@Override
@@ -105,7 +90,7 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public void setlChild(Node<E> lChild) {
-		this.lChild = (BSTNode<E>) lChild;
+		this.lChild = (BinaryNode<E>) lChild;
 	}
 
 	@Override
@@ -115,12 +100,28 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public void setrChild(Node<E> rChild) {
-		this.rChild = (BSTNode<E>) rChild;
+		this.rChild = (BinaryNode<E>) rChild;
 	}
 
 	@Override
 	public String getInfo() {
-		return key + "(" + height + ") ";
+		if (data != null)
+			return data + " ";
+		else
+			return "null ";
+
+	}
+
+	@Override
+	public int getKey() {
+		// do nothing
+		return 0;
+	}
+
+	@Override
+	public void setKey(int key) {
+		// do nothing
+
 	}
 
 	@Override
