@@ -22,7 +22,6 @@ import java.util.Stack;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
@@ -245,7 +244,7 @@ public class Main {
 
 	private static void testCryptography() {
 		try {
-			KeystoreManager.printKeyStoreInfo();
+			KeystoreManager.printKeyStoreInfo(KeySet.KEYSTORE_PATH,KeySet.KEYSTORE_TYPE,KeySet.KEYSTORE_PW);
 
 			TrackLog log1 = new TrackLog("General a single key");
 			Analysis.startTracking(log1);

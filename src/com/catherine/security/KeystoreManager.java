@@ -53,12 +53,12 @@ public class KeystoreManager {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static void printKeyStoreInfo() throws UnrecoverableKeyException, KeyStoreException,
-			NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
-		KeyStore keystore = KeyStore.getInstance(KeySet.KEYSTORE_TYPE);
-		File kf = new File(KeySet.KEYSTORE_PATH);
+	public static void printKeyStoreInfo(String path, String type, String password) throws UnrecoverableKeyException,
+			KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
+		KeyStore keystore = KeyStore.getInstance(type);
+		File kf = new File(path);
 		// System.out.println(kf.getAbsolutePath());
-		keystore.load(new FileInputStream(kf), KeySet.KEYSTORE_PW.toCharArray());
+		keystore.load(new FileInputStream(kf), password.toCharArray());
 
 		System.out.println("==>KeyStoreInfo: START");
 		// 获取KeyStore中定义的别名
