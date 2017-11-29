@@ -213,7 +213,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 **[JwsHelper]**
   - Split JWS into 3 parts and decode them.
-  - Take Android SafetyNet attestation JWS result for example, validate the certificates and the JWS signature.
+  - Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature.
 
 >Follow these steps:
 >1. Extract the SSL certificate chain from the JWS message.
@@ -253,7 +253,7 @@ private void testJWS() {
   }
 }
 ```
-  - There is a Android sample ([SecuritySample]) integrated attestation APIs and JWS validating.
+  - Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation.
 
 ## Reference
   - [Algorithms, 4th Edition]
