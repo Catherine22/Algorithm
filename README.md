@@ -183,7 +183,12 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 - [MyBTree]
 
 
-### Red-black BSTs
+## Dictionary
+- There are four types of structures - Call by rank(Vector), call by position(List), call by key(BST) and call by value(Hashing).
+- Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save  and search them.  If you loop the data to find out a number, it'll spend only O(1). But there are 100M telephones. That means your accurate performance is 25K/100M = 0.025%. It's terrible. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
+
+
+
 
 ## [Others]
   - Hailstone
@@ -214,46 +219,13 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 **[JwsHelper]**
   - Split JWS into 3 parts and decode them.
   - Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature.
+  - Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation.
 
 >Follow these steps:
 >1. Extract the SSL certificate chain from the JWS message.
 >2. Validate the SSL certificate chain and use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com.
 >3. Use the certificate to verify the signature of the JWS message.
 
-```Java
-private static String attestationJws = "Fill in your jws response from SafetyNetApi.AttestationResult";
-
-private void testJWS() {
-  try {
-    JwsHelper jwsHelper = new JwsHelper(attestationJws);
-    AttestationResult result = new AttestationResult(jwsHelper.getDecodedPayload());
-    System.out.println(result);
-
-    List<X509Certificate> certs = jwsHelper.getX5CCertificates();
-    X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
-
-    // Just verify one of the certificates which is belonged to "attest.android.com" in this case.
-    boolean isJwsHeaderLegel = false;
-    for (X509Certificate cert : certs) {
-      boolean isValid = CertificatesManager.validate(cert, rootCert);
-      CertificatesManager.printCertificatesInfo(cert);
-      if (isValid == true)
-        isJwsHeaderLegel = true;
-    }
-
-    // Verify the signature of JWS
-    boolean isJwsSignatureLegel = jwsHelper.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
-    if (isJwsHeaderLegel && isJwsSignatureLegel)
-      System.out.println("Your JWS is valid!");
-    else
-      System.out.println("Your JWS is not valid!");
-
-  } catch (Exception e) {
-    e.printStackTrace();
-  }
-}
-```
-  - Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation.
 
 ## Reference
   - [Algorithms, 4th Edition]
