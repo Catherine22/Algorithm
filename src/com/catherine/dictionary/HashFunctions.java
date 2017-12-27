@@ -3,7 +3,6 @@ package com.catherine.dictionary;
 import java.util.List;
 
 import com.catherine.dictionary.unit_test.HashingDaoImpl;
-import com.catherine.dictionary.unit_test.RawDaoImpl;
 import com.catherine.dictionary.unit_test.Student;
 
 /**
@@ -19,6 +18,23 @@ import com.catherine.dictionary.unit_test.Student;
  */
 public class HashFunctions {
 	private final boolean SHOW_DEBUG_LOG = true;
+	private HashingDaoImpl rawDaoImpl;
+
+	/**
+	 * 
+	 * @param capacity
+	 *            容量，代表List的长度
+	 * @param loadFactor
+	 *            代表List内有百分之多少的栏位要被赋值，比如设置0.75，容量为100，代表生成75个随机数，留下25个空栏位。
+	 * @param from
+	 *            随机数数值范围（含）
+	 * @param to
+	 *            随机数数值范围（不含）
+	 */
+	public HashFunctions(int capacity, float loadFactor, int from, int to) {
+		rawDaoImpl = new HashingDaoImpl("students_raw");
+		rawDaoImpl.createRandomTable(capacity, loadFactor, from, to);
+	}
 
 	/**
 	 * 除余法<br>
@@ -29,20 +45,23 @@ public class HashFunctions {
 	 * @param key
 	 */
 	public void remainder(int m) {
-		RawDaoImpl.getInstance().createRandomTable(20, 0.75f, 30, 36);
-		List<Student> rawTableList = RawDaoImpl.getInstance().getTableList();
-		List<Student> rawStudentList = RawDaoImpl.getInstance().getStudent();
+		List<Student> rawTableList = rawDaoImpl.getTableList();
+		List<Student> rawStudentList = rawDaoImpl.getStudent();
 
 		// 要做hash处理的是学生信息表的seat_id
-		for (Student student : rawStudentList) {
-			HashingDaoImpl.getInstance().insert(student.seat_id % m, student.student_id);
+		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_" + m);
+		for (Student student : rawTableList) {
+			hashingDaoImpl.insert(student.seat_id % m, student.student_id);
 		}
 
-		List<Student> newTableList = HashingDaoImpl.getInstance().getTableList();
-		List<Student> newStudentList = HashingDaoImpl.getInstance().getStudent();
+		List<Student> newTableList = hashingDaoImpl.getTableList();
+		List<Student> newStudentList = hashingDaoImpl.getStudent();
 
-		if (SHOW_DEBUG_LOG)
+		if (SHOW_DEBUG_LOG) {
+			System.out.println("***************analytics***************");
+			System.out.println("mod " + m);
 			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+		}
 	}
 
 	/**
@@ -87,18 +106,18 @@ public class HashFunctions {
 	public void analyze(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
 			List<Student> newStudentList) {
 		System.out.println(String.format("original size:%d, new size:%d", rawTableList.size(), newTableList.size()));
-		
+
 		int collisions = 0;
 		for (Student student : newStudentList) {
 			if (student.collisions > 0)
 				collisions++;
 		}
 		System.out.println(String.format("lost keys:%d, collisions:%.2f%%", collisions,
-				collisions * 1.0f / newStudentList.size()));
+				collisions * 100.0f / newStudentList.size()));
 
-		float su0 = rawStudentList.size() * 1.0f / rawTableList.size();
-		float su1 = newStudentList.size() * 1.0f / newTableList.size();
-		System.out.println(String.format("space usage:%.2f%%, improve:%.2f%%", su1, su1 - su0));
+		float su0 = rawStudentList.size() * 100.0f / rawTableList.size();
+		float su1 = newStudentList.size() * 100.0f / newTableList.size();
+		System.out.println(String.format("space usage:%.2f%%, improved:%.2f%%", su1, su1 - su0));
 
 	}
 }

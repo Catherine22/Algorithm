@@ -90,25 +90,34 @@ class MainTestDao {
 			throw new IllegalArgumentException("loadFactor>100 || loadFactor<0");
 
 		List<Integer> rawList = new LinkedList<>();
-		int size = to - from;
-
-		for (int i = 0; i < size; i++) {
+		int rawSize = to - from;
+		for (int i = 0; i < rawSize; i++) {
 			rawList.add(from++);
 		}
 
 		if (SHOW_DEBUG_LOG)
-			System.out.println("rawArray from " + rawList.get(0) + "~" + rawList.get(rawList.size() - 1));
+			System.out.println("rawArray from " + from + " to " + to);
 
-		int emptySpace = (int) (capacity * (1 - loadFactor));
-		for (int i = 0; i < emptySpace; i++) {
-			rawList.add(null);
+		int entitySize = (int) (capacity * loadFactor);
+		int emptySpace = capacity - entitySize;
+		List<Integer> newList = new ArrayList<>();
+		int header = 0;
+		while (newList.size() < entitySize) {
+			header = newList.size();
+			Collections.shuffle(rawList);
+			newList.addAll(header, rawList);
 		}
+		newList = newList.subList(0, entitySize);
 
-		Collections.shuffle(rawList);
+		for (int i = 0; i < emptySpace; i++) {
+			newList.add(null);
+		}
+		rawList.clear();
+		Collections.shuffle(newList);
 
 		if (SHOW_DEBUG_LOG)
-			System.out.println(rawList);
-		return rawList;
+			System.out.println(newList.size());
+		return newList;
 	}
 
 	/**
@@ -132,7 +141,6 @@ class MainTestDao {
 				while (rs0.next()) {
 					hasCollision = rs0.getInt(1) == 1;
 				}
-
 				rs0.close();
 
 				int collisions = 0;
@@ -174,8 +182,8 @@ class MainTestDao {
 
 				ResultSet rs = stmt.executeQuery("SELECT * FROM STUDENTS WHERE student_id != ''");
 				while (rs.next()) {
-						students.add(new Student(rs.getInt("id"), rs.getInt("seat_id"), rs.getString("student_id"),
-								rs.getString("student_name"), rs.getInt("collisions")));
+					students.add(new Student(rs.getInt("id"), rs.getInt("seat_id"), rs.getString("student_id"),
+							rs.getString("student_name"), rs.getInt("collisions")));
 				}
 				rs.close();
 				stmt.close();
@@ -225,29 +233,31 @@ class MainTestDao {
 	 * collisions代表进行hash时该栏位发生多少次碰撞，同一个座位被重复塞入学生就+1，初始值为0。<br>
 	 */
 	protected static void initialize(String TABLE) {
-		try {
-			Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
-			Statement stmt = c.createStatement();
+		synchronized (getInstance()) {
+			try {
+				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
+				Statement stmt = c.createStatement();
+
+				// if (SHOW_DEBUG_LOG)
+				// System.out.println("Opened database successfully");
+
+				String droping = "DROP TABLE IF EXISTS STUDENTS";
+				stmt.executeUpdate(droping);
+
+				String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
+						+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
+						+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
+				stmt.executeUpdate(creation);
+				stmt.close();
+				c.close();
+			} catch (Exception e) {
+				if (SHOW_DEBUG_LOG)
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
 
 			// if (SHOW_DEBUG_LOG)
-			// System.out.println("Opened database successfully");
-
-			String droping = "DROP TABLE IF EXISTS STUDENTS";
-			stmt.executeUpdate(droping);
-
-			String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-					+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
-					+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
-			stmt.executeUpdate(creation);
-			stmt.close();
-			c.close();
-		} catch (Exception e) {
-			if (SHOW_DEBUG_LOG)
-				System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			// System.out.println("Table created successfully");
 		}
-
-		// if (SHOW_DEBUG_LOG)
-		// System.out.println("Table created successfully");
 	}
 
 	private String md5(String rawData) {

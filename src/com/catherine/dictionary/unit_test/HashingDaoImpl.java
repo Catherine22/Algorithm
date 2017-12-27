@@ -2,18 +2,11 @@ package com.catherine.dictionary.unit_test;
 
 import java.util.List;
 
-public class HashingDaoImpl extends MainTestDao implements UnitTestDao {
-	private final String TABLE = "students_hashing";
+public class HashingDaoImpl extends MainTestDao {
+	private String TABLE;
 
-	private static class RawDaoImplHolder {
-		private static HashingDaoImpl instance = new HashingDaoImpl();
-	}
-
-	public static HashingDaoImpl getInstance() {
-		return RawDaoImplHolder.instance;
-	}
-
-	private HashingDaoImpl() {
+	public HashingDaoImpl(String TABLE) {
+		this.TABLE = TABLE;
 		super.initialize(TABLE);
 	}
 
@@ -29,7 +22,7 @@ public class HashingDaoImpl extends MainTestDao implements UnitTestDao {
 		return super.getInstance().getStudent(TABLE);
 	}
 
-	public List<Student> getTableList(){
+	public List<Student> getTableList() {
 		return super.getInstance().getTableList(TABLE);
 	}
 }

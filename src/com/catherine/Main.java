@@ -28,7 +28,6 @@ import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.dictionary.HashFunctions;
-import com.catherine.dictionary.unit_test.RawDaoImpl;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.sort.BubbleSort;
@@ -95,8 +94,11 @@ public class Main {
 	}
 
 	public static void testHash() {
-		HashFunctions hashFunctions = new HashFunctions();
-		hashFunctions.remainder(7);
+		HashFunctions hashFunctions = new HashFunctions(100, 0.75f, 30, 36);
+		hashFunctions.remainder(17);
+		hashFunctions.remainder(36);
+		hashFunctions.remainder(37);
+		hashFunctions.remainder(97);
 	}
 
 	public static void testBTree() {
