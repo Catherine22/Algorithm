@@ -1,5 +1,7 @@
 package com.catherine.dictionary;
 
+import com.catherine.dictionary.unit_test.RawDaoImpl;
+
 /**
  * 设计散列（hash）函数时应注意下列原则：<br>
  * <br>
@@ -22,14 +24,11 @@ public class HashFunctions {
 	 * 
 	 * @param key
 	 */
-	public void remainder(String dbName, int m) {
+	public void remainder(int m) {
 		// 要做hash处理的是学生信息表的ID
-		// HashUnitTest.getInstance().createRandomTable(table, 20, 0.75f, 30,
-		// 36);
-		HashUnitTest.getInstance().insert(1, "10");
-		HashUnitTest.getInstance().insert(1, "11");
-		HashUnitTest.getInstance().insert(2, "12");
-
+		RawDaoImpl.getInstance().createRandomTable(20, 0.75f, 30, 36);
+		System.out.println(RawDaoImpl.getInstance().getTableList());
+		System.out.println(RawDaoImpl.getInstance().getStudent());
 		if (SHOW_DEBUG_LOG)
 			analyze();
 	}

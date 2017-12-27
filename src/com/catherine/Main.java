@@ -28,7 +28,7 @@ import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
 import com.catherine.dictionary.HashFunctions;
-import com.catherine.dictionary.HashUnitTest;
+import com.catherine.dictionary.unit_test.RawDaoImpl;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.sort.BubbleSort;
@@ -95,9 +95,8 @@ public class Main {
 	}
 
 	public static void testHash() {
-		String table = "md5_numbers";
 		HashFunctions hashFunctions = new HashFunctions();
-		hashFunctions.remainder(table, 10);
+		hashFunctions.remainder(10);
 	}
 
 	public static void testBTree() {

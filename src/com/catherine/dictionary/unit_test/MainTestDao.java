@@ -1,4 +1,4 @@
-package com.catherine.dictionary;
+package com.catherine.dictionary.unit_test;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -6,79 +6,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HashUnitTest {
-	private final boolean SHOW_DEBUG_LOG = true;
-	private final String TABLE = "md5_numbers";
+class MainTestDao {
+	protected final static boolean SHOW_DEBUG_LOG = true;
 
 	private static class HashUnitTestHolder {
-		private static HashUnitTest instance = new HashUnitTest();
+		private static MainTestDao instance = new MainTestDao();
 	}
 
-	public static HashUnitTest getInstance() {
+	public static MainTestDao getInstance() {
 		return HashUnitTestHolder.instance;
 	}
 
-	/**
-	 * 
-	 * 生成随机不重复数组
-	 * 
-	 * @param size
-	 *            数组长度
-	 * @param from
-	 *            数值范围（含）
-	 * @param to
-	 *            数值范围（不含）
-	 * @return
-	 */
-	public int[] getRandomIntArray(int size, int from, int to) {
+	protected MainTestDao() {
 
-		return null;
-	}
-
-	/**
-	 * 生成随机不重复链表
-	 * 
-	 * @param capacity
-	 *            容量，代表List的长度
-	 * @param loadFactor
-	 *            代表List内有百分之多少的栏位要被赋值，比如设置0.75，容量为100，代表生成75个随机数，留下25个空栏位。
-	 * @param from
-	 *            随机数数值范围（含）
-	 * @param to
-	 *            随机数数值范围（不含）
-	 */
-	public List<Integer> getRandomIntList(int capacity, float loadFactor, int from, int to) {
-		if (capacity < 0)
-			throw new IllegalArgumentException("capacity<0");
-		if (from >= to)
-			throw new IllegalArgumentException("from >= to");
-		if (loadFactor > 100 || loadFactor < 0)
-			throw new IllegalArgumentException("loadFactor>100 || loadFactor<0");
-
-		List<Integer> rawList = new LinkedList<>();
-		int size = to - from;
-
-		for (int i = 0; i < size; i++) {
-			rawList.add(from++);
-		}
-
-		if (SHOW_DEBUG_LOG)
-			System.out.println("rawArray from " + rawList.get(0) + "~" + rawList.get(rawList.size() - 1));
-
-		int emptySpace = (int) (capacity * (1 - loadFactor));
-		for (int i = 0; i < emptySpace; i++) {
-			rawList.add(null);
-		}
-
-		Collections.shuffle(rawList);
-
-		if (SHOW_DEBUG_LOG)
-			System.out.println(rawList);
-		return rawList;
 	}
 
 	/**
@@ -94,7 +39,7 @@ public class HashUnitTest {
 	 * @param to
 	 *            随机数数值范围（不含）
 	 */
-	public void createRandomTable(int capacity, float loadFactor, int from, int to) {
+	protected void createRandomTable(String TABLE, int capacity, float loadFactor, int from, int to) {
 		synchronized (getInstance()) {
 			List<Integer> randomList = getRandomIntList(capacity, loadFactor, from, to);
 
@@ -125,12 +70,54 @@ public class HashUnitTest {
 	}
 
 	/**
+	 * 生成随机不重复链表
+	 * 
+	 * @param capacity
+	 *            容量，代表List的长度
+	 * @param loadFactor
+	 *            代表List内有百分之多少的栏位要被赋值，比如设置0.75，容量为100，代表生成75个随机数，留下25个空栏位。
+	 * @param from
+	 *            随机数数值范围（含）
+	 * @param to
+	 *            随机数数值范围（不含）
+	 */
+	private List<Integer> getRandomIntList(int capacity, float loadFactor, int from, int to) {
+		if (capacity < 0)
+			throw new IllegalArgumentException("capacity<0");
+		if (from >= to)
+			throw new IllegalArgumentException("from >= to");
+		if (loadFactor > 100 || loadFactor < 0)
+			throw new IllegalArgumentException("loadFactor>100 || loadFactor<0");
+
+		List<Integer> rawList = new LinkedList<>();
+		int size = to - from;
+
+		for (int i = 0; i < size; i++) {
+			rawList.add(from++);
+		}
+
+		if (SHOW_DEBUG_LOG)
+			System.out.println("rawArray from " + rawList.get(0) + "~" + rawList.get(rawList.size() - 1));
+
+		int emptySpace = (int) (capacity * (1 - loadFactor));
+		for (int i = 0; i < emptySpace; i++) {
+			rawList.add(null);
+		}
+
+		Collections.shuffle(rawList);
+
+		if (SHOW_DEBUG_LOG)
+			System.out.println(rawList);
+		return rawList;
+	}
+
+	/**
 	 * 插入新的栏位（学生）
 	 * 
 	 * @param ID
 	 * @param SERIAL_NUM
 	 */
-	public void insert(int SEAT_ID, String STUDENT_ID) {
+	protected void insert(String TABLE, int SEAT_ID, String STUDENT_ID) {
 		synchronized (getInstance()) {
 			try {
 				Class.forName("org.sqlite.JDBC");
@@ -175,14 +162,71 @@ public class HashUnitTest {
 	}
 
 	/**
+	 * 取得全部学生列表
+	 * 
+	 * @return
+	 */
+	protected List<Student> getStudent(String TABLE) {
+		synchronized (getInstance()) {
+			List<Student> students = new ArrayList<>();
+			try {
+				Class.forName("org.sqlite.JDBC");
+				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
+				Statement stmt = c.createStatement();
+
+				ResultSet rs = stmt.executeQuery("SELECT * FROM STUDENTS WHERE student_id != ''");
+				while (rs.next()) {
+						students.add(new Student(rs.getInt("id"), rs.getInt("seat_id"), rs.getString("student_id"),
+								rs.getString("student_name"), rs.getInt("collisions")));
+				}
+				rs.close();
+				stmt.close();
+				c.close();
+			} catch (Exception e) {
+				if (SHOW_DEBUG_LOG)
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+			return students;
+		}
+	}
+
+	/**
+	 * 取得全部列表（包含没有学生的栏位）
+	 * 
+	 * @return
+	 */
+	protected List<Student> getTableList(String TABLE) {
+		synchronized (getInstance()) {
+			List<Student> students = new ArrayList<>();
+			try {
+				Class.forName("org.sqlite.JDBC");
+				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
+				Statement stmt = c.createStatement();
+
+				ResultSet rs = stmt.executeQuery("SELECT * FROM STUDENTS");
+				while (rs.next()) {
+					students.add(new Student(rs.getInt("id"), rs.getInt("seat_id"), rs.getString("student_id"),
+							rs.getString("student_name"), rs.getInt("collisions")));
+				}
+				rs.close();
+				stmt.close();
+				c.close();
+			} catch (Exception e) {
+				if (SHOW_DEBUG_LOG)
+					System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			}
+			return students;
+		}
+	}
+
+	/**
 	 * 建立数据库，为了简化逻辑，seat_id为座位id，student_id作为学生ID（唯一识别码），学生名就用随机数(student_id)
 	 * 的MD5。<br>
 	 * 每个id都有对应的seat_id，但是不一定每个座位都有学生。<br>
 	 * 每个student_id都对应一个student_name。<br>
 	 * collisions代表进行hash时该栏位发生多少次碰撞，同一个座位被重复塞入学生就+1，初始值为0。<br>
 	 */
-	private HashUnitTest() {
-
+	protected static void initialize(String TABLE) {
 		try {
 			Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
 			Statement stmt = c.createStatement();
@@ -193,12 +237,9 @@ public class HashUnitTest {
 			String droping = "DROP TABLE IF EXISTS STUDENTS";
 			stmt.executeUpdate(droping);
 
-			String creation = "CREATE TABLE STUDENTS ("
-			+ "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-			+ "seat_id   		INT  		NOT NULL, " 
-			+ "student_id  		TEXT  		NOT NULL, "
-			+ "student_name		TEXT  		NOT NULL, " 
-			+ "collisions 		INT  		NOT NULL)";
+			String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
+					+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
+					+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
 			stmt.executeUpdate(creation);
 			stmt.close();
 			c.close();
@@ -235,5 +276,4 @@ public class HashUnitTest {
 			return "";
 		}
 	}
-
 }
