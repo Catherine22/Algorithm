@@ -96,7 +96,7 @@ public class Main {
 
 	public static void testHash() {
 		HashFunctions hashFunctions = new HashFunctions();
-		hashFunctions.remainder(10);
+		hashFunctions.remainder(7);
 	}
 
 	public static void testBTree() {

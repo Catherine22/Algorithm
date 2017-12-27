@@ -1,6 +1,10 @@
 package com.catherine.dictionary;
 
+import java.util.List;
+
+import com.catherine.dictionary.unit_test.HashingDaoImpl;
 import com.catherine.dictionary.unit_test.RawDaoImpl;
+import com.catherine.dictionary.unit_test.Student;
 
 /**
  * 设计散列（hash）函数时应注意下列原则：<br>
@@ -25,12 +29,20 @@ public class HashFunctions {
 	 * @param key
 	 */
 	public void remainder(int m) {
-		// 要做hash处理的是学生信息表的ID
 		RawDaoImpl.getInstance().createRandomTable(20, 0.75f, 30, 36);
-		System.out.println(RawDaoImpl.getInstance().getTableList());
-		System.out.println(RawDaoImpl.getInstance().getStudent());
+		List<Student> rawTableList = RawDaoImpl.getInstance().getTableList();
+		List<Student> rawStudentList = RawDaoImpl.getInstance().getStudent();
+
+		// 要做hash处理的是学生信息表的seat_id
+		for (Student student : rawStudentList) {
+			HashingDaoImpl.getInstance().insert(student.seat_id % m, student.student_id);
+		}
+
+		List<Student> newTableList = HashingDaoImpl.getInstance().getTableList();
+		List<Student> newStudentList = HashingDaoImpl.getInstance().getStudent();
+
 		if (SHOW_DEBUG_LOG)
-			analyze();
+			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 
 	/**
@@ -72,10 +84,21 @@ public class HashFunctions {
 		return (found) ? num : -1;
 	}
 
-	public void analyze() {
-		System.out.println(String.format("original size:%d, new size:%d", 0, 0));
-		System.out.println(String.format("collisions:%d%%", 100));
-		System.out.println(String.format("space usage:%d%%, improve:%d%%", 0, 0));
+	public void analyze(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
+			List<Student> newStudentList) {
+		System.out.println(String.format("original size:%d, new size:%d", rawTableList.size(), newTableList.size()));
+		
+		int collisions = 0;
+		for (Student student : newStudentList) {
+			if (student.collisions > 0)
+				collisions++;
+		}
+		System.out.println(String.format("lost keys:%d, collisions:%.2f%%", collisions,
+				collisions * 1.0f / newStudentList.size()));
+
+		float su0 = rawStudentList.size() * 1.0f / rawTableList.size();
+		float su1 = newStudentList.size() * 1.0f / newTableList.size();
+		System.out.println(String.format("space usage:%.2f%%, improve:%.2f%%", su1, su1 - su0));
 
 	}
 }

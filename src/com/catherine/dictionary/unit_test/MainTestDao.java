@@ -133,8 +133,6 @@ class MainTestDao {
 					hasCollision = rs0.getInt(1) == 1;
 				}
 
-				if (SHOW_DEBUG_LOG)
-					System.out.println("collsions:" + hasCollision);
 				rs0.close();
 
 				int collisions = 0;
