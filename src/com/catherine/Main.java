@@ -27,6 +27,8 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
+import com.catherine.dictionary.HashFunctions;
+import com.catherine.dictionary.HashUnitTest;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.sort.BubbleSort;
@@ -45,7 +47,6 @@ import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.NumberSystem;
 import com.catherine.utils.Others;
-import com.catherine.utils.TestUtils;
 import com.catherine.utils.TrackLog;
 import com.catherine.security.Algorithm;
 import com.catherine.security.CertificatesManager;
@@ -94,7 +95,9 @@ public class Main {
 	}
 
 	public static void testHash() {
-		TestUtils.createRandomTable(20, 0.75f, 30, 36);
+		String table = "md5_numbers";
+		HashFunctions hashFunctions = new HashFunctions();
+		hashFunctions.remainder(table, 10);
 	}
 
 	public static void testBTree() {
