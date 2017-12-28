@@ -109,9 +109,8 @@ public class Main {
 		// hashFunctions.midSquare();
 		// hashFunctions.fold(2);
 		// hashFunctions.rotateAndFold(2);
-		hashFunctions.XORFold(2);
-		hashFunctions.rotateAndXORFold(2);
-
+		// hashFunctions.XORFold(2);
+		// hashFunctions.rotateAndXORFold(2);
 	}
 
 	public static void testBTree() {

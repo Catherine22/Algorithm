@@ -1,6 +1,5 @@
 package com.catherine.dictionary;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -433,7 +432,7 @@ public class HashFunctions {
 				// 偶数位不变
 				reversedStack.push(numbers.pop());
 			} else {
-				// 反转int
+				// 反转数字
 
 				// 共有几个位数
 				int digits = 0;

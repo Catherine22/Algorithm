@@ -187,14 +187,22 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 - There are four types of structures - Call by rank(Vector), call by position(List), call by key(BST) and call by value(Hashing).
 - Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save  and search them.  If you loop the data to find out a number, it'll spend only O(1). But there are 100M telephones. That means your accurate performance is 25K/100M = 0.025%. It's terrible. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
-> There are many ways to hash. Here in [HashFunctions], I made some functions:
+> There are many ways to hash. Here in [HashFunctions], I made some hashing functions:
 > 1. Hashing by remainder
 > 2. Hashing by MAD
 > 3. Hashing by selecting digits
 > 4. Hashing by median of square numbers
 > 5. Hashing by folding
 > 6. Hashing by rotation + folding
+> 7. Hashing by folding + XOR
+> 8. Hashing by rotation + folding + XOR
 
+**Collisions**
+value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision". Here are solutions.
+1. Open addressing (or closed hashing)
+> Basically, it's support to be mutiple slots (linked list chaining).
+> You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
+> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. This chain is called probing sequence/chain is a list.
 
 
 ## [Others]
