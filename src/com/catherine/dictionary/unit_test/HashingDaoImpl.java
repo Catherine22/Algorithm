@@ -10,8 +10,8 @@ public class HashingDaoImpl extends MainTestDao {
 		super.initialize(TABLE);
 	}
 
-	public void createRandomTable(int capacity, float loadFactor, int from, int to) {
-		super.getInstance().createRandomTable(TABLE, capacity, loadFactor, from, to);
+	public void createRandomTable(int capacity, float loadFactor, int from, int to, boolean isUnique) {
+		super.getInstance().createRandomTable(TABLE, capacity, loadFactor, from, to, isUnique);
 	}
 
 	public void insert(int SEAT_ID, String STUDENT_ID) {

@@ -38,10 +38,12 @@ class MainTestDao {
 	 *            随机数数值范围（含）
 	 * @param to
 	 *            随机数数值范围（不含）
+	 * @param isUnique
+	 *            链值是否不重复（在此是指学号要不要重复）
 	 */
-	protected void createRandomTable(String TABLE, int capacity, float loadFactor, int from, int to) {
+	protected void createRandomTable(String TABLE, int capacity, float loadFactor, int from, int to, boolean isUnique) {
 		synchronized (getInstance()) {
-			List<Integer> randomList = getRandomIntList(capacity, loadFactor, from, to);
+			List<Integer> randomList = getRandomIntList(capacity, loadFactor, from, to, isUnique);
 
 			try {
 				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
@@ -70,7 +72,7 @@ class MainTestDao {
 	}
 
 	/**
-	 * 生成随机不重复链表
+	 * 生成随机链表
 	 * 
 	 * @param capacity
 	 *            容量，代表List的长度
@@ -80,8 +82,10 @@ class MainTestDao {
 	 *            随机数数值范围（含）
 	 * @param to
 	 *            随机数数值范围（不含）
+	 * @param isUnique
+	 *            链值是否不重复
 	 */
-	private List<Integer> getRandomIntList(int capacity, float loadFactor, int from, int to) {
+	private List<Integer> getRandomIntList(int capacity, float loadFactor, int from, int to, boolean isUnique) {
 		if (capacity < 0)
 			throw new IllegalArgumentException("capacity<0");
 		if (from >= to)
@@ -89,17 +93,23 @@ class MainTestDao {
 		if (loadFactor > 100 || loadFactor < 0)
 			throw new IllegalArgumentException("loadFactor>100 || loadFactor<0");
 
+		int entitySize = (int) (capacity * loadFactor);
+		int emptySpace = capacity - entitySize;
+
+		if (isUnique && (to - from) < entitySize) {
+			throw new IllegalArgumentException(
+					"Your range of keys should be larger so that every element in this list would be unique.");
+		}
+
+		if (SHOW_DEBUG_LOG)
+			System.out.println("rawArray from " + from + " to " + to);
+
 		List<Integer> rawList = new LinkedList<>();
 		int rawSize = to - from;
 		for (int i = 0; i < rawSize; i++) {
 			rawList.add(from++);
 		}
 
-		if (SHOW_DEBUG_LOG)
-			System.out.println("rawArray from " + from + " to " + to);
-
-		int entitySize = (int) (capacity * loadFactor);
-		int emptySpace = capacity - entitySize;
 		List<Integer> newList = new ArrayList<>();
 		int header = 0;
 		while (newList.size() < entitySize) {

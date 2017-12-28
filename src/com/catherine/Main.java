@@ -94,7 +94,7 @@ public class Main {
 	}
 
 	public static void testHash() {
-		HashFunctions hashFunctions = new HashFunctions(100, 0.75f, 30, 36);
+		HashFunctions hashFunctions = new HashFunctions(100, 0.75f, 30, 336, true);
 		hashFunctions.remainder(17);
 		hashFunctions.remainder(36);
 		hashFunctions.remainder(37);
@@ -106,6 +106,7 @@ public class Main {
 		hashFunctions.mad(2, 14, 97);
 
 		hashFunctions.selectingDigits();
+		hashFunctions.midSquare();
 	}
 
 	public static void testBTree() {

@@ -1,6 +1,8 @@
 package com.catherine.dictionary;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.catherine.dictionary.unit_test.HashingDaoImpl;
 import com.catherine.dictionary.unit_test.Student;
@@ -37,9 +39,9 @@ public class HashFunctions {
 	 * @param to
 	 *            随机数数值范围（不含）
 	 */
-	public HashFunctions(int capacity, float loadFactor, int from, int to) {
+	public HashFunctions(int capacity, float loadFactor, int from, int to, boolean isUnique) {
 		rawDaoImpl = new HashingDaoImpl("students_raw");
-		rawDaoImpl.createRandomTable(capacity, loadFactor, from, to);
+		rawDaoImpl.createRandomTable(capacity, loadFactor, from, to, isUnique);
 	}
 
 	/**
@@ -133,6 +135,33 @@ public class HashFunctions {
 	}
 
 	/**
+	 * 4. 平方取中<br>
+	 * 取关键码平方值的中间三位数作为散列地址<br>
+	 * <br>
+	 * 之所以取中间三码是有用意的，在平方运算中，是由一系列的累加进位而成，从个位数开始向左计算，
+	 * 每个位数都是由原数经求和而成，因此取经过最多原数位的中间三位作为散列地址能让原关键码对散列地址的影响较大。
+	 */
+	public void midSquare() {
+		List<Student> rawTableList = rawDaoImpl.getTableList();
+		List<Student> rawStudentList = rawDaoImpl.getStudent();
+
+		// 要做hash处理的是学生信息表的seat_id
+		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_mid_square");
+		for (Student student : rawTableList) {
+			hashingDaoImpl.insert(getMid3Num(student.seat_id * student.seat_id), student.student_id);
+		}
+
+		List<Student> newTableList = hashingDaoImpl.getTableList();
+		List<Student> newStudentList = hashingDaoImpl.getStudent();
+
+		if (SHOW_DEBUG_LOG) {
+			System.out.println("***************analytics***************");
+			System.out.println("Median square");
+			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+		}
+	}
+
+	/**
 	 * 找到最小素数，若没有返回-1
 	 * 
 	 * @param from
@@ -169,6 +198,44 @@ public class HashFunctions {
 		}
 
 		return (found) ? num : -1;
+	}
+
+	/**
+	 * 取中间三位数字，例如传入12345，则回传234，传入1356则回传135，不足三位则原数返还。
+	 * 
+	 * @param num
+	 * @return
+	 */
+	public int getMid3Num(int num) {
+		if (num < 100 && num > -100)
+			return num;
+		int result = 0;
+		Stack<Integer> digits = new Stack<>();
+
+		// 先分解成各个位数
+		if (num > 0) {
+			while (num > 0) {
+				digits.push(num % 10);
+				num /= 10;
+			}
+		} else {
+			while (num < 0) {
+				digits.push(num % -10);
+				num /= 10;
+			}
+		}
+
+		// 取中间三位
+		if (digits.size() % 2 != 0) {
+			int mid = (digits.size() - 1) / 2;
+			result = digits.elementAt(mid - 1) * (int) Math.pow(10, 0) + digits.elementAt(mid) * (int) Math.pow(10, 1)
+					+ digits.elementAt(mid + 1) * (int) Math.pow(10, 2);
+		} else {
+			int mid = digits.size() / 2;
+			result = digits.elementAt(mid - 1) * (int) Math.pow(10, 0) + digits.elementAt(mid) * (int) Math.pow(10, 1)
+					+ digits.elementAt(mid + 1) * (int) Math.pow(10, 2);
+		}
+		return result;
 	}
 
 	public void analyze(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
