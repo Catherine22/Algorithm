@@ -227,6 +227,73 @@ public class HashFunctions {
 	}
 
 	/**
+	 * 7. 基本折叠法 + XOR<br>
+	 * 将关键码转成二进制再分割成等宽的若干段，取其总和作为散列地址，比如124会转为1111100，切3段成为1，111，100，取1 XOR 111
+	 * XOR 100后作为映射函数。<br>
+	 * <br>
+	 * 
+	 * @param n
+	 *            平均切成几段
+	 */
+	public void XORFold(int n) {
+		List<Student> rawTableList = rawDaoImpl.getTableList();
+		List<Student> rawStudentList = rawDaoImpl.getStudent();
+
+		// 要做hash处理的是学生信息表的seat_id
+		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_xor_fold");
+		for (Student student : rawTableList) {
+			Stack<Integer> stack = separate(student.seat_id, n);
+			int temp = 0;
+			while (!stack.isEmpty()) {
+				temp ^= stack.pop();
+			}
+			hashingDaoImpl.insert(temp, student.student_id);
+		}
+
+		List<Student> newTableList = hashingDaoImpl.getTableList();
+		List<Student> newStudentList = hashingDaoImpl.getStudent();
+
+		if (SHOW_DEBUG_LOG) {
+			System.out.println("***************analytics***************");
+			System.out.println("XOR fold");
+			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+		}
+	}
+
+	/**
+	 * 8. 旋转折叠法 + XOR<br>
+	 * 将关键码转成二进制再分割成等宽的若干段，每一段的读取方向不同（从左到右或右到左读数字），356会转为101100100，切3段成为101，100，
+	 * 100，取101 XOR 1 XOR 100后作为映射函数。<br>
+	 * <br>
+	 * 
+	 * @param n
+	 *            平均切成几段
+	 */
+	public void rotateAndXORFold(int n) {
+		List<Student> rawTableList = rawDaoImpl.getTableList();
+		List<Student> rawStudentList = rawDaoImpl.getStudent();
+
+		// 要做hash处理的是学生信息表的seat_id
+		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_rotate_xor_fold");
+		for (Student student : rawTableList) {
+			Stack<Integer> stack = reverseOddAddressesBinary(separate(student.seat_id, n));
+			int temp = 0;
+			while (!stack.isEmpty())
+				temp ^= stack.pop();
+			hashingDaoImpl.insert(temp, student.student_id);
+		}
+
+		List<Student> newTableList = hashingDaoImpl.getTableList();
+		List<Student> newStudentList = hashingDaoImpl.getStudent();
+
+		if (SHOW_DEBUG_LOG) {
+			System.out.println("***************analytics***************");
+			System.out.println("Rotate + fold + XOR");
+			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+		}
+	}
+
+	/**
 	 * 找到最小素数，若没有返回-1
 	 * 
 	 * @param from
@@ -395,6 +462,34 @@ public class HashFunctions {
 					header++;
 				}
 				reversedStack.push(tmp);
+			}
+		}
+
+		// 最后再反转stack
+		numbers.clear();
+		while (!reversedStack.isEmpty())
+			numbers.push(reversedStack.pop());
+		return numbers;
+	}
+
+	/**
+	 * 反转奇数地址的二进制数字顺序，比如传入stack{134,275,12,20}，也就是{10000110, 100010011, 1100,
+	 * 10100}，返回stack{134,401,12,5}
+	 * 
+	 * @param numbers
+	 * @return
+	 */
+	private Stack<Integer> reverseOddAddressesBinary(Stack<Integer> numbers) {
+		Stack<Integer> reversedStack = new Stack<>();
+
+		while (numbers.size() > 0) {
+			if (numbers.size() % 2 != 0) {
+				// 偶数位不变
+				reversedStack.push(numbers.pop());
+			} else {
+				// 反转二进制
+				StringBuilder binary = new StringBuilder(Integer.toBinaryString(numbers.pop()));
+				reversedStack.push(Integer.parseInt(binary.reverse().toString(), 2));
 			}
 		}
 

@@ -102,7 +102,7 @@ class MainTestDao {
 		}
 
 		if (SHOW_DEBUG_LOG)
-			System.out.println("rawArray from " + from + " to " + to);
+			System.out.print("rawArray from " + from + " to " + to);
 
 		List<Integer> rawList = new LinkedList<>();
 		int rawSize = to - from;
@@ -126,7 +126,7 @@ class MainTestDao {
 		Collections.shuffle(newList);
 
 		if (SHOW_DEBUG_LOG)
-			System.out.println(newList.size());
+			System.out.println(", size:" + newList.size());
 		return newList;
 	}
 
@@ -254,12 +254,9 @@ class MainTestDao {
 				String droping = "DROP TABLE IF EXISTS STUDENTS";
 				stmt.executeUpdate(droping);
 
-				String creation = "CREATE TABLE STUDENTS (" 
-						+ "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-						+ "seat_id   		INT  		NOT NULL, " 
-						+ "student_id  		TEXT  		NOT NULL, "
-						+ "student_name		TEXT  		NOT NULL, " 
-						+ "collisions 		INT  		NOT NULL)";
+				String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
+						+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
+						+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
 				stmt.executeUpdate(creation);
 				stmt.close();
 				c.close();
