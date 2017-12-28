@@ -191,6 +191,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 > 1. Hashing by remainder
 > 2. Hashing by MAD
 > 3. Hashing by selecting digits
+> 4. Hashing by median of square numbers
+> 5. Hashing by folding
+> 6. Hashing by rotation + folding
 
 
 

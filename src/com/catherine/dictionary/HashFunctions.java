@@ -19,7 +19,7 @@ import com.catherine.dictionary.unit_test.Student;
  * 3. 射满（surjection）：尽可能射满整个映射空间。<br>
  * 4. 均匀（uniformity）：关键码映射到散列表各位置的概率应尽量接近。<br>
  * <br>
- * 散列函数可以有各式不同的设计，并非固定的模式。
+ * 散列函数可以有各式不同的设计，并非固定的模式，大原则是越随机、越没有规律越好。
  * 
  * @author Catherine
  *
@@ -162,6 +162,71 @@ public class HashFunctions {
 	}
 
 	/**
+	 * 5. 基本折叠法<br>
+	 * 将关键码分割成等宽的若干段，取其总和作为散列地址，比如123456切3段成为12，34，56，取总和102作为映射函数。<br>
+	 * <br>
+	 * 
+	 * @param n
+	 *            平均切成几段
+	 */
+	public void fold(int n) {
+		List<Student> rawTableList = rawDaoImpl.getTableList();
+		List<Student> rawStudentList = rawDaoImpl.getStudent();
+
+		// 要做hash处理的是学生信息表的seat_id
+		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_fold");
+		for (Student student : rawTableList) {
+			Stack<Integer> stack = separate(student.seat_id, n);
+			int temp = 0;
+			while (!stack.isEmpty())
+				temp += stack.pop();
+			hashingDaoImpl.insert(temp, student.student_id);
+		}
+
+		List<Student> newTableList = hashingDaoImpl.getTableList();
+		List<Student> newStudentList = hashingDaoImpl.getStudent();
+
+		if (SHOW_DEBUG_LOG) {
+			System.out.println("***************analytics***************");
+			System.out.println("Fold");
+			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+		}
+	}
+
+	/**
+	 * 6. 旋转折叠法<br>
+	 * 将关键码分割成等宽的若干段，每一段的读取方向不同（从左到右或右到左读数字），取其总和作为散列地址，比如123456切3段成为12，43，56，
+	 * 取总和111作为映射函数。<br>
+	 * <br>
+	 * 
+	 * @param n
+	 *            平均切成几段
+	 */
+	public void rotateAndFold(int n) {
+		List<Student> rawTableList = rawDaoImpl.getTableList();
+		List<Student> rawStudentList = rawDaoImpl.getStudent();
+
+		// 要做hash处理的是学生信息表的seat_id
+		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_rotate_fold");
+		for (Student student : rawTableList) {
+			Stack<Integer> stack = reverseOddAddressesNum(separate(student.seat_id, n));
+			int temp = 0;
+			while (!stack.isEmpty())
+				temp += stack.pop();
+			hashingDaoImpl.insert(temp, student.student_id);
+		}
+
+		List<Student> newTableList = hashingDaoImpl.getTableList();
+		List<Student> newStudentList = hashingDaoImpl.getStudent();
+
+		if (SHOW_DEBUG_LOG) {
+			System.out.println("***************analytics***************");
+			System.out.println("Rotate + fold");
+			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+		}
+	}
+
+	/**
 	 * 找到最小素数，若没有返回-1
 	 * 
 	 * @param from
@@ -206,7 +271,7 @@ public class HashFunctions {
 	 * @param num
 	 * @return
 	 */
-	public int getMid3Num(int num) {
+	private int getMid3Num(int num) {
 		if (num < 100 && num > -100)
 			return num;
 		int result = 0;
@@ -236,6 +301,108 @@ public class HashFunctions {
 					+ digits.elementAt(mid + 1) * (int) Math.pow(10, 2);
 		}
 		return result;
+	}
+
+	/**
+	 * 将num分割成n段，比如传入num = 23456，n=3，回传stack{56,34,2}，<br>
+	 * 若num长度小于n，直接返回stack{num}<br>
+	 * 
+	 * @param num
+	 * @param n
+	 * @return
+	 */
+	private Stack<Integer> separate(int num, int n) {
+		if (n <= 0)
+			throw new IllegalArgumentException("n <= 0");
+
+		Stack<Integer> digits = new Stack<>();
+		int numDigits = 0;
+
+		// 先计算num一共有几个位数
+		int temp = num;
+		if (temp > 0) {
+			while (temp > 0) {
+				numDigits++;
+				temp /= 10;
+			}
+		} else {
+			while (temp < 0) {
+				numDigits++;
+				temp /= 10;
+			}
+		}
+
+		// num长度小于n，无法分割，则视为切成一份
+		if (n > numDigits)
+			n = 1;
+
+		int k = (int) Math.pow(10, (int) Math.round(numDigits * 1.0f / n));
+		if (num > 0) {
+			while (num > 0) {
+				digits.push(num % k);
+				num /= k;
+			}
+		} else {
+			while (num < 0) {
+				digits.push(num % -k);
+				num /= k;
+			}
+		}
+		return digits;
+	}
+
+	/**
+	 * 反转奇数地址的数字顺序，比如传入stack{134,275,12,20}，返回stack{134,572,12,2}
+	 * 
+	 * @param numbers
+	 * @return
+	 */
+	private Stack<Integer> reverseOddAddressesNum(Stack<Integer> numbers) {
+		Stack<Integer> reversedStack = new Stack<>();
+		Stack<Integer> intContainer = new Stack<>();
+
+		while (numbers.size() > 0) {
+			if (numbers.size() % 2 != 0) {
+				// 偶数位不变
+				reversedStack.push(numbers.pop());
+			} else {
+				// 反转int
+
+				// 共有几个位数
+				int digits = 0;
+				int tmp = numbers.pop();
+
+				// 先分解成各个位数
+				if (tmp > 0) {
+					while (tmp > 0) {
+						digits++;
+						intContainer.push(tmp % 10);
+						tmp /= 10;
+					}
+				} else {
+					while (tmp < 0) {
+						digits++;
+						intContainer.push(tmp % -10);
+						tmp /= 10;
+					}
+				}
+
+				// 重新构成
+				tmp = 0;
+				int header = 0;
+				while (header < digits) {
+					tmp += (intContainer.pop() * Math.pow(10, header));
+					header++;
+				}
+				reversedStack.push(tmp);
+			}
+		}
+
+		// 最后再反转stack
+		numbers.clear();
+		while (!reversedStack.isEmpty())
+			numbers.push(reversedStack.pop());
+		return numbers;
 	}
 
 	public void analyze(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,

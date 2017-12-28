@@ -107,6 +107,8 @@ public class Main {
 
 		hashFunctions.selectingDigits();
 		hashFunctions.midSquare();
+		hashFunctions.fold(2);
+		hashFunctions.rotateAndFold(2);
 	}
 
 	public static void testBTree() {
