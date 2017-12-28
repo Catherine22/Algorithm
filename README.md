@@ -17,8 +17,8 @@ trees/Algorithms
   - 2 ways to increase the capacity.
 
 > **Tips**
-> - increaseArray() - In the worst case, It takes O(n) to increase the capacity of a vector by one, but it's space utilization is always 100%. <br>
-> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1). <br>
+> - increaseArray() - In the worst case, it spends O(n) on increasing the capacity of a vector by one. But its space utilization is always 100%. <br>
+> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it will just spend O(1). <br>
 > If you need a large array, double the capacity of your array is more efficient. In general, it's better.
 
   - Insertion/removing/searching
@@ -27,28 +27,28 @@ trees/Algorithms
   - Remove duplicates with/without sorting
 
   > **Tips**
-  > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
-  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
-  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
-  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
+  > - removeDuplicates() - It's not necessary to sort your array before you remove duplicated elements. O(n^2) <br>
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It just spend O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
+  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() when you don't want to return a unsorted array. <br>
+  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() which replaces elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array to find an element.** If the array contains the element, it'll return where the element is in the array or the latest position while there're duplicated elements.
-  - As I was saying, if the element've never been found, this algorithm would return the index referring to a value(array[index] < element < array[index+1]).
-      - two ways to do binary searching (Usually, binSearch2() which is more efficient than binSearch() is better)
+  - [Sequence Searching] is used to **search a sorted array and find an element.** If an array contains the element, it'll return where the element is in that array or the latest position while there're duplicated elements.
+  - As I was saying, if the element hasn't been found, this algorithm would return an index referring to the value(array[index] < element < array[index+1]).
+      - Two ways to binary search (Normally, binSearch2() is more efficient than binSearch())
       - Fibonacci Searching
 
 ## List
   - [MyArrayList]
-    - Base on array
+    - Base on Array
   - [MyLinkedList]
-    - Base on the node, a user-defined Object including a predecessor, a value, and a successor.
+    - Base on Node, a user-defined Object includes a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
->  You would push the top object with push(), and use peek() to get the top object without removing it. <br>
->  Add an object on the top with pop(). <br>
->  So, it takes O(1) to add and remove an object. <br>
->  But if you'd like to put or delete an element at the bottom, it takes O(n) so that the stack could move every object following the first (bottom) object.
+>  push() is used to return the top object and remove it. peek() is to get the top object without removing it. <br>
+>  pop() is to add an object on the top . <br>
+>  It spends O(1) to add and remove an object. <br>
+>  But if you'd like to put or delete an element at the bottom, it'd spend O(n) because the stack must move every object below the first (bottom) object.
 
   - [NumberSystem] convertDecimalToOthers()
   - [Others] isBracketsCorrect()
@@ -59,7 +59,7 @@ trees/Algorithms
 
 ## Graph
 
-Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
+Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced data structure to a sequence.
 
 ### Undirected Graph
   - [UndirectedGraph]
@@ -72,13 +72,13 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 | memory requirement |  | less |
 | data type | Queue | Stack |
 
-  - Breadth-first search (BFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex. It's just like level order traversal of the Tree.
-  - Depth-first search (DFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex.
-  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
+  - Breadth-first search (BFS) - Choose a vertex (root) as the beginning of a graph and visit every vertex. This is just like level order traversal of the Tree.
+  - Depth-first search (DFS) - Choose a vertex (root) as the beginning of a graph and visit every vertex.
+  - Connected Graph - While there is at least one path between every pair of vertices, the graph will be connect. If you wanna find out a path which is able to traversal the whole graph, try to run BFS from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
   - [DirectedGraph]
 
-  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
-  > An Edge<E> is a user-defined class, it contains data, weight and status.
+  > There are two arrays, I stores all vertexes in vertexes[] and another array adjMatrix[][], a two-dimensional Edge<E> array, which is used to copy down edges. For example, if adjMatrix[i][j] is not empty, that means there's an edge from i to j.<br>
+  > Edge<E> is a user-defined class. It contains data, weight and status.
 
 ## Tree
 
@@ -187,6 +187,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 - There are four types of structures - Call by rank(Vector), call by position(List), call by key(BST) and call by value(Hashing).
 - Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save  and search them.  If you loop the data to find out a number, it'll spend only O(1). But there are 100M telephones. That means your accurate performance is 25K/100M = 0.025%. It's terrible. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
+> There are many ways to hash. Here in [HashFunctions], I made some functions:
+> 1. Hashing by remainder
+> 2. Hashing by MAD
+> 3. Hashing by selecting digits
 
 
 
@@ -282,6 +286,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
    [MyBTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree.java>
    [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
    [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
+   [HashFunctions]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/HashFunctions.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

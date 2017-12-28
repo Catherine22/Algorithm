@@ -244,9 +244,12 @@ class MainTestDao {
 				String droping = "DROP TABLE IF EXISTS STUDENTS";
 				stmt.executeUpdate(droping);
 
-				String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-						+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
-						+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
+				String creation = "CREATE TABLE STUDENTS (" 
+						+ "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
+						+ "seat_id   		INT  		NOT NULL, " 
+						+ "student_id  		TEXT  		NOT NULL, "
+						+ "student_name		TEXT  		NOT NULL, " 
+						+ "collisions 		INT  		NOT NULL)";
 				stmt.executeUpdate(creation);
 				stmt.close();
 				c.close();

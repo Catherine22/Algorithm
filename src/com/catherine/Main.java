@@ -99,6 +99,13 @@ public class Main {
 		hashFunctions.remainder(36);
 		hashFunctions.remainder(37);
 		hashFunctions.remainder(97);
+
+		hashFunctions.mad(2, 14, 17);
+		hashFunctions.mad(2, 14, 36);
+		hashFunctions.mad(2, 14, 37);
+		hashFunctions.mad(2, 14, 97);
+
+		hashFunctions.selectingDigits();
 	}
 
 	public static void testBTree() {
