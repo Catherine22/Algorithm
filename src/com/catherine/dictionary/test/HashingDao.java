@@ -1,4 +1,4 @@
-package com.catherine.dictionary.unit_test;
+package com.catherine.dictionary.test;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,18 +11,18 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-class MainTestDao {
+class HashingDao {
 	protected final static boolean SHOW_DEBUG_LOG = true;
 
 	private static class HashUnitTestHolder {
-		private static MainTestDao instance = new MainTestDao();
+		private static HashingDao instance = new HashingDao();
 	}
 
-	public static MainTestDao getInstance() {
+	public static HashingDao getInstance() {
 		return HashUnitTestHolder.instance;
 	}
 
-	protected MainTestDao() {
+	protected HashingDao() {
 
 	}
 
@@ -241,6 +241,7 @@ class MainTestDao {
 	 * 每个id都有对应的seat_id，但是不一定每个座位都有学生。<br>
 	 * 每个student_id都对应一个student_name。<br>
 	 * collisions代表进行hash时该栏位发生多少次碰撞，同一个座位被重复塞入学生就+1，初始值为0。<br>
+	 * 
 	 */
 	protected static void initialize(String TABLE) {
 		synchronized (getInstance()) {
@@ -254,9 +255,16 @@ class MainTestDao {
 				String droping = "DROP TABLE IF EXISTS STUDENTS";
 				stmt.executeUpdate(droping);
 
-				String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-						+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
-						+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
+				// If you don't want to override the table
+				// String creation = "CREATE TABLE IF NOT EXISTS STUDENTS";
+				// stmt.executeUpdate(creation);
+
+				String creation = "CREATE TABLE STUDENTS (" 
+						+ "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
+						+ "seat_id   		INT  		NOT NULL, " 
+						+ "student_id  		TEXT  		NOT NULL, "
+						+ "student_name		TEXT  		NOT NULL, " 
+						+ "collisions 		INT  		NOT NULL)";
 				stmt.executeUpdate(creation);
 				stmt.close();
 				c.close();

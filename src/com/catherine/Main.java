@@ -95,7 +95,7 @@ public class Main {
 
 	public static void testHash() {
 		HashFunctions hashFunctions = new HashFunctions(100, 0.75f, 30, 336, true);
-		// hashFunctions.remainder(17);
+		hashFunctions.remainder(17);
 		// hashFunctions.remainder(36);
 		// hashFunctions.remainder(37);
 		// hashFunctions.remainder(97);

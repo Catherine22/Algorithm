@@ -202,7 +202,10 @@ value = hash(key). As you hash keys, you almot can't avoid to get the same value
 1. Open addressing (or closed hashing)
 > Basically, it's support to be mutiple slots (linked list chaining).
 > You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
-> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. This chain is called probing sequence/chain is a list.
+> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are support to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
+
+- [HashFunctions]
+- []
 
 
 ## [Others]

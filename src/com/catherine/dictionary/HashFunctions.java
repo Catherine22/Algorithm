@@ -3,8 +3,8 @@ package com.catherine.dictionary;
 import java.util.List;
 import java.util.Stack;
 
-import com.catherine.dictionary.unit_test.HashingDaoImpl;
-import com.catherine.dictionary.unit_test.Student;
+import com.catherine.dictionary.test.HashingHelper;
+import com.catherine.dictionary.test.Student;
 
 /**
  * 在此探讨的散列都是通过散列算法的设计，将元素从大的集合映射到小的集合的情况。<br>
@@ -13,19 +13,20 @@ import com.catherine.dictionary.unit_test.Student;
  * <br>
  * 设计散列（hash）函数时应注意下列原则：<br>
  * <br>
- * 1. 确定（determinism）：同一个关键码总是映射到同一个地址。<br>
+ * 1. 确定（determinism）：同一个关键码(key)总是映射到同一个地址(value)。<br>
  * 2. 快速（efficiency）：预期O（1）。<br>
  * 3. 射满（surjection）：尽可能射满整个映射空间。<br>
  * 4. 均匀（uniformity）：关键码映射到散列表各位置的概率应尽量接近。<br>
  * <br>
- * 散列函数可以有各式不同的设计，并非固定的模式，大原则是越随机、越没有规律越好。
+ * 散列函数可以有各式不同的设计，并非固定的模式，大原则是越随机、越没有规律越好。<br>
+ * 不论如何设计，散列函数都不可避免冲突发生。<br>
  * 
  * @author Catherine
  *
  */
 public class HashFunctions {
 	private final boolean SHOW_DEBUG_LOG = true;
-	private HashingDaoImpl rawDaoImpl;
+	private HashingHelper rawDaoImpl;
 
 	/**
 	 * 
@@ -37,9 +38,11 @@ public class HashFunctions {
 	 *            随机数数值范围（含）
 	 * @param to
 	 *            随机数数值范围（不含）
+	 * @param isUnique
+	 *            随机产生的数值是否唯一
 	 */
 	public HashFunctions(int capacity, float loadFactor, int from, int to, boolean isUnique) {
-		rawDaoImpl = new HashingDaoImpl("students_raw");
+		rawDaoImpl = new HashingHelper("students_raw");
 		rawDaoImpl.createRandomTable(capacity, loadFactor, from, to, isUnique);
 	}
 
@@ -55,24 +58,27 @@ public class HashFunctions {
 	 * 
 	 * @param m
 	 *            应为一素数
+	 * @param fixCollisionsm
+	 *            是否解决冲突情况（不同的key对应到同一个value）
 	 */
 	public void remainder(int m) {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = String.format("students_hashing_%d", m);
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_" + m);
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
-			hashingDaoImpl.insert(student.seat_id % m, student.student_id);
+			hashingHelper.put(student.seat_id % m, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("mod " + m);
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -91,20 +97,21 @@ public class HashFunctions {
 	public void mad(int step, int offset, int m) {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = String.format("students_hashing_%d_%d_%d", step, offset, m);
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl(String.format("students_hashing_%d_%d_%d", step, offset, m));
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
-			hashingDaoImpl.insert((student.seat_id * step + offset) % m, student.student_id);
+			hashingHelper.put((student.seat_id * step + offset) % m, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println(String.format("(%d * key + %d) %% %d", step, offset, m));
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -115,21 +122,22 @@ public class HashFunctions {
 	public void selectingDigits() {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = "students_hashing_odd";
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_odd");
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
 			if (student.seat_id % 2 == 1)
-				hashingDaoImpl.insert(student.seat_id, student.student_id);
+				hashingHelper.put(student.seat_id, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("odd number");
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -143,20 +151,21 @@ public class HashFunctions {
 	public void midSquare() {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = "students_hashing_mid_square";
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_mid_square");
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
-			hashingDaoImpl.insert(getMid3Num(student.seat_id * student.seat_id), student.student_id);
+			hashingHelper.put(getMid3Num(student.seat_id * student.seat_id), student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("Median square");
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -171,24 +180,25 @@ public class HashFunctions {
 	public void fold(int n) {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = "students_hashing_fold";
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_fold");
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
 			Stack<Integer> stack = separate(student.seat_id, n);
 			int temp = 0;
 			while (!stack.isEmpty())
 				temp += stack.pop();
-			hashingDaoImpl.insert(temp, student.student_id);
+			hashingHelper.put(temp, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("Fold");
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -204,24 +214,25 @@ public class HashFunctions {
 	public void rotateAndFold(int n) {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = "students_hashing_rotate_fold";
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_rotate_fold");
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
 			Stack<Integer> stack = reverseOddAddressesNum(separate(student.seat_id, n));
 			int temp = 0;
 			while (!stack.isEmpty())
 				temp += stack.pop();
-			hashingDaoImpl.insert(temp, student.student_id);
+			hashingHelper.put(temp, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("Rotate + fold");
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -237,25 +248,26 @@ public class HashFunctions {
 	public void XORFold(int n) {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = "students_hashing_xor_fold";
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_xor_fold");
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
 			Stack<Integer> stack = separate(student.seat_id, n);
 			int temp = 0;
 			while (!stack.isEmpty()) {
 				temp ^= stack.pop();
 			}
-			hashingDaoImpl.insert(temp, student.student_id);
+			hashingHelper.put(temp, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("XOR fold");
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -271,24 +283,25 @@ public class HashFunctions {
 	public void rotateAndXORFold(int n) {
 		List<Student> rawTableList = rawDaoImpl.getTableList();
 		List<Student> rawStudentList = rawDaoImpl.getStudent();
+		String table = "students_hashing_rotate_xor_fold";
 
 		// 要做hash处理的是学生信息表的seat_id
-		HashingDaoImpl hashingDaoImpl = new HashingDaoImpl("students_hashing_rotate_xor_fold");
+		HashingHelper hashingHelper = new HashingHelper(table);
 		for (Student student : rawTableList) {
 			Stack<Integer> stack = reverseOddAddressesBinary(separate(student.seat_id, n));
 			int temp = 0;
 			while (!stack.isEmpty())
 				temp ^= stack.pop();
-			hashingDaoImpl.insert(temp, student.student_id);
+			hashingHelper.put(temp, student.student_id);
 		}
 
-		List<Student> newTableList = hashingDaoImpl.getTableList();
-		List<Student> newStudentList = hashingDaoImpl.getStudent();
+		List<Student> newTableList = hashingHelper.getTableList();
+		List<Student> newStudentList = hashingHelper.getStudent();
 
 		if (SHOW_DEBUG_LOG) {
 			System.out.println("***************analytics***************");
 			System.out.println("Rotate + fold + XOR");
-			analyze(rawTableList, rawStudentList, newTableList, newStudentList);
+			analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 		}
 	}
 
@@ -499,7 +512,7 @@ public class HashFunctions {
 		return numbers;
 	}
 
-	public void analyze(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
+	public void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
 			List<Student> newStudentList) {
 		System.out.println(String.format("original size:%d, new size:%d", rawTableList.size(), newTableList.size()));
 
