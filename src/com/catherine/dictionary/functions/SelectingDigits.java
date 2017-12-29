@@ -11,10 +11,10 @@ import com.catherine.dictionary.data.Student;
  */
 public class SelectingDigits extends HashingTemplate {
 	private String table;
-	private int collisionMode;
+	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
-	public SelectingDigits(int collisionMode) {
+	public SelectingDigits(CollisionMode collisionMode) {
 		table = "students_hashing_odd";
 		this.collisionMode = collisionMode;
 		hashingHelper = new HashingHelper(table, collisionMode);
@@ -44,7 +44,7 @@ public class SelectingDigits extends HashingTemplate {
 	public void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
-		System.out.println(String.format("odd number\tmode: %s", CollisionMode.getName(collisionMode)));
+		System.out.println(String.format("odd number\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }

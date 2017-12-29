@@ -7,19 +7,19 @@ import com.catherine.dictionary.functions.CollisionMode;
 
 public class HashingHelper {
 	private String TABLE;
-	private int collisionMode;
+	private CollisionMode collisionMode;
 	private HashingDaoTemplate hashingDao;
 
-	private HashingDaoTemplate getHashingDao(int collisionMode) {
+	private HashingDaoTemplate getHashingDao(CollisionMode collisionMode) {
 		if (hashingDao != null)
 			return hashingDao;
 		else {
-			switch (collisionMode) {
+			switch (collisionMode.getMode()) {
 			case CollisionMode.DO_NOTHING:
 				hashingDao = new HashingDao();
 				return hashingDao;
 			case CollisionMode.PROBING_SEQUENCE:
-				hashingDao = new ProbingSequenceDao();
+				hashingDao = new ProbingSequenceDao(collisionMode.getSpareBuckets());
 				return hashingDao;
 			default:
 				throw new NullPointerException("No such a mode");
@@ -36,20 +36,10 @@ public class HashingHelper {
 	 * @see CollisionMode#DO_NOTHING DO_NOTHING 不处理冲突
 	 * @see CollisionMode#PROBING_SEQUENCE PROBING_SEQUENCE 线性试探
 	 */
-	public HashingHelper(String TABLE, int collisionMode) {
+	public HashingHelper(String TABLE, CollisionMode collisionMode) {
 		this.collisionMode = collisionMode;
 		this.TABLE = TABLE;
-
-		switch (collisionMode) {
-		case CollisionMode.DO_NOTHING:
-			HashingDao.initialize(TABLE);
-			break;
-		case CollisionMode.PROBING_SEQUENCE:
-			ProbingSequenceDao.initialize(TABLE);
-			break;
-		default:
-			throw new NullPointerException("No such a mode");
-		}
+		getHashingDao(collisionMode).initialize(TABLE);
 	}
 
 	public void createRandomTable(int capacity, float loadFactor, int from, int to, boolean isUnique) {

@@ -18,10 +18,10 @@ import com.catherine.dictionary.data.Student;
 public class XORFold extends HashingTemplate {
 	private int n;
 	private String table;
-	private int collisionMode;
+	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
-	public XORFold(int n, int collisionMode) {
+	public XORFold(int n, CollisionMode collisionMode) {
 		this.n = n;
 		table = "students_hashing_xor_fold";
 		this.collisionMode = collisionMode;
@@ -56,7 +56,7 @@ public class XORFold extends HashingTemplate {
 	public void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
-		System.out.println(String.format("XOR fold\tmode: %s", CollisionMode.getName(collisionMode)));
+		System.out.println(String.format("XOR fold\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }

@@ -41,6 +41,7 @@ import java.util.List;
  *
  */
 public class ProbingSequenceDao extends HashingDaoTemplate {
+	private int spareBuckets;
 
 	private static class InstanceHolder {
 		private static ProbingSequenceDao instance = new ProbingSequenceDao();
@@ -51,8 +52,18 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 		return InstanceHolder.instance;
 	}
 
-	protected ProbingSequenceDao() {
+	/**
+	 * 备用桶的数量
+	 * 
+	 * @param spareBuckets
+	 */
+	protected ProbingSequenceDao(int spareBuckets) {
+		this.spareBuckets = spareBuckets;
+		getInstance();
+	}
 
+	private ProbingSequenceDao() {
+		getInstance();
 	}
 
 	@Override
@@ -127,42 +138,6 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 				if (SHOW_DEBUG_LOG)
 					System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			}
-		}
-	}
-
-	/**
-	 * 建立数据库，为了简化逻辑，seat_id为座位id，student_id作为学生ID（唯一识别码），学生名就用随机数(student_id)
-	 * 的MD5。<br>
-	 * 每个id都有对应的seat_id，但是不一定每个座位都有学生。<br>
-	 * 每个student_id都对应一个student_name。<br>
-	 * collisions代表进行hash时该栏位发生多少次碰撞，同一个座位被重复塞入学生就+1，初始值为0。<br>
-	 * 
-	 */
-	protected static void initialize(String TABLE) {
-		synchronized (getInstance()) {
-			try {
-				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
-				Statement stmt = c.createStatement();
-
-				// if (SHOW_DEBUG_LOG)
-				// System.out.println("Opened database successfully");
-
-				String droping = "DROP TABLE IF EXISTS STUDENTS";
-				stmt.executeUpdate(droping);
-
-				String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-						+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
-						+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
-				stmt.executeUpdate(creation);
-				stmt.close();
-				c.close();
-			} catch (Exception e) {
-				if (SHOW_DEBUG_LOG)
-					System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			}
-
-			// if (SHOW_DEBUG_LOG)
-			// System.out.println("Table created successfully");
 		}
 	}
 }

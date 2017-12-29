@@ -22,10 +22,10 @@ public class Mod extends HashingTemplate {
 	private int step;
 	private int offset;
 	private String table;
-	private int collisionMode;
+	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
-	public Mod(int step, int offset, int m, int collisionMode) {
+	public Mod(int step, int offset, int m, CollisionMode collisionMode) {
 		this.m = m;
 		this.step = step;
 		this.offset = offset;
@@ -58,7 +58,7 @@ public class Mod extends HashingTemplate {
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
 		System.out.println(String.format("(%d * key + %d) %% %d\tmode: %s", step, offset, m,
-				CollisionMode.getName(collisionMode)));
+				CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }

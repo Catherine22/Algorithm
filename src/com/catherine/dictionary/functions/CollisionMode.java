@@ -3,7 +3,7 @@ package com.catherine.dictionary.functions;
 public class CollisionMode {
 
 	public final static int DO_NOTHING = 0;
-	
+
 	/**
 	 * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，每个散列地址（之后简称为桶）
 	 * 可存放一个LinkedList， 让重复的关键码存在同一个桶中。<br>
@@ -51,4 +51,46 @@ public class CollisionMode {
 		}
 	}
 
+	private int spareBuckets;
+	private int mode;
+
+	public CollisionMode() {
+
+	}
+
+	public CollisionMode(Builder builder) {
+		mode = builder.mode;
+		spareBuckets = builder.spareBuckets;
+	}
+
+	public static class Builder {
+		private int mode;
+		private int spareBuckets;
+
+		public Builder() {
+			mode = DO_NOTHING;
+		}
+
+		public Builder mode(int mode) {
+			this.mode = mode;
+			return this;
+		}
+
+		public Builder spareBuckets(int spareBuckets) {
+			this.spareBuckets = spareBuckets;
+			return this;
+		}
+
+		public CollisionMode build() {
+			return new CollisionMode(this);
+		}
+	}
+
+	public int getSpareBuckets() {
+		return spareBuckets;
+	}
+
+	public int getMode() {
+		return mode;
+	}
 }

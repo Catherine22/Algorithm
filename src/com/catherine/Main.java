@@ -105,17 +105,21 @@ public class Main {
 	}
 
 	public static void testHash() {
-		HashingHelper hashingHelper = new HashingHelper("students_raw", CollisionMode.DO_NOTHING);
+		CollisionMode doNothing = new CollisionMode.Builder().build();
+		CollisionMode probingSequence = new CollisionMode.Builder().mode(CollisionMode.PROBING_SEQUENCE).spareBuckets(3)
+				.build();
+
+		HashingHelper hashingHelper = new HashingHelper("students_raw", doNothing);
 		hashingHelper.createRandomTable(100, 0.75f, 30, 336, true);
 		List<Student> rawTableList = hashingHelper.getTableList();
 		List<Student> rawStudentList = hashingHelper.getStudent();
 
 		// remainder
-		HashingTemplate remainder = new Remainder(17, CollisionMode.DO_NOTHING);
+		HashingTemplate remainder = new Remainder(17, doNothing);
 		remainder.hash(rawTableList);
 		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
-		
-		remainder = new Remainder(17, CollisionMode.PROBING_SEQUENCE);
+
+		remainder = new Remainder(17, probingSequence);
 		remainder.hash(rawTableList);
 		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
 		//

@@ -15,10 +15,10 @@ import com.catherine.dictionary.data.Student;
  */
 public class MidSquare extends HashingTemplate {
 	private String table;
-	private int collisionMode;
+	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
-	public MidSquare(int collisionMode) {
+	public MidSquare(CollisionMode collisionMode) {
 		this.collisionMode = collisionMode;
 		table = "students_hashing_mid_square";
 		hashingHelper = new HashingHelper(table, collisionMode);
@@ -47,7 +47,7 @@ public class MidSquare extends HashingTemplate {
 	public void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
-		System.out.println(String.format("Median square\tmode: %s", CollisionMode.getName(collisionMode)));
+		System.out.println(String.format("Median square\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }

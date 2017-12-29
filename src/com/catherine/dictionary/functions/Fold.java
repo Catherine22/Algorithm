@@ -17,10 +17,10 @@ import com.catherine.dictionary.data.Student;
 public class Fold extends HashingTemplate {
 	private int n;
 	private String table;
-	private int collisionMode;
+	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
-	public Fold(int n) {
+	public Fold(int n, CollisionMode collisionMode) {
 		this.n = n;
 		this.collisionMode = collisionMode;
 		table = "students_hashing_fold";
@@ -54,7 +54,7 @@ public class Fold extends HashingTemplate {
 	public void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
-		System.out.println(String.format("Fold\tmode: %s", CollisionMode.getName(collisionMode)));
+		System.out.println(String.format("Fold\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }
