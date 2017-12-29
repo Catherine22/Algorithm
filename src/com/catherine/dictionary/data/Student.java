@@ -1,4 +1,4 @@
-package com.catherine.dictionary.test;
+package com.catherine.dictionary.data;
 
 public class Student {
 	public Student() {

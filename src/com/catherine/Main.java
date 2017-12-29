@@ -27,7 +27,18 @@ import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
 import com.catherine.data_type.Search;
 import com.catherine.data_type.Sequence;
-import com.catherine.dictionary.HashFunctions;
+import com.catherine.dictionary.HashingHelper;
+import com.catherine.dictionary.data.Student;
+import com.catherine.dictionary.functions.CollisionMode;
+import com.catherine.dictionary.functions.Fold;
+import com.catherine.dictionary.functions.HashingTemplate;
+import com.catherine.dictionary.functions.Mod;
+import com.catherine.dictionary.functions.MidSquare;
+import com.catherine.dictionary.functions.Remainder;
+import com.catherine.dictionary.functions.RotateAndFold;
+import com.catherine.dictionary.functions.RotateAndXORFold;
+import com.catherine.dictionary.functions.SelectingDigits;
+import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.sort.BubbleSort;
@@ -94,23 +105,85 @@ public class Main {
 	}
 
 	public static void testHash() {
-		HashFunctions hashFunctions = new HashFunctions(100, 0.75f, 30, 336, true);
-		hashFunctions.remainder(17);
-		// hashFunctions.remainder(36);
-		// hashFunctions.remainder(37);
-		// hashFunctions.remainder(97);
+		HashingHelper hashingHelper = new HashingHelper("students_raw", CollisionMode.DO_NOTHING);
+		hashingHelper.createRandomTable(100, 0.75f, 30, 336, true);
+		List<Student> rawTableList = hashingHelper.getTableList();
+		List<Student> rawStudentList = hashingHelper.getStudent();
+
+		// remainder
+		HashingTemplate remainder = new Remainder(17, CollisionMode.DO_NOTHING);
+		remainder.hash(rawTableList);
+		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
+		
+		remainder = new Remainder(17, CollisionMode.PROBING_SEQUENCE);
+		remainder.hash(rawTableList);
+		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
 		//
-		// hashFunctions.mad(2, 14, 17);
-		// hashFunctions.mad(2, 14, 36);
-		// hashFunctions.mad(2, 14, 37);
-		// hashFunctions.mad(2, 14, 97);
+		// remainder = new Remainder(36);
+		// remainder.hash(rawTableList);
+		// remainder.analyse(rawTableList, rawStudentList,
+		// remainder.getTableList(), remainder.getStudent());
 		//
-		// hashFunctions.selectingDigits();
-		// hashFunctions.midSquare();
-		// hashFunctions.fold(2);
-		// hashFunctions.rotateAndFold(2);
-		// hashFunctions.XORFold(2);
-		// hashFunctions.rotateAndXORFold(2);
+		// remainder = new Remainder(37);
+		// remainder.hash(rawTableList);
+		// remainder.analyse(rawTableList, rawStudentList,
+		// remainder.getTableList(), remainder.getStudent());
+		//
+		// remainder = new Remainder(97);
+		// remainder.hash(rawTableList);
+		// remainder.analyse(rawTableList, rawStudentList,
+		// remainder.getTableList(), remainder.getStudent());
+		//
+		// // modulo
+		// HashingTemplate mod = new Mod(2, 14, 17);
+		// mod.hash(rawTableList);
+		// mod.analyse(rawTableList, rawStudentList, mod.getTableList(),
+		// mod.getStudent());
+		//
+		// mod = new Mod(2, 14, 36);
+		// mod.hash(rawTableList);
+		// mod.analyse(rawTableList, rawStudentList, mod.getTableList(),
+		// mod.getStudent());
+		//
+		// mod = new Mod(2, 14, 37);
+		// mod.hash(rawTableList);
+		// mod.analyse(rawTableList, rawStudentList, mod.getTableList(),
+		// mod.getStudent());
+		//
+		// mod = new Mod(2, 14, 97);
+		// mod.hash(rawTableList);
+		// mod.analyse(rawTableList, rawStudentList, mod.getTableList(),
+		// mod.getStudent());
+		//
+		// HashingTemplate sd = new SelectingDigits();
+		// sd.hash(rawTableList);
+		// sd.analyse(rawTableList, rawStudentList, sd.getTableList(),
+		// sd.getStudent());
+		//
+		// MidSquare ms = new MidSquare();
+		// ms.hash(rawTableList);
+		// ms.analyse(rawTableList, rawStudentList, ms.getTableList(),
+		// ms.getStudent());
+		//
+		// Fold fold = new Fold(2);
+		// fold.hash(rawTableList);
+		// fold.analyse(rawTableList, rawStudentList, fold.getTableList(),
+		// fold.getStudent());
+		//
+		// RotateAndFold raf = new RotateAndFold(2);
+		// raf.hash(rawTableList);
+		// raf.analyse(rawTableList, rawStudentList, raf.getTableList(),
+		// raf.getStudent());
+		//
+		// XORFold xorf = new XORFold(2);
+		// xorf.hash(rawTableList);
+		// xorf.analyse(rawTableList, rawStudentList, xorf.getTableList(),
+		// xorf.getStudent());
+		//
+		// RotateAndXORFold raxorf = new RotateAndXORFold(2);
+		// raxorf.hash(rawTableList);
+		// raxorf.analyse(rawTableList, rawStudentList, raxorf.getTableList(),
+		// raxorf.getStudent());
 	}
 
 	public static void testBTree() {
