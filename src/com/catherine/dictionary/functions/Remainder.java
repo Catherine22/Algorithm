@@ -19,8 +19,6 @@ import com.catherine.dictionary.data.Student;
  */
 public class Remainder extends HashingTemplate {
 	private int m;
-	private String table;
-	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
 	public Remainder(int m, CollisionMode collisionMode) {
@@ -56,5 +54,4 @@ public class Remainder extends HashingTemplate {
 		System.out.println(String.format("mod %d\tmode: %s", m, CollisionMode.getName(collisionMode.getMode())));
 		analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
-
 }

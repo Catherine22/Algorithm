@@ -10,8 +10,6 @@ import com.catherine.dictionary.data.Student;
  * 必须先定义怎么样的分析法，比如这边采用的是取关键码的奇数位作为散列地址。
  */
 public class SelectingDigits extends HashingTemplate {
-	private String table;
-	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
 	public SelectingDigits(CollisionMode collisionMode) {

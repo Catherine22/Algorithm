@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
+import com.catherine.dictionary.data.Student;
+
 /**
  * 不同的关键码(key)经散列函数hash(key)计算后的散列地址(value)可能会重复，在此忽略冲突情况，直接覆盖，累计到collisions栏位记录
  * 

@@ -14,8 +14,6 @@ import com.catherine.dictionary.data.Student;
  * 每个位数都是由原数经求和而成，因此取经过最多原数位的中间三位作为散列地址能让原关键码对散列地址的影响较大。
  */
 public class MidSquare extends HashingTemplate {
-	private String table;
-	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
 	public MidSquare(CollisionMode collisionMode) {

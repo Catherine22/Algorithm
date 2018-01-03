@@ -16,8 +16,6 @@ import com.catherine.dictionary.data.Student;
  */
 public class Fold extends HashingTemplate {
 	private int n;
-	private String table;
-	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
 	public Fold(int n, CollisionMode collisionMode) {

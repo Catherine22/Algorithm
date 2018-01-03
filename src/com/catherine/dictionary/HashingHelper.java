@@ -55,6 +55,8 @@ public class HashingHelper {
 	}
 
 	/**
+	 * 插入新的栏位（学生）
+	 * 
 	 * @param SEAT_ID
 	 *            key
 	 * @param STUDENT_ID
@@ -62,18 +64,6 @@ public class HashingHelper {
 	 */
 	public void put(int SEAT_ID, String STUDENT_ID) {
 		getHashingDao(collisionMode).insert(TABLE, SEAT_ID, STUDENT_ID);
-	}
-
-	/**
-	 * 
-	 * @param SEAT_ID
-	 *            key
-	 * @return
-	 */
-	public int get(int SEAT_ID) {
-		int value = 0;
-
-		return value;
 	}
 
 	/**

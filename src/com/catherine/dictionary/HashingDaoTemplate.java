@@ -39,10 +39,12 @@ public abstract class HashingDaoTemplate {
 	 * 插入新的栏位（学生）
 	 * 
 	 * @param TABLE
-	 * @param ID
-	 * @param SERIAL_NUM
+	 * @param SEAT_ID
+	 * @param STUDENT_ID
 	 */
 	protected abstract void insert(String TABLE, int SEAT_ID, String STUDENT_ID);
+
+	
 
 	/**
 	 * 建立数据库，为了简化逻辑，seat_id为座位id，student_id作为学生ID（唯一识别码），学生名就用随机数(student_id)

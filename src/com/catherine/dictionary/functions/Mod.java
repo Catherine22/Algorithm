@@ -21,8 +21,6 @@ public class Mod extends HashingTemplate {
 	private int m;
 	private int step;
 	private int offset;
-	private String table;
-	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
 	public Mod(int step, int offset, int m, CollisionMode collisionMode) {

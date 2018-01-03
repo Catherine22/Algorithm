@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
+import com.catherine.dictionary.data.Student;
+
 /**
  * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，每个散列地址（之后简称为桶）
  * 可存放一个LinkedList， 让重复的关键码存在同一个桶中。<br>
@@ -151,8 +153,9 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 				}
 				hasCollision = (emptyBuckets != (spareBuckets + 1));
 
-//				System.out.println(String.format("seat_id:%d, STUDENT_ID:%s, hasCollision:%b -> id:%s", SEAT_ID,
-//						STUDENT_ID, hasCollision, spareID));
+				// System.out.println(String.format("seat_id:%d, STUDENT_ID:%s,
+				// hasCollision:%b -> id:%s", SEAT_ID,
+				// STUDENT_ID, hasCollision, spareID));
 
 				// 一旦当前条目已存在数据，就往后寻找备用桶，若备用桶全满，则在原条目的collisions+1
 				int collisions = 0;

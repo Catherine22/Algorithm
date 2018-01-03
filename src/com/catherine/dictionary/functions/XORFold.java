@@ -17,8 +17,6 @@ import com.catherine.dictionary.data.Student;
  */
 public class XORFold extends HashingTemplate {
 	private int n;
-	private String table;
-	private CollisionMode collisionMode;
 	private HashingHelper hashingHelper;
 
 	public XORFold(int n, CollisionMode collisionMode) {
