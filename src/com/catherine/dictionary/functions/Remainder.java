@@ -31,12 +31,12 @@ public class Remainder extends HashingTemplate {
 	}
 
 	@Override
-	public List<Student> hash(List<Student> rawTableList) {
+	public List<Student> hash(List<Student> rawStudentList) {
 		// 要做hash处理的是学生信息表的seat_id
-		for (Student student : rawTableList) {
+		for (Student student : rawStudentList) {
 			hashingHelper.put(student.seat_id % m, student.student_id);
 		}
-		return hashingHelper.getTableList();
+		return hashingHelper.getStudent();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class Remainder extends HashingTemplate {
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
 		System.out.println(String.format("mod %d\tmode: %s", m, CollisionMode.getName(collisionMode.getMode())));
-		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
+		analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 
 }

@@ -55,7 +55,6 @@ public class HashingHelper {
 	}
 
 	/**
-	 * 
 	 * @param SEAT_ID
 	 *            key
 	 * @param STUDENT_ID
@@ -81,7 +80,6 @@ public class HashingHelper {
 	 * 
 	 * @param SEAT_ID
 	 *            key
-	 * @return
 	 */
 	public void remove(int SEAT_ID) {
 

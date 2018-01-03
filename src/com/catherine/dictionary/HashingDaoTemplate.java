@@ -81,6 +81,7 @@ public abstract class HashingDaoTemplate {
 	}
 
 	/**
+	 * 
 	 * 生成随机链表
 	 * 
 	 * @param capacity
@@ -93,6 +94,7 @@ public abstract class HashingDaoTemplate {
 	 *            随机数数值范围（不含）
 	 * @param isUnique
 	 *            链值是否不重复
+	 * @return
 	 */
 	protected List<Integer> getRandomIntList(int capacity, float loadFactor, int from, int to, boolean isUnique) {
 		if (capacity < 0)

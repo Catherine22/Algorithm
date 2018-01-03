@@ -1,5 +1,9 @@
 package com.catherine.dictionary.functions;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Stack;
 
@@ -7,30 +11,55 @@ import com.catherine.dictionary.data.Student;
 
 public abstract class HashingTemplate {
 
-	public abstract List<Student> hash(List<Student> rawTableList);
+	public abstract List<Student> hash(List<Student> rawStudentList);
 
 	public abstract List<Student> getStudent();
 
 	public abstract List<Student> getTableList();
 
-	public void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
-			List<Student> newStudentList) {
-		System.out.println(String.format("original size:%d, new size:%d", rawTableList.size(), newTableList.size()));
+	public abstract void analyse(List<Student> rawTableList, List<Student> rawStudentList, List<Student> newTableList,
+			List<Student> newStudentList);
+
+	public void analyse(String TABLE, List<Student> rawTableList, List<Student> rawStudentList,
+			List<Student> newTableList, List<Student> newStudentList) {
+		System.out.println(String.format("original size:%d, new size:%d (%.2f%% ↓)", rawTableList.size(),
+				newTableList.size(), (rawTableList.size() - newTableList.size()) * 100.0f / rawTableList.size()));
 
 		int lostKeys = rawStudentList.size() - newStudentList.size();
 
 		int collisions = 0;
-		for (Student student : newStudentList) {
-			if (student.collisions > 0)
-				collisions++;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
+			Statement stmt = c.createStatement();
+
+			ResultSet rs0 = stmt.executeQuery("SELECT SUM(collisions) FROM STUDENTS");
+			while (rs0.next()) {
+				collisions = rs0.getInt(1);
+			}
+			rs0.close();
+			stmt.close();
+			c.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		System.out.println(String.format("lost keys:%d (%.2f%%), collisions:%d (%.2f%%)", lostKeys,
-				lostKeys * 100.0f / rawStudentList.size(), collisions, collisions * 100.0f / newStudentList.size()));
+
+		System.out.println(String.format("lost keys:%d (%.2f%% ↑), collisions:%d (%.2f%% ↑)", lostKeys,
+				lostKeys * 100.0f / rawStudentList.size(), collisions, collisions * 100.0f / rawStudentList.size()));
 
 		float su0 = rawStudentList.size() * 100.0f / rawTableList.size();
 		float su1 = newStudentList.size() * 100.0f / newTableList.size();
-		System.out.println(String.format("space usage:%.2f%%, improved:%.2f%%", su1, su1 - su0));
 
+		float diff = 0;
+		String symbol = "";
+		if (su1 > su0) {
+			symbol = "↑";
+			diff = su1 - su0;
+		} else {
+			symbol = "↓";
+			diff = su0 - su1;
+		}
+		System.out.println(String.format("space usage:%.2f%% (%.2f%% %s)", su1, diff, symbol));
 	}
 
 	/**

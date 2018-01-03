@@ -54,9 +54,9 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 	}
 
 	/**
-	 * 备用桶的数量
 	 * 
 	 * @param spareBuckets
+	 *            备用桶的数量
 	 */
 	protected ProbingSequenceDao(int spareBuckets) {
 		this.spareBuckets = spareBuckets;
@@ -71,7 +71,6 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 	protected void createRandomTable(String TABLE, int capacity, float loadFactor, int from, int to, boolean isUnique) {
 		synchronized (getInstance()) {
 			List<Integer> randomList = getRandomIntList(capacity, loadFactor, from, to, isUnique);
-
 			try {
 				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
 				Statement stmt = c.createStatement();
@@ -79,15 +78,15 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 				StringBuilder insertion = new StringBuilder();
 				for (int i = 0; i < randomList.size(); i++) {
 					Integer data = randomList.get(i);
-					if (data != null)
+					if (data != null) {
 						insertion.append(String.format(
 								"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d);",
 								i, data + "", getInstance().md5(data + "") + "", 0));
-					else
+					} else {
 						insertion.append(String.format(
 								"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d);",
 								i, "", "", 0));
-
+					}
 					// 每个桶后面都有spareBuckets个备用桶
 					for (int j = 0; j < spareBuckets; j++) {
 						insertion.append(String.format(
@@ -113,50 +112,18 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
 				Statement stmt = c.createStatement();
 
-				// 检查该座位是否已存在学生
-				ResultSet rs0 = stmt
-						.executeQuery(String.format("SELECT EXISTS(SELECT * From STUDENTS WHERE seat_id=%d)", SEAT_ID));
-				boolean hasCollision = false;
+				// 首先检查是否已有座位，若没有则创建（同时创建备用桶）
+				ResultSet rs0 = stmt.executeQuery(String.format("SELECT id From STUDENTS WHERE seat_id=%d", SEAT_ID));
+				boolean hasSeat = false;
 				while (rs0.next()) {
-					hasCollision = rs0.getInt(1) == 1;
+					hasSeat = true;
+					break;
 				}
 
-				if (hasCollision)
-					System.out.println(String.format("seat_id=%d, STUDENT_ID:%s", SEAT_ID, STUDENT_ID));
-
-				// 当前条目重复插入计数
-				int collisions = 0;
-
-				// 一旦当前条目已存在数据，就往后寻找备用桶，若备用桶全满，则在原条目的collisions+1
-				if (hasCollision) {
-
-					// 检查有没有空的备用桶
-					rs0 = stmt.executeQuery(
-							String.format("SELECT id From STUDENTS WHERE seat_id=%d AND student_id=''", SEAT_ID));
-					int spareID = 0;
-					boolean hasBucket = false;
-					while (rs0.next()) {
-						spareID = rs0.getInt(1);
-						hasBucket = true;
-						break;
-					}
-					if (hasBucket) {
-						System.out.println("spareID:" + spareID);
-						stmt.executeUpdate(String.format(
-								"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE id=%d",
-								SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + "") + "", 0, spareID));
-					} else {
-						// 座位上有学生而且备用桶全满，collisions+1
-						rs0 = stmt.executeQuery(
-								String.format("SELECT collisions FROM STUDENTS WHERE seat_id=%d", SEAT_ID));
-						collisions = rs0.getInt(1) + 1;
-						stmt.executeUpdate(String.format("UPDATE STUDENTS SET collisions=%d WHERE seat_id=%d",
-								collisions, SEAT_ID));
-					}
-				} else {
+				if (!hasSeat) {
 					stmt.executeUpdate(String.format(
 							"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d)",
-							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + "") + "", 0));
+							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), 0));
 
 					// 每个桶后面都有spareBuckets个备用桶
 					for (int j = 0; j < spareBuckets; j++) {
@@ -164,6 +131,49 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 								"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d);",
 								SEAT_ID, "", "", 0));
 					}
+					return;
+				}
+
+				// 检查该座位及其备用桶是否已存在学生
+				rs0 = stmt.executeQuery(
+						String.format("SELECT * From STUDENTS WHERE seat_id=%d AND student_id=''", SEAT_ID));
+				boolean hasCollision = true;
+				int spareID = 0;
+
+				boolean block = false;
+				int emptyBuckets = 0;
+				while (rs0.next()) {
+					if (!block) {
+						block = true;
+						spareID = rs0.getInt("id");
+					}
+					emptyBuckets++;
+				}
+				hasCollision = (emptyBuckets != (spareBuckets + 1));
+
+//				System.out.println(String.format("seat_id:%d, STUDENT_ID:%s, hasCollision:%b -> id:%s", SEAT_ID,
+//						STUDENT_ID, hasCollision, spareID));
+
+				// 一旦当前条目已存在数据，就往后寻找备用桶，若备用桶全满，则在原条目的collisions+1
+				int collisions = 0;
+				if (hasCollision) {
+					// 表示备用桶全满
+					if (emptyBuckets == 0) {
+						rs0 = stmt.executeQuery(String.format("SELECT * From STUDENTS WHERE seat_id=%d", SEAT_ID));
+						while (rs0.next()) {
+							collisions = rs0.getInt("collisions") + 1;
+							spareID = rs0.getInt("id");
+							break;
+						}
+					}
+
+					stmt.executeUpdate(String.format(
+							"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE id=%d",
+							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions, spareID));
+				} else {
+					stmt.executeUpdate(String.format(
+							"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE seat_id=%d",
+							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions, SEAT_ID));
 				}
 
 				rs0.close();

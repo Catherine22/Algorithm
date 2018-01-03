@@ -57,6 +57,6 @@ public class RotateAndXORFold extends HashingTemplate {
 		System.out.println("***************analytics***************");
 		System.out.println(
 				String.format("Rotate + fold + XOR\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
-		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
+		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }

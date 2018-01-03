@@ -111,17 +111,15 @@ public class Main {
 
 		HashingHelper hashingHelper = new HashingHelper("students_raw", doNothing);
 		hashingHelper.createRandomTable(100, 0.75f, 30, 336, true);
-		List<Student> rawTableList = hashingHelper.getTableList();
-		List<Student> rawStudentList = hashingHelper.getStudent();
 
 		// remainder
 		HashingTemplate remainder = new Remainder(17, doNothing);
-//		remainder.hash(rawTableList);
-//		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
+		remainder.hash( hashingHelper.getStudent());
+		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(), remainder.getStudent());
 
 		remainder = new Remainder(17, probingSequence);
-		remainder.hash(rawTableList);
-		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
+		remainder.hash( hashingHelper.getStudent());
+		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(), remainder.getStudent());
 		//
 		// remainder = new Remainder(36);
 		// remainder.hash(rawTableList);

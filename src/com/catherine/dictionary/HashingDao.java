@@ -31,7 +31,6 @@ class HashingDao extends HashingDaoTemplate {
 	protected void createRandomTable(String TABLE, int capacity, float loadFactor, int from, int to, boolean isUnique) {
 		synchronized (getInstance()) {
 			List<Integer> randomList = getRandomIntList(capacity, loadFactor, from, to, isUnique);
-
 			try {
 				Connection c = DriverManager.getConnection(String.format("jdbc:sqlite:%s.db", TABLE));
 				Statement stmt = c.createStatement();
@@ -39,14 +38,15 @@ class HashingDao extends HashingDaoTemplate {
 				StringBuilder insertion = new StringBuilder();
 				for (int i = 0; i < randomList.size(); i++) {
 					Integer data = randomList.get(i);
-					if (data != null)
+					if (data != null) {
 						insertion.append(String.format(
 								"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d);",
-								i, data + "", getInstance().md5(data + "") + "", 0));
-					else
+								i, data + "", getInstance().md5(data + ""), 0));
+					} else {
 						insertion.append(String.format(
 								"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d);",
 								i, "", "", 0));
+					}
 				}
 				stmt.executeUpdate(insertion.toString());
 				stmt.close();
@@ -87,11 +87,12 @@ class HashingDao extends HashingDaoTemplate {
 					// 座位给新学生（覆盖旧数据，等同于直接遗失一个关键码）
 					stmt.executeUpdate(String.format(
 							"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE seat_id=%d",
-							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + "") + "", collisions, SEAT_ID));
+							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions, SEAT_ID));
+
 				} else {
 					stmt.executeUpdate(String.format(
 							"INSERT INTO STUDENTS (seat_id, student_id, student_name, collisions) VALUES (%d, '%s', '%s', %d)",
-							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + "") + "", collisions));
+							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions));
 				}
 				stmt.close();
 				c.close();

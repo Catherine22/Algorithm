@@ -48,6 +48,6 @@ public class MidSquare extends HashingTemplate {
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
 		System.out.println(String.format("Median square\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
-		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
+		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }

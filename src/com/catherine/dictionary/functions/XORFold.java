@@ -57,6 +57,6 @@ public class XORFold extends HashingTemplate {
 			List<Student> newStudentList) {
 		System.out.println("***************analytics***************");
 		System.out.println(String.format("XOR fold\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
-		super.analyse(rawTableList, rawStudentList, newTableList, newStudentList);
+		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
 }
