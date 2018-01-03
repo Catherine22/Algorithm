@@ -116,8 +116,8 @@ public class Main {
 
 		// remainder
 		HashingTemplate remainder = new Remainder(17, doNothing);
-		remainder.hash(rawTableList);
-		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
+//		remainder.hash(rawTableList);
+//		remainder.analyse(rawTableList, rawStudentList, remainder.getTableList(), remainder.getStudent());
 
 		remainder = new Remainder(17, probingSequence);
 		remainder.hash(rawTableList);
