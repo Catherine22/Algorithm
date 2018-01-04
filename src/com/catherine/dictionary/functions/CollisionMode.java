@@ -76,17 +76,20 @@ public class CollisionMode {
 
 	private int spareBuckets;
 	private int mode;
+	private int mod;
 
 	public CollisionMode() {
 
 	}
 
 	public CollisionMode(Builder builder) {
+		mod = builder.mod;
 		mode = builder.mode;
 		spareBuckets = builder.spareBuckets;
 	}
 
 	public static class Builder {
+		private int mod;
 		private int mode;
 		private int spareBuckets;
 
@@ -104,6 +107,11 @@ public class CollisionMode {
 			return this;
 		}
 
+		public Builder mod(int mod) {
+			this.mod = mod;
+			return this;
+		}
+
 		public CollisionMode build() {
 			return new CollisionMode(this);
 		}
@@ -115,5 +123,9 @@ public class CollisionMode {
 
 	public int getMode() {
 		return mode;
+	}
+
+	public int getMod() {
+		return mod;
 	}
 }

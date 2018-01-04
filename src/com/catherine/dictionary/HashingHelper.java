@@ -22,7 +22,7 @@ public class HashingHelper {
 				hashingDao = new LinearProbing(collisionMode.getSpareBuckets());
 				return hashingDao;
 			case CollisionMode.QUADRATIC_PROBING:
-				hashingDao = new QuadraticProbing();
+				hashingDao = new QuadraticProbing(collisionMode.getSpareBuckets(), collisionMode.getMod());
 				return hashingDao;
 			default:
 				throw new NullPointerException("No such a mode");

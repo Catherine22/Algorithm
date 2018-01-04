@@ -106,20 +106,19 @@ public class Main {
 
 	public static void testHash() {
 		CollisionMode doNothing = new CollisionMode.Builder().build();
-		CollisionMode linearProbing = new CollisionMode.Builder().mode(CollisionMode.LINEAR_PROBING).spareBuckets(3)
-				.build();
+		CollisionMode linearProbing = new CollisionMode.Builder().mode(CollisionMode.LINEAR_PROBING).spareBuckets(3).build();
+		CollisionMode quadraticPobing = new CollisionMode.Builder().mode(CollisionMode.QUADRATIC_PROBING).spareBuckets(3).mod(31).build();
 
 		HashingHelper hashingHelper = new HashingHelper("students_raw", doNothing);
 		hashingHelper.createRandomTable(100, 0.75f, 30, 336, true);
 
-		// **************************Do not fix
-		// collisions**************************
+		// **************************Do not fix collisions**************************
 
 		// remainder
-		HashingTemplate remainder = new Remainder(17, doNothing);
-		remainder.hash(hashingHelper.getStudent());
-		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
-				remainder.getStudent());
+//		HashingTemplate remainder = new Remainder(17, doNothing);
+//		remainder.hash(hashingHelper.getStudent());
+//		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
+//				remainder.getStudent());
 
 		// remainder = new Remainder(36, doNothing);
 		// remainder.hash(hashingHelper.getStudent());
@@ -191,83 +190,165 @@ public class Main {
 		// hashingHelper.getStudent(), raxorf.getTableList(),
 		// raxorf.getStudent());
 
-		// **************************Fix collisions**************************
+		// **************************Fix collisions (Linear Probing)**************************
 
 		// remainder
-		remainder = new Remainder(17, linearProbing);
-		remainder.hash(hashingHelper.getStudent());
-		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
-				remainder.getStudent());
+//		remainder = new Remainder(17, linearProbing);
+//		remainder.hash(hashingHelper.getStudent());
+//		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
+//				remainder.getStudent());
 
-		// remainder = new Remainder(36, probingSequence);
+		// remainder = new Remainder(36, linearProbing);
 		// remainder.hash( hashingHelper.getStudent());
 		// remainder.analyse(hashingHelper.getTableList(),
 		// hashingHelper.getStudent(), remainder.getTableList(),
 		// remainder.getStudent());
 		//
-		// remainder = new Remainder(37, probingSequence);
+		// remainder = new Remainder(37, linearProbing);
 		// remainder.hash( hashingHelper.getStudent());
 		// remainder.analyse(hashingHelper.getTableList(),
 		// hashingHelper.getStudent(), remainder.getTableList(),
 		// remainder.getStudent());
 		//
-		// remainder = new Remainder(97, probingSequence);
+		// remainder = new Remainder(97, linearProbing);
 		// remainder.hash( hashingHelper.getStudent());
 		// remainder.analyse(hashingHelper.getTableList(),
 		// hashingHelper.getStudent(), remainder.getTableList(),
 		// remainder.getStudent());
 		//
 		// // modulo
-		// mod = new Mod(2, 14, 17, probingSequence);
+		// mod = new Mod(2, 14, 17, linearProbing);
 		// mod.hash(hashingHelper.getStudent());
 		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// mod.getTableList(),
 		// mod.getStudent());
 		//
-		// mod = new Mod(2, 14, 36, probingSequence);
+		// mod = new Mod(2, 14, 36, linearProbing);
 		// mod.hash(hashingHelper.getStudent());
 		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// mod.getTableList(),
 		// mod.getStudent());
 		//
-		// mod = new Mod(2, 14, 37, probingSequence);
+		// mod = new Mod(2, 14, 37, linearProbing);
 		// mod.hash(hashingHelper.getStudent());
 		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// mod.getTableList(),
 		// mod.getStudent());
 		//
-		// mod = new Mod(2, 14, 97, probingSequence);
+		// mod = new Mod(2, 14, 97, linearProbing);
 		// mod.hash(hashingHelper.getStudent());
 		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// mod.getTableList(),
 		// mod.getStudent());
 		//
-		// sd = new SelectingDigits(probingSequence);
+		// sd = new SelectingDigits(linearProbing);
 		// sd.hash(hashingHelper.getStudent());
 		// sd.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// sd.getTableList(), sd.getStudent());
 		//
-		// ms = new MidSquare(probingSequence);
+		// ms = new MidSquare(linearProbing);
 		// ms.hash(hashingHelper.getStudent());
 		// ms.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// ms.getTableList(), ms.getStudent());
 		//
-		// fold = new Fold(2, probingSequence);
+		// fold = new Fold(2, linearProbing);
 		// fold.hash(hashingHelper.getStudent());
 		// fold.analyse(hashingHelper.getTableList(),
 		// hashingHelper.getStudent(), fold.getTableList(), fold.getStudent());
 		//
-		// raf = new RotateAndFold(2, probingSequence);
+		// raf = new RotateAndFold(2, linearProbing);
 		// raf.hash(hashingHelper.getStudent());
 		// raf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
 		// raf.getTableList(), raf.getStudent());
 		//
-		// xorf = new XORFold(2, probingSequence);
+		// xorf = new XORFold(2, linearProbing);
 		// xorf.hash(hashingHelper.getStudent());
 		// xorf.analyse(hashingHelper.getTableList(),
 		// hashingHelper.getStudent(), xorf.getTableList(), xorf.getStudent());
 		//
-		// raxorf = new RotateAndXORFold(2, probingSequence);
+		// raxorf = new RotateAndXORFold(2, linearProbing);
+		// raxorf.hash(hashingHelper.getStudent());
+		// raxorf.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), raxorf.getTableList(),
+		// raxorf.getStudent());
+		
+
+		// **************************Fix collisions (Quadratic Probing)**************************
+		// remainder
+		Remainder	remainder = new Remainder(17, quadraticPobing);
+		remainder.hash(hashingHelper.getStudent());
+		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
+				remainder.getStudent());
+
+		// remainder = new Remainder(36, quadraticPobing);
+		// remainder.hash( hashingHelper.getStudent());
+		// remainder.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), remainder.getTableList(),
+		// remainder.getStudent());
+		//
+		// remainder = new Remainder(37, quadraticPobing);
+		// remainder.hash( hashingHelper.getStudent());
+		// remainder.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), remainder.getTableList(),
+		// remainder.getStudent());
+		//
+		// remainder = new Remainder(97, quadraticPobing);
+		// remainder.hash( hashingHelper.getStudent());
+		// remainder.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), remainder.getTableList(),
+		// remainder.getStudent());
+		//
+		// // modulo
+		// mod = new Mod(2, 14, 17, quadraticPobing);
+		// mod.hash(hashingHelper.getStudent());
+		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// mod.getTableList(),
+		// mod.getStudent());
+		//
+		// mod = new Mod(2, 14, 36, quadraticPobing);
+		// mod.hash(hashingHelper.getStudent());
+		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// mod.getTableList(),
+		// mod.getStudent());
+		//
+		// mod = new Mod(2, 14, 37, quadraticPobing);
+		// mod.hash(hashingHelper.getStudent());
+		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// mod.getTableList(),
+		// mod.getStudent());
+		//
+		// mod = new Mod(2, 14, 97, quadraticPobing);
+		// mod.hash(hashingHelper.getStudent());
+		// mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// mod.getTableList(),
+		// mod.getStudent());
+		//
+		// sd = new SelectingDigits(quadraticPobing);
+		// sd.hash(hashingHelper.getStudent());
+		// sd.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// sd.getTableList(), sd.getStudent());
+		//
+		// ms = new MidSquare(quadraticPobing);
+		// ms.hash(hashingHelper.getStudent());
+		// ms.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// ms.getTableList(), ms.getStudent());
+		//
+		// fold = new Fold(2, quadraticPobing);
+		// fold.hash(hashingHelper.getStudent());
+		// fold.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), fold.getTableList(), fold.getStudent());
+		//
+		// raf = new RotateAndFold(2, quadraticPobing);
+		// raf.hash(hashingHelper.getStudent());
+		// raf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// raf.getTableList(), raf.getStudent());
+		//
+		// xorf = new XORFold(2, quadraticPobing);
+		// xorf.hash(hashingHelper.getStudent());
+		// xorf.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), xorf.getTableList(), xorf.getStudent());
+		//
+		// raxorf = new RotateAndXORFold(2, quadraticPobing);
 		// raxorf.hash(hashingHelper.getStudent());
 		// raxorf.analyse(hashingHelper.getTableList(),
 		// hashingHelper.getStudent(), raxorf.getTableList(),

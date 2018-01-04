@@ -44,8 +44,6 @@ public abstract class Probing {
 	 */
 	protected abstract void insert(String TABLE, int SEAT_ID, String STUDENT_ID);
 
-	
-
 	/**
 	 * 建立数据库，为了简化逻辑，seat_id为座位id，student_id作为学生ID（唯一识别码），学生名就用随机数(student_id)
 	 * 的MD5。<br>
@@ -66,9 +64,12 @@ public abstract class Probing {
 				String droping = "DROP TABLE IF EXISTS STUDENTS";
 				stmt.executeUpdate(droping);
 
-				String creation = "CREATE TABLE STUDENTS (" + "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
-						+ "seat_id   		INT  		NOT NULL, " + "student_id  		TEXT  		NOT NULL, "
-						+ "student_name		TEXT  		NOT NULL, " + "collisions 		INT  		NOT NULL)";
+				String creation = "CREATE TABLE STUDENTS (" 
+						+ "id 				INTEGER 	PRIMARY KEY AUTOINCREMENT, "
+						+ "seat_id   		INT  		NOT NULL, " 
+						+ "student_id  		TEXT  		NOT NULL, "
+						+ "student_name		TEXT  		NOT NULL, " 
+						+ "collisions 		INT  		NOT NULL)";
 				stmt.executeUpdate(creation);
 				stmt.close();
 				c.close();
@@ -115,7 +116,7 @@ public abstract class Probing {
 		}
 
 		if (SHOW_DEBUG_LOG)
-			System.out.print("rawArray from " + from + " to " + to);
+			System.out.print("Create an array is in " + from + " - " + to + " range");
 
 		List<Integer> rawList = new LinkedList<>();
 		int rawSize = to - from;
@@ -139,7 +140,7 @@ public abstract class Probing {
 		Collections.shuffle(newList);
 
 		if (SHOW_DEBUG_LOG)
-			System.out.println(", size:" + newList.size());
+			System.out.println(", size:" + newList.size() + ", load factor:" + loadFactor);
 		return newList;
 	}
 
