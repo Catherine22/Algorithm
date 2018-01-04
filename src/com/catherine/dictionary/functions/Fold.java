@@ -21,7 +21,7 @@ public class Fold extends HashingTemplate {
 	public Fold(int n, CollisionMode collisionMode) {
 		this.n = n;
 		this.collisionMode = collisionMode;
-		table = "students_hashing_fold";
+		table = String.format("%s_students_hashing_fold", CollisionMode.getName(collisionMode.getMode()));
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 

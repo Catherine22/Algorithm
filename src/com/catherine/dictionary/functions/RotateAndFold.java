@@ -22,7 +22,7 @@ public class RotateAndFold extends HashingTemplate {
 	public RotateAndFold(int n, CollisionMode collisionMode) {
 		this.n = n;
 		this.collisionMode = collisionMode;
-		table = "students_hashing_rotate_fold";
+		table = String.format("%s_students_hashing_rotate_fold", CollisionMode.getName(collisionMode.getMode()));
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 

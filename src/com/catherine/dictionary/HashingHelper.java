@@ -24,6 +24,9 @@ public class HashingHelper {
 			case CollisionMode.QUADRATIC_PROBING:
 				hashingDao = new QuadraticProbing(collisionMode.getSpareBuckets(), collisionMode.getMod());
 				return hashingDao;
+			case CollisionMode.FERMAT_QUADRATIC_PROBING:
+				hashingDao = new FermatQuadraticProbing(collisionMode.getSpareBuckets(), collisionMode.getMod());
+				return hashingDao;
 			default:
 				throw new NullPointerException("No such a mode");
 			}
@@ -39,6 +42,7 @@ public class HashingHelper {
 	 * @see CollisionMode#DO_NOTHING 不处理冲突
 	 * @see CollisionMode#LINEAR_PROBING 线性试探
 	 * @see CollisionMode#QUADRATIC_PROBING 平方试探
+	 * @see CollisionMode#FERMAT_QUADRATIC_PROBING 双向平方试探
 	 */
 	public HashingHelper(String TABLE, CollisionMode collisionMode) {
 		this.collisionMode = collisionMode;

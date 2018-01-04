@@ -28,7 +28,8 @@ public class Mod extends HashingTemplate {
 		this.step = step;
 		this.offset = offset;
 		this.collisionMode = collisionMode;
-		table = String.format("students_hashing_%d_%d_%d", step, offset, m);
+		table = String.format("%s_students_hashing_%d_%d_%d", CollisionMode.getName(collisionMode.getMode()), step,
+				offset, m);
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 

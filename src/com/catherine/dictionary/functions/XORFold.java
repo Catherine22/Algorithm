@@ -21,8 +21,8 @@ public class XORFold extends HashingTemplate {
 
 	public XORFold(int n, CollisionMode collisionMode) {
 		this.n = n;
-		table = "students_hashing_xor_fold";
 		this.collisionMode = collisionMode;
+		table = String.format("%s_students_hashing_xor_fold", CollisionMode.getName(collisionMode.getMode()));
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 

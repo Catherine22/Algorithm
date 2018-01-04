@@ -208,9 +208,14 @@ Open addressing (or closed hashing)
 > So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are support to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
 
 Two ways to probe:
-- [LinearProbing]
-- [QuadraticProbing]
+- [LinearProbing] : hash(key) + 1, hash(key) + 2, ... hash(key) + k
+- [QuadraticProbing] : [hash(key) + 1^2] % M, [hash(key) + 2^2] % M, ... [hash(key) + k^2] % M
+- [FermatQuadraticProbing] : [hash(key) + 1^2] % M, [hash(key) - 1^2] % M, [hash(key) + 2^2] % M, ... [hash(key) + k^2] % M, [hash(key) - k^2] % M
 
+![quadratic probing][13]
+
+In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the most uniformly distributed hash table.
+![Fermat's theorem on sums of two squares][14]
 
 ## [Others]
   - Hailstone
@@ -307,6 +312,7 @@ Two ways to probe:
    [HashFunctions]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/functions/>
    [LinearProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/LinearProbing.java>
    [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
+   [FermatQuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -328,3 +334,5 @@ Two ways to probe:
   [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_1.png.png
   [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_2.png.png
   [12]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png
+  [13]: https://github.com/Catherine22/Algorithms/blob/master/res/quadratic_probing.png
+  [14]: https://github.com/Catherine22/Algorithms/blob/master/res/Fermat_s_theorem.png

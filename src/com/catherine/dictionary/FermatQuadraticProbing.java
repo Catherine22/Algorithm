@@ -7,44 +7,25 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，每个散列地址（之后简称为桶）
- * 可存放一个LinkedList， 让重复的关键码存在同一个桶中。<br>
- * bucket(key1-key2-key3)<br>
- * |<br>
- * bucket(key4-key5)<br>
- * |<br>
- * bucket(key6)<br>
- * 
- * 
- * 如此会有一个重大缺陷，CPU缓存依赖连续内存地址，一旦已链构成桶，整个散列地址并非连续地址，直接影响效能。<br>
- * 因而对散列进一步改进，桶不以LinkedList的形式存在，而是加上固定数量的备用桶，让整个散列列表为桶串联起来的一长串连续地址。<br>
+ * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，有两种解决方式，线性试探和平方试探。<br>
  * <br>
- * <br>
- * 假设hash(key)=key%7，目前有0～6的地址，M=7<br>
- * key=10、13、11、3、8、5、14<br>
- * <br>
- * 10:放3<br>
- * 13:放6<br>
- * 11:放4<br>
- * 3:3冲突，改成(3+1)，放4，继续冲突，改(3+2)，放5<br>
- * 8:放1<br>
- * 5:5冲突，改成(5+1)，放6冲突，改成(5+2)，7超过地址长度，回到0，放0<br>
- * 14:0冲突，改成(0+1)，放1，继续冲突，改(0+2)，放2<br>
- * 整个表为[5, 8, 14, 10, 11, 3, 13]<br>
+ * 双向平方试探<br>
+ * 双向平方试探的函数为：[hash(key) + 1^2] % M, [hash(key) - 1^2] % M, [hash(key) + 2^2] %
+ * M, ... [hash(key) + k^2] % M, [hash(key) - k^2] % M<br>
+ * 根据Fermat的两平方数和理论，M应为一素数且=4k+3最佳，比如3、7、11、19......，如此可保证前M项找到的数都不同。
  * 
  * @author Catherine
  * @see QuadraticProbing 平方试探
- * @see FermatQuadraticProbing 双向试探
- *
  */
-public class LinearProbing extends Probing {
+public class FermatQuadraticProbing extends Probing {
 	private int spareBuckets;
+	private int mod;
 
 	private static class InstanceHolder {
-		private static LinearProbing instance = new LinearProbing();
+		private static FermatQuadraticProbing instance = new FermatQuadraticProbing();
 	}
 
-	public static LinearProbing getInstance() {
+	public static FermatQuadraticProbing getInstance() {
 		INSTANCE = InstanceHolder.instance;
 		return InstanceHolder.instance;
 	}
@@ -53,13 +34,16 @@ public class LinearProbing extends Probing {
 	 * 
 	 * @param spareBuckets
 	 *            备用桶的数量
+	 * @param mod
+	 *            应为一素数，根据Fermat的两平方数和理论，M=4k+3最佳，比如3、7、11、19......，如此可保证前M项找到的数都不同。
 	 */
-	protected LinearProbing(int spareBuckets) {
+	protected FermatQuadraticProbing(int spareBuckets, int mod) {
 		this.spareBuckets = spareBuckets;
+		this.mod = mod;
 		getInstance();
 	}
 
-	private LinearProbing() {
+	private FermatQuadraticProbing() {
 		getInstance();
 	}
 
@@ -134,48 +118,45 @@ public class LinearProbing extends Probing {
 					headID = rs0.getInt("id");
 				}
 
-				// 检查表长
-				int seatLength = 0;
-				rs0 = stmt.executeQuery("SELECT COUNT(*) FROM STUDENTS");
-				if (rs0.next()) {
-					seatLength = rs0.getInt(1);
-				}
-
 				// 还有没有空桶
 				boolean hasRoom = false;
 				// 空桶的id
 				int spareID = 0;
-				// seat_id的范围应为0～表长 / (备用桶数 + 1)
-				int maxSeatID = seatLength / (spareBuckets + 1);
+				// 最多查找mod/2次，因为n^2%M的结果最多为M/2次
+				int limitation = Math.round(mod * 1.0f / 2);
 				// 当前指针
 				int currentSeatID = SEAT_ID;
+				int n = 1;
+				// 向前还是向后找
+				int direction = 1;
 
-				// 是否重新找过
-				boolean hasLooped = false;
-				// 检查该座位及其备用桶是否已存在学生，这边用循环的概念，找到最后若还是没有空桶，则从最初开始找。
-				while (currentSeatID <= maxSeatID) {
+				// 检查该座位及其备用桶是否已存在学生
+				while (limitation > 0) {
 					rs0 = stmt.executeQuery(
 							String.format("SELECT * From STUDENTS WHERE seat_id=%d AND student_id=''", currentSeatID));
 
 					if (rs0.next()) {
 						hasRoom = true;
 						spareID = rs0.getInt("id");
-						currentSeatID = maxSeatID;
+						limitation = 0;
 					}
-					currentSeatID++;
-
-					// 找到最后如果还是没有空桶则从头开始找，确保整条数组都没有空间。
-					if (currentSeatID > maxSeatID && !hasLooped) {
-						currentSeatID = 0;
-						hasLooped = true;
-					}
+					currentSeatID = (SEAT_ID + direction * n * n) % mod;
+//					System.out.println(
+//							String.format("(%d + %d) %% %d = %d", SEAT_ID, direction * n * n, mod, currentSeatID));
+					if (direction == -1) {
+						n++;
+						limitation--;
+						direction = 1;
+					} else
+						direction = -1;
 				}
 
 				// 表示该座位已经有学生
 				boolean hasCollision = (headID != spareID);
 
-//				System.out.println(String.format("seat_id:%d, STUDENT_ID:%s,hasCollision:%b,hasRoom:%b -> id:%s",
-//						SEAT_ID, STUDENT_ID, hasCollision, hasRoom, spareID));
+				// System.out.println(String.format("seat_id:%d,STUDENT_ID:%s,hasCollision:%b,hasRoom:%b
+				// -> id:%s",
+				// SEAT_ID, STUDENT_ID, hasCollision, hasRoom, spareID));
 
 				// 一旦当前条目已存在数据，就往后寻找备用桶，直到整条数组的备用桶全满，则在原条目的collisions+1
 				int collisions = 0;

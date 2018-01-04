@@ -24,7 +24,7 @@ public class Remainder extends HashingTemplate {
 	public Remainder(int m, CollisionMode collisionMode) {
 		this.m = m;
 		this.collisionMode = collisionMode;
-		table = String.format("students_hashing_%d", m);
+		table = String.format("%s_students_hashing_%d", CollisionMode.getName(collisionMode.getMode()), m);
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 

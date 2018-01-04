@@ -61,6 +61,20 @@ public class CollisionMode {
 	 */
 	public final static int QUADRATIC_PROBING = 2;
 
+	/**
+	 * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，有两种解决方式，线性试探和平方试探。
+	 * <br>
+	 * <br>
+	 * 双向平方试探<br>
+	 * 双向平方试探的函数为：[hash(key) + 1^2] % M, [hash(key) - 1^2] % M, [hash(key) +
+	 * 2^2] % M, ... [hash(key) + k^2] % M, [hash(key) - k^2] % M<br>
+	 * 根据Fermat的两平方数和理论，M应为一素数且=4k+3最佳，比如3、7、11、19......
+	 * 
+	 * @author Catherine
+	 * @see FermatQuadraticProbing 平方试探
+	 */
+	public final static int FERMAT_QUADRATIC_PROBING = 3;
+
 	public static String getName(int mode) {
 		switch (mode) {
 		case DO_NOTHING:
@@ -69,6 +83,8 @@ public class CollisionMode {
 			return "LINEAR_PROBING";
 		case QUADRATIC_PROBING:
 			return "QUADRATIC_PROBING";
+		case FERMAT_QUADRATIC_PROBING:
+			return "FERMAT_QUADRATIC_PROBING";
 		default:
 			throw new NullPointerException("No such a mode");
 		}

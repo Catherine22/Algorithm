@@ -25,9 +25,11 @@ import java.util.List;
  * 5:放5<br>
  * 14:0冲突，改成(0+1^2)%7，放1，继续冲突，改(0+2^2)%7，放4，继续冲突，改(0+3^2)%7，放2<br>
  * 整个表为[3, 8, 14, 10, 11, 5, 13]<br>
+ * <br><br>
  * 
  * @author Catherine
  * @see LinearProbing 线性试探
+ * @see FermatQuadraticProbing 双向试探
  */
 public class QuadraticProbing extends Probing {
 	private int spareBuckets;
@@ -47,7 +49,7 @@ public class QuadraticProbing extends Probing {
 	 * @param spareBuckets
 	 *            备用桶的数量
 	 * @param mod
-	 *            应为一素数，且mod=4k+3最佳，比如3、7、11、19......
+	 *            应为一素数
 	 */
 	protected QuadraticProbing(int spareBuckets, int mod) {
 		this.spareBuckets = spareBuckets;

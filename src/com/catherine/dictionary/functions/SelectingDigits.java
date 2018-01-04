@@ -13,8 +13,8 @@ public class SelectingDigits extends HashingTemplate {
 	private HashingHelper hashingHelper;
 
 	public SelectingDigits(CollisionMode collisionMode) {
-		table = "students_hashing_odd";
 		this.collisionMode = collisionMode;
+		table = String.format("%s_students_hashing_odd", CollisionMode.getName(collisionMode.getMode()));
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 

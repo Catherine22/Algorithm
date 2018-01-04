@@ -18,7 +18,7 @@ public class MidSquare extends HashingTemplate {
 
 	public MidSquare(CollisionMode collisionMode) {
 		this.collisionMode = collisionMode;
-		table = "students_hashing_mid_square";
+		table = String.format("%s_students_hashing_mid_square", CollisionMode.getName(collisionMode.getMode()));
 		hashingHelper = new HashingHelper(table, collisionMode);
 	}
 
