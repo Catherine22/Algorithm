@@ -204,9 +204,9 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision".
 
 Open addressing (or closed hashing)
-> Basically, it's support to be mutiple slots (linked list chaining).
+> Basically, it's supposed to be mutiple slots (linked list chaining).
 > You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
-> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are support to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
+> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are supposed to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
 
 Two ways to probe:
 - [LinearProbing] : hash(key) + 1, hash(key) + 2, ... hash(key) + k
@@ -232,7 +232,7 @@ In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the mo
 | [MessageDigestKit] | Verify files with its message digest or signature. |
 | [CipherKit] | Encrypt or decrypt messages by the secret key/keyPair. |
 | [CertificatesManager] | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data by OID. <br> 3. Validate a certificate. |
-| [JwsHelper] | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. | 
+| [JwsHelper] | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. |
 
  >Follow these steps:
 >1. Extract the SSL certificate chain from the JWS message.
