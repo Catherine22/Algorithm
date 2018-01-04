@@ -140,12 +140,18 @@ public class LinearProbing extends Probing {
 					seatLength = rs0.getInt(1);
 				}
 
-				// 检查该座位及其备用桶是否已存在学生
+				// 还有没有空桶
 				boolean hasRoom = false;
+				// 空桶的id
 				int spareID = 0;
-
+				// seat_id的范围应为0～表长 / (备用桶数 + 1)
 				int maxSeatID = seatLength / (spareBuckets + 1);
+				// 当前指针
 				int currentSeatID = SEAT_ID;
+
+				// 是否重新找过
+				boolean hasLooped = false;
+				// 检查该座位及其备用桶是否已存在学生，这边用循环的概念，找到最后若还是没有空桶，则从最初开始找。
 				while (currentSeatID <= maxSeatID) {
 					rs0 = stmt.executeQuery(
 							String.format("SELECT * From STUDENTS WHERE seat_id=%d AND student_id=''", currentSeatID));
@@ -156,13 +162,19 @@ public class LinearProbing extends Probing {
 						currentSeatID = maxSeatID;
 					}
 					currentSeatID++;
+
+					// 找到最后如果还是没有空桶则从头开始找，确保整条数组都没有空间。
+					if (currentSeatID > maxSeatID && !hasLooped) {
+						currentSeatID = 0;
+						hasLooped = true;
+					}
 				}
 
 				// 表示该座位已经有学生
 				boolean hasCollision = (headID != spareID);
 
-				System.out.println(String.format("seat_id:%d, STUDENT_ID:%s,hasCollision:%b,hasRoom:%b -> id:%s",
-						SEAT_ID, STUDENT_ID, hasCollision, hasRoom, spareID));
+//				System.out.println(String.format("seat_id:%d, STUDENT_ID:%s,hasCollision:%b,hasRoom:%b -> id:%s",
+//						SEAT_ID, STUDENT_ID, hasCollision, hasRoom, spareID));
 
 				// 一旦当前条目已存在数据，就往后寻找备用桶，直到整条数组的备用桶全满，则在原条目的collisions+1
 				int collisions = 0;
