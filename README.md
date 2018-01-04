@@ -200,14 +200,16 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 > 8. Hashing by rotation + folding + XOR
 
 **Collisions**
-value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision". Here are solutions.
-1. Open addressing (or closed hashing)
+value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision".
+
+Open addressing (or closed hashing)
 > Basically, it's support to be mutiple slots (linked list chaining).
 > You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
 > So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are support to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
 
-- [ProbingSequence]
-- []
+Two ways to probe:
+- [LinearProbing]
+- [QuadraticProbing]
 
 
 ## [Others]
@@ -303,7 +305,8 @@ value = hash(key). As you hash keys, you almot can't avoid to get the same value
    [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
    [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
    [HashFunctions]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/functions/>
-   [ProbingSequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/ProbingSequenceDao.java>
+   [LinearProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/LinearProbing.java>
+   [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

@@ -13,9 +13,9 @@ import java.util.List;
 
 import com.catherine.dictionary.data.Student;
 
-public abstract class HashingDaoTemplate {
+public abstract class Probing {
 	protected final static boolean SHOW_DEBUG_LOG = true;
-	protected static HashingDaoTemplate INSTANCE;
+	protected static Probing INSTANCE;
 
 	/**
 	 * 生成随机不重复表，数据库中含有学生信息表，包含五个栏位：索引、座位编号、学号、姓名、碰撞次数。每个学号都有对应的姓名，但是不是每个座位都有学生。

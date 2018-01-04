@@ -106,7 +106,7 @@ public class Main {
 
 	public static void testHash() {
 		CollisionMode doNothing = new CollisionMode.Builder().build();
-		CollisionMode probingSequence = new CollisionMode.Builder().mode(CollisionMode.PROBING_SEQUENCE).spareBuckets(3)
+		CollisionMode linearProbing = new CollisionMode.Builder().mode(CollisionMode.LINEAR_PROBING).spareBuckets(3)
 				.build();
 
 		HashingHelper hashingHelper = new HashingHelper("students_raw", doNothing);
@@ -120,9 +120,6 @@ public class Main {
 		remainder.hash(hashingHelper.getStudent());
 		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
 				remainder.getStudent());
-
-		int seat_id = 1;
-		System.out.println(String.format("seat_id[%d]:%s", seat_id, remainder.get(seat_id)));
 
 		// remainder = new Remainder(36, doNothing);
 		// remainder.hash(hashingHelper.getStudent());
@@ -197,7 +194,7 @@ public class Main {
 		// **************************Fix collisions**************************
 
 		// remainder
-		remainder = new Remainder(17, probingSequence);
+		remainder = new Remainder(17, linearProbing);
 		remainder.hash(hashingHelper.getStudent());
 		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
 				remainder.getStudent());

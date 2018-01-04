@@ -8,18 +8,21 @@ import com.catherine.dictionary.functions.CollisionMode;
 public class HashingHelper {
 	private String TABLE;
 	private CollisionMode collisionMode;
-	private HashingDaoTemplate hashingDao;
+	private Probing hashingDao;
 
-	private HashingDaoTemplate getHashingDao(CollisionMode collisionMode) {
+	private Probing getHashingDao(CollisionMode collisionMode) {
 		if (hashingDao != null)
 			return hashingDao;
 		else {
 			switch (collisionMode.getMode()) {
 			case CollisionMode.DO_NOTHING:
-				hashingDao = new HashingDao();
+				hashingDao = new SimpleProbing();
 				return hashingDao;
-			case CollisionMode.PROBING_SEQUENCE:
-				hashingDao = new ProbingSequenceDao(collisionMode.getSpareBuckets());
+			case CollisionMode.LINEAR_PROBING:
+				hashingDao = new LinearProbing(collisionMode.getSpareBuckets());
+				return hashingDao;
+			case CollisionMode.QUADRATIC_PROBING:
+				hashingDao = new QuadraticProbing();
 				return hashingDao;
 			default:
 				throw new NullPointerException("No such a mode");
@@ -33,8 +36,9 @@ public class HashingHelper {
 	 * @param collisionMode
 	 *            决定该如何处理冲突问题
 	 * 
-	 * @see CollisionMode#DO_NOTHING DO_NOTHING 不处理冲突
-	 * @see CollisionMode#PROBING_SEQUENCE PROBING_SEQUENCE 线性试探
+	 * @see CollisionMode#DO_NOTHING 不处理冲突
+	 * @see CollisionMode#LINEAR_PROBING 线性试探
+	 * @see CollisionMode#QUADRATIC_PROBING 平方试探
 	 */
 	public HashingHelper(String TABLE, CollisionMode collisionMode) {
 		this.collisionMode = collisionMode;

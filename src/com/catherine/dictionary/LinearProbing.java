@@ -18,37 +18,32 @@ import java.util.List;
  * 
  * 如此会有一个重大缺陷，CPU缓存依赖连续内存地址，一旦已链构成桶，整个散列地址并非连续地址，直接影响效能。<br>
  * 因而对散列进一步改进，桶不以LinkedList的形式存在，而是加上固定数量的备用桶，让整个散列列表为桶串联起来的一长串连续地址。<br>
- * 以spareBuckets==2为例：<br>
- * 
- * bucket(key1)<br>
- * |<br>
- * spareBucket(key2)<br>
- * |<br>
- * spareBucket(key3)<br>
- * |<br>
- * bucket(key4)<br>
- * |<br>
- * spareBucket(key5)<br>
- * |<br>
- * spareBucket()<br>
- * |<br>
- * bucket(key6)<br>
- * |<br>
- * spareBucket()<br>
- * |<br>
- * spareBucket()<br>
+ * <br>
+ * <br>
+ * 假设hash(key)=key%7，目前有0～6的地址，M=7<br>
+ * key=10、13、11、3、8、5、14<br>
+ * <br>
+ * 10:放3<br>
+ * 13:放6<br>
+ * 11:放4<br>
+ * 3:3冲突，改成(3+1)，放4，继续冲突，改(3+2)，放5<br>
+ * 8:放1<br>
+ * 5:5冲突，改成(5+1)，放6冲突，改成(5+2)，7超过地址长度，回到0，放0<br>
+ * 14:0冲突，改成(0+1)，放1，继续冲突，改(0+2)，放2<br>
+ * 整个表为[5, 8, 14, 10, 11, 3, 13]<br>
  * 
  * @author Catherine
+ * @see QuadraticProbing 平方试探
  *
  */
-public class ProbingSequenceDao extends HashingDaoTemplate {
+public class LinearProbing extends Probing {
 	private int spareBuckets;
 
 	private static class InstanceHolder {
-		private static ProbingSequenceDao instance = new ProbingSequenceDao();
+		private static LinearProbing instance = new LinearProbing();
 	}
 
-	public static ProbingSequenceDao getInstance() {
+	public static LinearProbing getInstance() {
 		INSTANCE = InstanceHolder.instance;
 		return InstanceHolder.instance;
 	}
@@ -58,12 +53,12 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 	 * @param spareBuckets
 	 *            备用桶的数量
 	 */
-	protected ProbingSequenceDao(int spareBuckets) {
+	protected LinearProbing(int spareBuckets) {
 		this.spareBuckets = spareBuckets;
 		getInstance();
 	}
 
-	private ProbingSequenceDao() {
+	private LinearProbing() {
 		getInstance();
 	}
 
@@ -115,10 +110,8 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 				// 首先检查是否已有座位，若没有则创建（同时创建备用桶）
 				ResultSet rs0 = stmt.executeQuery(String.format("SELECT id From STUDENTS WHERE seat_id=%d", SEAT_ID));
 				boolean hasSeat = false;
-				while (rs0.next()) {
+				if (rs0.next())
 					hasSeat = true;
-					break;
-				}
 
 				if (!hasSeat) {
 					stmt.executeUpdate(String.format(
@@ -133,44 +126,63 @@ public class ProbingSequenceDao extends HashingDaoTemplate {
 					}
 					return;
 				}
+				// 检查该座位是否已有学生
+				int headID = 0;
+				rs0 = stmt.executeQuery(String.format("SELECT * From STUDENTS WHERE seat_id=%d", SEAT_ID));
+				if (rs0.next()) {
+					headID = rs0.getInt("id");
+				}
+
+				// 检查表长
+				int seatLength = 0;
+				rs0 = stmt.executeQuery("SELECT COUNT(*) FROM STUDENTS");
+				if (rs0.next()) {
+					seatLength = rs0.getInt(1);
+				}
 
 				// 检查该座位及其备用桶是否已存在学生
-				rs0 = stmt.executeQuery(
-						String.format("SELECT * From STUDENTS WHERE seat_id=%d AND student_id=''", SEAT_ID));
-				boolean hasCollision = true;
+				boolean hasRoom = false;
 				int spareID = 0;
 
-				boolean block = false;
-				int emptyBuckets = 0;
-				while (rs0.next()) {
-					if (!block) {
-						block = true;
+				int maxSeatID = seatLength / (spareBuckets + 1);
+				int currentSeatID = SEAT_ID;
+				while (currentSeatID <= maxSeatID) {
+					rs0 = stmt.executeQuery(
+							String.format("SELECT * From STUDENTS WHERE seat_id=%d AND student_id=''", currentSeatID));
+
+					if (rs0.next()) {
+						hasRoom = true;
 						spareID = rs0.getInt("id");
+						currentSeatID = maxSeatID;
 					}
-					emptyBuckets++;
+					currentSeatID++;
 				}
-				hasCollision = (emptyBuckets != (spareBuckets + 1));
 
-				// System.out.println(String.format("seat_id:%d, STUDENT_ID:%s,
-				// hasCollision:%b -> id:%s", SEAT_ID,
-				// STUDENT_ID, hasCollision, spareID));
+				// 表示该座位已经有学生
+				boolean hasCollision = (headID != spareID);
 
-				// 一旦当前条目已存在数据，就往后寻找备用桶，若备用桶全满，则在原条目的collisions+1
+				System.out.println(String.format("seat_id:%d, STUDENT_ID:%s,hasCollision:%b,hasRoom:%b -> id:%s",
+						SEAT_ID, STUDENT_ID, hasCollision, hasRoom, spareID));
+
+				// 一旦当前条目已存在数据，就往后寻找备用桶，直到整条数组的备用桶全满，则在原条目的collisions+1
 				int collisions = 0;
 				if (hasCollision) {
 					// 表示备用桶全满
-					if (emptyBuckets == 0) {
-						rs0 = stmt.executeQuery(String.format("SELECT * From STUDENTS WHERE seat_id=%d", SEAT_ID));
-						while (rs0.next()) {
+					if (!hasRoom) {
+						rs0 = stmt.executeQuery(String.format("SELECT * From STUDENTS WHERE id=%d", headID));
+						if (rs0.next()) {
 							collisions = rs0.getInt("collisions") + 1;
 							spareID = rs0.getInt("id");
-							break;
 						}
-					}
 
-					stmt.executeUpdate(String.format(
-							"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE id=%d",
-							SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions, spareID));
+						stmt.executeUpdate(String.format(
+								"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE id=%d",
+								SEAT_ID, STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions, spareID));
+					} else {
+						stmt.executeUpdate(String.format(
+								"UPDATE STUDENTS SET  student_id='%s', student_name='%s', collisions=%d WHERE id=%d",
+								STUDENT_ID + "", getInstance().md5(STUDENT_ID + ""), collisions, spareID));
+					}
 				} else {
 					stmt.executeUpdate(String.format(
 							"UPDATE STUDENTS SET seat_id=%d, student_id='%s', student_name='%s', collisions=%d WHERE seat_id=%d",

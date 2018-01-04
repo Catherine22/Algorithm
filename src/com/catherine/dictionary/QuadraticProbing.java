@@ -7,23 +7,38 @@ import java.sql.Statement;
 import java.util.List;
 
 /**
- * 不同的关键码(key)经散列函数hash(key)计算后的散列地址(value)可能会重复，在此忽略冲突情况，直接覆盖，累计到collisions栏位记录
+ * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，有两种解决方式，线性试探和平方试探。
+ * 平方试探是以平方数为单位，寻找下一个桶单元。<br>
+ * 平方试探的函数为：[hash(key) + n^2] % M<br>
+ * <br>
+ * <br>
+ * 假设hash(key)=key%7，目前有0～6的地址，M=7<br>
+ * key=10、13、11、3、8、5、14<br>
+ * <br>
+ * 10:放3<br>
+ * 13:放6<br>
+ * 11:放4<br>
+ * 3:3冲突，改成(3+1^2)%7，放4，继续冲突，改(3+2^2)%7，放0<br>
+ * 8:放1<br>
+ * 5:放5<br>
+ * 14:0冲突，改成(0+1^2)%7，放1，继续冲突，改(0+2^2)%7，放4，继续冲突，改(0+3^2)%7，放2<br>
+ * 整个表为[3, 8, 14, 10, 11, 5, 13]<br>
  * 
  * @author Catherine
- *
+ * @see LinearProbing 线性试探
  */
-class HashingDao extends HashingDaoTemplate {
+public class QuadraticProbing extends Probing {
 
 	private static class InstanceHolder {
-		private static HashingDao instance = new HashingDao();
+		private static QuadraticProbing instance = new QuadraticProbing();
 	}
 
-	public static HashingDao getInstance() {
+	public static QuadraticProbing getInstance() {
 		INSTANCE = InstanceHolder.instance;
 		return InstanceHolder.instance;
 	}
 
-	protected HashingDao() {
+	protected QuadraticProbing() {
 		getInstance();
 	}
 
