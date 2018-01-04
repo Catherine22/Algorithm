@@ -215,6 +215,7 @@ Two ways to probe:
 ![quadratic probing][13]
 
 In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the most uniformly distributed hash table.
+
 ![Fermat's theorem on sums of two squares][14]
 
 ## [Others]
