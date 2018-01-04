@@ -17,8 +17,8 @@ trees/Algorithms
   - 2 ways to increase the capacity.
 
 > **Tips**
-> - increaseArray() - In the worst case, It takes O(n) to increase the capacity of a vector by one, but it's space utilization is always 100%. <br>
-> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it only takes O(1). <br>
+> - increaseArray() - In the worst case, it spends O(n) on increasing the capacity of a vector by one. But its space utilization is always 100%. <br>
+> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it will just spend O(1). <br>
 > If you need a large array, double the capacity of your array is more efficient. In general, it's better.
 
   - Insertion/removing/searching
@@ -27,28 +27,28 @@ trees/Algorithms
   - Remove duplicates with/without sorting
 
   > **Tips**
-  > - removeDuplicates() - No need to sort your array before you remove duplicated elements. O(n^2) <br>
-  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
-  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() if you don't need to return unsorted array. <br>
-  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() due to replacing elements instead of removing duplicates.
+  > - removeDuplicates() - It's not necessary to sort your array before you remove duplicated elements. O(n^2) <br>
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It just spend O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
+  > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() when you don't want to return a unsorted array. <br>
+  > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() which replaces elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array to find an element.** If the array contains the element, it'll return where the element is in the array or the latest position while there're duplicated elements.
-  - As I was saying, if the element've never been found, this algorithm would return the index referring to a value(array[index] < element < array[index+1]).
-      - two ways to do binary searching (Usually, binSearch2() which is more efficient than binSearch() is better)
+  - [Sequence Searching] is used to **search a sorted array and find an element.** If an array contains the element, it'll return where the element is in that array or the latest position while there're duplicated elements.
+  - As I was saying, if the element hasn't been found, this algorithm would return an index referring to the value(array[index] < element < array[index+1]).
+      - Two ways to binary search (Normally, binSearch2() is more efficient than binSearch())
       - Fibonacci Searching
 
 ## List
   - [MyArrayList]
-    - Base on array
+    - Base on Array
   - [MyLinkedList]
-    - Base on the node, a user-defined Object including a predecessor, a value, and a successor.
+    - Base on Node, a user-defined Object includes a predecessor, a value, and a successor.
     - Remove duplicates
 
 ## Stack
->  You would push the top object with push(), and use peek() to get the top object without removing it. <br>
->  Add an object on the top with pop(). <br>
->  So, it takes O(1) to add and remove an object. <br>
->  But if you'd like to put or delete an element at the bottom, it takes O(n) so that the stack could move every object following the first (bottom) object.
+>  push() is used to return the top object and remove it. peek() is to get the top object without removing it. <br>
+>  pop() is to add an object on the top . <br>
+>  It spends O(1) to add and remove an object. <br>
+>  But if you'd like to put or delete an element at the bottom, it'd spend O(n) because the stack must move every object below the first (bottom) object.
 
   - [NumberSystem] convertDecimalToOthers()
   - [Others] isBracketsCorrect()
@@ -59,7 +59,7 @@ trees/Algorithms
 
 ## Graph
 
-Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced type to a sequence.
+Traversal - to simplify Graph and make it looks like a sequence. It's a powerful way to transfer a unsequenced data structure to a sequence.
 
 ### Undirected Graph
   - [UndirectedGraph]
@@ -72,13 +72,13 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 | memory requirement |  | less |
 | data type | Queue | Stack |
 
-  - Breadth-first search (BFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex. It's just like level order traversal of the Tree.
-  - Depth-first search (DFS) - Choose a vertex (root) being the beginning of a graph and start to visit each vertex.
-  - Connected Graph - A graph is connected when there is a path between every pair of vertices. If you wanna find out a path which is able to traversal the whole graph, run bfs from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
+  - Breadth-first search (BFS) - Choose a vertex (root) as the beginning of a graph and visit every vertex. This is just like level order traversal of the Tree.
+  - Depth-first search (DFS) - Choose a vertex (root) as the beginning of a graph and visit every vertex.
+  - Connected Graph - While there is at least one path between every pair of vertices, the graph will be connect. If you wanna find out a path which is able to traversal the whole graph, try to run BFS from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
   - [DirectedGraph]
 
-  > There are two arrays, I stored all vertexes in vertexes[] and another array adjMatrix[][] which is used to copy down edges is a two-dimensional Edge<E> array. For example, if adjMatrix[i][j] is not empty, it means there's an edge from i to j.<br>
-  > An Edge<E> is a user-defined class, it contains data, weight and status.
+  > There are two arrays, I stores all vertexes in vertexes[] and another array adjMatrix[][], a two-dimensional Edge<E> array, which is used to copy down edges. For example, if adjMatrix[i][j] is not empty, that means there's an edge from i to j.<br>
+  > Edge<E> is a user-defined class. It contains data, weight and status.
 
 ## Tree
 
@@ -183,7 +183,39 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 - [MyBTree]
 
 
-### Red-black BSTs
+## Dictionary
+
+### Hashing
+- There are four types of structures - Call by rank(Vector), call by position(List), call by key(BST) and call by value(Hashing).
+- Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save  and search them.  If you loop the data to find out a number, it'll spend only O(1). But there are 100M telephones. That means your accurate performance is 25K/100M = 0.025%. It's terrible. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
+
+> There are many ways to hash. Here in [HashFunctions], I made some hashing functions:
+> 1. Hashing by remainder
+> 2. Hashing by MAD
+> 3. Hashing by selecting digits
+> 4. Hashing by median of square numbers
+> 5. Hashing by folding
+> 6. Hashing by rotation + folding
+> 7. Hashing by folding + XOR
+> 8. Hashing by rotation + folding + XOR
+
+**Collisions**
+value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision".
+
+Open addressing (or closed hashing)
+> Basically, it's support to be mutiple slots (linked list chaining).
+> You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
+> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are support to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
+
+Two ways to probe:
+- [LinearProbing] : hash(key) + 1, hash(key) + 2, ... hash(key) + k
+- [QuadraticProbing] : [hash(key) + 1^2] % M, [hash(key) + 2^2] % M, ... [hash(key) + k^2] % M
+- [FermatQuadraticProbing] : [hash(key) + 1^2] % M, [hash(key) - 1^2] % M, [hash(key) + 2^2] % M, ... [hash(key) + k^2] % M, [hash(key) - k^2] % M
+
+![quadratic probing][13]
+
+In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the most uniformly distributed hash table.
+![Fermat's theorem on sums of two squares][14]
 
 ## [Others]
   - Hailstone
@@ -214,46 +246,13 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 **[JwsHelper]**
   - Split JWS into 3 parts and decode them.
   - Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature.
+  - Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation.
 
 >Follow these steps:
 >1. Extract the SSL certificate chain from the JWS message.
 >2. Validate the SSL certificate chain and use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com.
 >3. Use the certificate to verify the signature of the JWS message.
 
-```Java
-private static String attestationJws = "Fill in your jws response from SafetyNetApi.AttestationResult";
-
-private void testJWS() {
-  try {
-    JwsHelper jwsHelper = new JwsHelper(attestationJws);
-    AttestationResult result = new AttestationResult(jwsHelper.getDecodedPayload());
-    System.out.println(result);
-
-    List<X509Certificate> certs = jwsHelper.getX5CCertificates();
-    X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
-
-    // Just verify one of the certificates which is belonged to "attest.android.com" in this case.
-    boolean isJwsHeaderLegel = false;
-    for (X509Certificate cert : certs) {
-      boolean isValid = CertificatesManager.validate(cert, rootCert);
-      CertificatesManager.printCertificatesInfo(cert);
-      if (isValid == true)
-        isJwsHeaderLegel = true;
-    }
-
-    // Verify the signature of JWS
-    boolean isJwsSignatureLegel = jwsHelper.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
-    if (isJwsHeaderLegel && isJwsSignatureLegel)
-      System.out.println("Your JWS is valid!");
-    else
-      System.out.println("Your JWS is not valid!");
-
-  } catch (Exception e) {
-    e.printStackTrace();
-  }
-}
-```
-  - Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation.
 
 ## Reference
   - [Algorithms, 4th Edition]
@@ -310,6 +309,10 @@ private void testJWS() {
    [MyBTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree.java>
    [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
    [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
+   [HashFunctions]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/functions/>
+   [LinearProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/LinearProbing.java>
+   [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
+   [FermatQuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -331,3 +334,5 @@ private void testJWS() {
   [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_1.png.png
   [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_2.png.png
   [12]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png
+  [13]: https://github.com/Catherine22/Algorithms/blob/master/res/quadratic_probing.png
+  [14]: https://github.com/Catherine22/Algorithms/blob/master/res/Fermat_s_theorem.png

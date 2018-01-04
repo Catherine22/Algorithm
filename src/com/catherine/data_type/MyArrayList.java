@@ -2,14 +2,10 @@ package com.catherine.data_type;
 
 import java.io.Serializable;
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
 
 //隐藏，不可见
 //import java.util.ArrayList.Itr;

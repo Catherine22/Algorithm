@@ -1,7 +1,6 @@
 package com.catherine.data_type;
 
 import java.util.Arrays;
-import java.util.Vector;
 
 import com.catherine.Main;
 

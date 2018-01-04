@@ -739,16 +739,4 @@ public class MyBTree<E> implements BTree<E> {
 		}
 		return log.toString();
 	}
-
-	/**
-	 * 只有(2, 4)-tree能转成红黑树。
-	 * 
-	 * @return
-	 */
-	public MyRedBlackBST<Object> convertToRedBlackBST() {
-		if (order != 2)
-			return null;
-
-		return null;
-	}
 }
