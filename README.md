@@ -200,6 +200,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 > 8. Hashing by rotation + folding + XOR
 
 **Collisions**
+
 value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision".
 
 Open addressing (or closed hashing)
@@ -224,35 +225,19 @@ In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the mo
   - Catalan
 
 ### Cryptography
-**[KeystoreManager]**
-  - Generate a secret key or a keyPair
-  - Put or get the secret key/keyPair from a keyStore
 
-**[MessageDigestKit]**
-  - Verify files with its message digest or signature.
+|  API | description |
+| ---- | ---- |
+| KeystoreManager | 1. Generate a secret key or a keyPair. <br> 2. Put or get the secret key/keyPair from a keyStore. |
+| MessageDigestKit | Verify files with its message digest or signature. |
+| CipherKit | Encrypt or decrypt messages by the secret key/keyPair. |
+| CertificatesManager | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data by OID. <br> 3. Validate a certificate. |
+| JwsHelper | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. |
 
-**[CipherKit]**
-  - Encrypt or decrypt messages by the secret key/keyPair
-
-**[CertificatesManager]**
-  - Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate.
-  - Get data by OID
-  - Validate a certificate
-
-**[CertificatesManager]**
-  - Analysis and retrieve data such like certificate extensions, the signature and so on from a certificate.
-  - Get data by OID
-  - Validate certificates
-
-**[JwsHelper]**
-  - Split JWS into 3 parts and decode them.
-  - Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature.
-  - Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation.
-
->Follow these steps:
+ >Follow these steps:
 >1. Extract the SSL certificate chain from the JWS message.
 >2. Validate the SSL certificate chain and use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com.
->3. Use the certificate to verify the signature of the JWS message.
+>3. Use the certificate to verify the signature of the JWS message.<br>
 
 
 ## Reference
