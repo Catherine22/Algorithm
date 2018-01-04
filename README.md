@@ -232,7 +232,7 @@ In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the mo
 | [MessageDigestKit] | Verify files with its message digest or signature. |
 | [CipherKit] | Encrypt or decrypt messages by the secret key/keyPair. |
 | [CertificatesManager] | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data by OID. <br> 3. Validate a certificate. |
-| [JwsHelper] | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. |
+| [JwsHelper] | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. | 
 
  >Follow these steps:
 >1. Extract the SSL certificate chain from the JWS message.
