@@ -56,4 +56,59 @@ public class RotateAndFold extends HashingTemplate {
 		System.out.println(String.format("Rotate + fold\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
+
+	/**
+	 * 反转奇数地址的数字顺序，比如传入stack{134,275,12,20}，返回stack{134,572,12,2}
+	 * 
+	 * @param numbers
+	 * @return
+	 */
+	protected Stack<Integer> reverseOddAddressesNum(Stack<Integer> numbers) {
+		Stack<Integer> reversedStack = new Stack<>();
+		Stack<Integer> intContainer = new Stack<>();
+
+		while (numbers.size() > 0) {
+			if (numbers.size() % 2 != 0) {
+				// 偶数位不变
+				reversedStack.push(numbers.pop());
+			} else {
+				// 反转数字
+
+				// 共有几个位数
+				int digits = 0;
+				int tmp = numbers.pop();
+
+				// 先分解成各个位数
+				if (tmp > 0) {
+					while (tmp > 0) {
+						digits++;
+						intContainer.push(tmp % 10);
+						tmp /= 10;
+					}
+				} else {
+					while (tmp < 0) {
+						digits++;
+						intContainer.push(tmp % -10);
+						tmp /= 10;
+					}
+				}
+
+				// 重新构成
+				tmp = 0;
+				int header = 0;
+				while (header < digits) {
+					tmp += (intContainer.pop() * Math.pow(10, header));
+					header++;
+				}
+				reversedStack.push(tmp);
+			}
+		}
+
+		// 最后再反转stack
+		numbers.clear();
+		while (!reversedStack.isEmpty())
+			numbers.push(reversedStack.pop());
+		return numbers;
+	}
+
 }

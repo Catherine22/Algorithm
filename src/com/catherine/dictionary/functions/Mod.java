@@ -59,4 +59,43 @@ public class Mod extends HashingTemplate {
 				CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
+
+	/**
+	 * 找到最小素数，若没有返回-1
+	 * 
+	 * @param from
+	 *            （含）
+	 * @param to
+	 *            （不含）
+	 * @return
+	 */
+	protected int getPrimeNumber(int from, int to) {
+		if (to <= from)
+			throw new IllegalArgumentException("to <= from");
+		if (to < 2)
+			return -1;
+		if (from == 2)
+			return 2;
+
+		int num = (from < 2) ? 2 : from;
+		int half;
+		boolean stop = false;
+		boolean found = false;
+
+		while (!stop && num < to) {
+			found = true;
+			half = num / 2 + 1;
+			for (int i = 2; i < half; i++) {
+				if (num % i == 0) {
+					found = false;
+					break;
+				}
+			}
+			if (found)
+				break;
+			num++;
+		}
+
+		return (found) ? num : -1;
+	}
 }

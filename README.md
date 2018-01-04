@@ -184,6 +184,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 
 ## Dictionary
+
+### Hashing
 - There are four types of structures - Call by rank(Vector), call by position(List), call by key(BST) and call by value(Hashing).
 - Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save  and search them.  If you loop the data to find out a number, it'll spend only O(1). But there are 100M telephones. That means your accurate performance is 25K/100M = 0.025%. It's terrible. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
@@ -204,7 +206,7 @@ value = hash(key). As you hash keys, you almot can't avoid to get the same value
 > You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
 > So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are support to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
 
-- [HashFunctions]
+- [ProbingSequence]
 - []
 
 
@@ -301,6 +303,7 @@ value = hash(key). As you hash keys, you almot can't avoid to get the same value
    [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
    [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
    [HashFunctions]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/functions/>
+   [ProbingSequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/ProbingSequenceDao.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

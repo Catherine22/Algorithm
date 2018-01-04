@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
-import com.catherine.dictionary.data.Student;
-
 /**
  * 设计散列函数时，同一个关键码(key)映射到同一个散列地址(value)是无可避免的，为了解决这个问题，每个散列地址（之后简称为桶）
  * 可存放一个LinkedList， 让重复的关键码存在同一个桶中。<br>

@@ -48,4 +48,42 @@ public class MidSquare extends HashingTemplate {
 		System.out.println(String.format("Median square\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
+
+	/**
+	 * 取中间三位数字，例如传入12345，则回传234，传入1356则回传135，不足三位则原数返还。
+	 * 
+	 * @param num
+	 * @return
+	 */
+	protected int getMid3Num(int num) {
+		if (num < 100 && num > -100)
+			return num;
+		int result = 0;
+		Stack<Integer> digits = new Stack<>();
+
+		// 先分解成各个位数
+		if (num > 0) {
+			while (num > 0) {
+				digits.push(num % 10);
+				num /= 10;
+			}
+		} else {
+			while (num < 0) {
+				digits.push(num % -10);
+				num /= 10;
+			}
+		}
+
+		// 取中间三位
+		if (digits.size() % 2 != 0) {
+			int mid = (digits.size() - 1) / 2;
+			result = digits.elementAt(mid - 1) * (int) Math.pow(10, 0) + digits.elementAt(mid) * (int) Math.pow(10, 1)
+					+ digits.elementAt(mid + 1) * (int) Math.pow(10, 2);
+		} else {
+			int mid = digits.size() / 2;
+			result = digits.elementAt(mid - 1) * (int) Math.pow(10, 0) + digits.elementAt(mid) * (int) Math.pow(10, 1)
+					+ digits.elementAt(mid + 1) * (int) Math.pow(10, 2);
+		}
+		return result;
+	}
 }

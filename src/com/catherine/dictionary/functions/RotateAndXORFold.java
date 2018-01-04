@@ -57,4 +57,33 @@ public class RotateAndXORFold extends HashingTemplate {
 				String.format("Rotate + fold + XOR\tmode: %s", CollisionMode.getName(collisionMode.getMode())));
 		super.analyse(table, rawTableList, rawStudentList, newTableList, newStudentList);
 	}
+
+	/**
+	 * 反转奇数地址的二进制数字顺序，比如传入stack{134,275,12,20}，也就是{10000110, 100010011, 1100,
+	 * 10100}，返回stack{134,401,12,5}
+	 * 
+	 * @param numbers
+	 * @return
+	 */
+	protected Stack<Integer> reverseOddAddressesBinary(Stack<Integer> numbers) {
+		Stack<Integer> reversedStack = new Stack<>();
+
+		while (numbers.size() > 0) {
+			if (numbers.size() % 2 != 0) {
+				// 偶数位不变
+				reversedStack.push(numbers.pop());
+			} else {
+				// 反转二进制
+				StringBuilder binary = new StringBuilder(Integer.toBinaryString(numbers.pop()));
+				reversedStack.push(Integer.parseInt(binary.reverse().toString(), 2));
+			}
+		}
+
+		// 最后再反转stack
+		numbers.clear();
+		while (!reversedStack.isEmpty())
+			numbers.push(reversedStack.pop());
+		return numbers;
+	}
+
 }
