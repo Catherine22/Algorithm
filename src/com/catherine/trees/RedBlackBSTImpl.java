@@ -187,6 +187,12 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 	/**
 	 * 平衡红黑树节点的逻辑和AVL树一样，但加入重新着色的逻辑。<br>
+	 * 1. 若移除节点为红色，则颜色不变。<br>
+	 * 2. 若移除节点为黑色、左节点，兄弟节点为黑色，兄弟节点和其父、其右子节点为一斜线：兄弟节点的右子节点改黑色。<br>
+	 * 3. 若移除节点为黑色、左节点，兄弟节点为黑色，兄弟节点和其父、其左子节点为一斜线，兄弟节点没有右孩子：兄弟节点的左子节点改黑色。<br>
+	 * 4. 若移除节点为黑色、左节点，兄弟节点为黑色，兄弟节点没有孩子：兄弟节点改红色。<br>
+	 * 
+	 * 
 	 * 移除情形：<br>
 	 * 1. 可能会失衡的节点，hot（{@link #remove(int)}
 	 * 操作后重新指定）或其祖先，该祖先的子节点以及孙子节点为一直线同方向，并且和移除节点反向，
@@ -205,7 +211,8 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 */
 	public void removeAndBalance(int key) {
 		Node<E> tmp = search(key);
-		Node<E> uncle = findUncle(tmp);
+		boolean isLastTargetRed = tmp.isRed();
+		Node<E> sibling = findSibling(tmp);
 		super.remove(tmp);
 
 		Node<E> ancestor = hot;
@@ -214,21 +221,54 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 		int count = 1;
 		while (ancestor != null) {
-			if (SHOW_LOG)
-				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
+			// if (SHOW_LOG)
+			// System.out.println(String.format("round %d, ancestor:%d",
+			// count++, ancestor.getKey()));
+
+			System.out.println((sibling == null) ? "null"
+					: String.format("sibling(%s):%d", sibling.isRed() ? "RED" : "BLACK", sibling.getKey()));
+			// 更新颜色
+			if (sibling != null && !isLastTargetRed) {
+				if (sibling.isBlack()) {
+					if (isRightChild(sibling)) {
+						if (sibling.getrChild() != null) {
+							// 情况2
+							sibling.getrChild().setColor(Color.RED);
+						} else if (sibling.getrChild() == null && sibling.getlChild() != null) {
+							// 情况3
+							sibling.getlChild().setColor(Color.BLACK);
+						} else if (sibling.getrChild() == null && sibling.getlChild() == null) {
+							// 情况4
+							sibling.setColor(Color.RED);
+						}
+					} else {
+						if (sibling.getlChild() != null) {
+							// 情况2
+							sibling.getlChild().setColor(Color.RED);
+						} else if (sibling.getlChild() == null && sibling.getrChild() != null) {
+							// 情况3
+							sibling.getrChild().setColor(Color.BLACK);
+						} else if (sibling.getlChild() == null && sibling.getrChild() == null) {
+							// 情况4
+							sibling.setColor(Color.RED);
+						}
+					}
+				} else {
+					if (isRightChild(sibling) && sibling.getlChild() != null) {
+						// 情况5
+						sibling.getlChild().setColor(Color.RED);
+					} else if (isLeftChild(sibling) && sibling.getrChild() != null) {
+						// 情况5
+						sibling.getrChild().setColor(Color.RED);
+
+					}
+				}
+			}
 
 			if (isBalanced(ancestor)) {
-				uncle = findUncle(ancestor);
+				sibling = findSibling(ancestor);
 				ancestor = ancestor.getParent();
 			} else {
-
-				// 更新颜色
-				if (ancestor.getParent() != null && uncle != null) {
-					uncle.setColor(Color.BLACK);
-					ancestor.setColor(Color.BLACK);
-					ancestor.getParent().setColor(Color.RED);
-				}
-				
 				// 节点取高度较高的那边
 				target = (getBalanceFactor(ancestor) < -1) ? ancestor.getrChild() : ancestor.getlChild();
 				if (target != null) {
@@ -251,9 +291,9 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				}
 
 				tmp = null;
-				uncle = null;
 				child = null;
 				target = null;
+				sibling = null;
 
 				if (isLeftChild && isLeftGrandchild) {
 					if (SHOW_LOG)
@@ -278,6 +318,22 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				}
 			}
 		}
+	}
+
+	/**
+	 * 返回兄弟节点
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private Node<E> findSibling(Node<E> node) {
+		if (node == null || node.getParent() == null)
+			return null;
+		if (isLeftChild(node))
+			return node.getParent().getrChild();
+		if (isRightChild(node))
+			return node.getParent().getlChild();
+		return null;
 	}
 
 	/**

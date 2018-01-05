@@ -21,7 +21,7 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 
 	@Override
 	public void remove(int key) {
-		rbTree.remove(key);
+		rbTree.removeAndBalance(key);
 	}
 
 	@Override
