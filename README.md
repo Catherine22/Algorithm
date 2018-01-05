@@ -17,8 +17,8 @@ trees/Algorithms
   - 2 ways to increase the capacity.
 
 > **Tips**
-> - increaseArray() - In the worst case, it spends O(n) on increasing the capacity of a vector by one. But its space utilization is always 100%. <br>
-> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it will just spend O(1). <br>
+> - increaseArray() - In the worst case, it takes O(n) on increasing the capacity of a vector by one. But its space utilization is always 100%. <br>
+> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it will just take O(1). <br>
 > If you need a large array, double the capacity of your array is more efficient. In general, it's better.
 
   - Insertion/removing/searching
@@ -28,7 +28,7 @@ trees/Algorithms
 
   > **Tips**
   > - removeDuplicates() - It's not necessary to sort your array before you remove duplicated elements. O(n^2) <br>
-  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It just spend O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
+  > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() when you don't want to return a unsorted array. <br>
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() which replaces elements instead of removing duplicates.
 
@@ -47,15 +47,12 @@ trees/Algorithms
 ## Stack
 >  push() is used to return the top object and remove it. peek() is to get the top object without removing it. <br>
 >  pop() is to add an object on the top . <br>
->  It spends O(1) to add and remove an object. <br>
->  But if you'd like to put or delete an element at the bottom, it'd spend O(n) because the stack must move every object below the first (bottom) object.
+>  It takes O(1) to add and remove an object. <br>
+>  But if you'd like to put or delete an element at the bottom, it'd take O(n) because the stack must move every object below the first (bottom) object.
 
   - [NumberSystem] convertDecimalToOthers()
   - [Others] isBracketsCorrect()
   - [Stack-sortable permutation]
-
-## Queue
-  -
 
 ## Graph
 
@@ -164,7 +161,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Splay tree
 
-- Splay tree practices pretty well when the recently accessed node may be accessed again.
+- Splay tree practices pretty well when recently accessed nodes would be accessed frequently.
 - Splay tree moves the selected node to the root after searching, inserting and removing.
 - Splaying the node every two levels (parent and grandparent) makes splaying more efficient then splaying the node every level.
 - [MySplayTree]
@@ -174,7 +171,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ### B-Tree
 
 - Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.
-- There are 2 tips about memory you must know -- First of all, it spends a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
+- There are 2 tips about memory you must know -- First of all, it takes a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
 ![B-tree][8]
 
@@ -182,14 +179,17 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 - Underflow and overflow issues
 - [MyBTree]
 
+## Priority Queue
+- Call-by-priority
+- CompleteBinaryHeap
 
 ## Dictionary
 
 ### Hashing
-- There are four types of structures - Call by rank(Vector), call by position(List), call by key(BST) and call by value(Hashing).
-- Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save  and search them.  If you loop the data to find out a number, it'll spend only O(1). But there are 100M telephones. That means your accurate performance is 25K/100M = 0.025%. It's terrible. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
+- As I mentioned, we've learned four types of structures - Call-by-rank(Vector), call-by-position(List), call-by-key(BST),  call-by-value(Hashing) and call-by-priority(Priority Queue).
+- Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save and search them.  If you loop the data to find out a number, it'll take only O(1). But there are so many telephones and your accurate performance would be 25K/100M = 0.025%. It sucks. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
-> There are many ways to hash. Here in [HashFunctions], I made some hashing functions:
+> Some hashing examples in [HashFunctions]:
 > 1. Hashing by remainder
 > 2. Hashing by MAD
 > 3. Hashing by selecting digits
@@ -201,12 +201,13 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 **Collisions**
 
-value = hash(key). As you hash keys, you almot can't avoid to get the same value by different keys. That's what we call "collision".
+value = hash(key). As you hash keys, you almost can't avoid to get the same value by different keys. That's what we call "collision".
 
 Open addressing (or closed hashing)
 > Basically, it's supposed to be mutiple slots (linked list chaining).
-> You put duplicates into the same value list. Using LinkedList to minimize space. Now you could imagine this hash table looks like a tree. But it is hard to cache because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
-> So we create a chain and you put every bucket (which contains value comes from different keys) in sequence. Those buckets have fixed capacity. It means values sometimes can't be put into the bucket where they are supposed to be. Instead, they are assigned to the other buckets. This chain is called probing sequence/chain is a list.
+> You put duplicates into the same value list. Using LinkedList to minimize the space. Imagine that this hash table looks like a tree. But it is hard to be cached by CPU because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
+> So we create a chain and you put every bucket (which contains a value comes from different keys) in sequence. Those buckets have fixed capacity. And there are two ways to probe the buckets: Linear Probing and Quadratic Probing.
+
 
 Two ways to probe:
 - [LinearProbing] : hash(key) + 1, hash(key) + 2, ... hash(key) + k
@@ -215,7 +216,7 @@ Two ways to probe:
 
 ![quadratic probing][13]
 
-In Quadratic Probing, when M is a prime number and M = 4x+3 you would get the most uniformly distributed hash table.
+In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get the most uniformly distributed hash table.
 
 ![Fermat's theorem on sums of two squares][14]
 
