@@ -16,7 +16,7 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 
 	@Override
 	public Node<E> insert(int key, E data) {
-		return rbTree.insert(key, data);
+		return rbTree.insertAndBalance(key, data);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 
 	@Override
 	public int getHeight() {
-		return rbTree.getHeight();
+		return rbTree.getBHeight();
 	}
 
 	@Override

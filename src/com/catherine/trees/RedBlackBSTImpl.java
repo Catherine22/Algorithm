@@ -3,7 +3,6 @@ package com.catherine.trees;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
-import com.catherine.trees.nodes.RedBlackBSTNode;
 import com.catherine.trees.nodes.RedBlackBSTNode.Color;
 
 /**
@@ -56,9 +55,8 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * 
 	 * @return
 	 */
-	@Override
-	public int getHeight() {
-		return getHeight(root);
+	public int getBHeight() {
+		return getBHeight(root);
 	}
 
 	/**
@@ -68,8 +66,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * @param node
 	 * @return
 	 */
-	@Override
-	protected int getHeight(Node<E> node) {
+	protected int getBHeight(Node<E> node) {
 		if (node == null)
 			return -1;
 
@@ -86,7 +83,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	}
 
 	/**
-	 * 红黑树的搜寻花费O(log n) 时间
+	 * 红黑树的搜寻花费O(log n)时间
 	 * 
 	 * @param key
 	 * @return
@@ -96,73 +93,207 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 		return super.search(key);
 	}
 
-	@Override
-	public Node<E> insert(int key, E data) {
+	/**
+	 * 平衡红黑树节点的逻辑和AVL树一样，但加入重新着色的逻辑。颜色变化是根据叔叔节点判断 <br>
+	 * 插入节点预设红色。 <br>
+	 * 流程： <br>
+	 * 1. 父节点改黑色，叔叔节点改黑色，祖父节点红色 <br>
+	 * 2. 旋转 <br>
+	 * 3. 将指针移到父节点，回到第一步重新开始，不断往上直到检查到根节点为止。
+	 * 
+	 * 插入旋转情形（一共两种）：<br>
+	 * 1. 插入节点的父节点往上推，祖孙三代都是同方向，只需旋转祖父节点可达到平衡（包含祖父以上节点）<br>
+	 * 2. A（祖父） - B（父，左子树） — C （右子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
+	 * Or A（祖父） - B（父，右子树） — C （左子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
+	 * 
+	 * @param key
+	 * @param data
+	 * @return
+	 */
+	public Node<E> insertAndBalance(int key, E data) {
+		final Node<E> newNode = super.insert(key, data);
+		Node<E> ancestor = newNode.getParent();
+
+		Node<E> target = ancestor;
+		Node<E> lastTarget = newNode;
+		Node<E> child = null;
+		Node<E> uncle = findUncle(newNode);
+
+		int count = 1;
+		while (ancestor != null) {
+			if (SHOW_LOG)
+				System.out.println(String.format("key: %d, round %d, ancestor:%d", key, count++, ancestor.getKey()));
+
+			// 更新颜色
+			if (ancestor.getParent() != null && uncle != null) {
+				uncle.setColor(Color.BLACK);
+				ancestor.setColor(Color.BLACK);
+				ancestor.getParent().setColor(Color.RED);
+			}
+
+			if (isBalanced(ancestor)) {
+				target = ancestor;
+				child = lastTarget;
+				ancestor = ancestor.getParent();
+				uncle = findUncle(target);
+				lastTarget = target;
+			} else {
+				// 没失衡的祖先直接返回（表示修改节点后仍保持平衡）
+				if (ancestor == null || target == null || child == null)
+					break;
+
+				boolean isLeftChild = isLeftChild(target);
+				boolean isLeftGrandchild = isLeftChild(child);
+
+				if (SHOW_LOG) {
+					String r2 = (isLeftChild) ? "L" : "R";
+					String r3 = (isLeftGrandchild) ? "L" : "R";
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
+							child.getKey(), r3));
+				}
+
+				child = null;
+				uncle = null;
+				target = null;
+				lastTarget = null;
+
+				if (isLeftChild && isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一左斜线");
+					// 符合情况1，三节点相连为一斜线
+					zig(ancestor);
+				} else if (!isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一右斜线");
+					// 符合情况1，三节点相连为一斜线
+					zag(ancestor);
+				} else if (isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况2，<形");
+					// 符合情况2，"<"形
+					left_rightRotate(ancestor);
+				} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
+					if (SHOW_LOG)
+						System.out.println("符合情况2，>形");
+					// 符合情况2，">"形
+					right_leftRotate(ancestor);
+				}
+			}
+		}
+
+		root.setColor(Color.BLACK);
+		return newNode;
+	}
+
+	/**
+	 * 平衡红黑树节点的逻辑和AVL树一样，但加入重新着色的逻辑。<br>
+	 * 移除情形：<br>
+	 * 1. 可能会失衡的节点，hot（{@link #remove(int)}
+	 * 操作后重新指定）或其祖先，该祖先的子节点以及孙子节点为一直线同方向，并且和移除节点反向，
+	 * 此时根据该祖先的子节点的高度不同旋转次数也会不同，复衡最多O(log n)次。 <br>
+	 * 2. 可能会失衡的节点，hot（{@link #remove(int)} 操作后重新指定）或其祖先，该祖先的子节点以及孙子节点为>或<的方向，
+	 * 此时做一次双旋让孙子节点成为新的父节点，复衡最多O(log n)次。 <br>
+	 * 其它. 旋转后高度不变，就不会发生新的失衡。<br>
+	 * <br>
+	 * <br>
+	 * p.s. 取子节点和孙子节点则是依照balance factory，如果左子树较高，balance factory > 1，那就取左边的节点，
+	 * <br>
+	 * 反之balance factory <
+	 * -1，那就取右边的节点（为什么不是介于1和-1之间是因为如果是1、0或-1表示平衡，就不会被当成目标节点）。
+	 * 
+	 * @param key
+	 */
+	public void removeAndBalance(int key) {
+		Node<E> tmp = search(key);
+		Node<E> uncle = findUncle(tmp);
+		super.remove(tmp);
+
+		Node<E> ancestor = hot;
+		Node<E> target = null;
+		Node<E> child = null;
+
+		int count = 1;
+		while (ancestor != null) {
+			if (SHOW_LOG)
+				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
+
+			if (isBalanced(ancestor)) {
+				uncle = findUncle(ancestor);
+				ancestor = ancestor.getParent();
+			} else {
+
+				// 更新颜色
+				if (ancestor.getParent() != null && uncle != null) {
+					uncle.setColor(Color.BLACK);
+					ancestor.setColor(Color.BLACK);
+					ancestor.getParent().setColor(Color.RED);
+				}
+				
+				// 节点取高度较高的那边
+				target = (getBalanceFactor(ancestor) < -1) ? ancestor.getrChild() : ancestor.getlChild();
+				if (target != null) {
+					// 子节点取高度较高的
+					child = (getBalanceFactor(target) < -1) ? target.getrChild() : target.getlChild();
+				}
+
+				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
+				if (ancestor == null || target == null || child == null)
+					break;
+
+				boolean isLeftChild = isLeftChild(target);
+				boolean isLeftGrandchild = isLeftChild(child);
+
+				if (SHOW_LOG) {
+					String r2 = (isLeftChild) ? "L" : "R";
+					String r3 = (isLeftGrandchild) ? "L" : "R";
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
+							child.getKey(), r3));
+				}
+
+				tmp = null;
+				uncle = null;
+				child = null;
+				target = null;
+
+				if (isLeftChild && isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一左斜线");
+					// 符合情况1，三节点相连为一斜线
+					zig(ancestor);
+				} else if (!isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况1，三节点相连为一右斜线");
+					// 符合情况1，三节点相连为一斜线
+					zag(ancestor);
+				} else if (isLeftChild && !isLeftGrandchild) {
+					if (SHOW_LOG)
+						System.out.println("符合情况2，<形");
+					// 符合情况2，"<"形
+					left_rightRotate(ancestor);
+				} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
+					if (SHOW_LOG)
+						System.out.println("符合情况2，>形");
+					// 符合情况2，">"形
+					right_leftRotate(ancestor);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 返回叔叔节点
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private Node<E> findUncle(Node<E> node) {
+		if (node == null || node.getParent() == null || node.getParent().getParent() == null)
+			return null;
+		if (isLeftChild(node.getParent()))
+			return node.getParent().getParent().getrChild();
+		if (isRightChild(node.getParent()))
+			return node.getParent().getParent().getlChild();
 		return null;
-	}
-
-	@Override
-	public void remove(int key) {
-	}
-
-	/**
-	 * 一定要从B-tree的角度来看方便理解。<br>
-	 * 目标节点为红节点，目标节点的父节点也是红色，称双红缺陷(double-red)。<br>
-	 * 考察目标节点的祖父节点和父节点的兄弟（叔父节点）。<br>
-	 * <br>
-	 * 目标节点-父节点-祖父节点-叔父节点四点上升到同一排，想象成四个key，为(2,4)树的一个节点。<br>
-	 * 有四种组合：<br>
-	 * 目标-父-祖父-叔父<br>
-	 * 父-目标-祖父-叔父<br>
-	 * 叔父-祖父-目标-父<br>
-	 * 叔父-祖父-父-目标<br>
-	 * <br>
-	 * 情况1：黑叔父节点。中间节点往上搬，其它放两侧，中间节点黑色，其它红色。不必改变拓扑结构，不必检查原祖父的祖先，耗时O(1)。<br>
-	 * 1-1 目标-父-祖父成一直线，父节点为中间节点。<br>
-	 * 1-2 目标-父-祖父成"<"或">"型，目标节点为中间节点。<br>
-	 * <br>
-	 * 情况2：红叔父节点，要检查原祖父的祖先，至多耗时O(n)。<br>
-	 * 四节点合起来看就是B-tree的上溢，最上面的节点为红色，两旁黑色，最下层红色。 <br>
-	 * 因为最上面的节点为红色，做完后情况2节点可能会再度发生双红缺陷，情况2须检查祖先。
-	 * 
-	 * @param node目标节点
-	 */
-	private void solveDoubleRed(Node<E> node) {
-
-	}
-
-	/**
-	 * 双黑缺陷<br>
-	 * 就像在b-tree中发生下溢。<br>
-	 * 情况1:移除节点node后，其parent节点连接黑孩子（node节点的后继和兄弟节点），后继节点只能有一个孩子，左右都行，兄弟节点必须是黑色，
-	 * 兄弟节点的左孩子节点为红色，耗时O(1)。<br>
-	 * 做一次右旋，parent变成后继节点的父节点，兄弟节点成为新parent，parent的左孩子为原本兄弟节点的左孩子（红），让新父节点成为红色，
-	 * 两孩子为黑色。<br>
-	 * <br>
-	 * 情况2:parent为红色，两孩子（兄弟节点和后继节点）都是黑色，耗时O(1)。此前处理只需将parent转黑色、兄弟节点转红色。<br>
-	 * <br>
-	 * 情况3:同情况1，但是涉及的四个节点（parent, succ, sibling, child of
-	 * sibling）都是黑色。解决：兄弟节点转红色，其它都黑色，双黑缺陷向上传播直到树根，必须递归判断，耗时O(n)。<br>
-	 * <br>
-	 * 情况4:当兄弟节点为红，其它节点为黑色时，做一次旋转，让兄弟节点变成新parent，原parent变成孩子，此时还是double
-	 * black，再做一次判断，此时必不会有情况3和情况4，也就是情况4总共需要做两次double black处理，耗时O(1)。
-	 * 
-	 * @param parent
-	 *            经过移除操作后的hot节点
-	 * @param rightNodeRemoved
-	 *            被移除的节点是否为hot节点的右孩子
-	 */
-	private void solveDoubleBlack(Node<E> parent, boolean rightNodeRemoved) {
-
-	}
-
-	/**
-	 * 让{@link #solveDoubleBlack(Node)}或{@link #solveDoubleRed(Node)}来做，功能写在
-	 * {@link #updateHeight(Node)}，提升效率。
-	 */
-	@Override
-	protected void updateAboveHeight(Node<E> node) {
-		// do nothing
 	}
 
 	@Override

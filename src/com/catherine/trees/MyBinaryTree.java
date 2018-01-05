@@ -82,23 +82,27 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	 * 节点高度定义：<br>
 	 * 1. 只有单一节点：0<br>
 	 * 2. 无节点，也就是空树：-1<br>
-	 * 3. 其他：取左右子树中高度大着+1（含自身）<br>
+	 * 3. 其他：取左右子树中高度大着+1<br>
 	 * 
 	 * 
 	 * @return 高度
 	 */
 	protected void updateAboveHeight(Node<E> node) {
-		if (node.getParent() == null)
+		if (node == null || node.getParent() == null)
 			return;
 
 		int h1 = node.getHeight();
 		int h2 = -1;
+		// 该节点是左节点且兄弟节点存在
 		if (node.getParent().getlChild() == node && node.getParent().getrChild() != null) {
 			h2 = node.getParent().getrChild().getHeight();
-		} else if (node.getParent().getrChild() == node && node.getParent().getlChild() != null) {
+		}
+		// 该节点是右节点且兄弟节点存在
+		else if (node.getParent().getrChild() == node && node.getParent().getlChild() != null) {
 			h2 = node.getParent().getlChild().getHeight();
 		}
 		int newH = (h1 > h2) ? h1 + 1 : h2 + 1;
+		// 更新父节点高度而不是自己，自己在呼叫方法时就必须是正确的值了
 		node.getParent().setHeight(newH);
 		updateAboveHeight(node.getParent());
 	}
