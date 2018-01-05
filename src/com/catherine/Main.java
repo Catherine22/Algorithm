@@ -51,6 +51,7 @@ import com.catherine.trees.MyAVLTree;
 import com.catherine.trees.MyBTree;
 import com.catherine.trees.MyBinarySearchTree;
 import com.catherine.trees.MyBinaryTree;
+import com.catherine.trees.MyRedBlackBST;
 import com.catherine.trees.MySplayTree;
 import com.catherine.trees.nodes.Node;
 import com.catherine.turing_machine.TuringMachine;
@@ -96,9 +97,10 @@ public class Main {
 		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
+		testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
-		testHash();
+		// testHash();
 
 		// testCryptography();
 		// testJWS();
@@ -152,49 +154,49 @@ public class Main {
 				raxorf.getStudent());
 
 		// Fix collisions (Linear Probing)**************************
-//		 HashingTemplate remainderL = new Remainder(17, linearProbing);
-//		 remainderL.hash(hashingHelper.getStudent());
-//		 remainderL.analyse(hashingHelper.getTableList(),
-//		 hashingHelper.getStudent(), remainderL.getTableList(),
-//		 remainderL.getStudent());
-//		
-//		 Mod modL = new Mod(2, 14, 17, linearProbing);
-//		 modL.hash(hashingHelper.getStudent());
-//		 modL.analyse(hashingHelper.getTableList(),
-//		 hashingHelper.getStudent(), modL.getTableList(), modL.getStudent());
-//		
-//		 SelectingDigits sdL = new SelectingDigits(linearProbing);
-//		 sdL.hash(hashingHelper.getStudent());
-//		 sdL.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
-//		 sdL.getTableList(), sdL.getStudent());
-//		
-//		 MidSquare msL = new MidSquare(linearProbing);
-//		 msL.hash(hashingHelper.getStudent());
-//		 msL.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
-//		 msL.getTableList(), msL.getStudent());
-//		
-//		 Fold foldL = new Fold(2, linearProbing);
-//		 foldL.hash(hashingHelper.getStudent());
-//		 foldL.analyse(hashingHelper.getTableList(),
-//		 hashingHelper.getStudent(), foldL.getTableList(),
-//		 foldL.getStudent());
-//		
-//		 RotateAndFold rafL = new RotateAndFold(2, linearProbing);
-//		 rafL.hash(hashingHelper.getStudent());
-//		 rafL.analyse(hashingHelper.getTableList(),
-//		 hashingHelper.getStudent(), rafL.getTableList(), rafL.getStudent());
-//		
-//		 XORFold xorfL = new XORFold(2, linearProbing);
-//		 xorfL.hash(hashingHelper.getStudent());
-//		 xorfL.analyse(hashingHelper.getTableList(),
-//		 hashingHelper.getStudent(), xorfL.getTableList(),
-//		 xorfL.getStudent());
-//		
-//		 RotateAndXORFold raxorfL = new RotateAndXORFold(2, linearProbing);
-//		 raxorfL.hash(hashingHelper.getStudent());
-//		 raxorfL.analyse(hashingHelper.getTableList(),
-//		 hashingHelper.getStudent(), raxorfL.getTableList(),
-//		 raxorfL.getStudent());
+		// HashingTemplate remainderL = new Remainder(17, linearProbing);
+		// remainderL.hash(hashingHelper.getStudent());
+		// remainderL.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), remainderL.getTableList(),
+		// remainderL.getStudent());
+		//
+		// Mod modL = new Mod(2, 14, 17, linearProbing);
+		// modL.hash(hashingHelper.getStudent());
+		// modL.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), modL.getTableList(), modL.getStudent());
+		//
+		// SelectingDigits sdL = new SelectingDigits(linearProbing);
+		// sdL.hash(hashingHelper.getStudent());
+		// sdL.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// sdL.getTableList(), sdL.getStudent());
+		//
+		// MidSquare msL = new MidSquare(linearProbing);
+		// msL.hash(hashingHelper.getStudent());
+		// msL.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+		// msL.getTableList(), msL.getStudent());
+		//
+		// Fold foldL = new Fold(2, linearProbing);
+		// foldL.hash(hashingHelper.getStudent());
+		// foldL.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), foldL.getTableList(),
+		// foldL.getStudent());
+		//
+		// RotateAndFold rafL = new RotateAndFold(2, linearProbing);
+		// rafL.hash(hashingHelper.getStudent());
+		// rafL.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), rafL.getTableList(), rafL.getStudent());
+		//
+		// XORFold xorfL = new XORFold(2, linearProbing);
+		// xorfL.hash(hashingHelper.getStudent());
+		// xorfL.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), xorfL.getTableList(),
+		// xorfL.getStudent());
+		//
+		// RotateAndXORFold raxorfL = new RotateAndXORFold(2, linearProbing);
+		// raxorfL.hash(hashingHelper.getStudent());
+		// raxorfL.analyse(hashingHelper.getTableList(),
+		// hashingHelper.getStudent(), raxorfL.getTableList(),
+		// raxorfL.getStudent());
 
 		// Fix collisions (Quadratic Probing)**************************
 		// Remainder remainderQ = new Remainder(17, quadraticPobing);
@@ -242,50 +244,41 @@ public class Main {
 		// raxorfQ.getStudent());
 
 		// Fix collisions (Fermat Quadratic Probing)**************************
-		 Remainder remainderF = new Remainder(17, fermatQuadraticPobing);
-		 remainderF.hash(hashingHelper.getStudent());
-		 remainderF.analyse(hashingHelper.getTableList(),
-		 hashingHelper.getStudent(), remainderF.getTableList(),
-		 remainderF.getStudent());
-		
-		 Mod modF = new Mod(2, 14, 17, fermatQuadraticPobing);
-		 modF.hash(hashingHelper.getStudent());
-		 modF.analyse(hashingHelper.getTableList(),
-		 hashingHelper.getStudent(), modF.getTableList(), modF.getStudent());
-		
-		 SelectingDigits sdF = new SelectingDigits(fermatQuadraticPobing);
-		 sdF.hash(hashingHelper.getStudent());
-		 sdF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
-		 sdF.getTableList(), sdF.getStudent());
-		
-		 MidSquare msF = new MidSquare(fermatQuadraticPobing);
-		 msF.hash(hashingHelper.getStudent());
-		 msF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
-		 msF.getTableList(), msF.getStudent());
-		
-		 Fold foldF = new Fold(2, fermatQuadraticPobing);
-		 foldF.hash(hashingHelper.getStudent());
-		 foldF.analyse(hashingHelper.getTableList(),
-		 hashingHelper.getStudent(), foldF.getTableList(),
-		 foldF.getStudent());
-		
-		 RotateAndFold rafF = new RotateAndFold(2, fermatQuadraticPobing);
-		 rafF.hash(hashingHelper.getStudent());
-		 rafF.analyse(hashingHelper.getTableList(),
-		 hashingHelper.getStudent(), rafF.getTableList(), rafF.getStudent());
-		
-		 XORFold xorfF = new XORFold(2, fermatQuadraticPobing);
-		 xorfF.hash(hashingHelper.getStudent());
-		 xorfF.analyse(hashingHelper.getTableList(),
-		 hashingHelper.getStudent(), xorfF.getTableList(),
-		 xorfF.getStudent());
-		
-		 RotateAndXORFold raxorfF = new RotateAndXORFold(2,
-		 fermatQuadraticPobing);
-		 raxorfF.hash(hashingHelper.getStudent());
-		 raxorfF.analyse(hashingHelper.getTableList(),
-		 hashingHelper.getStudent(), raxorfF.getTableList(),
-		 raxorfF.getStudent());
+		Remainder remainderF = new Remainder(17, fermatQuadraticPobing);
+		remainderF.hash(hashingHelper.getStudent());
+		remainderF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainderF.getTableList(),
+				remainderF.getStudent());
+
+		Mod modF = new Mod(2, 14, 17, fermatQuadraticPobing);
+		modF.hash(hashingHelper.getStudent());
+		modF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), modF.getTableList(), modF.getStudent());
+
+		SelectingDigits sdF = new SelectingDigits(fermatQuadraticPobing);
+		sdF.hash(hashingHelper.getStudent());
+		sdF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), sdF.getTableList(), sdF.getStudent());
+
+		MidSquare msF = new MidSquare(fermatQuadraticPobing);
+		msF.hash(hashingHelper.getStudent());
+		msF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), msF.getTableList(), msF.getStudent());
+
+		Fold foldF = new Fold(2, fermatQuadraticPobing);
+		foldF.hash(hashingHelper.getStudent());
+		foldF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), foldF.getTableList(),
+				foldF.getStudent());
+
+		RotateAndFold rafF = new RotateAndFold(2, fermatQuadraticPobing);
+		rafF.hash(hashingHelper.getStudent());
+		rafF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), rafF.getTableList(), rafF.getStudent());
+
+		XORFold xorfF = new XORFold(2, fermatQuadraticPobing);
+		xorfF.hash(hashingHelper.getStudent());
+		xorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), xorfF.getTableList(),
+				xorfF.getStudent());
+
+		RotateAndXORFold raxorfF = new RotateAndXORFold(2, fermatQuadraticPobing);
+		raxorfF.hash(hashingHelper.getStudent());
+		raxorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raxorfF.getTableList(),
+				raxorfF.getStudent());
 	}
 
 	public static void testBTree() {
@@ -581,6 +574,14 @@ public class Main {
 				ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
+	}
+
+	public static void testRedBlackBST() {
+		MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(10, null);
+		rbTree1.traverseLevel();
+		System.out.println(rbTree1.getHeight()+"");
+//		rbTree1.insert(12, null);
+//		rbTree1.traverseLevel();
 	}
 
 	public static void testAVLTree() {
