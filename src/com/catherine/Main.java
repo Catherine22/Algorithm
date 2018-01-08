@@ -97,11 +97,11 @@ public class Main {
 		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
-		testRedBlackBST();
+		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
+		testPQ();
 		// testHash();
-
 		// testCryptography();
 		// testJWS();
 	}
@@ -279,6 +279,10 @@ public class Main {
 		raxorfF.hash(hashingHelper.getStudent());
 		raxorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raxorfF.getTableList(),
 				raxorfF.getStudent());
+	}
+
+	public static void testPQ() {
+
 	}
 
 	public static void testBTree() {
@@ -580,32 +584,32 @@ public class Main {
 		// 1
 		// MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(20, null);
 		// rbTree1.insert(10, null);
-//		rbTree2.traverseLevel();
+		// rbTree2.traverseLevel();
 		// rbTree1.insert(30, null);
-//		rbTree2.traverseLevel();
+		// rbTree2.traverseLevel();
 		// rbTree1.insert(15, null);
 		// rbTree1.traverseLevel();
 
 		// 2
-//		MyRedBlackBST<String> rbTree2 = new MyRedBlackBST<String>(40, null);
-//		rbTree2.insert(30, null);
-//		rbTree2.traverseLevel();
-//		rbTree2.insert(50, null);
-//		rbTree2.traverseLevel();
-//		rbTree2.insert(45, null);
-//		rbTree2.traverseLevel();
-//		rbTree2.insert(35, null);
-//		rbTree2.traverseLevel();
+		// MyRedBlackBST<String> rbTree2 = new MyRedBlackBST<String>(40, null);
+		// rbTree2.insert(30, null);
+		// rbTree2.traverseLevel();
+		// rbTree2.insert(50, null);
+		// rbTree2.traverseLevel();
+		// rbTree2.insert(45, null);
+		// rbTree2.traverseLevel();
+		// rbTree2.insert(35, null);
+		// rbTree2.traverseLevel();
 		// //3
-		 MyRedBlackBST<String> rbTree3 = new MyRedBlackBST<String>(40, null);
-		 rbTree3.insert(30, null);
-		 rbTree3.traverseLevel();
-		 rbTree3.insert(50, null);
-		 rbTree3.traverseLevel();
-		 rbTree3.insert(45, null);
-		 rbTree3.traverseLevel();
-		 rbTree3.insert(25, null);
-		 rbTree3.traverseLevel();
+		MyRedBlackBST<String> rbTree3 = new MyRedBlackBST<String>(40, null);
+		rbTree3.insert(30, null);
+		rbTree3.traverseLevel();
+		rbTree3.insert(50, null);
+		rbTree3.traverseLevel();
+		rbTree3.insert(45, null);
+		rbTree3.traverseLevel();
+		rbTree3.insert(25, null);
+		rbTree3.traverseLevel();
 	}
 
 	public static void testAVLTree() {

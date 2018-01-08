@@ -181,7 +181,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ## Priority Queue
 - Call-by-priority
-- CompleteBinaryHeap
+- E.g. Huffman Coding, Scan-Line Filling
+
+### CompleteBinaryHeap
+![Complete Binary Heap][15]
 
 ## Dictionary
 
@@ -327,3 +330,4 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [12]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png
   [13]: https://github.com/Catherine22/Algorithms/blob/master/res/quadratic_probing.png
   [14]: https://github.com/Catherine22/Algorithms/blob/master/res/Fermat_s_theorem.png
+  [15]: https://github.com/Catherine22/Algorithms/blob/master/res/complete_binary_heap.png

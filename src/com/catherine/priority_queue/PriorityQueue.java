@@ -12,25 +12,32 @@ package com.catherine.priority_queue;
  * @param <E>
  * @see MyCompleteBinaryHeap 完全二叉堆
  */
-public abstract class PriorityQueue<E> {
+public interface PriorityQueue<E> {
 
 	/**
 	 * 插入词条（Entry）
 	 * 
 	 * @param e
 	 */
-	abstract void insert(E e);
+	public void insert(E e);
 
 	/**
 	 * 
 	 * @return 优先级最高的词条
 	 */
-	abstract E getMax();
+	public E getMax();
 
 	/**
 	 * 删除优先级最高的词条
 	 * 
 	 * @return 新。优先级最高的词条
 	 */
-	abstract E delMax();
+	public E delMax();
+
+//	Rank percolateDown(Rank n, Rank i);
+//
+//	Rank percolateUp(Rank i);
+//
+//	void heapify(Rank n);
+
 }
