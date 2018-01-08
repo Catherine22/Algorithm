@@ -187,11 +187,8 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 
 	/**
 	 * 平衡红黑树节点的逻辑和AVL树一样，但加入重新着色的逻辑。<br>
-	 * 1. 若移除节点为红色，则颜色不变。<br>
-	 * 2. 若移除节点为黑色、左节点，兄弟节点为黑色，兄弟节点和其父、其右子节点为一斜线：兄弟节点的右子节点改黑色。<br>
-	 * 3. 若移除节点为黑色、左节点，兄弟节点为黑色，兄弟节点和其父、其左子节点为一斜线，兄弟节点没有右孩子：兄弟节点的左子节点改黑色。<br>
-	 * 4. 若移除节点为黑色、左节点，兄弟节点为黑色，兄弟节点没有孩子：兄弟节点改红色。<br>
-	 * 
+	 * 1. 移除节点为红色，让移除节点的孩子取代移除节点，并改红色。<br>
+	 * 双黑缺陷：<br>
 	 * 
 	 * 移除情形：<br>
 	 * 1. 可能会失衡的节点，hot（{@link #remove(int)}
@@ -210,114 +207,6 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * @param key
 	 */
 	public void removeAndBalance(int key) {
-		Node<E> tmp = search(key);
-		boolean isLastTargetRed = tmp.isRed();
-		Node<E> sibling = findSibling(tmp);
-		super.remove(tmp);
-
-		Node<E> ancestor = hot;
-		Node<E> target = null;
-		Node<E> child = null;
-
-		int count = 1;
-		while (ancestor != null) {
-			// if (SHOW_LOG)
-			// System.out.println(String.format("round %d, ancestor:%d",
-			// count++, ancestor.getKey()));
-
-			System.out.println((sibling == null) ? "null"
-					: String.format("sibling(%s):%d", sibling.isRed() ? "RED" : "BLACK", sibling.getKey()));
-			// 更新颜色
-			if (sibling != null && !isLastTargetRed) {
-				if (sibling.isBlack()) {
-					if (isRightChild(sibling)) {
-						if (sibling.getrChild() != null) {
-							// 情况2
-							sibling.getrChild().setColor(Color.RED);
-						} else if (sibling.getrChild() == null && sibling.getlChild() != null) {
-							// 情况3
-							sibling.getlChild().setColor(Color.BLACK);
-						} else if (sibling.getrChild() == null && sibling.getlChild() == null) {
-							// 情况4
-							sibling.setColor(Color.RED);
-						}
-					} else {
-						if (sibling.getlChild() != null) {
-							// 情况2
-							sibling.getlChild().setColor(Color.RED);
-						} else if (sibling.getlChild() == null && sibling.getrChild() != null) {
-							// 情况3
-							sibling.getrChild().setColor(Color.BLACK);
-						} else if (sibling.getlChild() == null && sibling.getrChild() == null) {
-							// 情况4
-							sibling.setColor(Color.RED);
-						}
-					}
-				} else {
-					if (isRightChild(sibling) && sibling.getlChild() != null) {
-						// 情况5
-						sibling.getlChild().setColor(Color.RED);
-					} else if (isLeftChild(sibling) && sibling.getrChild() != null) {
-						// 情况5
-						sibling.getrChild().setColor(Color.RED);
-
-					}
-				}
-			}
-
-			if (isBalanced(ancestor)) {
-				sibling = findSibling(ancestor);
-				ancestor = ancestor.getParent();
-			} else {
-				// 节点取高度较高的那边
-				target = (getBalanceFactor(ancestor) < -1) ? ancestor.getrChild() : ancestor.getlChild();
-				if (target != null) {
-					// 子节点取高度较高的
-					child = (getBalanceFactor(target) < -1) ? target.getrChild() : target.getlChild();
-				}
-
-				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
-				if (ancestor == null || target == null || child == null)
-					break;
-
-				boolean isLeftChild = isLeftChild(target);
-				boolean isLeftGrandchild = isLeftChild(child);
-
-				if (SHOW_LOG) {
-					String r2 = (isLeftChild) ? "L" : "R";
-					String r3 = (isLeftGrandchild) ? "L" : "R";
-					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
-							child.getKey(), r3));
-				}
-
-				tmp = null;
-				child = null;
-				target = null;
-				sibling = null;
-
-				if (isLeftChild && isLeftGrandchild) {
-					if (SHOW_LOG)
-						System.out.println("符合情况1，三节点相连为一左斜线");
-					// 符合情况1，三节点相连为一斜线
-					zig(ancestor);
-				} else if (!isLeftChild && !isLeftGrandchild) {
-					if (SHOW_LOG)
-						System.out.println("符合情况1，三节点相连为一右斜线");
-					// 符合情况1，三节点相连为一斜线
-					zag(ancestor);
-				} else if (isLeftChild && !isLeftGrandchild) {
-					if (SHOW_LOG)
-						System.out.println("符合情况2，<形");
-					// 符合情况2，"<"形
-					left_rightRotate(ancestor);
-				} else { // 也就是 else if (!isLeftChild && isLeftGrandchild)
-					if (SHOW_LOG)
-						System.out.println("符合情况2，>形");
-					// 符合情况2，">"形
-					right_leftRotate(ancestor);
-				}
-			}
-		}
 	}
 
 	/**
