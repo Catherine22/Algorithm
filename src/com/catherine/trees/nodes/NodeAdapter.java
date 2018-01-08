@@ -31,7 +31,7 @@ public class NodeAdapter<E> implements Node<E> {
 		else if (type == Nodes.BST)
 			aNode = new BSTNode<E>(key, data, (BSTNode<E>) parent, (BSTNode<E>) lChild, (BSTNode<E>) rChild, height,
 					depth);
-		else if (type == Nodes.RB)
+		else if (type == Nodes.RED_BLACK)
 			aNode = new RedBlackBSTNode<E>(key, data, (RedBlackBSTNode<E>) parent, (RedBlackBSTNode<E>) lChild,
 					(RedBlackBSTNode<E>) rChild, height, depth);
 
@@ -47,7 +47,7 @@ public class NodeAdapter<E> implements Node<E> {
 		if (type == Nodes.BST) {
 			BSTNode<E> node = (BSTNode<E>) aNode;
 			return node.getKey();
-		} else if (type == Nodes.RB) {
+		} else if (type == Nodes.RED_BLACK) {
 			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
 			return node.getKey();
 		} else
@@ -59,7 +59,7 @@ public class NodeAdapter<E> implements Node<E> {
 		if (type == Nodes.BST) {
 			BSTNode<E> node = (BSTNode<E>) aNode;
 			node.setKey(key);
-		} else if (type == Nodes.RB) {
+		} else if (type == Nodes.RED_BLACK) {
 			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
 			node.setKey(key);
 		}
@@ -67,7 +67,7 @@ public class NodeAdapter<E> implements Node<E> {
 
 	@Override
 	public boolean isBlack() {
-		if (type == Nodes.RB) {
+		if (type == Nodes.RED_BLACK) {
 			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
 			return node.isBlack();
 		}
@@ -76,7 +76,7 @@ public class NodeAdapter<E> implements Node<E> {
 
 	@Override
 	public boolean isRed() {
-		if (type == Nodes.RB) {
+		if (type == Nodes.RED_BLACK) {
 			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
 			return node.isRed();
 		}
@@ -85,7 +85,7 @@ public class NodeAdapter<E> implements Node<E> {
 
 	@Override
 	public void setColor(Color color) {
-		if (type == Nodes.RB) {
+		if (type == Nodes.RED_BLACK) {
 			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
 			node.setColor(color);
 		}

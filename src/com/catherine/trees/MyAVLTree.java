@@ -42,12 +42,12 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 	 * @param ins
 	 */
 	public void insertAndBalance(int key, E data) {
-		final Node<E> newNode = insert(key, data);
+		final Node<E> newNode = super.insert(key, data);
 		Node<E> ancestor = newNode.getParent();
 
-		Node<E> child = ancestor;
-		Node<E> tmp = newNode;
-		Node<E> grandchild = null;
+		Node<E> target = ancestor;
+		Node<E> lastTarget = newNode;
+		Node<E> child = null;
 
 		int count = 1;
 		while (ancestor != null) {
@@ -55,28 +55,28 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
 
 			if (isBalanced(ancestor)) {
-				child = ancestor;
-				grandchild = tmp;
+				target = ancestor;
+				child = lastTarget;
 				ancestor = ancestor.getParent();
-				tmp = child;
+				lastTarget = target;
 			} else {
-				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
-				if (ancestor == null || child == null || grandchild == null)
+				// 没失衡的祖先直接返回（表示修改节点后仍保持平衡）
+				if (ancestor == null || target == null || child == null)
 					break;
 
-				boolean isLeftChild = isLeftChild(child);
-				boolean isLeftGrandchild = isLeftChild(grandchild);
+				boolean isLeftChild = isLeftChild(target);
+				boolean isLeftGrandchild = isLeftChild(child);
 
 				if (SHOW_LOG) {
 					String r2 = (isLeftChild) ? "L" : "R";
 					String r3 = (isLeftGrandchild) ? "L" : "R";
-					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
-							grandchild.getKey(), r3));
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
+							child.getKey(), r3));
 				}
 
-				tmp = null;
 				child = null;
-				grandchild = null;
+				target = null;
+				lastTarget = null;
 
 				if (isLeftChild && isLeftGrandchild) {
 					if (SHOW_LOG)
@@ -135,8 +135,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 		super.remove(tmp);
 
 		Node<E> ancestor = hot;
+		Node<E> target = null;
 		Node<E> child = null;
-		Node<E> grandchild = null;
 
 		int count = 1;
 		while (ancestor != null) {
@@ -146,30 +146,30 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 			if (isBalanced(ancestor)) {
 				ancestor = ancestor.getParent();
 			} else {
-				// 子节点取高度较高的那边
-				child = (getBalanceFactor(ancestor) < -1) ? ancestor.getrChild() : ancestor.getlChild();
-				if (child != null) {
-					// 孙子节点取高度较高的
-					grandchild = (getBalanceFactor(child) < -1) ? child.getrChild() : child.getlChild();
+				// 节点取高度较高的那边
+				target = (getBalanceFactor(ancestor) < -1) ? ancestor.getrChild() : ancestor.getlChild();
+				if (target != null) {
+					// 子节点取高度较高的
+					child = (getBalanceFactor(target) < -1) ? target.getrChild() : target.getlChild();
 				}
 
 				// 没失衡的祖先直接返回（表示移除节点后仍保持平衡）
-				if (ancestor == null || child == null || grandchild == null)
+				if (ancestor == null || target == null || child == null)
 					break;
 
-				boolean isLeftChild = isLeftChild(child);
-				boolean isLeftGrandchild = isLeftChild(grandchild);
+				boolean isLeftChild = isLeftChild(target);
+				boolean isLeftGrandchild = isLeftChild(child);
 
 				if (SHOW_LOG) {
 					String r2 = (isLeftChild) ? "L" : "R";
 					String r3 = (isLeftGrandchild) ? "L" : "R";
-					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), child.getKey(), r2,
-							grandchild.getKey(), r3));
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
+							child.getKey(), r3));
 				}
 
 				tmp = null;
 				child = null;
-				grandchild = null;
+				target = null;
 
 				if (isLeftChild && isLeftGrandchild) {
 					if (SHOW_LOG)

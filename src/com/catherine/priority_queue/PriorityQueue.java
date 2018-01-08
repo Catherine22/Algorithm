@@ -3,7 +3,7 @@ package com.catherine.priority_queue;
 /**
  * 优先级队列<br>
  * <br>
- * 可以用BBST来实现(AVL tree, Splay tree, Black red
+ * 可以用BBST来实现(AVL tree, Splay tree, Red black
  * tree...)，但是BBST功能过于强大，用BBST来实现显得有些小题大做了。在此由完全二叉堆(Complete binary
  * heap)来实现优先级队列。
  * 

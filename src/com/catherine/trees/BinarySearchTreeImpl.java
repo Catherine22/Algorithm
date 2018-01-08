@@ -537,6 +537,7 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	protected int getBalanceFactor(Node<E> node) {
 		int lHeight = (node.getlChild() == null) ? -1 : node.getlChild().getHeight();
 		int rHeight = (node.getrChild() == null) ? -1 : node.getrChild().getHeight();
+//		System.out.println(String.format("L:%d, R:%s", lHeight, node.getrChild().toString()));
 		return lHeight - rHeight;
 	}
 
