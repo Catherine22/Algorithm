@@ -32,7 +32,7 @@ trees/Algorithms
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() when you don't want to return a unsorted array. <br>
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() which replaces elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array and find an element.** If an array contains the element, it'll return where the element is in that array or the latest position while there're duplicated elements.
+  - [Sequence Searching] is used to **search a sorted array and find an element.** If an array contains the element, it'll return where the element is in that array or the latest one of duplicated elements.
   - As I was saying, if the element hasn't been found, this algorithm would return an index referring to the value(array[index] < element < array[index+1]).
       - Two ways to binary search (Normally, binSearch2() is more efficient than binSearch())
       - Fibonacci Searching
@@ -106,7 +106,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ### Binary Search Tree (BST)
 
   - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
-  - In this case, I assumed that there are no duplicated keys in the BST. Every operation based on this scenario.
+  - In this case, I assumed that no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
   > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
@@ -171,7 +171,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ### B-Tree
 
 - Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.
-- There are 2 tips about memory you must know -- First of all, it takes a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
+- 2 tips about memory you must know -- First of all, it takes a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
 ![B-tree][8]
 
@@ -206,7 +206,7 @@ value = hash(key). As you hash keys, you almost can't avoid to get the same valu
 Open addressing (or closed hashing)
 > Basically, it's supposed to be mutiple slots (linked list chaining).
 > You put duplicates into the same value list. Using LinkedList to minimize the space. Imagine that this hash table looks like a tree. But it is hard to be cached by CPU because CPU caches sequence addresses. And you probably won't visit the value in order of writing.
-> So we create a chain and you put every bucket (which contains a value comes from different keys) in sequence. Those buckets have fixed capacity. And there are two ways to probe the buckets: Linear Probing and Quadratic Probing.
+> So we create a chain and you put every bucket (which contains a value comes from different keys) in sequence. Those buckets have fixed capacity. And we have two ways to probe the buckets: Linear Probing and Quadratic Probing.
 
 
 Two ways to probe:
@@ -248,6 +248,8 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   - [Server Authentication During SSL Handshake]
   - [Verifying a Certificate Chain]
   - [JSON Web Signature (JWS) draft-jones-json-web-signature-01]
+  - [Red/Black Trees]
+  - [Red black tree animation]
 
 ## License
 
@@ -308,6 +310,8 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [JSON Web Signature (JWS) draft-jones-json-web-signature-01]:<http://self-issued.info/docs/draft-jones-json-web-signature-01.html>
    [SecuritySample]:<https://github.com/Catherine22/SecuritySample>
    [Double red video]:<https://www.youtube.com/watch?v=m9tse9Gr2pE>
+   [Red black tree animation]:<https://www.cs.usfca.edu/~galles/visualization/RedBlack.html>
+   [Red/Black Trees]:<https://github.com/Catherine22/Algorithms/blob/master/res/L19b_BalancedBST_BTreeRB.pdf>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
