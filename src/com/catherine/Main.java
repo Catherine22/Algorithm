@@ -292,7 +292,13 @@ public class Main {
 		pq.insert("Zed");
 		pq.insert("Jonas");
 		pq.insert("Julianne");
-		
+		pq.insert("Priscilla");
+		pq.insert("Shawn");
+
+		printIterator(pq.iterator());
+		pq.printTree();
+
+		pq.delMax();
 		printIterator(pq.iterator());
 		pq.printTree();
 	}
