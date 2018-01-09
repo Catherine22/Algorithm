@@ -16,6 +16,8 @@ import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -41,6 +43,7 @@ import com.catherine.dictionary.functions.SelectingDigits;
 import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.priority_queue.MyCompleteBinaryHeap;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -282,7 +285,16 @@ public class Main {
 	}
 
 	public static void testPQ() {
-
+		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>();
+		pq.insert("Cooper");
+		pq.insert("Barbarian");
+		pq.insert("Alan");
+		pq.insert("Zed");
+		pq.insert("Jonas");
+		pq.insert("Julianne");
+		
+		printIterator(pq.iterator());
+		pq.printTree();
 	}
 
 	public static void testBTree() {
@@ -999,6 +1011,15 @@ public class Main {
 		printArray("MergeSort", ms.sort(input3, false));
 		Analysis.endTracking(tLog); // track
 		Analysis.printTrack(tLog); // track
+	}
+
+	public static void printIterator(Iterator<?> it) {
+		Iterator<?> iterator = it;
+		System.out.print("[");
+		StringBuilder sBuilder = new StringBuilder();
+		while (iterator.hasNext())
+			sBuilder.append(iterator.next() + ", ");
+		System.out.println(sBuilder.substring(0, sBuilder.length() - 2) + "]");
 	}
 
 	public static void printArray(String title, int[] array) {

@@ -34,10 +34,16 @@ public interface PriorityQueue<E> {
 	 */
 	public E delMax();
 
-//	Rank percolateDown(Rank n, Rank i);
-//
-//	Rank percolateUp(Rank i);
-//
-//	void heapify(Rank n);
+	void percolateDown(E n, E i);
+
+	/**
+	 * 上滤<br>
+	 * 如果E与其父亲违反堆序性，则交换为止，交换后继续和新父亲（原祖父）做确认，直到 E与父亲符合堆序性或到达顶点。
+	 * 
+	 * @param i
+	 */
+	void percolateUp(E i);
+
+	void heapify(E n);
 
 }

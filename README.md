@@ -170,8 +170,8 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### B-Tree
 
-- Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.
-- 2 tips about memory you must know -- First of all, it takes a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
+Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.    
+2 tips about memory you must know -- First of all, it takes a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
 ![B-tree][8]
 
@@ -180,17 +180,22 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 - [MyBTree]
 
 ## Priority Queue
+
+You could build a priority queue by Vector, List or Tree. Tree (BBST) is the most efficient data structure of all while we are talking about insertion and searching for the max element. But BBST has a lot of functions we don't use in a priority queue. We want to find a plain data structure as efficient as BBST. That is - Complete binary heap, a nifty structure to implement Priority Queue.
+
 - Call-by-priority
 - E.g. Huffman Coding, Scan-Line Filling
 
 ### CompleteBinaryHeap
+
 ![Complete Binary Heap][15]
+CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
 
 ## Dictionary
 
 ### Hashing
-- As I mentioned, we've learned four types of structures - Call-by-rank(Vector), call-by-position(List), call-by-key(BST),  call-by-value(Hashing) and call-by-priority(Priority Queue).
-- Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save and search them.  If you loop the data to find out a number, it'll take only O(1). But there are so many telephones and your accurate performance would be 25K/100M = 0.025%. It sucks. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
+As I mentioned, we've learned four types of structures - Call-by-rank(Vector), call-by-position(List), call-by-key(BST),  call-by-value(Hashing) and call-by-priority(Priority Queue).    
+Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save and search them.  If you loop the data to find out a number, it'll take only O(1). But there are so many telephones and your accurate performance would be 25K/100M = 0.025%. It sucks. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
 > Some hashing examples in [HashFunctions]:
 > 1. Hashing by remainder
