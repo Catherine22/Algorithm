@@ -11,18 +11,21 @@ import com.catherine.utils.TrackLog;
  * <br>
  * memory: worst case is n
  * 
+ * @param <T>
  * @author Catherine
  *
  */
 public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
-	T[] tmp;
+	Object[] tmp;
 
 	@Override
 	public T[] sort(T[] a, boolean isAscending) {
+		if (a == null || a.length == 0)
+			return a;
 		TrackLog tLog = new TrackLog("MergeSort");
 		Analysis.startTracking(tLog);
 
-		tmp = (T[]) new Object[a.length];
+		tmp = new Object[a.length];
 		for (int i = 0; i < a.length; i++) {
 			tmp[i] = a[i];
 		}
@@ -31,7 +34,11 @@ public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
 			Analysis.printTrack(tLog);
-		return tmp;
+		for (int i = 0; i < a.length; i++) {
+			a[i] = (T) tmp[i];
+		}
+
+		return a;
 	}
 
 	/**
@@ -105,7 +112,7 @@ public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
 			Main.printArray("STEP2", tmp);
 
 		for (int i = 0; i < a.length; i++) {
-			a[i] = tmp[i];
+			a[i] = (T) tmp[i];
 		}
 
 		if (SHOW_DEBUG_LOG)

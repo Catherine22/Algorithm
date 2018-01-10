@@ -44,7 +44,9 @@ import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
+import com.catherine.sort.BaseSort;
 import com.catherine.sort.BubbleSort;
+import com.catherine.sort.HeapSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 import com.catherine.sort.SelectionSort;
@@ -84,20 +86,22 @@ public class Main {
 	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
-	private static Integer[] Input1 = new Integer[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
-			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
+	private static Integer[] Input1 = new Integer[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5,
+			7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
 	private static Integer[] Input2 = new Integer[] { 38, 29, 28, 11, 4, 5, 2 };
 	private static Integer[] Input3 = new Integer[] { 5, 11, 13, 15, 28, 29, 38 };
 	private static Integer[] Input4 = null;
 	private static Integer[] Input5 = new Integer[] { 1 };
 	private static Integer[] Input6 = new Integer[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
-	private static Integer[] Input7 = new Integer[] { 23, 24, 25, 26, 29, 4, 2 };
+	private static String[] Input7 = new String[] { "Czech Republic", "United States", "China", "Iraq", "Germany",
+			"Saudi Arabia", "Australia" };
 
 	public static void main(String[] args) {
 		testInsertionSort();
-		// testMergeSort();
-		// testBubbleSort();
-		// testSelectionSort();
+//		testMergeSort();
+//		testBubbleSort();
+//		testSelectionSort();
+		// testHeapSort();
 		// testHailstone();
 		// testTuringMachine();
 		// testSequence();
@@ -1008,13 +1012,36 @@ public class Main {
 		printList("Hailstone", other.getHailstone(42));
 	}
 
+	public static void testHeapSort() {
+		BaseSort<Integer> ms = new HeapSort<>();
+		TrackLog tLog = new TrackLog("HeapSort"); // track
+		Analysis.startTracking(tLog); // track
+		printArray("HeapSort", ms.sort(Input1, true));
+		Analysis.endTracking(tLog); // track
+		Analysis.printTrack(tLog); // track
+		printArray("HeapSort", ms.sort(Input2, true));
+		printArray("HeapSort", ms.sort(Input3, true));
+		printArray("HeapSort", ms.sort(Input4, true));
+		printArray("HeapSort", ms.sort(Input5, true));
+		printArray("HeapSort", ms.sort(Input6, true));
+		BaseSort<String> ms2 = new HeapSort<>();
+		printArray("HeapSort", ms2.sort(Input7, true));
+	}
+
 	public static void testSelectionSort() {
-		SelectionSort<Integer> ms = new SelectionSort<>();
+		BaseSort<Integer> ms = new SelectionSort<>();
 		TrackLog tLog = new TrackLog("SelectionSort"); // track
 		Analysis.startTracking(tLog); // track
 		printArray("SelectionSort", ms.sort(Input1, true));
 		Analysis.endTracking(tLog); // track
 		Analysis.printTrack(tLog); // track
+		printArray("SelectionSort", ms.sort(Input2, true));
+		printArray("SelectionSort", ms.sort(Input3, true));
+		printArray("SelectionSort", ms.sort(Input4, true));
+		printArray("SelectionSort", ms.sort(Input5, true));
+		printArray("SelectionSort", ms.sort(Input6, true));
+		BaseSort<String> ms2 = new SelectionSort<>();
+		printArray("SelectionSort", ms2.sort(Input7, true));
 	}
 
 	public static void testBubbleSort() {
@@ -1024,28 +1051,42 @@ public class Main {
 		printArray("BubbleSort", bs.sort(Input1, false));
 		Analysis.endTracking(tLog1); // track
 		Analysis.printTrack(tLog1); // track
-		printArray("BubbleSort2", bs.sort2(Input3, false));
-		printArray("BubbleSort3", bs.sort3(Input7, false));
+		printArray("BubbleSort2", bs.sort2(Input2, false));
+		printArray("BubbleSort3", bs.sort3(Input3, false));
+		printArray("BubbleSort2", bs.sort2(Input4, false));
+		printArray("BubbleSort3", bs.sort3(Input5, false));
+		printArray("BubbleSort2", bs.sort2(Input6, false));
+		BubbleSort<String> bs2 = new BubbleSort<>();
+		printArray("BubbleSort3", bs2.sort3(Input7, true));
 	}
 
 	public static void testInsertionSort() {
-		InsertionSort<Integer> is = new InsertionSort<>();
+		BaseSort<Integer> is = new InsertionSort<>();
 		printArray("InsertionSort", is.sort(Input1, true));
 		printArray("InsertionSort", is.sort(Input2, true));
 		printArray("InsertionSort", is.sort(Input3, true));
 		printArray("InsertionSort", is.sort(Input4, true));
 		printArray("InsertionSort", is.sort(Input5, true));
 		printArray("InsertionSort", is.sort(Input6, true));
-		printArray("InsertionSort", is.sort(Input7, true));
+		BaseSort<String> is2 = new InsertionSort<>();
+		printArray("InsertionSort", is2.sort(Input7, true));
 	}
 
 	public static void testMergeSort() {
-		MergeSort<Integer> ms = new MergeSort<>();
+		BaseSort<Integer> ms = new MergeSort<>();
 		TrackLog tLog = new TrackLog("MergeSort"); // track
 		Analysis.startTracking(tLog); // track
 		printArray("MergeSort", ms.sort(Input3, false));
 		Analysis.endTracking(tLog); // track
 		Analysis.printTrack(tLog); // track
+
+		printArray("MergeSort", ms.sort(Input1, false));
+		printArray("MergeSort", ms.sort(Input2, false));
+		printArray("MergeSort", ms.sort(Input4, false));
+		printArray("MergeSort", ms.sort(Input5, false));
+		printArray("MergeSort", ms.sort(Input6, false));
+		BaseSort<String> ms2 = new MergeSort<>();
+		printArray("MergeSort", ms2.sort(Input7, true));
 	}
 
 	public static void printIterator(Iterator<?> it) {
@@ -1056,6 +1097,7 @@ public class Main {
 			sBuilder.append(iterator.next() + ", ");
 		System.out.println(sBuilder.substring(0, sBuilder.length() - 2) + "]");
 	}
+
 	public static void printArray(String title, Object[] array) {
 		System.out.println("--------------------------------------------------------");
 		if (array == null)
@@ -1065,7 +1107,7 @@ public class Main {
 			for (int i = 0; i < array.length; i++) {
 				System.out.print(array[i]);
 				if (i != array.length - 1)
-					System.out.print(",");
+					System.out.print(", ");
 				else
 					System.out.println("]");
 			}
@@ -1082,7 +1124,7 @@ public class Main {
 			for (int i = 0; i < array.length; i++) {
 				System.out.print(array[i]);
 				if (i != array.length - 1)
-					System.out.print(",");
+					System.out.print(", ");
 				else
 					System.out.println("]");
 			}
@@ -1099,7 +1141,7 @@ public class Main {
 			for (int i = 0; i < list.size(); i++) {
 				System.out.print(list.get(i));
 				if (i != list.size() - 1)
-					System.out.print(",");
+					System.out.print(", ");
 				else
 					System.out.println("]");
 			}

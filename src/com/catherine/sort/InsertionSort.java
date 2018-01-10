@@ -7,6 +7,7 @@ package com.catherine.sort;
  * <br>
  * memory: 1（就地算法 in-place）
  * 
+ * @param <T>
  * @author Catherine
  *
  */
@@ -20,7 +21,7 @@ public class InsertionSort<T extends Comparable<? super T>> extends BaseSort<T> 
 			return input;
 
 		T temp;
-		for (int i = 0; i < input.length - 1; i++) {
+		for (int i = 0; i < input.length; i++) {
 			for (int j = i; j > 0; j--) {
 				if (!isAscending) {
 					if (input[j].compareTo(input[j - 1]) > 0) {

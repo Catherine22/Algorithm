@@ -17,6 +17,7 @@ import com.catherine.utils.TrackLog;
  * <br>
  * selection sort适合用LinkedList实作，因为只要改引用而不是调整整个数组。<br>
  * 
+ * @param <T>
  * @author Catherine
  *
  */
