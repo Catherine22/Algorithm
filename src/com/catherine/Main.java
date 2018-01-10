@@ -16,6 +16,8 @@ import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -41,6 +43,7 @@ import com.catherine.dictionary.functions.SelectingDigits;
 import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.priority_queue.MyCompleteBinaryHeap;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
@@ -97,11 +100,11 @@ public class Main {
 		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
-		testRedBlackBST();
+		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
+		testPQ();
 		// testHash();
-
 		// testCryptography();
 		// testJWS();
 	}
@@ -279,6 +282,39 @@ public class Main {
 		raxorfF.hash(hashingHelper.getStudent());
 		raxorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raxorfF.getTableList(),
 				raxorfF.getStudent());
+	}
+
+	public static void testPQ() {
+		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>();
+		pq.insert("Cooper");
+		pq.insert("Barbarian");
+		pq.insert("Alan");
+		pq.insert("Zed");
+		pq.insert("Jonas");
+		pq.insert("Julianne");
+		pq.insert("Priscilla");
+		pq.insert("Shawn");
+
+		printIterator(pq.iterator());
+		pq.printTree();
+
+		pq.delMax();
+		printIterator(pq.iterator());
+		pq.printTree();
+
+		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>();
+		List<String> list = new ArrayList<>();
+		list.add("Cooper");
+		list.add("Barbarian");
+		list.add("Alan");
+		list.add("Zed");
+		list.add("Jonas");
+		list.add("Julianne");
+		list.add("Priscilla");
+		list.add("Shawn");
+		pq2.heapify(list);
+		printIterator(pq2.iterator());
+		pq2.printTree();
 	}
 
 	public static void testBTree() {
@@ -580,32 +616,32 @@ public class Main {
 		// 1
 		// MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(20, null);
 		// rbTree1.insert(10, null);
-//		rbTree2.traverseLevel();
+		// rbTree2.traverseLevel();
 		// rbTree1.insert(30, null);
-//		rbTree2.traverseLevel();
+		// rbTree2.traverseLevel();
 		// rbTree1.insert(15, null);
 		// rbTree1.traverseLevel();
 
 		// 2
-//		MyRedBlackBST<String> rbTree2 = new MyRedBlackBST<String>(40, null);
-//		rbTree2.insert(30, null);
-//		rbTree2.traverseLevel();
-//		rbTree2.insert(50, null);
-//		rbTree2.traverseLevel();
-//		rbTree2.insert(45, null);
-//		rbTree2.traverseLevel();
-//		rbTree2.insert(35, null);
-//		rbTree2.traverseLevel();
+		// MyRedBlackBST<String> rbTree2 = new MyRedBlackBST<String>(40, null);
+		// rbTree2.insert(30, null);
+		// rbTree2.traverseLevel();
+		// rbTree2.insert(50, null);
+		// rbTree2.traverseLevel();
+		// rbTree2.insert(45, null);
+		// rbTree2.traverseLevel();
+		// rbTree2.insert(35, null);
+		// rbTree2.traverseLevel();
 		// //3
-		 MyRedBlackBST<String> rbTree3 = new MyRedBlackBST<String>(40, null);
-		 rbTree3.insert(30, null);
-		 rbTree3.traverseLevel();
-		 rbTree3.insert(50, null);
-		 rbTree3.traverseLevel();
-		 rbTree3.insert(45, null);
-		 rbTree3.traverseLevel();
-		 rbTree3.insert(25, null);
-		 rbTree3.traverseLevel();
+		MyRedBlackBST<String> rbTree3 = new MyRedBlackBST<String>(40, null);
+		rbTree3.insert(30, null);
+		rbTree3.traverseLevel();
+		rbTree3.insert(50, null);
+		rbTree3.traverseLevel();
+		rbTree3.insert(45, null);
+		rbTree3.traverseLevel();
+		rbTree3.insert(25, null);
+		rbTree3.traverseLevel();
 	}
 
 	public static void testAVLTree() {
@@ -995,6 +1031,15 @@ public class Main {
 		printArray("MergeSort", ms.sort(input3, false));
 		Analysis.endTracking(tLog); // track
 		Analysis.printTrack(tLog); // track
+	}
+
+	public static void printIterator(Iterator<?> it) {
+		Iterator<?> iterator = it;
+		System.out.print("[");
+		StringBuilder sBuilder = new StringBuilder();
+		while (iterator.hasNext())
+			sBuilder.append(iterator.next() + ", ");
+		System.out.println(sBuilder.substring(0, sBuilder.length() - 2) + "]");
 	}
 
 	public static void printArray(String title, int[] array) {
