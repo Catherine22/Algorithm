@@ -65,7 +65,7 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			return null;
 
 		i = 1 + (i << 1);// time 2, odd number
-		if (i >= size() || i == 0)
+		if (i >= size() || i <= 0)
 			return null;
 
 		// System.out.println(e + "'s LChild is " + get(i));
@@ -84,7 +84,7 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			return null;
 
 		i = (1 + i) << 1;// time 2, even number
-		if (i >= size() || i == 0)
+		if (i >= size() || i <= 0)
 			return null;
 
 		// System.out.println(e + "'s RChild is " + get(i));
@@ -146,38 +146,47 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 					.println(String.format("percolateDown %s, %s", (i == null ? "null" : i), (c == null ? "null" : c)));
 
 		boolean swap = false;
+		// 指定节点和其孩子比较，一旦有交换就进行下一轮比较，让原孩子成为新指针，与其孩子比较
 		while (childPos <= limit && (c).compareTo(base) > 0) {
 			swap = true;
 			if (SHOW_DEBUG_LOG)
-				System.out.println(String.format("set %s to %s", i.toString(), c.toString()));
+				System.out.println(String.format("assign %s to %d", c.toString(), basePos));
 			set(basePos, c);
-			basePos = childPos;
-			//TODO 
-			i = get(basePos);
-			
-			T tmp = getChild(i);
-			if (tmp == null)
-				break;
-			
-			int tp = getPos(tmp);
-			if (tp > limit || tp == -1)
-				break;
 
-			c = tmp;
+			// 找出孩子
+			int rp, lp;
+			rp = (1 + childPos) << 1;
+			lp = 1 + (childPos << 1);
 
-			if (c == getLChild(i))
-				childPos = 1 + (basePos << 1);
-			else if (c == getRChild(i))
-				childPos = (1 + basePos) << 1;
+			if ((rp > limit || rp <= 0) && (lp > limit || lp <= 0)) {
+				// 没孩子
+				basePos = childPos;
+				break;
+			} else if (rp > limit || rp <= 0) {
+				// 没右孩子
+				childPos = lp;
+			} else if (lp > limit || lp <= 0) {
+				// 没左孩子
+				childPos = rp;
+			} else {
+				// 挑大的孩子
+				childPos = (get(rp).compareTo(get(lp)) > 0) ? rp : lp;
+			}
+			c = get(childPos);
+
+			// 找出父亲
+			basePos = (childPos - 1) >> 1;
+			i = base;
+			System.out.println(String.format("basePos:%d, target:%s, childPos:%d, child:%s", basePos, i, childPos, c));
 		}
 
 		if (swap) {
 			if (SHOW_DEBUG_LOG)
-				System.out.println(String.format("set %s to %s", get(basePos), base));
+				System.out.println(String.format("fill %s in %d", base, basePos));
 			set(basePos, base);
 		}
 	}
-	
+
 	@Override
 	public void percolateUp(T i) {
 		int basePos = getPos(i);
