@@ -15,7 +15,7 @@ import java.util.Vector;
  * @param <T>
  */
 class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueue<T> {
-	protected final boolean SHOW_DEBUG_LOG = true;
+	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
 

@@ -14,27 +14,27 @@ import com.catherine.utils.TrackLog;
  * @author Catherine
  *
  */
-public class BubbleSort extends BaseSort {
+public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 	@Override
-	public int[] sort(int[] input, boolean isAscending) {
+	public T[] sort(T[] input, boolean isAscending) {
 		TrackLog tLog = new TrackLog("BubbleSort");
 		Analysis.startTracking(tLog);
 		if (input == null)
 			return null;
 		if (input.length == 1)
 			return input;
-		int temp;
+		T temp;
 		for (int i = input.length; i >= 0; i--) {
 			for (int j = 0; j < i - 1; j++) {
 				if (isAscending) {
-					if (input[j] > input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) > 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 					}
 				} else {
-					if (input[j] < input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) < 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
@@ -57,7 +57,7 @@ public class BubbleSort extends BaseSort {
 	 * @param isAscending
 	 * @return
 	 */
-	public int[] sort2(int[] input, boolean isAscending) {
+	public T[] sort2(T[] input, boolean isAscending) {
 		TrackLog tLog = new TrackLog("BubbleSort2");
 		Analysis.startTracking(tLog);
 		if (input == null)
@@ -67,20 +67,20 @@ public class BubbleSort extends BaseSort {
 		int path = input.length - 1;
 
 		int exchangeCount = 0;
-		int temp;
+		T temp;
 		while ((path > 0)) {
 			for (int j = 0; j < path; j++) {
 				if (SHOW_DEBUG_LOG)
 					System.out.print(j);
 				if (isAscending) {
-					if (input[j] > input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) > 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 						exchangeCount++;
 					}
 				} else {
-					if (input[j] < input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) < 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
@@ -111,7 +111,7 @@ public class BubbleSort extends BaseSort {
 	 * @param isAscending
 	 * @return
 	 */
-	public int[] sort3(int[] input, boolean isAscending) {
+	public T[] sort3(T[] input, boolean isAscending) {
 		TrackLog tLog = new TrackLog("BubbleSort3");
 		Analysis.startTracking(tLog);
 		if (input == null)
@@ -121,20 +121,20 @@ public class BubbleSort extends BaseSort {
 
 		int path = input.length - 1;
 		int preExchangePos = path;
-		int temp;
+		T temp;
 		for (int i = path; i > 0; i--) {
 			for (int j = 0; j < path - 1; j++) {
 				if (SHOW_DEBUG_LOG)
 					System.out.print(j);
 				if (isAscending) {
-					if (input[j] > input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) > 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 						preExchangePos = j;
 					}
 				} else {
-					if (input[j] < input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) < 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;

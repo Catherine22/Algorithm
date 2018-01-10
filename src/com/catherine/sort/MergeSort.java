@@ -14,15 +14,15 @@ import com.catherine.utils.TrackLog;
  * @author Catherine
  *
  */
-public class MergeSort extends BaseSort {
-	int[] tmp;
+public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
+	T[] tmp;
 
 	@Override
-	public int[] sort(int[] a, boolean isAscending) {
+	public T[] sort(T[] a, boolean isAscending) {
 		TrackLog tLog = new TrackLog("MergeSort");
 		Analysis.startTracking(tLog);
 
-		tmp = new int[a.length];
+		tmp = (T[]) new Object[a.length];
 		for (int i = 0; i < a.length; i++) {
 			tmp[i] = a[i];
 		}
@@ -46,7 +46,7 @@ public class MergeSort extends BaseSort {
 	 * @param isAscending
 	 *            是否递增
 	 */
-	private void mergeSort(int[] a, int left, int right, boolean isAscending) {
+	private void mergeSort(T[] a, int left, int right, boolean isAscending) {
 		if (right > left) {
 			int center = (left + right) / 2;
 			// 排左边
@@ -64,7 +64,7 @@ public class MergeSort extends BaseSort {
 		}
 	}
 
-	private void merge(int[] a, int lStart, int center, int rEnd, boolean isAscending) {
+	private void merge(T[] a, int lStart, int center, int rEnd, boolean isAscending) {
 		int rStart = center + 1;// 右边起始位置
 		int lEnd = center;// 左边结束位置
 		int header = lStart;// 填入回传数组的指针
@@ -77,7 +77,7 @@ public class MergeSort extends BaseSort {
 
 		while (lStart <= lEnd && rStart <= rEnd) {
 			if (isAscending) {
-				if (a[rStart] <= a[lStart])
+				if (a[rStart].compareTo(a[lStart]) <= 0)
 					tmp[header++] = a[rStart++];
 				else
 					tmp[header++] = a[lStart++];
@@ -85,7 +85,7 @@ public class MergeSort extends BaseSort {
 				if (SHOW_DEBUG_LOG)
 					Main.printArray("STEP1", tmp);
 			} else {
-				if (a[rStart] >= a[lStart])
+				if (a[rStart].compareTo(a[lStart]) >= 0)
 					tmp[header++] = a[rStart++];
 				else
 					tmp[header++] = a[lStart++];

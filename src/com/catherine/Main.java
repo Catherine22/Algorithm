@@ -84,8 +84,17 @@ public class Main {
 	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
+	private static Integer[] Input1 = new Integer[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
+			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
+	private static Integer[] Input2 = new Integer[] { 38, 29, 28, 11, 4, 5, 2 };
+	private static Integer[] Input3 = new Integer[] { 5, 11, 13, 15, 28, 29, 38 };
+	private static Integer[] Input4 = null;
+	private static Integer[] Input5 = new Integer[] { 1 };
+	private static Integer[] Input6 = new Integer[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
+	private static Integer[] Input7 = new Integer[] { 23, 24, 25, 26, 29, 4, 2 };
+
 	public static void main(String[] args) {
-		// testInsertionSort();
+		testInsertionSort();
 		// testMergeSort();
 		// testBubbleSort();
 		// testSelectionSort();
@@ -103,7 +112,7 @@ public class Main {
 		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
-		testPQ();
+		// testPQ();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -1000,35 +1009,41 @@ public class Main {
 	}
 
 	public static void testSelectionSort() {
-		SelectionSort ms = new SelectionSort();
+		SelectionSort<Integer> ms = new SelectionSort<>();
 		TrackLog tLog = new TrackLog("SelectionSort"); // track
 		Analysis.startTracking(tLog); // track
-		printArray("SelectionSort", ms.sort(input1, true));
+		printArray("SelectionSort", ms.sort(Input1, true));
 		Analysis.endTracking(tLog); // track
 		Analysis.printTrack(tLog); // track
 	}
 
 	public static void testBubbleSort() {
-		BubbleSort bs = new BubbleSort();
+		BubbleSort<Integer> bs = new BubbleSort<>();
 		TrackLog tLog1 = new TrackLog("BubbleSort"); // track
 		Analysis.startTracking(tLog1); // track
-		printArray("BubbleSort", bs.sort(input1, false));
+		printArray("BubbleSort", bs.sort(Input1, false));
 		Analysis.endTracking(tLog1); // track
 		Analysis.printTrack(tLog1); // track
-		printArray("BubbleSort2", bs.sort2(input3, false));
-		printArray("BubbleSort3", bs.sort3(input7, false));
+		printArray("BubbleSort2", bs.sort2(Input3, false));
+		printArray("BubbleSort3", bs.sort3(Input7, false));
 	}
 
 	public static void testInsertionSort() {
-		InsertionSort is = new InsertionSort();
-		printArray("InsertionSort", is.sort(input1, true));
+		InsertionSort<Integer> is = new InsertionSort<>();
+		printArray("InsertionSort", is.sort(Input1, true));
+		printArray("InsertionSort", is.sort(Input2, true));
+		printArray("InsertionSort", is.sort(Input3, true));
+		printArray("InsertionSort", is.sort(Input4, true));
+		printArray("InsertionSort", is.sort(Input5, true));
+		printArray("InsertionSort", is.sort(Input6, true));
+		printArray("InsertionSort", is.sort(Input7, true));
 	}
 
 	public static void testMergeSort() {
-		MergeSort ms = new MergeSort();
+		MergeSort<Integer> ms = new MergeSort<>();
 		TrackLog tLog = new TrackLog("MergeSort"); // track
 		Analysis.startTracking(tLog); // track
-		printArray("MergeSort", ms.sort(input3, false));
+		printArray("MergeSort", ms.sort(Input3, false));
 		Analysis.endTracking(tLog); // track
 		Analysis.printTrack(tLog); // track
 	}
@@ -1040,6 +1055,22 @@ public class Main {
 		while (iterator.hasNext())
 			sBuilder.append(iterator.next() + ", ");
 		System.out.println(sBuilder.substring(0, sBuilder.length() - 2) + "]");
+	}
+	public static void printArray(String title, Object[] array) {
+		System.out.println("--------------------------------------------------------");
+		if (array == null)
+			System.out.println("null");
+		else {
+			System.out.print(title + " -> [");
+			for (int i = 0; i < array.length; i++) {
+				System.out.print(array[i]);
+				if (i != array.length - 1)
+					System.out.print(",");
+				else
+					System.out.println("]");
+			}
+		}
+		System.out.println("--------------------------------------------------------");
 	}
 
 	public static void printArray(String title, int[] array) {
@@ -1059,7 +1090,7 @@ public class Main {
 		System.out.println("--------------------------------------------------------");
 	}
 
-	public static void printList(String title, List<Integer> list) {
+	public static void printList(String title, List<?> list) {
 		System.out.println("--------------------------------------------------------");
 		if (list == null)
 			System.out.println("null");
