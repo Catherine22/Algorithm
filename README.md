@@ -188,8 +188,9 @@ You could build a priority queue by Vector, List or Tree. Tree (BBST) is the mos
 
 ### CompleteBinaryHeap
 
-![Complete Binary Heap][15]
+![Complete Binary Heap][15]   
 CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
+- [PriorityQueueImpl]
 
 ## Dictionary
 
@@ -310,6 +311,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [LinearProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/LinearProbing.java>
    [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
    [FermatQuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
+   [PriorityQueueImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueImpl.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

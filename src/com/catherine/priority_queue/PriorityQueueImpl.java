@@ -92,6 +92,42 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	}
 
 	/**
+	 * （完全二叉树）找到左孩子
+	 * 
+	 * @param e
+	 * @return
+	 */
+	private int getLChildPos(T e) {
+		int i = getPos(e);
+		if (i == -1)
+			return -1;
+
+		i = 1 + (i << 1);// time 2, odd number
+		if (i >= size() || i <= 0)
+			return -1;
+
+		return i;
+	}
+
+	/**
+	 * （完全二叉树）找到右孩子
+	 * 
+	 * @param e
+	 * @return
+	 */
+	private int getRChildPos(T e) {
+		int i = getPos(e);
+		if (i == -1)
+			return -1;
+
+		i = (1 + i) << 1;// time 2, even number
+		if (i >= size() || i <= 0)
+			return -1;
+
+		return i;
+	}
+
+	/**
 	 * 返回较大或唯一的孩子
 	 * 
 	 * @param i
@@ -104,6 +140,27 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 		else {
 			T lc = getLChild(i);
 			return ((lc != null) && (rc).compareTo(lc) > 0) ? rc : lc;
+		}
+	}
+
+	/**
+	 * 返回较大或唯一的孩子
+	 * 
+	 * @param i
+	 * @return
+	 */
+	private int getChildPos(T i) {
+		int rp = getRChildPos(i);
+		int lp = getLChildPos(i);
+
+		if (rp == -1 && lp == -1)
+			return -1;
+		else if (rp == -1)
+			return lp;
+		else if (lp == -1)
+			return rp;
+		else {
+			return (get(lp).compareTo(get(rp)) > 0) ? lp : rp;
 		}
 	}
 
@@ -149,8 +206,9 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 		// 指定节点和其孩子比较，一旦有交换就进行下一轮比较，让原孩子成为新指针，与其孩子比较
 		while (childPos <= limit && (c).compareTo(base) > 0) {
 			swap = true;
-			if (SHOW_DEBUG_LOG)
-				System.out.println(String.format("assign %s to %d", c.toString(), basePos));
+			// if (SHOW_DEBUG_LOG)
+			// System.out.println(String.format("assign %s to %d", c.toString(),
+			// basePos));
 			set(basePos, c);
 
 			// 找出孩子
@@ -177,12 +235,16 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			// 找出父亲
 			basePos = (childPos - 1) >> 1;
 			i = base;
-			System.out.println(String.format("basePos:%d, target:%s, childPos:%d, child:%s", basePos, i, childPos, c));
+			// if (SHOW_DEBUG_LOG)
+			// System.out.println(
+			// String.format("basePos:%d, target:%s, childPos:%d, child:%s",
+			// basePos, i, childPos, c));
 		}
 
 		if (swap) {
-			if (SHOW_DEBUG_LOG)
-				System.out.println(String.format("fill %s in %d", base, basePos));
+			// if (SHOW_DEBUG_LOG)
+			// System.out.println(String.format("fill %s in %d", base,
+			// basePos));
 			set(basePos, base);
 		}
 	}
@@ -260,12 +322,13 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	 */
 	@Deprecated
 	public void percolateDownOriginal(T n, T i) {
-		T c = getChild(i);
+		int cp = getChildPos(i);
 
-		if (c == null)
+		if (cp == -1)
 			return;
 
-		if (getPos(c) > getPos(n))
+		T c = get(cp);
+		if (cp > getPos(n))
 			return;
 
 		if (SHOW_DEBUG_LOG)
