@@ -301,6 +301,20 @@ public class Main {
 		pq.delMax();
 		printIterator(pq.iterator());
 		pq.printTree();
+
+		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>();
+		List<String> list = new ArrayList<>();
+		list.add("Cooper");
+		list.add("Barbarian");
+		list.add("Alan");
+		list.add("Zed");
+		list.add("Jonas");
+		list.add("Julianne");
+		list.add("Priscilla");
+		list.add("Shawn");
+		pq2.heapify(list);
+		printIterator(pq2.iterator());
+		pq2.printTree();
 	}
 
 	public static void testBTree() {

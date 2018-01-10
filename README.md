@@ -80,7 +80,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ## Tree
 
 ### Binary Tree
-
 ![tree][1]
   - It's a special case of Graph.
   - Performance
@@ -104,7 +103,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 
 ### Binary Search Tree (BST)
-
   - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
   - In this case, I assumed that no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
@@ -115,7 +113,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
 
 ### AVL Tree
-
   - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
 
   - **Single rotations**
@@ -160,7 +157,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 ## Classy tree
 
 ### Splay tree
-
 - Splay tree practices pretty well when recently accessed nodes would be accessed frequently.
 - Splay tree moves the selected node to the root after searching, inserting and removing.
 - Splaying the node every two levels (parent and grandparent) makes splaying more efficient then splaying the node every level.
@@ -169,7 +165,6 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 >If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
 
 ### B-Tree
-
 Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.    
 2 tips about memory you must know -- First of all, it takes a great deal of time to retrieve data from external memory (I/O). Then, the average time of reading a byte or a blocks of data are almost the same. To pick up speed of accessing data, you would like to take a bunch of data a time (just like you can obtain a lot of data by accessing a node) or you'd rather retrieve data from main memory (RAM) 100 times than external memory (disk) once (B-tree always searches data from the first level). And that's what B-tree is designed to optimize filesystem.
 
@@ -180,17 +175,17 @@ Every node contains more than two keys and branches, it seems like a binary tree
 - [MyBTree]
 
 ## Priority Queue
-
 You could build a priority queue by Vector, List or Tree. Tree (BBST) is the most efficient data structure of all while we are talking about insertion and searching for the max element. But BBST has a lot of functions we don't use in a priority queue. We want to find a plain data structure as efficient as BBST. That is - Complete binary heap, a nifty structure to implement Priority Queue.
 
 - Call-by-priority
 - E.g. Huffman Coding, Scan-Line Filling
 
 ### CompleteBinaryHeap
-
 ![Complete Binary Heap][15]   
 CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
 - [PriorityQueueImpl]
+- Percolate up and down
+- Heapify (Robert Floyd's algorithm)
 
 ## Dictionary
 
@@ -235,7 +230,6 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   - Catalan
 
 ### Cryptography
-
 |  API | description |
 | ---- | ---- |
 | [KeystoreManager] | 1. Generate a secret key or a keyPair. <br> 2. Put or get the secret key/keyPair from a keyStore. |

@@ -1,5 +1,7 @@
 package com.catherine.priority_queue;
 
+import java.util.List;
+
 /**
  * 优先级队列<br>
  * <br>
@@ -12,17 +14,17 @@ package com.catherine.priority_queue;
  * 
  * @author Catherine
  *
- * @param <E>
+ * @param <T>
  * @see MyCompleteBinaryHeap 完全二叉堆
  */
-public interface PriorityQueue<E> {
+public interface PriorityQueue<T> {
 
 	/**
 	 * 插入词条（Entry）并上滤。
 	 * 
 	 * @param e
 	 */
-	public void insert(E e);
+	public void insert(T e);
 
 	/**
 	 * 返回优先级最高的词条（也就是堆顶）
@@ -32,7 +34,7 @@ public interface PriorityQueue<E> {
 	 * 
 	 * @return 优先级最高的词条
 	 */
-	public E getMax();
+	public T getMax();
 
 	/**
 	 * 删除优先级最高的词条（也就是堆顶），让最后一个节点取代根节点并下滤。
@@ -42,7 +44,7 @@ public interface PriorityQueue<E> {
 	 * 
 	 * @return 新。优先级最高的词条
 	 */
-	public E delMax();
+	public T delMax();
 
 	/**
 	 * 对前n个词条的第i个节点进行下滤，n>i<br>
@@ -55,7 +57,7 @@ public interface PriorityQueue<E> {
 	 * @param n
 	 * @param i
 	 */
-	void percolateDown(E n, E i);
+	void percolateDown(T n, T i);
 
 	/**
 	 * 上滤<br>
@@ -67,8 +69,16 @@ public interface PriorityQueue<E> {
 	 * 
 	 * @param i
 	 */
-	void percolateUp(E i);
+	void percolateUp(T i);
 
-	void heapify(E n);
+	/**
+	 * 传入一段可排序的集合，使之成为优先级队列。<br>
+	 * 两种实现方式，这里采第二种：<br>
+	 * 1. 将集合内的元素挨个加入，每次加入做上滤处理。（平淡无奇的土办法，花費O(n(log n))效率差，花费的时间足以做全排序，而在此只需达到偏序）<br>
+	 * 2. 佛洛依德算法，由上而下的下濾——先把元素搬进来，然后从最后一个元素的父亲开始下滤，再兄弟下滤， 再两者的父亲下滤，类似合并堆的概念，O(n)。<br>
+	 * 
+	 * @param n
+	 */
+	void heapify(List<T> list);
 
 }

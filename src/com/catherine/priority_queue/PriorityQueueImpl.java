@@ -1,5 +1,6 @@
 package com.catherine.priority_queue;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -19,9 +20,9 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	private static final long serialVersionUID = 880638399272054759L;
 
 	@Override
-	public void insert(T e) {
-		add(e);
-		percolateUp(e);
+	public void insert(T t) {
+		add(t);
+		percolateUp(t);
 	}
 
 	@Override
@@ -92,13 +93,28 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	}
 
 	/**
+	 * （完全二叉树）找到父亲
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public int getParentPos(T e) {
+		int i = getPos(e);
+
+		if (i <= 0)
+			return -1;
+
+		return (i - 1) >> 1;// divide by 2
+	}
+
+	/**
 	 * （完全二叉树）找到左孩子
 	 * 
 	 * @param e
 	 * @return
 	 */
-	private int getLChildPos(T e) {
-		int i = getPos(e);
+	private int getLChildPos(T t) {
+		int i = getPos(t);
 		if (i == -1)
 			return -1;
 
@@ -115,8 +131,8 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	 * @param e
 	 * @return
 	 */
-	private int getRChildPos(T e) {
-		int i = getPos(e);
+	private int getRChildPos(T t) {
+		int i = getPos(t);
 		if (i == -1)
 			return -1;
 
@@ -170,11 +186,11 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	 * @param e
 	 * @return
 	 */
-	private int getPos(T e) {
+	private int getPos(T t) {
 		int pos = -1;
 		int count = 0;
 		while (count < size()) {
-			if (get(count) == e) {
+			if (get(count) == t) {
 				pos = count;
 				break;
 			}
@@ -341,7 +357,6 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 		}
 	}
 
-	@Deprecated
 	private void swap(T i, T p) {
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("swap %s, %s", i.toString(), p.toString()));
@@ -352,9 +367,54 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	}
 
 	@Override
-	public void heapify(T n) {
-		// TODO Auto-generated method stub
+	public void heapify(List<T> list) {
+		if (list == null || list.size() == 0)
+			return;
 
+		// 方法1
+		// for (T t : list) {
+		// insert(t);
+		// }
+
+		// 方法2
+		for (T t : list) {
+			add(t);
+		}
+
+		// 找出最后一个元素的父亲
+		int target = list.size() / 2 - 1;
+		int limit = list.size() - 1;
+		merge(target, limit);
+	}
+
+	private void merge(int target, int limit) {
+		if (target < 0 || limit < target)
+			return;
+
+		T l = get(limit);
+		// 目标节点
+		// System.out.println("目标 " + get(target));
+		percolateDown(l, get(target));
+		// printTree();
+
+		int parentPos = getParentPos(get(target));
+		if (parentPos >= 0) {
+			T p = get(parentPos);
+			// 换兄弟节点
+			int siblingPos = (getLChildPos(p) == target) ? getRChildPos(p) : getLChildPos(p);
+			if (siblingPos > 0) {
+				// System.out.println("兄弟 " + get(siblingPos));
+				percolateDown(l, get(siblingPos));
+				// printTree();
+			}
+
+			// 换父节点
+			// System.out.println("父 " + get(parentPos));
+			percolateDown(l, get(parentPos));
+			// printTree();
+
+			merge(parentPos, limit);
+		}
 	}
 
 	public void printTree() {

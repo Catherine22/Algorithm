@@ -1,6 +1,7 @@
 package com.catherine.priority_queue;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * 完全二叉堆（逻辑上等同于完全二叉树，物理上以向量实现）<br>
@@ -47,8 +48,8 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 	}
 
 	@Override
-	public void heapify(T n) {
-		priorityQueueImpl.heapify(n);
+	public void heapify(List<T> list) {
+		priorityQueueImpl.heapify(list);
 	}
 
 	public T getParent(T e) {
