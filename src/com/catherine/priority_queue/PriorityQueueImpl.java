@@ -20,6 +20,11 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	private static final long serialVersionUID = 880638399272054759L;
 
 	@Override
+	public int size() {
+		return super.size();
+	}
+
+	@Override
 	public void insert(T t) {
 		add(t);
 		percolateUp(t);
@@ -364,6 +369,27 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 		T tmp = i;
 		set(p1, p);
 		set((p1 - 1) >> 1, tmp);
+	}
+
+	@Override
+	public void heapify(T[] array) {
+		if (array == null || array.length == 0)
+			return;
+
+		// 方法1
+		// for (T t : list) {
+		// insert(t);
+		// }
+
+		// 方法2
+		for (T t : array) {
+			add(t);
+		}
+
+		// 找出最后一个元素的父亲
+		int target = array.length / 2 - 1;
+		int limit = array.length - 1;
+		merge(target, limit);
 	}
 
 	@Override

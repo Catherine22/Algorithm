@@ -48,6 +48,11 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 	}
 
 	@Override
+	public void heapify(T[] array) {
+		priorityQueueImpl.heapify(array);
+	}
+
+	@Override
 	public void heapify(List<T> list) {
 		priorityQueueImpl.heapify(list);
 	}
@@ -70,5 +75,10 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 
 	public void printTree() {
 		priorityQueueImpl.printTree();
+	}
+
+	@Override
+	public int size() {
+		return priorityQueueImpl.size();
 	}
 }
