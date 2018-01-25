@@ -150,6 +150,8 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 				}
 			}
 			path = preExchangePos + 1;
+			if (path >= input.length)
+				break;
 			if (SHOW_DEBUG_LOG)
 				System.out.print("\t" + preExchangePos + "\t" + path + "\n");
 		}
