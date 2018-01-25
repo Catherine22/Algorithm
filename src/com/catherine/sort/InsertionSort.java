@@ -14,12 +14,13 @@ package com.catherine.sort;
 public class InsertionSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 	@Override
-	public T[] sort(T[] input, boolean isAscending) {
-		if (input == null)
+	public T[] sort(T[] a, boolean isAscending) {
+		if (a == null)
 			return null;
-		if (input.length == 1)
-			return input;
+		if (a.length == 1)
+			return a;
 
+		T[] input = a.clone();
 		T temp;
 		for (int i = 0; i < input.length; i++) {
 			for (int j = i; j > 0; j--) {

@@ -1,10 +1,5 @@
 package com.catherine.sort;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.catherine.Main;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
@@ -21,14 +16,15 @@ import com.catherine.utils.TrackLog;
 public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 	@Override
-	public T[] sort(T[] input, boolean isAscending) {
+	public T[] sort(T[] a, boolean isAscending) {
 		TrackLog tLog = new TrackLog("SelectionSort");
 		Analysis.startTracking(tLog);
-		if (input == null)
+		if (a == null)
 			return null;
-		if (input.length == 1)
-			return input;
+		if (a.length == 1)
+			return a;
 
+		T[] input = a.clone();
 		MyCompleteBinaryHeap<T> pq = new MyCompleteBinaryHeap<>();
 		pq.heapify(input);
 

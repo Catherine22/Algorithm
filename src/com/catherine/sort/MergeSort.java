@@ -25,20 +25,21 @@ public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		TrackLog tLog = new TrackLog("MergeSort");
 		Analysis.startTracking(tLog);
 
-		tmp = new Object[a.length];
-		for (int i = 0; i < a.length; i++) {
-			tmp[i] = a[i];
+		T[] inputBackup = a.clone();
+		tmp = new Object[inputBackup.length];
+		for (int i = 0; i < inputBackup.length; i++) {
+			tmp[i] = inputBackup[i];
 		}
-		mergeSort(a, 0, a.length - 1, isAscending);
+		mergeSort(inputBackup, 0, inputBackup.length - 1, isAscending);
 
 		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
 			Analysis.printTrack(tLog);
-		for (int i = 0; i < a.length; i++) {
-			a[i] = (T) tmp[i];
+		for (int i = 0; i < inputBackup.length; i++) {
+			inputBackup[i] = (T) tmp[i];
 		}
 
-		return a;
+		return inputBackup;
 	}
 
 	/**
