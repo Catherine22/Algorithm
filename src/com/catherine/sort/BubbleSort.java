@@ -144,7 +144,7 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 				}
 			}
 			// 提前终止
-			if (path == 1)
+			if (i == 1)
 				break;
 
 			path = preExchangePos + 1;

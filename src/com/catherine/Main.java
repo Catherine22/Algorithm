@@ -88,23 +88,9 @@ public class Main {
 	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
-	private static Integer[] Input1 = new Integer[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5,
-			7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
-	private static Integer[] Input2 = new Integer[] { 38, 29, 28, 11, 4, 5, 2 };
-	private static Integer[] Input3 = new Integer[] { 5, 11, 13, 15, 28, 29, 38 };
-	private static Integer[] Input4 = null;
-	private static Integer[] Input5 = new Integer[] { 1 };
-	private static Integer[] Input6 = new Integer[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
-	private static String[] Input7 = new String[] { "Czech Republic", "United States", "China", "Iraq", "Germany",
-			"Saudi Arabia", "Australia" };
-
 	public static void main(String[] args) {
-		// testInsertionSort();
-		// testMergeSort();
-		// testBubbleSort();
-		// testSelectionSort();
-		// testHeapSort();
-		compareSorting();
+		compareStringSorting();
+		compareIntSorting();
 
 		// testHailstone();
 		// testTuringMachine();
@@ -1016,204 +1002,110 @@ public class Main {
 		printList("Hailstone", other.getHailstone(42));
 	}
 
-	public static void testHeapSort() {
-		BaseSort<Integer> hs = new HeapSort<>();
-		TrackLog tLog = new TrackLog("HeapSort"); // track
-		Analysis.startTracking(tLog); // track
-		printArray("HeapSort", hs.sort(Input1, true));
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
-		printArray("HeapSort", hs.sort(Input2, true));
-		printArray("HeapSort", hs.sort(Input3, true));
-		printArray("HeapSort", hs.sort(Input4, true));
-		printArray("HeapSort", hs.sort(Input5, true));
-		printArray("HeapSort", hs.sort(Input6, true));
-		BaseSort<String> hs2 = new HeapSort<>();
-		printArray("HeapSort", hs2.sort(Input7, true));
-	}
-
-	public static void testSelectionSort() {
-		BaseSort<Integer> ss = new SelectionSort<>();
-		TrackLog tLog = new TrackLog("SelectionSort"); // track
-		Analysis.startTracking(tLog); // track
-		printArray("SelectionSort", ss.sort(Input1, true));
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
-		printArray("SelectionSort", ss.sort(Input2, true));
-		printArray("SelectionSort", ss.sort(Input3, true));
-		printArray("SelectionSort", ss.sort(Input4, true));
-		printArray("SelectionSort", ss.sort(Input5, true));
-		printArray("SelectionSort", ss.sort(Input6, true));
-		BaseSort<String> ss2 = new SelectionSort<>();
-		printArray("SelectionSort", ss2.sort(Input7, true));
-	}
-
-	public static void testBubbleSort() {
-		BubbleSort<Integer> bs = new BubbleSort<>();
-		TrackLog tLog1 = new TrackLog("BubbleSort"); // track
-		Analysis.startTracking(tLog1); // track
-		printArray("BubbleSort", bs.sort(Input1, false));
-		Analysis.endTracking(tLog1); // track
-		Analysis.printTrack(tLog1); // track
-		printArray("BubbleSort2", bs.sort2(Input2, false));
-		printArray("BubbleSort3", bs.sort3(Input3, false));
-		printArray("BubbleSort2", bs.sort2(Input4, false));
-		printArray("BubbleSort3", bs.sort3(Input5, false));
-		printArray("BubbleSort2", bs.sort2(Input6, false));
-		BubbleSort<String> bs2 = new BubbleSort<>();
-		printArray("BubbleSort3", bs2.sort3(Input7, true));
-	}
-
-	public static void testInsertionSort() {
-		BaseSort<Integer> is = new InsertionSort<>();
-		printArray("InsertionSort", is.sort(Input1, true));
-		printArray("InsertionSort", is.sort(Input2, true));
-		printArray("InsertionSort", is.sort(Input3, true));
-		printArray("InsertionSort", is.sort(Input4, true));
-		printArray("InsertionSort", is.sort(Input5, true));
-		printArray("InsertionSort", is.sort(Input6, true));
-		BaseSort<String> is2 = new InsertionSort<>();
-		printArray("InsertionSort", is2.sort(Input7, true));
-	}
-
-	public static void testMergeSort() {
-		BaseSort<Integer> ms = new MergeSort<>();
-		TrackLog tLog = new TrackLog("MergeSort"); // track
-		Analysis.startTracking(tLog); // track
-		printArray("MergeSort", ms.sort(Input3, false));
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
-
-		printArray("MergeSort", ms.sort(Input1, false));
-		printArray("MergeSort", ms.sort(Input2, false));
-		printArray("MergeSort", ms.sort(Input4, false));
-		printArray("MergeSort", ms.sort(Input5, false));
-		printArray("MergeSort", ms.sort(Input6, false));
-		BaseSort<String> ms2 = new MergeSort<>();
-		printArray("MergeSort", ms2.sort(Input7, true));
-	}
-
-	public static void compareSorting() {
-		int MAX = 10;
+	public static void compareStringSorting() {
+		int SIZE = 9;
 		int stringLen = 10;
-		String[] input = new String[MAX];
+		String[] input = new String[SIZE];
+		String[] inputBackup = new String[SIZE];
 		StringBuilder sBuilder = new StringBuilder();
 
 		Random random = new Random();
-		for (int i = 0; i < MAX; i++) {
+		for (int i = 0; i < SIZE; i++) {
 			sBuilder.delete(0, stringLen);
 			for (int j = 0; j < stringLen; j++) {
 				sBuilder.append((char) ('A' + random.nextInt(26)));
 			}
 			input[i] = sBuilder.toString();
+			random = new Random();
 		}
 
-		boolean isAscending = (0 + random.nextInt(1)) == 1;
+		boolean isAscending = (0 + random.nextInt(2)) == 1;
 
 		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
+
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
 		BaseSort<String> ms = new MergeSort<>();
-		TrackLog tLog = new TrackLog("MergeSort"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array1 = ms.sort(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		String[] a1 = ms.sort(inputBackup, isAscending);
+		printArray("Sorted array (MergeSort)", a1);
 
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
 		BaseSort<String> is = new InsertionSort<>();
-		tLog = new TrackLog("InsertionSort"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array2 = is.sort(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		String[] a2 = is.sort(inputBackup, isAscending);
+		printArray("Sorted array (InsertionSort)", a2);
 
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
 		BubbleSort<String> bs = new BubbleSort<>();
-		tLog = new TrackLog("BubbleSort"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array3 = bs.sort(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		String[] a3 = bs.sort(inputBackup, isAscending);
+		printArray("Sorted array (BubbleSort1)", a3);
 
-		tLog = new TrackLog("BubbleSort2"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array4 = bs.sort2(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		String[] a4 = bs.sort2(inputBackup, isAscending);
+		printArray("Sorted array (BubbleSort2)", a4);
 
-		tLog = new TrackLog("BubbleSort3"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array5 = bs.sort3(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		String[] a5 = bs.sort3(inputBackup, isAscending);
+		printArray("Sorted array (BubbleSort3)", a5);
 
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
 		BaseSort<String> ss = new SelectionSort<>();
-		tLog = new TrackLog("SelectionSort"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array6 = ss.sort(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		String[] a6 = ss.sort(inputBackup, isAscending);
+		printArray("Sorted array (SelectionSort)", a6);
 
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
 		BaseSort<String> hs = new HeapSort<>();
-		tLog = new TrackLog("HeapSort"); // track
-		Analysis.startTracking(tLog); // track
-		String[] array7 = hs.sort(input, isAscending);
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		String[] a7 = hs.sort(inputBackup, isAscending);
+		printArray("Sorted array (HeapSort)", a7);
 
-		boolean error = false;
-		for (int i = 0; i < array1.length; i++) {
-			if (array1[i] != array2[i]) {
-				error = true;
-				break;
-			}
+	}
+
+	public static void compareIntSorting() {
+		int SIZE = 10;
+		int MIN_INT = 0;
+		int MAX_INT = 10000;
+		Integer[] input = new Integer[SIZE];
+		Integer[] inputBackup = new Integer[SIZE];
+
+		Random random = new Random();
+		for (int i = 0; i < SIZE; i++) {
+			input[i] = MIN_INT + random.nextInt(MAX_INT);
+			random = new Random();
 		}
-		if (error)
-			printArray("InsertionSort Error:", array2);
 
-		for (int i = 0; i < array1.length; i++) {
-			if (array1[i] != array3[i]) {
-				error = true;
-				break;
-			}
-		}
-		if (error)
-			printArray("BubbleSort Error:", array3);
+		boolean isAscending = (0 + random.nextInt(2)) == 1;
+		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
 
-		for (int i = 0; i < array1.length; i++) {
-			if (array1[i] != array4[i]) {
-				error = true;
-				break;
-			}
-		}
-		if (error)
-			printArray("BubbleSort2 Error:", array4);
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		BaseSort<Integer> ms = new MergeSort<>();
+		Integer[] a1 = ms.sort(inputBackup, isAscending);
+		printArray("Sorted array (MergeSort)", a1);
 
-		for (int i = 0; i < array1.length; i++) {
-			if (array1[i] != array5[i]) {
-				error = true;
-				break;
-			}
-		}
-		if (error)
-			printArray("BubbleSort3 Error:", array5);
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		BaseSort<Integer> is = new InsertionSort<>();
+		Integer[] a2 = is.sort(inputBackup, isAscending);
+		printArray("Sorted array (InsertionSort)", a2);
 
-		for (int i = 0; i < array1.length; i++) {
-			if (array1[i] != array6[i]) {
-				error = true;
-				break;
-			}
-		}
-		if (error)
-			printArray("SelectionSort Error:", array6);
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		BubbleSort<Integer> bs = new BubbleSort<>();
+		Integer[] a3 = bs.sort(inputBackup, isAscending);
+		printArray("Sorted array (BubbleSort1)", a3);
 
-		// for (int i = 0; i < array1.length; i++) {
-		// if (array1[i] != array7[i]) {
-		// error = true;
-		// break;
-		// }
-		// }
-		// if (error)
-		// printArray("HeapSort Error:", array7);
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		Integer[] a4 = bs.sort2(inputBackup, isAscending);
+		printArray("Sorted array (BubbleSort2)", a4);
 
-		printArray("Sort", array1);
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		Integer[] a5 = bs.sort3(inputBackup, isAscending);
+		printArray("Sorted array (BubbleSort3)", a5);
+
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		BaseSort<Integer> ss = new SelectionSort<>();
+		Integer[] a6 = ss.sort(inputBackup, isAscending);
+		printArray("Sorted array (SelectionSort)", a6);
+
+		System.arraycopy(input, 0, inputBackup, 0, SIZE);
+		BaseSort<Integer> hs = new HeapSort<>();
+		Integer[] a7 = hs.sort(inputBackup, isAscending);
+		printArray("Sorted array (HeapSort)", a7);
 
 	}
 
@@ -1226,7 +1118,7 @@ public class Main {
 		System.out.println(sBuilder.substring(0, sBuilder.length() - 2) + "]");
 	}
 
-	public static void printArray(String title, Object[] array) {
+	public synchronized static void printArray(String title, Object[] array) {
 		System.out.println("--------------------------------------------------------");
 		if (array == null)
 			System.out.println("null");

@@ -84,7 +84,7 @@ public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 		while (lStart <= lEnd && rStart <= rEnd) {
 			if (isAscending) {
-				if (a[rStart].compareTo(a[lStart]) >= 0)
+				if (a[rStart].compareTo(a[lStart]) <= 0)
 					tmp[header++] = a[rStart++];
 				else
 					tmp[header++] = a[lStart++];
@@ -92,7 +92,7 @@ public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
 				if (SHOW_DEBUG_LOG)
 					Main.printArray("STEP1", tmp);
 			} else {
-				if (a[rStart].compareTo(a[lStart]) <= 0)
+				if (a[rStart].compareTo(a[lStart]) >= 0)
 					tmp[header++] = a[rStart++];
 				else
 					tmp[header++] = a[lStart++];

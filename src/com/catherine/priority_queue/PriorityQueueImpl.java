@@ -37,6 +37,14 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 
 	@Override
 	public T delMax() {
+		if (size() == 0)
+			return null;
+		if (size() == 1) {
+			T tmp = get(0);
+			remove(0);
+			return tmp;
+		}
+		
 		set(0, get(size() - 1));
 		remove(size() - 1);
 		percolateDown(get(size() - 1), get(0));

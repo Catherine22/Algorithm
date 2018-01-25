@@ -29,21 +29,21 @@ public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		if (input.length == 1)
 			return input;
 
-		LinkedList<T> outputs = new LinkedList<>();
-
-		if (SHOW_DEBUG_LOG)
-			Main.printList("original list", outputs);
-
 		MyCompleteBinaryHeap<T> pq = new MyCompleteBinaryHeap<>();
 		pq.heapify(input);
 
-		if (SHOW_DEBUG_LOG)
-			Main.printList("sorted list", outputs);
-
 		for (int i = 0; i < input.length; i++)
 			input[i] = pq.delMax();
-		
-		//descend??
+
+		if (!isAscending) {
+			T tmp;
+			int m = ((int) Math.floor(input.length / 2)) - 1;
+			for (int i = 0; i < m; i++) {
+				tmp = input[i];
+				input[i] = input[input.length - i - 1];
+				input[input.length - i - 1] = tmp;
+			}
+		}
 
 		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
