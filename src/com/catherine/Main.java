@@ -1007,7 +1007,6 @@ public class Main {
 		int SIZE = 9;
 		int stringLen = 10;
 		String[] input = new String[SIZE];
-		String[] inputBackup = new String[SIZE];
 		StringBuilder sBuilder = new StringBuilder();
 
 		Random random = new Random();
