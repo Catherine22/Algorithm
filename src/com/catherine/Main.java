@@ -1002,14 +1002,14 @@ public class Main {
 		printList("Hailstone", other.getHailstone(42));
 	}
 
-
 	public static void compareStringSorting() {
-		int SIZE = 9;
-		int stringLen = 10;
+		Random random = new Random();
+		int SIZE = 0 + random.nextInt(15);
+		int stringLen = 0 + random.nextInt(10);
 		String[] input = new String[SIZE];
 		StringBuilder sBuilder = new StringBuilder();
 
-		Random random = new Random();
+		random = new Random();
 		for (int i = 0; i < SIZE; i++) {
 			sBuilder.delete(0, stringLen);
 			for (int j = 0; j < stringLen; j++) {
@@ -1025,40 +1025,40 @@ public class Main {
 
 		BaseSort<String> ms = new MergeSort<>();
 		String[] a1 = ms.sort(input, isAscending);
-		printArray("Sorted array (MergeSort)", a1);
+		printArray(String.format("Sorted array (%s)", ms.TAG), a1);
 
 		BaseSort<String> is = new InsertionSort<>();
 		String[] a2 = is.sort(input, isAscending);
-		printArray("Sorted array (InsertionSort)", a2);
+		printArray(String.format("Sorted array (%s)", is.TAG), a2);
 
 		BubbleSort<String> bs = new BubbleSort<>();
 		String[] a3 = bs.sort(input, isAscending);
-		printArray("Sorted array (BubbleSort1)", a3);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a3);
 
 		String[] a4 = bs.sort2(input, isAscending);
-		printArray("Sorted array (BubbleSort2)", a4);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a4);
 
 		String[] a5 = bs.sort3(input, isAscending);
-		printArray("Sorted array (BubbleSort3)", a5);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a5);
 
 		BaseSort<String> ss = new SelectionSort<>();
 		String[] a6 = ss.sort(input, isAscending);
-		printArray("Sorted array (SelectionSort)", a6);
+		printArray(String.format("Sorted array (%s)", ss.TAG), a6);
 
 		BaseSort<String> hs = new HeapSort<>();
 		String[] a7 = hs.sort(input, isAscending);
-		printArray("Sorted array (HeapSort)", a7);
-
+		printArray(String.format("Sorted array (%s)", hs.TAG), a7);
 
 	}
 
 	public static void compareIntSorting() {
-		int SIZE = 10;
-		int MIN_INT = 0;
+		Random random = new Random();
+		int SIZE = 0 + random.nextInt(15);
+		int MIN_INT = 0 + random.nextInt(10);
 		int MAX_INT = 10000;
 		Integer[] input = new Integer[SIZE];
 
-		Random random = new Random();
+		random = new Random();
 		for (int i = 0; i < SIZE; i++) {
 			input[i] = MIN_INT + random.nextInt(MAX_INT);
 			random = new Random();
@@ -1069,29 +1069,29 @@ public class Main {
 
 		BaseSort<Integer> ms = new MergeSort<>();
 		Integer[] a1 = ms.sort(input, isAscending);
-		printArray("Sorted array (MergeSort)", a1);
+		printArray(String.format("Sorted array (%s)", ms.TAG), a1);
 
 		BaseSort<Integer> is = new InsertionSort<>();
 		Integer[] a2 = is.sort(input, isAscending);
-		printArray("Sorted array (InsertionSort)", a2);
+		printArray(String.format("Sorted array (%s)", is.TAG), a2);
 
 		BubbleSort<Integer> bs = new BubbleSort<>();
 		Integer[] a3 = bs.sort(input, isAscending);
-		printArray("Sorted array (BubbleSort1)", a3);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a3);
 
 		Integer[] a4 = bs.sort2(input, isAscending);
-		printArray("Sorted array (BubbleSort2)", a4);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a4);
 
 		Integer[] a5 = bs.sort3(input, isAscending);
-		printArray("Sorted array (BubbleSort3)", a5);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a5);
 
 		BaseSort<Integer> ss = new SelectionSort<>();
 		Integer[] a6 = ss.sort(input, isAscending);
-		printArray("Sorted array (SelectionSort)", a6);
+		printArray(String.format("Sorted array (%s)", ss.TAG), a6);
 
 		BaseSort<Integer> hs = new HeapSort<>();
 		Integer[] a7 = hs.sort(input, isAscending);
-		printArray("Sorted array (HeapSort)", a7);
+		printArray(String.format("Sorted array (%s)", hs.TAG), a7);
 
 	}
 

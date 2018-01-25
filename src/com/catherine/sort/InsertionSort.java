@@ -1,5 +1,8 @@
 package com.catherine.sort;
 
+import com.catherine.utils.Analysis;
+import com.catherine.utils.TrackLog;
+
 /**
  * best: n <br>
  * average: n^2 <br>
@@ -13,12 +16,16 @@ package com.catherine.sort;
  */
 public class InsertionSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
+	public InsertionSort() {
+		TAG = "InsertionSort";
+	}
+
 	@Override
 	public T[] sort(T[] a, boolean isAscending) {
-		if (a == null)
-			return null;
-		if (a.length == 1)
+		if (a == null || a.length == 0)
 			return a;
+		TrackLog tLog = new TrackLog(TAG);
+		Analysis.startTracking(tLog);
 
 		T[] input = a.clone();
 		T temp;
@@ -44,6 +51,9 @@ public class InsertionSort<T extends Comparable<? super T>> extends BaseSort<T> 
 			}
 		}
 
+		Analysis.endTracking(tLog);
+		if (SHOW_DEBUG_LOG)
+			Analysis.printTrack(tLog);
 		return input;
 	}
 
