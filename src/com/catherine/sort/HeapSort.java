@@ -32,10 +32,11 @@ public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		MyCompleteBinaryHeap<T> pq = new MyCompleteBinaryHeap<>();
 		pq.heapify(input);
 
-		for (int i = 0; i < input.length; i++)
+		input[0] = pq.getMax();
+		for (int i = 1; i < input.length; i++)
 			input[i] = pq.delMax();
 
-		if (!isAscending) {
+		if (isAscending) {
 			T tmp;
 			int m = ((int) Math.floor(input.length / 2)) - 1;
 			for (int i = 0; i < m; i++) {
