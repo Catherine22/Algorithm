@@ -105,7 +105,7 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 	/**
 	 * 改良版，排序时，若从某一点到最后一位都已经排好时，表示该部分可掠过不检查，直接把排序范围改成某一点到前一位，大幅减少搜寻范围。<br>
-	 * E.g. 19, 3, 14, [11, 12, 13, 14]<br>
+	 * E.g. 9, 2, 6, [11, 12, 13, 14]<br>
 	 * 原本扫描路径呈现三角形，改良后若符合条件会变成更小的三角形。
 	 * 
 	 * @param input
@@ -124,7 +124,7 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		int preExchangePos = path;
 		T temp;
 		for (int i = path; i > 0; i--) {
-			for (int j = 0; j < path - 1; j++) {
+			for (int j = 0; j < path; j++) {
 				if (SHOW_DEBUG_LOG)
 					System.out.print(j);
 				if (isAscending) {
@@ -143,10 +143,6 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 					}
 				}
 			}
-			// 提前终止
-			if (i == 1)
-				break;
-
 			path = preExchangePos + 1;
 			if (SHOW_DEBUG_LOG)
 				System.out.print("\t" + preExchangePos + "\t" + path + "\n");
