@@ -11,27 +11,35 @@ import com.catherine.utils.TrackLog;
  * <br>
  * memory: worst case is n
  * 
+ * @param <T>
  * @author Catherine
  *
  */
-public class MergeSort extends BaseSort {
-	int[] tmp;
+public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
+	Object[] tmp;
 
 	@Override
-	public int[] sort(int[] a, boolean isAscending) {
+	public T[] sort(T[] a, boolean isAscending) {
+		if (a == null || a.length == 0)
+			return a;
 		TrackLog tLog = new TrackLog("MergeSort");
 		Analysis.startTracking(tLog);
 
-		tmp = new int[a.length];
-		for (int i = 0; i < a.length; i++) {
-			tmp[i] = a[i];
+		T[] inputBackup = a.clone();
+		tmp = new Object[inputBackup.length];
+		for (int i = 0; i < inputBackup.length; i++) {
+			tmp[i] = inputBackup[i];
 		}
-		mergeSort(a, 0, a.length - 1, isAscending);
+		mergeSort(inputBackup, 0, inputBackup.length - 1, isAscending);
 
 		Analysis.endTracking(tLog);
 		if (SHOW_DEBUG_LOG)
 			Analysis.printTrack(tLog);
-		return tmp;
+		for (int i = 0; i < inputBackup.length; i++) {
+			inputBackup[i] = (T) tmp[i];
+		}
+
+		return inputBackup;
 	}
 
 	/**
@@ -46,7 +54,7 @@ public class MergeSort extends BaseSort {
 	 * @param isAscending
 	 *            是否递增
 	 */
-	private void mergeSort(int[] a, int left, int right, boolean isAscending) {
+	private void mergeSort(T[] a, int left, int right, boolean isAscending) {
 		if (right > left) {
 			int center = (left + right) / 2;
 			// 排左边
@@ -64,7 +72,7 @@ public class MergeSort extends BaseSort {
 		}
 	}
 
-	private void merge(int[] a, int lStart, int center, int rEnd, boolean isAscending) {
+	private void merge(T[] a, int lStart, int center, int rEnd, boolean isAscending) {
 		int rStart = center + 1;// 右边起始位置
 		int lEnd = center;// 左边结束位置
 		int header = lStart;// 填入回传数组的指针
@@ -77,7 +85,7 @@ public class MergeSort extends BaseSort {
 
 		while (lStart <= lEnd && rStart <= rEnd) {
 			if (isAscending) {
-				if (a[rStart] <= a[lStart])
+				if (a[rStart].compareTo(a[lStart]) <= 0)
 					tmp[header++] = a[rStart++];
 				else
 					tmp[header++] = a[lStart++];
@@ -85,7 +93,7 @@ public class MergeSort extends BaseSort {
 				if (SHOW_DEBUG_LOG)
 					Main.printArray("STEP1", tmp);
 			} else {
-				if (a[rStart] >= a[lStart])
+				if (a[rStart].compareTo(a[lStart]) >= 0)
 					tmp[header++] = a[rStart++];
 				else
 					tmp[header++] = a[lStart++];
@@ -105,7 +113,7 @@ public class MergeSort extends BaseSort {
 			Main.printArray("STEP2", tmp);
 
 		for (int i = 0; i < a.length; i++) {
-			a[i] = tmp[i];
+			a[i] = (T) tmp[i];
 		}
 
 		if (SHOW_DEBUG_LOG)

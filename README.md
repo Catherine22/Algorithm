@@ -6,7 +6,7 @@ trees/Algorithms
 - [Bubble Sort]
 - [Insertion Sort]
 - [Merge Sort]
-- Heap sort
+- [Heap sort]
 - Quick sort
 - [Selection sort]
 
@@ -17,9 +17,9 @@ trees/Algorithms
   - 2 ways to increase the capacity.
 
 > **Tips**
-> - increaseArray() - In the worst case, it takes O(n) on increasing the capacity of a vector by one. But its space utilization is always 100%. <br>
-> - doubleArray() - If you double the capacity each time, you might get lower space utilization (the lowest is 50%), but it will just take O(1). <br>
-> If you need a large array, double the capacity of your array is more efficient. In general, it's better.
+> - increaseArray() <br>
+> - doubleArray() - If you double the capacity each time, the worst space utilization would reach 50%. But it will just take O(1) to insert. <br>
+> When you need a large array, double the capacity of your array is more efficient.
 
   - Insertion/removing/searching
   - Shift continued-elements (It's also a high level method to remove continued-elements)
@@ -27,13 +27,13 @@ trees/Algorithms
   - Remove duplicates with/without sorting
 
   > **Tips**
-  > - removeDuplicates() - It's not necessary to sort your array before you remove duplicated elements. O(n^2) <br>
+  > - removeDuplicates() - You don't have to sort your array before you remove duplicated elements. O(n^2) <br>
   > - removeDuplicatesAndSort1(), removeDuplicatesAndSort2() - It only takes O(n log n), but you've got to sort the whole sequence before removing duplicates. It's a little like using sort()+unique() with vector in C++. <br>
   > - Using removeDuplicatesAndSort1() or removeDuplicatesAndSort2() when you don't want to return a unsorted array. <br>
   > - removeDuplicatesAndSort2() is more efficient and smarter then removeDuplicatesAndSort1() which replaces elements instead of removing duplicates.
 
-  - [Sequence Searching] is used to **search a sorted array and find an element.** If an array contains the element, it'll return where the element is in that array or the latest one of duplicated elements.
-  - As I was saying, if the element hasn't been found, this algorithm would return an index referring to the value(array[index] < element < array[index+1]).
+  - [Sequence Searching] is used to **search a sorted array and find out an element.** It returns the first element when there are duplicated elements.
+  - As I was saying, if the element is not found, this algorithm would return an index. (array[index] < element < array[index+1]).
       - Two ways to binary search (Normally, binSearch2() is more efficient than binSearch())
       - Fibonacci Searching
 
@@ -276,6 +276,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
    [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
    [Selection sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SelectionSort.java>
+   [Heap sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/HeapSort.java>
    [Stack-sortable permutation]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SortableStackPermutation.java>
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>

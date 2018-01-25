@@ -15,9 +15,14 @@ import java.util.Vector;
  * @param <T>
  */
 class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueue<T> {
-	protected final boolean SHOW_DEBUG_LOG = true;
+	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
+
+	@Override
+	public int size() {
+		return super.size();
+	}
 
 	@Override
 	public void insert(T t) {
@@ -32,6 +37,14 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 
 	@Override
 	public T delMax() {
+		if (size() == 0)
+			return null;
+		if (size() == 1) {
+			T tmp = get(0);
+			remove(0);
+			return tmp;
+		}
+		
 		set(0, get(size() - 1));
 		remove(size() - 1);
 		percolateDown(get(size() - 1), get(0));
@@ -364,6 +377,27 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 		T tmp = i;
 		set(p1, p);
 		set((p1 - 1) >> 1, tmp);
+	}
+
+	@Override
+	public void heapify(T[] array) {
+		if (array == null || array.length == 0)
+			return;
+
+		// 方法1
+		// for (T t : list) {
+		// insert(t);
+		// }
+
+		// 方法2
+		for (T t : array) {
+			add(t);
+		}
+
+		// 找出最后一个元素的父亲
+		int target = array.length / 2 - 1;
+		int limit = array.length - 1;
+		merge(target, limit);
 	}
 
 	@Override

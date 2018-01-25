@@ -17,22 +17,24 @@ import com.catherine.utils.TrackLog;
  * <br>
  * selection sort适合用LinkedList实作，因为只要改引用而不是调整整个数组。<br>
  * 
+ * @param <T>
  * @author Catherine
  *
  */
-public class SelectionSort extends BaseSort {
+public class SelectionSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 	@Override
-	public int[] sort(int[] input, boolean isAscending) {
+	public T[] sort(T[] a, boolean isAscending) {
 		TrackLog tLog = new TrackLog("SelectionSort");
 		Analysis.startTracking(tLog);
-		if (input == null)
+		if (a == null)
 			return null;
-		if (input.length == 1)
-			return input;
+		if (a.length == 1)
+			return a;
 
-		LinkedList<Integer> outputs = new LinkedList<>();
-		for (int v : input) {
+		T[] input = a.clone();
+		LinkedList<T> outputs = new LinkedList<>();
+		for (T v : input) {
 			outputs.add(v);
 		}
 
@@ -41,17 +43,17 @@ public class SelectionSort extends BaseSort {
 
 		int header = outputs.size() - 1;
 		int tag = 0;
-		int minOrMax = outputs.getFirst();
+		T minOrMax = outputs.getFirst();
 
 		while (header >= 0) {
 			for (int i = 0; i <= header; i++) {
 				if (isAscending) {
-					if (minOrMax < outputs.get(i)) {
+					if (minOrMax.compareTo(outputs.get(i)) < 0) {
 						minOrMax = outputs.get(i);
 						tag = i;
 					}
 				} else {
-					if (minOrMax > outputs.get(i)) {
+					if (minOrMax.compareTo(outputs.get(i)) > 0) {
 						minOrMax = outputs.get(i);
 						tag = i;
 					}
