@@ -18,11 +18,15 @@ import com.catherine.utils.TrackLog;
 public class MergeSort<T extends Comparable<? super T>> extends BaseSort<T> {
 	Object[] tmp;
 
+	public MergeSort() {
+		TAG = "MergeSort";
+	}
+
 	@Override
 	public T[] sort(T[] a, boolean isAscending) {
 		if (a == null || a.length == 0)
 			return a;
-		TrackLog tLog = new TrackLog("MergeSort");
+		TrackLog tLog = new TrackLog(TAG);
 		Analysis.startTracking(tLog);
 
 		T[] inputBackup = a.clone();

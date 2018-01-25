@@ -23,14 +23,16 @@ import com.catherine.utils.TrackLog;
  */
 public class SelectionSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
+	public SelectionSort() {
+		TAG = "SelectionSort";
+	}
+
 	@Override
 	public T[] sort(T[] a, boolean isAscending) {
-		TrackLog tLog = new TrackLog("SelectionSort");
-		Analysis.startTracking(tLog);
-		if (a == null)
-			return null;
-		if (a.length == 1)
+		if (a == null || a.length == 0)
 			return a;
+		TrackLog tLog = new TrackLog(TAG);
+		Analysis.startTracking(tLog);
 
 		T[] input = a.clone();
 		LinkedList<T> outputs = new LinkedList<>();

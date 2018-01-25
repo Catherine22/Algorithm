@@ -17,14 +17,17 @@ import com.catherine.utils.TrackLog;
  */
 public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
+	public BubbleSort() {
+		TAG = "BubbleSort";
+	}
+
 	@Override
 	public T[] sort(T[] a, boolean isAscending) {
-		TrackLog tLog = new TrackLog("BubbleSort");
-		Analysis.startTracking(tLog);
-		if (a == null)
-			return null;
-		if (a.length == 1)
+		TAG = "BubbleSort1";
+		if (a == null || a.length == 0)
 			return a;
+		TrackLog tLog = new TrackLog(TAG);
+		Analysis.startTracking(tLog);
 
 		T[] input = a.clone();
 		T temp;
@@ -61,12 +64,11 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 	 * @return
 	 */
 	public T[] sort2(T[] a, boolean isAscending) {
-		TrackLog tLog = new TrackLog("BubbleSort2");
-		Analysis.startTracking(tLog);
-		if (a == null)
-			return null;
-		if (a.length == 1)
+		TAG = "BubbleSort2";
+		if (a == null || a.length == 0)
 			return a;
+		TrackLog tLog = new TrackLog(TAG);
+		Analysis.startTracking(tLog);
 
 		T[] input = a.clone();
 		int path = input.length - 1;
@@ -117,12 +119,11 @@ public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
 	 * @return
 	 */
 	public T[] sort3(T[] a, boolean isAscending) {
-		TrackLog tLog = new TrackLog("BubbleSort3");
-		Analysis.startTracking(tLog);
-		if (a == null)
-			return null;
-		if (a.length == 1)
+		TAG = "BubbleSort3";
+		if (a == null || a.length == 0)
 			return a;
+		TrackLog tLog = new TrackLog(TAG);
+		Analysis.startTracking(tLog);
 
 		T[] input = a.clone();
 		int path = input.length - 1;

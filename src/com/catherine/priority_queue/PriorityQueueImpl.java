@@ -44,7 +44,7 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			remove(0);
 			return tmp;
 		}
-		
+
 		set(0, get(size() - 1));
 		remove(size() - 1);
 		percolateDown(get(size() - 1), get(0));
@@ -385,7 +385,7 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			return;
 
 		// 方法1
-		// for (T t : list) {
+		// for (T t : array) {
 		// insert(t);
 		// }
 
@@ -394,10 +394,7 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			add(t);
 		}
 
-		// 找出最后一个元素的父亲
-		int target = array.length / 2 - 1;
-		int limit = array.length - 1;
-		merge(target, limit);
+		merge(array.length - 1, array.length - 1);
 	}
 
 	@Override
@@ -415,12 +412,16 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			add(t);
 		}
 
-		// 找出最后一个元素的父亲
-		int target = list.size() / 2 - 1;
-		int limit = list.size() - 1;
-		merge(target, limit);
+		merge(list.size() - 1, list.size() - 1);
 	}
 
+	/**
+	 * 
+	 * @param target
+	 *            从哪里开始滤
+	 * @param limit
+	 *            最后滤到哪里
+	 */
 	private void merge(int target, int limit) {
 		if (target < 0 || limit < target)
 			return;
@@ -445,7 +446,6 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			// 换父节点
 			// System.out.println("父 " + get(parentPos));
 			percolateDown(l, get(parentPos));
-			// printTree();
 
 			merge(parentPos, limit);
 		}
