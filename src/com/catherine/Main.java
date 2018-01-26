@@ -90,7 +90,7 @@ public class Main {
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
-//		compareStringSorting();
+		compareStringSorting();
 		compareIntSorting();
 
 		// testHailstone();

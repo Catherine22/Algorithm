@@ -19,13 +19,6 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
 
-	public PriorityQueueImpl() {
-	}
-
-	public T[] toArray(T[] a) {
-		return super.toArray(a);
-	};
-
 	@Override
 	public int size() {
 		return super.size();
@@ -241,6 +234,18 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 		int limit = getPos(n);
 		int childPos = getPos(c);
 
+		// TODO
+		// System.out.println("percolateDown:" + basePos + "->" + limit);
+		// System.out.print("percolateDown raw[");
+		// for (int x = 0; x < size(); x++) {
+		// System.out.print(toArray()[x]);
+		// if (x != size() - 1)
+		// System.out.print(", ");
+		// }
+		// System.out.println("]");
+		// System.out.println("RAW");
+		// printTree();
+
 		// 表示刚好第n个词条为右孩子，此时将指定孩子改为左孩子
 		if (childPos - 1 == limit && c == rc) {
 			c = lc;
@@ -299,6 +304,17 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 			// basePos));
 			set(basePos, base);
 		}
+
+		// TODO
+		// System.out.print("percolateDown new[");
+		// for (int x = 0; x < size(); x++) {
+		// System.out.print(toArray()[x]);
+		// if (x != size() - 1)
+		// System.out.print(", ");
+		// }
+		// System.out.println("]");
+		// System.out.println("NEW");
+		// printTree();
 	}
 
 	@Override
@@ -452,8 +468,9 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 			add(t);
 		}
 
-		printTree();
-		merge(target, n);
+		while (target > 0) {
+			merge(target--, n);
+		}
 
 	}
 
@@ -481,7 +498,9 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 			add(t);
 		}
 
-		merge(target, n);
+		while (target > 0) {
+			merge(target--, n);
+		}
 	}
 
 	/**
@@ -496,9 +515,9 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 
 		T l = get(n);
 		// 目标节点
-		// System.out.println("目标 " + get(target));
+//		System.out.println("目标 " + get(target));
 		percolateDown(l, get(target));
-		// printTree();
+//		printTree();
 
 		int parentPos = getParentPos(get(target));
 		if (parentPos >= 0) {

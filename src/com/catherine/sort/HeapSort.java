@@ -33,7 +33,7 @@ public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		Analysis.startTracking(tLog);
 
 		T[] input = a.clone();
-		
+
 		MyCompleteBinaryHeap<T> pq = new MyCompleteBinaryHeap<>();
 		pq.heapify(input);
 
