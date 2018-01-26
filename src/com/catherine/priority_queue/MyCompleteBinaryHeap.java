@@ -2,6 +2,8 @@ package com.catherine.priority_queue;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
 
 /**
  * 完全二叉堆（逻辑上等同于完全二叉树，物理上以向量实现）<br>
@@ -48,6 +50,18 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 	}
 
 	@Override
+	@Deprecated
+	public void completedlyHeapify(T[] array) {
+		priorityQueueImpl.heapify(array);
+	}
+
+	@Override
+	@Deprecated
+	public void completedlyHeapify(List<T> list) {
+		priorityQueueImpl.heapify(list);
+	}
+
+	@Override
 	public void heapify(T[] array) {
 		priorityQueueImpl.heapify(array);
 	}
@@ -69,16 +83,95 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 		return priorityQueueImpl.getRChild(e);
 	}
 
-	public Iterator<T> iterator() {
-		return priorityQueueImpl.iterator();
-	}
-
 	public void printTree() {
 		priorityQueueImpl.printTree();
 	}
 
-	@Override
 	public int size() {
 		return priorityQueueImpl.size();
+	}
+
+	public synchronized void copyInto(Object[] anArray) {
+		priorityQueueImpl.copyInto(anArray);
+	}
+
+	public synchronized void trimToSize() {
+		priorityQueueImpl.trimToSize();
+	}
+
+	public synchronized boolean isEmpty() {
+		return priorityQueueImpl.isEmpty();
+	}
+
+	public int indexOf(Object o) {
+		return priorityQueueImpl.indexOf(o);
+	}
+
+	public synchronized int indexOf(Object o, int index) {
+		return priorityQueueImpl.indexOf(o, index);
+	}
+
+	public synchronized int lastIndexOf(Object o) {
+		return priorityQueueImpl.lastIndexOf(o);
+	}
+
+	public synchronized int lastIndexOf(Object o, int index) {
+		return priorityQueueImpl.lastIndexOf(o, index);
+	}
+
+	public synchronized T elementAt(int index) {
+		return priorityQueueImpl.elementAt(index);
+	}
+
+	public synchronized T firstElement() {
+		return priorityQueueImpl.firstElement();
+	}
+
+	public synchronized T lastElement() {
+		return priorityQueueImpl.lastElement();
+	}
+
+	public synchronized Object clone() {
+		return priorityQueueImpl.clone();
+	}
+
+	public synchronized Object[] toArray() {
+		return priorityQueueImpl.toArray();
+	}
+
+	public synchronized <T> T[] toArray(T[] a) {
+		return priorityQueueImpl.toArray(a);
+	}
+
+	public synchronized T get(int index) {
+		return priorityQueueImpl.get(index);
+	}
+
+	public void clear() {
+		priorityQueueImpl.clear();
+	}
+
+	public synchronized String toString() {
+		return priorityQueueImpl.toString();
+	}
+
+	public synchronized List<T> subList(int fromIndex, int toIndex) {
+		return priorityQueueImpl.subList(fromIndex, toIndex);
+	}
+
+	public synchronized ListIterator<T> listIterator(int index) {
+		return priorityQueueImpl.listIterator(index);
+	}
+
+	public synchronized ListIterator<T> listIterator() {
+		return priorityQueueImpl.listIterator();
+	}
+
+	public synchronized Iterator<T> iterator() {
+		return priorityQueueImpl.iterator();
+	}
+
+	public Spliterator<T> spliterator() {
+		return priorityQueueImpl.spliterator();
 	}
 }

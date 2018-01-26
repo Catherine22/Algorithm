@@ -16,6 +16,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Iterator;
@@ -89,7 +90,7 @@ public class Main {
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
-		compareStringSorting();
+//		compareStringSorting();
 		compareIntSorting();
 
 		// testHailstone();
@@ -1020,7 +1021,6 @@ public class Main {
 		}
 
 		boolean isAscending = (0 + random.nextInt(2)) == 1;
-
 		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
 
 		BaseSort<String> ms = new MergeSort<>();
@@ -1029,26 +1029,42 @@ public class Main {
 
 		BaseSort<String> is = new InsertionSort<>();
 		String[] a2 = is.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		// printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		if (!Arrays.deepEquals(a1, a2))
+			throw new Error(getString(String.format("Sorted array (%s)", is.TAG), a2));
 
 		BubbleSort<String> bs = new BubbleSort<>();
 		String[] a3 = bs.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		if (!Arrays.deepEquals(a1, a3))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a3));
 
 		String[] a4 = bs.sort2(input, isAscending);
-		printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		if (!Arrays.deepEquals(a1, a4))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a4));
 
 		String[] a5 = bs.sort3(input, isAscending);
-		printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		if (!Arrays.deepEquals(a1, a5))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a5));
 
 		BaseSort<String> ss = new SelectionSort<>();
 		String[] a6 = ss.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		// printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		if (!Arrays.deepEquals(a1, a6))
+			throw new Error(getString(String.format("Sorted array (%s)", ss.TAG), a6));
 
-		BaseSort<String> hs = new HeapSort<>();
+		HeapSort<String> hs = new HeapSort<>();
 		String[] a7 = hs.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", hs.TAG), a7);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a7);
+		if (!Arrays.deepEquals(a1, a7))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a7));
 
+		String[] a8 = hs.sort2(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a8);
+		if (!Arrays.deepEquals(a1, a8))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a8));
 	}
 
 	public static void compareIntSorting() {
@@ -1073,26 +1089,42 @@ public class Main {
 
 		BaseSort<Integer> is = new InsertionSort<>();
 		Integer[] a2 = is.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		// printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		if (!Arrays.deepEquals(a1, a2))
+			throw new Error(getString(String.format("Sorted array (%s)", is.TAG), a2));
 
 		BubbleSort<Integer> bs = new BubbleSort<>();
 		Integer[] a3 = bs.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		if (!Arrays.deepEquals(a1, a3))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a3));
 
 		Integer[] a4 = bs.sort2(input, isAscending);
-		printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		if (!Arrays.deepEquals(a1, a4))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a4));
 
 		Integer[] a5 = bs.sort3(input, isAscending);
-		printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		if (!Arrays.deepEquals(a1, a5))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a5));
 
 		BaseSort<Integer> ss = new SelectionSort<>();
 		Integer[] a6 = ss.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		// printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		if (!Arrays.deepEquals(a1, a6))
+			throw new Error(getString(String.format("Sorted array (%s)", ss.TAG), a6));
 
-		BaseSort<Integer> hs = new HeapSort<>();
+		HeapSort<Integer> hs = new HeapSort<>();
 		Integer[] a7 = hs.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", hs.TAG), a7);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a7);
+		if (!Arrays.deepEquals(a1, a7))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a7));
 
+		Integer[] a8 = hs.sort2(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a8);
+		if (!Arrays.deepEquals(a1, a8))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a8));
 	}
 
 	public static void printIterator(Iterator<?> it) {
@@ -1155,4 +1187,20 @@ public class Main {
 		System.out.println("--------------------------------------------------------");
 	}
 
+	public static String getString(String title, Object[] array) {
+		if (array == null)
+			return "null";
+		else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(title + " -> [");
+			for (int i = 0; i < array.length; i++) {
+				sb.append(array[i]);
+				if (i != array.length - 1)
+					sb.append(", ");
+				else
+					sb.append("]");
+			}
+			return sb.toString();
+		}
+	}
 }
