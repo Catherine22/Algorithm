@@ -11,30 +11,36 @@ import com.catherine.utils.TrackLog;
  * <br>
  * memory: 1
  * 
+ * @param <T>
  * @author Catherine
  *
  */
-public class BubbleSort extends BaseSort {
+public class BubbleSort<T extends Comparable<? super T>> extends BaseSort<T> {
+
+	public BubbleSort() {
+		TAG = "BubbleSort";
+	}
 
 	@Override
-	public int[] sort(int[] input, boolean isAscending) {
-		TrackLog tLog = new TrackLog("BubbleSort");
+	public T[] sort(T[] a, boolean isAscending) {
+		TAG = "BubbleSort1";
+		if (a == null || a.length == 0)
+			return a;
+		TrackLog tLog = new TrackLog(TAG);
 		Analysis.startTracking(tLog);
-		if (input == null)
-			return null;
-		if (input.length == 1)
-			return input;
-		int temp;
+
+		T[] input = a.clone();
+		T temp;
 		for (int i = input.length; i >= 0; i--) {
 			for (int j = 0; j < i - 1; j++) {
 				if (isAscending) {
-					if (input[j] > input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) > 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 					}
 				} else {
-					if (input[j] < input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) < 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
@@ -57,30 +63,31 @@ public class BubbleSort extends BaseSort {
 	 * @param isAscending
 	 * @return
 	 */
-	public int[] sort2(int[] input, boolean isAscending) {
-		TrackLog tLog = new TrackLog("BubbleSort2");
+	public T[] sort2(T[] a, boolean isAscending) {
+		TAG = "BubbleSort2";
+		if (a == null || a.length == 0)
+			return a;
+		TrackLog tLog = new TrackLog(TAG);
 		Analysis.startTracking(tLog);
-		if (input == null)
-			return null;
-		if (input.length == 1)
-			return input;
+
+		T[] input = a.clone();
 		int path = input.length - 1;
 
 		int exchangeCount = 0;
-		int temp;
+		T temp;
 		while ((path > 0)) {
 			for (int j = 0; j < path; j++) {
 				if (SHOW_DEBUG_LOG)
 					System.out.print(j);
 				if (isAscending) {
-					if (input[j] > input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) > 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 						exchangeCount++;
 					}
 				} else {
-					if (input[j] < input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) < 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
@@ -104,37 +111,37 @@ public class BubbleSort extends BaseSort {
 
 	/**
 	 * 改良版，排序时，若从某一点到最后一位都已经排好时，表示该部分可掠过不检查，直接把排序范围改成某一点到前一位，大幅减少搜寻范围。<br>
-	 * E.g. 19, 3, 14, [11, 12, 13, 14]<br>
+	 * E.g. 9, 2, 6, [11, 12, 13, 14]<br>
 	 * 原本扫描路径呈现三角形，改良后若符合条件会变成更小的三角形。
 	 * 
 	 * @param input
 	 * @param isAscending
 	 * @return
 	 */
-	public int[] sort3(int[] input, boolean isAscending) {
-		TrackLog tLog = new TrackLog("BubbleSort3");
+	public T[] sort3(T[] a, boolean isAscending) {
+		TAG = "BubbleSort3";
+		if (a == null || a.length == 0)
+			return a;
+		TrackLog tLog = new TrackLog(TAG);
 		Analysis.startTracking(tLog);
-		if (input == null)
-			return null;
-		if (input.length == 1)
-			return input;
 
+		T[] input = a.clone();
 		int path = input.length - 1;
 		int preExchangePos = path;
-		int temp;
+		T temp;
 		for (int i = path; i > 0; i--) {
-			for (int j = 0; j < path - 1; j++) {
+			for (int j = 0; j < path; j++) {
 				if (SHOW_DEBUG_LOG)
 					System.out.print(j);
 				if (isAscending) {
-					if (input[j] > input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) > 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
 						preExchangePos = j;
 					}
 				} else {
-					if (input[j] < input[j + 1]) {
+					if (input[j].compareTo(input[j + 1]) < 0) {
 						temp = input[j];
 						input[j] = input[j + 1];
 						input[j + 1] = temp;
@@ -142,11 +149,9 @@ public class BubbleSort extends BaseSort {
 					}
 				}
 			}
-			// 提前终止
-			if (path == 1)
-				break;
-
 			path = preExchangePos + 1;
+			if (path >= input.length)
+				break;
 			if (SHOW_DEBUG_LOG)
 				System.out.print("\t" + preExchangePos + "\t" + path + "\n");
 		}

@@ -14,10 +14,15 @@ import java.util.Vector;
  *
  * @param <T>
  */
-class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueue<T> {
-	protected final boolean SHOW_DEBUG_LOG = true;
+public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueue<T> {
+	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
+
+	@Override
+	public int size() {
+		return super.size();
+	}
 
 	@Override
 	public void insert(T t) {
@@ -32,9 +37,18 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 
 	@Override
 	public T delMax() {
+		if (size() == 0)
+			return null;
+		if (size() == 1) {
+			T tmp = get(0);
+			remove(0);
+			return tmp;
+		}
+
 		set(0, get(size() - 1));
 		remove(size() - 1);
 		percolateDown(get(size() - 1), get(0));
+
 		return get(0);
 	}
 
@@ -201,7 +215,16 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 
 	@Override
 	public void percolateDown(T n, T i) {
-		T c = getChild(i);
+		// beginning---这边逻辑等同于getChild(i)
+		T c = null;
+		T rc = getRChild(i);
+		T lc = getLChild(i);
+		if (rc == null)
+			c = lc;
+		else {
+			c = ((lc != null) && (rc).compareTo(lc) > 0) ? rc : lc;
+		}
+		// end---这边逻辑等同于getChild(i)
 
 		if (c == null)
 			return;
@@ -210,6 +233,24 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 		T base = i;
 		int limit = getPos(n);
 		int childPos = getPos(c);
+
+		// TODO
+		// System.out.println("percolateDown:" + basePos + "->" + limit);
+		// System.out.print("percolateDown raw[");
+		// for (int x = 0; x < size(); x++) {
+		// System.out.print(toArray()[x]);
+		// if (x != size() - 1)
+		// System.out.print(", ");
+		// }
+		// System.out.println("]");
+		// System.out.println("RAW");
+		// printTree();
+
+		// 表示刚好第n个词条为右孩子，此时将指定孩子改为左孩子
+		if (childPos - 1 == limit && c == rc) {
+			c = lc;
+			childPos--;
+		}
 
 		if (childPos > limit || childPos == -1)
 			return;
@@ -263,6 +304,17 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			// basePos));
 			set(basePos, base);
 		}
+
+		// TODO
+		// System.out.print("percolateDown new[");
+		// for (int x = 0; x < size(); x++) {
+		// System.out.print(toArray()[x]);
+		// if (x != size() - 1)
+		// System.out.print(", ");
+		// }
+		// System.out.println("]");
+		// System.out.println("NEW");
+		// printTree();
 	}
 
 	@Override
@@ -367,7 +419,72 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 	}
 
 	@Override
+	@Deprecated
+	public void completedlyHeapify(T[] array) {
+		for (T t : array) {
+			insert(t);
+		}
+	}
+
+	@Override
+	@Deprecated
+	public void completedlyHeapify(List<T> list) {
+		for (T t : list) {
+			insert(t);
+		}
+	}
+
+	@Override
+	public void heapify(T[] array) {
+		heapify(array, array.length - 1, array.length - 1);
+	}
+
+	@Override
 	public void heapify(List<T> list) {
+		heapify(list, list.size() - 1, list.size() - 1);
+	}
+
+	/**
+	 * 用{@link #heapify(List)}对整个集合做处理。
+	 * 
+	 * @param array
+	 *            可排序的集合
+	 * @param target
+	 *            从第target开始开始下滤
+	 * @param n
+	 *            最后滤到第n个词条
+	 */
+	private void heapify(T[] array, int target, int n) {
+		if (array == null || array.length == 0)
+			return;
+
+		// 方法1
+		// for (T t : array) {
+		// insert(t);
+		// }
+
+		// 方法2
+		for (T t : array) {
+			add(t);
+		}
+
+		while (target > 0) {
+			merge(target--, n);
+		}
+
+	}
+
+	/**
+	 * 用{@link #heapify(Object[])}对整个集合做处理。
+	 * 
+	 * @param list
+	 *            可排序的集合
+	 * @param target
+	 *            从第target开始开始下滤
+	 * @param n
+	 *            最后滤到第n个词条
+	 */
+	private void heapify(List<T> list, int target, int n) {
 		if (list == null || list.size() == 0)
 			return;
 
@@ -381,21 +498,26 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			add(t);
 		}
 
-		// 找出最后一个元素的父亲
-		int target = list.size() / 2 - 1;
-		int limit = list.size() - 1;
-		merge(target, limit);
+		while (target > 0) {
+			merge(target--, n);
+		}
 	}
 
-	private void merge(int target, int limit) {
-		if (target < 0 || limit < target)
+	/**
+	 * @param target
+	 *            从哪里开始滤
+	 * @param n
+	 *            最后滤到哪里
+	 */
+	private void merge(int target, int n) {
+		if (target < 0 || n < target)
 			return;
 
-		T l = get(limit);
+		T l = get(n);
 		// 目标节点
-		// System.out.println("目标 " + get(target));
+//		System.out.println("目标 " + get(target));
 		percolateDown(l, get(target));
-		// printTree();
+//		printTree();
 
 		int parentPos = getParentPos(get(target));
 		if (parentPos >= 0) {
@@ -411,9 +533,8 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			// 换父节点
 			// System.out.println("父 " + get(parentPos));
 			percolateDown(l, get(parentPos));
-			// printTree();
 
-			merge(parentPos, limit);
+			merge(parentPos, n);
 		}
 	}
 
@@ -439,7 +560,6 @@ class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> imple
 			len = (int) Math.pow(2, level);
 			level++;
 		}
-
 	}
 
 }

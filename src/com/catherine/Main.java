@@ -2,6 +2,7 @@ package com.catherine;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -15,10 +16,12 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 import javax.crypto.BadPaddingException;
@@ -44,7 +47,9 @@ import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
+import com.catherine.sort.BaseSort;
 import com.catherine.sort.BubbleSort;
+import com.catherine.sort.HeapSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 import com.catherine.sort.SelectionSort;
@@ -85,10 +90,9 @@ public class Main {
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
-		// testInsertionSort();
-		// testMergeSort();
-		// testBubbleSort();
-		// testSelectionSort();
+		compareStringSorting();
+		compareIntSorting();
+
 		// testHailstone();
 		// testTuringMachine();
 		// testSequence();
@@ -103,7 +107,7 @@ public class Main {
 		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
-		testPQ();
+		// testPQ();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -999,38 +1003,128 @@ public class Main {
 		printList("Hailstone", other.getHailstone(42));
 	}
 
-	public static void testSelectionSort() {
-		SelectionSort ms = new SelectionSort();
-		TrackLog tLog = new TrackLog("SelectionSort"); // track
-		Analysis.startTracking(tLog); // track
-		printArray("SelectionSort", ms.sort(input1, true));
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+	public static void compareStringSorting() {
+		Random random = new Random();
+		int SIZE = 0 + random.nextInt(15);
+		int stringLen = 0 + random.nextInt(10);
+		String[] input = new String[SIZE];
+		StringBuilder sBuilder = new StringBuilder();
+
+		random = new Random();
+		for (int i = 0; i < SIZE; i++) {
+			sBuilder.delete(0, stringLen);
+			for (int j = 0; j < stringLen; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			input[i] = sBuilder.toString();
+			random = new Random();
+		}
+
+		boolean isAscending = (0 + random.nextInt(2)) == 1;
+		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
+
+		BaseSort<String> ms = new MergeSort<>();
+		String[] a1 = ms.sort(input, isAscending);
+		printArray(String.format("Sorted array (%s)", ms.TAG), a1);
+
+		BaseSort<String> is = new InsertionSort<>();
+		String[] a2 = is.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		if (!Arrays.deepEquals(a1, a2))
+			throw new Error(getString(String.format("Sorted array (%s)", is.TAG), a2));
+
+		BubbleSort<String> bs = new BubbleSort<>();
+		String[] a3 = bs.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		if (!Arrays.deepEquals(a1, a3))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a3));
+
+		String[] a4 = bs.sort2(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		if (!Arrays.deepEquals(a1, a4))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a4));
+
+		String[] a5 = bs.sort3(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		if (!Arrays.deepEquals(a1, a5))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a5));
+
+		BaseSort<String> ss = new SelectionSort<>();
+		String[] a6 = ss.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		if (!Arrays.deepEquals(a1, a6))
+			throw new Error(getString(String.format("Sorted array (%s)", ss.TAG), a6));
+
+		HeapSort<String> hs = new HeapSort<>();
+		String[] a7 = hs.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a7);
+		if (!Arrays.deepEquals(a1, a7))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a7));
+
+		String[] a8 = hs.sort2(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a8);
+		if (!Arrays.deepEquals(a1, a8))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a8));
 	}
 
-	public static void testBubbleSort() {
-		BubbleSort bs = new BubbleSort();
-		TrackLog tLog1 = new TrackLog("BubbleSort"); // track
-		Analysis.startTracking(tLog1); // track
-		printArray("BubbleSort", bs.sort(input1, false));
-		Analysis.endTracking(tLog1); // track
-		Analysis.printTrack(tLog1); // track
-		printArray("BubbleSort2", bs.sort2(input3, false));
-		printArray("BubbleSort3", bs.sort3(input7, false));
-	}
+	public static void compareIntSorting() {
+		Random random = new Random();
+		int SIZE = 0 + random.nextInt(15);
+		int MIN_INT = 0 + random.nextInt(10);
+		int MAX_INT = 10000;
+		Integer[] input = new Integer[SIZE];
 
-	public static void testInsertionSort() {
-		InsertionSort is = new InsertionSort();
-		printArray("InsertionSort", is.sort(input1, true));
-	}
+		random = new Random();
+		for (int i = 0; i < SIZE; i++) {
+			input[i] = MIN_INT + random.nextInt(MAX_INT);
+			random = new Random();
+		}
 
-	public static void testMergeSort() {
-		MergeSort ms = new MergeSort();
-		TrackLog tLog = new TrackLog("MergeSort"); // track
-		Analysis.startTracking(tLog); // track
-		printArray("MergeSort", ms.sort(input3, false));
-		Analysis.endTracking(tLog); // track
-		Analysis.printTrack(tLog); // track
+		boolean isAscending = (0 + random.nextInt(2)) == 1;
+		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
+
+		BaseSort<Integer> ms = new MergeSort<>();
+		Integer[] a1 = ms.sort(input, isAscending);
+		printArray(String.format("Sorted array (%s)", ms.TAG), a1);
+
+		BaseSort<Integer> is = new InsertionSort<>();
+		Integer[] a2 = is.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		if (!Arrays.deepEquals(a1, a2))
+			throw new Error(getString(String.format("Sorted array (%s)", is.TAG), a2));
+
+		BubbleSort<Integer> bs = new BubbleSort<>();
+		Integer[] a3 = bs.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		if (!Arrays.deepEquals(a1, a3))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a3));
+
+		Integer[] a4 = bs.sort2(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		if (!Arrays.deepEquals(a1, a4))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a4));
+
+		Integer[] a5 = bs.sort3(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		if (!Arrays.deepEquals(a1, a5))
+			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a5));
+
+		BaseSort<Integer> ss = new SelectionSort<>();
+		Integer[] a6 = ss.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		if (!Arrays.deepEquals(a1, a6))
+			throw new Error(getString(String.format("Sorted array (%s)", ss.TAG), a6));
+
+		HeapSort<Integer> hs = new HeapSort<>();
+		Integer[] a7 = hs.sort(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a7);
+		if (!Arrays.deepEquals(a1, a7))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a7));
+
+		Integer[] a8 = hs.sort2(input, isAscending);
+		// printArray(String.format("Sorted array (%s)", hs.TAG), a8);
+		if (!Arrays.deepEquals(a1, a8))
+			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a8));
 	}
 
 	public static void printIterator(Iterator<?> it) {
@@ -1042,6 +1136,23 @@ public class Main {
 		System.out.println(sBuilder.substring(0, sBuilder.length() - 2) + "]");
 	}
 
+	public synchronized static void printArray(String title, Object[] array) {
+		System.out.println("--------------------------------------------------------");
+		if (array == null)
+			System.out.println("null");
+		else {
+			System.out.print(title + " -> [");
+			for (int i = 0; i < array.length; i++) {
+				System.out.print(array[i]);
+				if (i != array.length - 1)
+					System.out.print(", ");
+				else
+					System.out.println("]");
+			}
+		}
+		System.out.println("--------------------------------------------------------");
+	}
+
 	public static void printArray(String title, int[] array) {
 		System.out.println("--------------------------------------------------------");
 		if (array == null)
@@ -1051,7 +1162,7 @@ public class Main {
 			for (int i = 0; i < array.length; i++) {
 				System.out.print(array[i]);
 				if (i != array.length - 1)
-					System.out.print(",");
+					System.out.print(", ");
 				else
 					System.out.println("]");
 			}
@@ -1059,7 +1170,7 @@ public class Main {
 		System.out.println("--------------------------------------------------------");
 	}
 
-	public static void printList(String title, List<Integer> list) {
+	public static void printList(String title, List<?> list) {
 		System.out.println("--------------------------------------------------------");
 		if (list == null)
 			System.out.println("null");
@@ -1068,7 +1179,7 @@ public class Main {
 			for (int i = 0; i < list.size(); i++) {
 				System.out.print(list.get(i));
 				if (i != list.size() - 1)
-					System.out.print(",");
+					System.out.print(", ");
 				else
 					System.out.println("]");
 			}
@@ -1076,4 +1187,20 @@ public class Main {
 		System.out.println("--------------------------------------------------------");
 	}
 
+	public static String getString(String title, Object[] array) {
+		if (array == null)
+			return "null";
+		else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(title + " -> [");
+			for (int i = 0; i < array.length; i++) {
+				sb.append(array[i]);
+				if (i != array.length - 1)
+					sb.append(", ");
+				else
+					sb.append("]");
+			}
+			return sb.toString();
+		}
+	}
 }

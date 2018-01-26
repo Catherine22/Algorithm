@@ -13,7 +13,7 @@ import java.util.Map;
 public class Analysis {
 	private static Map<Integer, Integer> counterCollection = new HashMap<>();
 
-	public static void startTracking(TrackLog tLog) {
+	public synchronized static void startTracking(TrackLog tLog) {
 		tLog.setStartTime(System.currentTimeMillis());
 
 		Runtime runtime = Runtime.getRuntime();
@@ -21,7 +21,7 @@ public class Analysis {
 		tLog.setStartMem(usedMemory);
 	}
 
-	public static void endTracking(TrackLog tLog) {
+	public synchronized static void endTracking(TrackLog tLog) {
 		tLog.setEndTime(System.currentTimeMillis());
 
 		Runtime runtime = Runtime.getRuntime();
@@ -29,7 +29,7 @@ public class Analysis {
 		tLog.setEndMem(usedMemory);
 	}
 
-	public static void printTrack(TrackLog tLog) {
+	public synchronized static void printTrack(TrackLog tLog) {
 		System.out.println("LOG-----------");
 		System.out.println(tLog.toString());
 		System.out.println("LOG-----------");
@@ -41,7 +41,7 @@ public class Analysis {
 	 * @param methodID
 	 *            自定义方法的ID，该数值不重复
 	 */
-	public static void count(int methodID) {
+	public synchronized static void count(int methodID) {
 		if (counterCollection.containsKey(methodID))
 			counterCollection.put(methodID, counterCollection.get(methodID) + 1);
 		else
@@ -54,7 +54,7 @@ public class Analysis {
 	 * @param methodID
 	 *            自定义方法的ID，该数值不重复
 	 */
-	public static void stopCounting(int methodID) {
+	public synchronized static void stopCounting(int methodID) {
 		if (counterCollection.containsKey(methodID)) {
 			System.out.println(String.format("It ran %s times.", counterCollection.get(methodID)));
 			counterCollection.remove(methodID);
