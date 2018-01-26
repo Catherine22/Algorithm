@@ -47,7 +47,7 @@ public interface PriorityQueue<T> {
 	public T delMax();
 
 	/**
-	 * 对前n个词条的第i个节点进行下滤，n>i<br>
+	 * 从第i个节点进行下滤直到第n个词条，n>i<br>
 	 * 如果E与其较大的子节点违反堆序性，则交换为止，交换后继续和新较大的子节点（原孙子）做确认，直到E与孩子符合堆序性或到达底端。<br>
 	 * 由于树高不超过log(n)，所以比较次数最多就是log(n)，最坏情况是每一次上滤都要交换（每次交换需要三次赋值），所以=3·log(n)。
 	 * <br>
@@ -79,7 +79,8 @@ public interface PriorityQueue<T> {
 	 * 2. 佛洛依德算法，由上而下的下濾——先把元素搬进来，然后从最后一个元素的父亲开始下滤，再兄弟下滤，
 	 * 再两者的父亲下滤，类似合并堆的概念，O(n)。<br>
 	 * 
-	 * @param n
+	 * @param list
+	 *            可排序的集合
 	 */
 	void heapify(List<T> list);
 
@@ -91,9 +92,30 @@ public interface PriorityQueue<T> {
 	 * 2. 佛洛依德算法，由上而下的下濾——先把元素搬进来，然后从最后一个元素的父亲开始下滤，再兄弟下滤，
 	 * 再两者的父亲下滤，类似合并堆的概念，O(n)。<br>
 	 * 
-	 * @param n
+	 * @param array
+	 *            可排序的集合
 	 */
 	void heapify(T[] array);
+
+	/**
+	 * 一般来说不必用到这个，直接用{@link #heapify(Object[])}做偏序处理即可。<br>
+	 * 传入一段可排序的集合，使之成为优先级队列，并全排序。<br>
+	 * 将集合内的元素挨个加入，每次加入做上滤处理。 <br>
+	 * 
+	 * @param n
+	 */
+	@Deprecated
+	public void completedlyHeapify(T[] array);
+
+	/**
+	 * 一般来说不必用到这个，直接用{@link #heapify(List)}做偏序处理即可。 <br>
+	 * 传入一段可排序的集合，使之成为优先级队列，并全排序。 <br>
+	 * 将集合内的元素挨个加入，每次加入做上滤处理。 <br>
+	 * 
+	 * @param n
+	 */
+	@Deprecated
+	public void completedlyHeapify(List<T> list);
 
 	int size();
 
