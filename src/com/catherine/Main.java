@@ -90,9 +90,8 @@ public class Main {
 	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
-		compareStringSorting();
-		compareIntSorting();
-
+		// compareStringSorting();
+		// compareIntSorting();
 		// testHailstone();
 		// testTuringMachine();
 		// testSequence();
@@ -108,6 +107,7 @@ public class Main {
 		// testSplayTree();
 		// testBTree();
 		// testPQ();
+		testLeftistHeaps();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -286,6 +286,57 @@ public class Main {
 		raxorfF.hash(hashingHelper.getStudent());
 		raxorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raxorfF.getTableList(),
 				raxorfF.getStudent());
+	}
+
+	public static void testLeftistHeaps() {
+		MyCompleteBinaryHeap<Integer> pq1 = new MyCompleteBinaryHeap<>();
+		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>();
+
+		Random random = new Random();
+		int SIZE1 = 0 + random.nextInt(15);
+		int SIZE2 = 0 + random.nextInt(5);
+		int MIN_INT = 0 + random.nextInt(10);
+		int MAX_INT = 10000;
+
+		// Generate a random priority queue
+		random = new Random();
+		for (int i = 0; i < SIZE1; i++) {
+			pq1.insert(MIN_INT + random.nextInt(MAX_INT));
+			random = new Random();
+		}
+
+		printArray(String.format("%s:", "pq1"), pq1.toArray());
+		// pq1.printTree();
+
+		// Generate a random priority queue
+		for (int i = 0; i < SIZE2; i++) {
+			pq2.insert(MIN_INT + random.nextInt(MAX_INT));
+			random = new Random();
+		}
+
+		printArray(String.format("%s:", "pq2"), pq2.toArray());
+		// pq2.printTree();
+		Integer[] raw = new Integer[pq2.size()];
+		pq2.toArray(raw);
+
+		MyCompleteBinaryHeap<Integer> pq3 = new MyCompleteBinaryHeap<>();
+		for (int i = 0; i < pq1.size(); i++) {
+			pq3.insert(pq1.get(i));
+		}
+
+		// completedlyMerge
+		pq1.completedlyMerge(pq2.getPriorityQueue());
+		printArray(String.format("merge %s and %s", "pq1", "pq2"), pq1.toArray());
+		pq1.printTree();
+		Integer[] a1 = new Integer[pq1.size()];
+		pq1.toArray(a1);
+
+		// merge
+		pq3.merge(pq2.getPriorityQueue());
+		printArray(String.format("merge %s and %s", "pq1", "pq2"), pq3.toArray());
+		pq3.printTree();
+		Integer[] a3 = new Integer[pq3.size()];
+		pq3.toArray(a3);
 	}
 
 	public static void testPQ() {

@@ -82,7 +82,7 @@ public interface PriorityQueue<T> {
 	 * @param list
 	 *            可排序的集合
 	 */
-	void heapify(List<T> list);
+	public void heapify(List<T> list);
 
 	/**
 	 * 传入一段可排序的集合，使之成为优先级队列。<br>
@@ -95,7 +95,7 @@ public interface PriorityQueue<T> {
 	 * @param array
 	 *            可排序的集合
 	 */
-	void heapify(T[] array);
+	public void heapify(T[] array);
 
 	/**
 	 * 一般来说不必用到这个，直接用{@link #heapify(Object[])}做偏序处理即可。<br>
@@ -117,6 +117,31 @@ public interface PriorityQueue<T> {
 	@Deprecated
 	public void completedlyHeapify(List<T> list);
 
+	/**
+	 * 合并两个堆，有三种实现方式，此处用第二种实现。 <br>
+	 * 堆A与堆B，且 |A| = m >= n = |B| <br>
+	 * 1. 挨个添加 = A.insert(B.delMax()) = O(m * log(m+n)) <br>
+	 * 2. 佛洛依德算法 = O(m+n) <br>
+	 * 3. 左式堆 = O(log(n))<br>
+	 * 
+	 * @see com.catherine.priority_queue.LeftistHeap 左式堆
+	 * @param heap
+	 */
+	public void merge(PriorityQueue<T> heap);
+
+	/**
+	 * 一般来说不必用到这个，直接用{@link #merge(heap)}做偏序处理即可。 <br>
+	 * 合并两个堆。 <br>
+	 * 堆A与堆B，且 |A| = m >= n = |B| <br>
+	 * 挨个添加 = A.insert(B.delMax()) = O(m * log(m+n)) <br>
+	 * 
+	 * @param heap
+	 */
+	@Deprecated
+	public void completedlyMerge(PriorityQueue<T> heap);
+
 	int size();
+
+	T get(int position);
 
 }

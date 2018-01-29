@@ -23,6 +23,10 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 		priorityQueueImpl = new PriorityQueueImpl<>();
 	}
 
+	public PriorityQueue<T> getPriorityQueue() {
+		return priorityQueueImpl;
+	}
+
 	@Override
 	public void insert(T e) {
 		priorityQueueImpl.add(e);
@@ -69,6 +73,17 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 	@Override
 	public void heapify(List<T> list) {
 		priorityQueueImpl.heapify(list);
+	}
+
+	@Override
+	public void merge(PriorityQueue<T> heap) {
+		priorityQueueImpl.merge(heap);
+	}
+
+	@Override
+	@Deprecated
+	public void completedlyMerge(PriorityQueue<T> heap) {
+		priorityQueueImpl.completedlyMerge(heap);
 	}
 
 	public T getParent(T e) {

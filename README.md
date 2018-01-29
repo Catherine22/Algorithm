@@ -185,7 +185,19 @@ You could build a priority queue by Vector, List or Tree. Tree (BBST) is the mos
 CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
 - [PriorityQueueImpl]
 - Percolate up and down
-- Heapify (Robert Floyd's algorithm)
+- Heapify
+    1. Insert elements of the collection one by one
+    2. Robert Floyd's algorithm
+
+### Leftist Heap
+When it comes to merge two heaps, we'd probably think of Floyd's algorithm. But **if those two heaps have been sorted**, Leftist Heap is a nifty solution.    
+![Leftist Heap][16]   
+![Leftist Heap][17]   
+Merge two heaps (A, B. |A| = m >= n = |B|):
+    1. A.insert(B.delMax()) = O(m * log(m+n))
+    2. Robert Floyd's algorithm = O(m+n)
+    3. Leftist Heap = O(log(n))
+
 
 ## Dictionary
 
@@ -333,3 +345,5 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [13]: https://github.com/Catherine22/Algorithms/blob/master/res/quadratic_probing.png
   [14]: https://github.com/Catherine22/Algorithms/blob/master/res/Fermat_s_theorem.png
   [15]: https://github.com/Catherine22/Algorithms/blob/master/res/complete_binary_heap.png
+  [16]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_1.png
+  [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png
