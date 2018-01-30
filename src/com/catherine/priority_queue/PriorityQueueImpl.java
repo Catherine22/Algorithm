@@ -444,47 +444,6 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 		heapify(list, list.size() - 1, list.size() - 1);
 	}
 
-	/**
-	 * 一般来说不必用到这个，直接用{@link #merge(heap)}做偏序处理即可。 <br>
-	 * 合并两个堆。 <br>
-	 * 堆A与堆B，且 |A| = m >= n = |B| <br>
-	 * 挨个添加 = A.insert(B.delMax()) = O(m * log(m+n)) <br>
-	 * 
-	 * @param heap
-	 */
-	@Deprecated
-	public void completedlyMerge(PriorityQueue<T> heap) {
-		if (heap == null || heap.size() == 0)
-			return;
-		PriorityQueueImpl<T> tmp = (PriorityQueueImpl<T>) ((PriorityQueueImpl<T>) heap).clone();
-
-		// 方法1
-		if (size() > tmp.size()) {
-			insert(tmp.getMax());
-			while (tmp.size() > 1)
-				insert(tmp.delMax());
-		} else {
-			if (size() > 0)
-				tmp.insert(getMax());
-			while (size() > 1)
-				tmp.insert(delMax());
-			clear();
-			for (int i = 0; i < tmp.size(); i++) {
-				add(tmp.get(i));
-			}
-		}
-	}
-
-	/**
-	 * 合并两个堆，有三种实现方式，此处用第二种实现。 <br>
-	 * 堆A与堆B，且 |A| = m >= n = |B| <br>
-	 * 1. 挨个添加 = A.insert(B.delMax()) = O(m * log(m+n)) <br>
-	 * 2. 佛洛依德算法 = O(m+n) <br>
-	 * 3. 左式堆 = O(log(n))<br>
-	 * 
-	 * @see com.catherine.priority_queue.LeftistHeap 左式堆
-	 * @param heap
-	 */
 	public void merge(PriorityQueue<T> heap) {
 		if (heap == null || heap.size() == 0)
 			return;
@@ -496,9 +455,9 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 		// while (tmp.size() > 1)
 		// insert(tmp.delMax());
 		// } else {
+		// if (size() > 0)
 		// tmp.insert(getMax());
 		// while (size() > 1)
-		// if (size() > 0)
 		// tmp.insert(delMax());
 		// clear();
 		// for (int i = 0; i < tmp.size(); i++) {

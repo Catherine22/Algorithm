@@ -129,17 +129,6 @@ public interface PriorityQueue<T> {
 	 */
 	public void merge(PriorityQueue<T> heap);
 
-	/**
-	 * 一般来说不必用到这个，直接用{@link #merge(heap)}做偏序处理即可。 <br>
-	 * 合并两个堆。 <br>
-	 * 堆A与堆B，且 |A| = m >= n = |B| <br>
-	 * 挨个添加 = A.insert(B.delMax()) = O(m * log(m+n)) <br>
-	 * 
-	 * @param heap
-	 */
-	@Deprecated
-	public void completedlyMerge(PriorityQueue<T> heap);
-
 	int size();
 
 	T get(int position);

@@ -46,6 +46,7 @@ import com.catherine.dictionary.functions.SelectingDigits;
 import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.priority_queue.LeftistHeap;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
 import com.catherine.sort.BaseSort;
 import com.catherine.sort.BubbleSort;
@@ -324,19 +325,15 @@ public class Main {
 			pq3.insert(pq1.get(i));
 		}
 
-		// completedlyMerge
-		pq1.completedlyMerge(pq2.getPriorityQueue());
+		// merge
+		pq1.merge(pq2.getPriorityQueue());
 		printArray(String.format("merge %s and %s", "pq1", "pq2"), pq1.toArray());
 		pq1.printTree();
-		Integer[] a1 = new Integer[pq1.size()];
-		pq1.toArray(a1);
-
-		// merge
-		pq3.merge(pq2.getPriorityQueue());
-		printArray(String.format("merge %s and %s", "pq1", "pq2"), pq3.toArray());
-		pq3.printTree();
-		Integer[] a3 = new Integer[pq3.size()];
-		pq3.toArray(a3);
+		Integer[] a3 = new Integer[pq1.size()];
+		pq1.toArray(a3);
+//
+//		if (!Arrays.deepEquals(a1, a3))
+//			throw new Error(getString(String.format("merge array (%s)", "pq1, pq2"), a3));
 	}
 
 	public static void testPQ() {

@@ -80,12 +80,6 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 		priorityQueueImpl.merge(heap);
 	}
 
-	@Override
-	@Deprecated
-	public void completedlyMerge(PriorityQueue<T> heap) {
-		priorityQueueImpl.completedlyMerge(heap);
-	}
-
 	public T getParent(T e) {
 		return priorityQueueImpl.getParent(e);
 	}
