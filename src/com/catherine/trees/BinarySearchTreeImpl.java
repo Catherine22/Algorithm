@@ -72,20 +72,59 @@ class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree
 			if (SHOW_LOG)
 				Analysis.count(ANALYSIS_ID);
 
-			if (data.compareTo(hot.getData()) > 0) {
-				if (hot.getrChild() == null)
-					stop = true;
-				else
-					hot = hot.getrChild();
-			} else if (data.compareTo(hot.getData()) < 0) {
+			if (data.compareTo(hot.getData()) < 0) {
 				if (hot.getlChild() == null)
 					stop = true;
 				else
 					hot = hot.getlChild();
+			} else if (data.compareTo(hot.getData()) > 0) {
+				if (hot.getrChild() == null)
+					stop = true;
+				else
+					hot = hot.getrChild();
 			} else {
 				node = hot;
 				hot = node.getParent();
 				stop = true;
+			}
+		}
+
+		if (SHOW_LOG)
+			Analysis.stopCounting(ANALYSIS_ID);
+
+		return node;
+	}
+
+	@Override
+	public Node<E> searchLast(E data) {
+		if (root == null)
+			throw new NullPointerException("Root must not be null.");
+		hot = root;
+		boolean stop = false;
+		Node<E> node = null;
+
+		while (!stop) {
+			if (SHOW_LOG)
+				Analysis.count(ANALYSIS_ID);
+
+			if (data.compareTo(hot.getData()) < 0) {
+				if (hot.getlChild() == null)
+					stop = true;
+				else
+					hot = hot.getlChild();
+			} else if (data.compareTo(hot.getData()) > 0) {
+				if (hot.getrChild() == null)
+					stop = true;
+				else
+					hot = hot.getrChild();
+			} else {
+				// 由于允许data重复，一旦出现两个相同的data，应返回最后一个
+				if (hot.getrChild() == null || data.compareTo(hot.getrChild().getData()) != 0) {
+					node = hot;
+					hot = node.getParent();
+					stop = true;
+				} else
+					hot = hot.getrChild();
 			}
 		}
 
@@ -102,11 +141,11 @@ class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree
 		if (root == null)
 			setRoot(data);
 
-		search(data);
-		//当插入节点的值与根节点相同时，此时hot为null
+		searchLast(data);
+		// 当插入节点的值与根节点相同时，此时hot为null
 		Node<E> parent = (hot == null) ? root : hot;
 
-		if (data.compareTo(parent.getData()) > 0) {
+		if (data.compareTo(parent.getData()) >= 0) {
 			return insertRC(parent, data);
 		} else {
 			return insertLC(parent, data);
@@ -123,13 +162,6 @@ class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree
 			throw new NullPointerException("Root must not be null.");
 		if (node == null)
 			throw new NullPointerException("Node must not be null.");
-		if (node.getParent() == null) {
-			// 移除根节点
-			size = 0;
-			root = null;
-			hot = null;
-			return;
-		}
 		hot = node.getParent();
 		// 情况2
 		if (node.getlChild() != null && node.getrChild() != null) {
@@ -143,21 +175,30 @@ class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree
 			node = succ;
 		}
 
-		Node<E> parent = node.getParent();
-		// 情况1
-		if (node.getlChild() != null && node.getrChild() == null) {
-			killParent(parent, node.getlChild());
+		// Node<E> parent = node.getParent();
+		// 情况1-移除节点为根节点
+		if (hot == null) {
+			root = node;
+			root.setHeight(root.getHeight());
+			updateAboveHeight(root);
+			size--;
+			return;
 		}
-		// 情况1
+
+		// 情况1-移除节点仅一孩子，且为左孩子
+		else if (node.getlChild() != null && node.getrChild() == null) {
+			killParent(hot, node.getlChild());
+		}
+		// 情况1-移除节点仅一孩子，且为右孩子
 		else if (node.getlChild() == null && node.getrChild() != null) {
-			killParent(parent, node.getrChild());
+			killParent(hot, node.getrChild());
 		}
-		// 情况1
+		// 情况1-移除节点没孩子
 		else {
-			if (node != root && node == parent.getlChild())
-				parent.setlChild(null);
-			else if (node != root && node == parent.getrChild())
-				parent.setrChild(null);
+			if (node != root && node == hot.getlChild())
+				hot.setlChild(null);
+			else if (node != root && node == hot.getrChild())
+				hot.setrChild(null);
 			node = null;
 		}
 

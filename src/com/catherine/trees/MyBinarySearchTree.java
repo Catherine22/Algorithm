@@ -119,6 +119,11 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	}
 
 	@Override
+	public Node<E> searchLast(E data) {
+		return bst.searchLast(data);
+	}
+
+	@Override
 	public Node<E> insert(E data) {
 		return bst.insert(data);
 	}
@@ -134,15 +139,20 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
-	public static BinarySearchTree<Integer> random(int size) {
+	public static BinarySearchTree<Integer> random(int size, int from, int to) {
+		if (size <= 0)
+			throw new IllegalArgumentException("Size must be more than 0");
+		if (to <= from)
+			throw new IllegalArgumentException("Error range");
+		
 		BinarySearchTree<Integer> newBST = null;
 		List<Integer> sequence = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			sequence.add(i + 1);
+		for (int i = from; i < to; i++) {
+			sequence.add(i);
 		}
 		// 产生乱数序列
 		Collections.shuffle(sequence);
-		System.out.print(sequence.get(0) + " ");
+		System.out.print("Random BST -> " + sequence.get(0) + " ");
 		newBST = new MyBinarySearchTree<Integer>(sequence.get(0));
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");

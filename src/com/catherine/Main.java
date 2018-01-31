@@ -827,16 +827,26 @@ public class Main {
 
 	public static void testBST() {
 		Random random = new Random();
-		MyBinarySearchTree<Character> mBST = new MyBinarySearchTree<>((char) ('A' + random.nextInt(26)));
+		char root = (char) ('A' + random.nextInt(26));
+		MyBinarySearchTree<Character> mBST = new MyBinarySearchTree<>(root);
 		int SIZE = 1 + random.nextInt(15);
 		char[] history = new char[SIZE];
-		for (int i = 0; i < SIZE; i++) {
+		history[0] = root;
+		for (int i = 1; i < SIZE; i++) {
 			history[i] = (char) ('A' + random.nextInt(26));
 			mBST.insert(history[i]);
 			random = new Random();
 		}
+
+		System.out.println("size:" + mBST.size());
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
+
+		for (int i = 0; i < history.length; i++) {
+			System.out.print(history[i] + " ");
+
+		}
+		System.out.print("\n");
 
 		// removeLCCompletely
 		int p = 0 + random.nextInt(history.length);
@@ -850,26 +860,24 @@ public class Main {
 		// remove
 		p = 0 + random.nextInt(history.length);
 		Node<Character> n2 = mBST.search(history[p]);
-		System.out.println("\n\nremove:" + n2.getData());
-		mBST.remove(n2.getData());
-		mBST.traverseIn();// 中序一定是小到大排
-		mBST.traverseLevel();
+		if (n2 != null) {
+			System.out.println("\n\nremove:" + n2.getData());
+			mBST.remove(n2.getData());
+			mBST.traverseIn();// 中序一定是小到大排
+			mBST.traverseLevel();
+		}
 
-		// mBST.removeLCCompletely(mBST.search(80));
-		// mBST.remove(20);
-		// mBST.traverseIn();// 中序一定是小到大排
-		// mBST.traverseLevel();
-		// mBST.zig(mBST.search(80));
-		// mBST.traverseIn();// 中序一定是小到大排
-		// mBST.traverseLevel();
-		// System.out.println(mBST.succ(mBST.search(20)));
+		// search
+		p = 0 + random.nextInt(history.length);
+		System.out.println("\n\nsearch:" + history[p]);
+		System.out.println(mBST.search(history[p]));
 
-		// System.out.println(mBST.search(25));
-		// System.out.println(mBST.size());
-		// MyBinarySearchTree<Integer> randomBST = (MyBinarySearchTree<Integer>)
-		// MyBinarySearchTree.random(5);
-		// randomBST.traverseLevel();
-		// System.out.println("Is this BST full? " + randomBST.isFull());
+		// Generate a random BST
+		System.out.println("\n\nrandom BST");
+		MyBinarySearchTree<Integer> randomBST = (MyBinarySearchTree<Integer>) MyBinarySearchTree.random(5, 100, 300);
+		System.out.println("Is this BST full? " + randomBST.isFull());
+		randomBST.traverseIn();// 中序一定是小到大排
+		randomBST.traverseLevel();
 	}
 
 	public static void testBinaryTree() {

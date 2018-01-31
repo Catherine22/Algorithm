@@ -97,8 +97,13 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 		return search(data, true);
 	}
 
+	@Override
+	public Node<E> searchLast(E data) {
+		return searchLast(data, true);
+	}
+
 	/**
-	 * 同{@link #search(int)}
+	 * 同{@link #search(data)}
 	 * 
 	 * @param key
 	 * @param efficient
@@ -119,6 +124,18 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 				splay(result);
 		}
 		return result;
+	}
+
+	/**
+	 * 同{@link #searchLast(data)}
+	 * 
+	 * @param key
+	 * @param efficient
+	 *            用双层旋转或是每层旋转
+	 * @return
+	 */
+	public Node<E> searchLast(E data, boolean efficient) {
+		return null;
 	}
 
 	/**
