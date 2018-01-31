@@ -9,11 +9,11 @@ public interface RedBlackBST<E> {
 	 * @param key
 	 * @return
 	 */
-	public Node<E> search(int key);
+	public Node<E> search(E data);
 
-	public Node<E> insert(int key, E data);
+	public Node<E> insert(E data);
 
-	public void remove(int key);
+	public void remove(E data);
 
 	/**
 	 * 转成(2,4)树

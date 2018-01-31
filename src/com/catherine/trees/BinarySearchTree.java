@@ -15,17 +15,15 @@ public interface BinarySearchTree<E> {
 	 *            搜寻节点的key
 	 * @return 命中节点或<code>null<code>
 	 */
-	public Node<E> search(int key);
+	public Node<E> search(E data);
 
 	/**
 	 * 先做一次遍历，得到hot，用hot作为父节点插入。 暂不考虑重复数值情况。
 	 * 
-	 * @param key
-	 *            插入节点的key
 	 * @param data
 	 *            插入节点的value
 	 */
-	public Node<E> insert(int key, E data);
+	public Node<E> insert(E data);
 
 	/**
 	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
@@ -35,7 +33,7 @@ public interface BinarySearchTree<E> {
 	 * 
 	 * @param key
 	 */
-	public void remove(int key);
+	public void remove(E data);
 
 	/**
 	 * 随机生成产生的树的组合只有卡塔兰数个

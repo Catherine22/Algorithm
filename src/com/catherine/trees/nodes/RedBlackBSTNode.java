@@ -13,11 +13,6 @@ public class RedBlackBSTNode<E> implements Node<E> {
 	}
 
 	/**
-	 * key-value, key不重复
-	 */
-	private int key;
-
-	/**
 	 * 到最末端黑节点的长度
 	 */
 	private int height;
@@ -32,18 +27,17 @@ public class RedBlackBSTNode<E> implements Node<E> {
 	private RedBlackBSTNode<E> rChild;
 	private boolean isBlack;// false: red
 
-	public RedBlackBSTNode(int key, E data, RedBlackBSTNode<E> parent, RedBlackBSTNode<E> lChild,
-			RedBlackBSTNode<E> rChild, int height, int depth) {
+	public RedBlackBSTNode(E data, RedBlackBSTNode<E> parent, RedBlackBSTNode<E> lChild, RedBlackBSTNode<E> rChild,
+			int height, int depth) {
 		// 新增节点预设红色
-		this(key, data, parent, lChild, rChild, height, depth, false);
+		this(data, parent, lChild, rChild, height, depth, false);
 	}
 
-	public RedBlackBSTNode(int key, E data, RedBlackBSTNode<E> parent, RedBlackBSTNode<E> lChild,
-			RedBlackBSTNode<E> rChild, int height, int depth, boolean isBlack) {
+	public RedBlackBSTNode(E data, RedBlackBSTNode<E> parent, RedBlackBSTNode<E> lChild, RedBlackBSTNode<E> rChild,
+			int height, int depth, boolean isBlack) {
 		this.data = data;
 		this.depth = depth;
 		this.height = height;
-		this.key = key;
 		this.parent = parent;
 		this.lChild = lChild;
 		this.rChild = rChild;
@@ -52,22 +46,14 @@ public class RedBlackBSTNode<E> implements Node<E> {
 
 	@Override
 	public String toString() {
-		String pkey = (getParent() != null) ? getParent().getKey() + "" : "null parent";
-		String lkey = (getlChild() != null) ? getlChild().getKey() + "" : "null lChild";
-		String rkey = (getrChild() != null) ? getrChild().getKey() + "" : "null rChild";
+		String pkey = (getParent() != null) ? getParent().getData() + "" : "null parent";
+		String lkey = (getlChild() != null) ? getlChild().getData() + "" : "null lChild";
+		String rkey = (getrChild() != null) ? getrChild().getData() + "" : "null rChild";
 		String color = isBlack ? "B" : "R";
 		return String.format(
-				"{\"key\": \"%d\", \"data\": \"%s\", \"color\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
-				getKey(), getData(), color, getHeight(), getDepth(), pkey, lkey, rkey);
+				"{\"data\": \"%s\", \"color\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
+				getData(), color, getHeight(), getDepth(), pkey, lkey, rkey);
 
-	}
-
-	public int getKey() {
-		return key;
-	}
-
-	public void setKey(int key) {
-		this.key = key;
 	}
 
 	@Override
@@ -133,7 +119,7 @@ public class RedBlackBSTNode<E> implements Node<E> {
 	@Override
 	public String getInfo() {
 		String color = isBlack ? "B" : "R";
-		return String.format("%d(%d, %s) ", key, height, color);
+		return String.format("%d(%d, %s) ", data, height, color);
 	}
 
 	@Override

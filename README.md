@@ -97,17 +97,17 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>
   > - Depth-first search (DFS) in recursion and non-recursion ways<br>
-  > - Find out the successor of any node by in-order traversal.<br>
+  > - Find out the successor of any node with in-order traversal.<br>
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
   > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
 
 
 ### Binary Search Tree (BST)
-  - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
+  - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure through in-order traversal.
   - In this case, I assumed that no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
-  > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
+  > It extends [MyBinaryTree]. The only difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
   > - [MyBinaryTree] implements BinaryTree the interface <br>
   > - [BinarySearchTreeImpl] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
   > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
@@ -175,7 +175,7 @@ Every node contains more than two keys and branches, it seems like a binary tree
 - [MyBTree]
 
 ## Priority Queue
-You could build a priority queue by Vector, List or Tree. Tree (BBST) is the most efficient data structure of all while we are talking about insertion and searching for the max element. But BBST has a lot of functions we don't use in a priority queue. We want to find a plain data structure as efficient as BBST. That is - Complete binary heap, a nifty structure to implement Priority Queue.
+You could build a priority queue with Vector, List or Tree. Tree (BBST) is the most efficient data structure of all while we are talking about insertion and searching for the max element. But BBST has a lot of functions we don't use in a priority queue. We want to find a plain data structure as efficient as BBST. That is - Complete binary heap, a nifty structure to implement Priority Queue.
 
 - Call-by-priority
 - E.g. Huffman Coding, Scan-Line Filling
@@ -190,7 +190,9 @@ CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
     2. Robert Floyd's algorithm
 
 ### Leftist Heap
-When it comes to merge two heaps, we'd probably think of Floyd's algorithm. But **if those two heaps have been sorted**, Leftist Heap is a nifty solution.    
+When it comes to merge two heaps, we'd probably think of Floyd's algorithm. But **if those two heaps have been sorted**, Leftist Heap is a nifty solution.   
+This time, we build a priority queue based on binary tree.
+
 ![Leftist Heap][16]   
 ![Leftist Heap][17]   
 Merge two heaps (A, B. |A| = m >= n = |B|):
@@ -206,14 +208,14 @@ As I mentioned, we've learned four types of structures - Call-by-rank(Vector), c
 Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save and search them.  If you loop the data to find out a number, it'll take only O(1). But there are so many telephones and your accurate performance would be 25K/100M = 0.025%. It sucks. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
 > Some hashing examples in [HashFunctions]:
-> 1. Hashing by remainder
-> 2. Hashing by MAD
-> 3. Hashing by selecting digits
-> 4. Hashing by median of square numbers
-> 5. Hashing by folding
-> 6. Hashing by rotation + folding
-> 7. Hashing by folding + XOR
-> 8. Hashing by rotation + folding + XOR
+> 1. remainder
+> 2. MAD
+> 3. selecting digits
+> 4. median of square numbers
+> 5. folding
+> 6. rotation + folding
+> 7. folding + XOR
+> 8. rotation + folding + XOR
 
 **Collisions**
 
@@ -246,8 +248,8 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
 | ---- | ---- |
 | [KeystoreManager] | 1. Generate a secret key or a keyPair. <br> 2. Put or get the secret key/keyPair from a keyStore. |
 | [MessageDigestKit] | Verify files with its message digest or signature. |
-| [CipherKit] | Encrypt or decrypt messages by the secret key/keyPair. |
-| [CertificatesManager] | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data by OID. <br> 3. Validate a certificate. |
+| [CipherKit] | Encrypt or decrypt messages with the secret key/keyPair. |
+| [CertificatesManager] | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data with OID. <br> 3. Validate a certificate. |
 | [JwsHelper] | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. |
 
  >Follow these steps:

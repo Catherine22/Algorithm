@@ -15,12 +15,12 @@ import com.catherine.utils.Others;
  * 若任意节点的左子树不空，则左子树上所有结点的值均小于它的根结点的值<br>
  * 若任意节点的右子树不空，则右子树上所有结点的值均大于它的根结点的值<br>
  * 所有节点的垂直投影就是该树的中序遍历<br>
- * 这边用key作为值比大小，value可以重复，key不行。
+ * 这边用key可以重复。
  * 
  * @author Catherine
  *
  */
-class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTree<E> {
+class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree<E> implements BinarySearchTree<E> {
 	private final static boolean SHOW_LOG = false;
 
 	/**
@@ -32,14 +32,14 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	private final int ANALYSIS_ID = 23104987;
 
 	protected BinarySearchTreeImpl() {
-
+		super();
 	}
 
-	public BinarySearchTreeImpl(int key, E root) {
+	public BinarySearchTreeImpl(E root) {
 		super();
 		adapter = new NodeAdapter<>();
 		adapter.setType(Nodes.BST);
-		setRoot(key, root);
+		setRoot(root);
 	}
 
 	/**
@@ -48,21 +48,22 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	 * @param 数值
 	 * @return 根节点
 	 */
-	public Node<E> setRoot(int key, E data) {
+	public Node<E> setRoot(E data) {
 		Node<E> n;
 		if (root == null) {
 			size++;
-			n = adapter.buildNode(key, data, null, null, null, 0, 0);
+			n = adapter.buildNode(data, null, null, null, 0, 0);
 		} else
-			n = adapter.buildNode(key, data, null, root.getlChild(), root.getrChild(), root.getHeight(),
-					root.getDepth());
+			n = adapter.buildNode(data, null, root.getlChild(), root.getrChild(), root.getHeight(), root.getDepth());
 		root = n;
 		hot = root;
 		return root;
 	}
 
 	@Override
-	public Node<E> search(int key) {
+	public Node<E> search(E data) {
+		if (root == null)
+			throw new NullPointerException("Root must not be null.");
 		hot = root;
 		boolean stop = false;
 		Node<E> node = null;
@@ -71,12 +72,12 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 			if (SHOW_LOG)
 				Analysis.count(ANALYSIS_ID);
 
-			if (key > hot.getKey()) {
+			if (data.compareTo(hot.getData()) > 0) {
 				if (hot.getrChild() == null)
 					stop = true;
 				else
 					hot = hot.getrChild();
-			} else if (key < hot.getKey()) {
+			} else if (data.compareTo(hot.getData()) < 0) {
 				if (hot.getlChild() == null)
 					stop = true;
 				else
@@ -95,27 +96,33 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	}
 
 	@Override
-	public Node<E> insert(int key, E data) {
-		if (search(key) != null)
-			throw new UnsupportedOperationException(String.format("This node(%d) has already been added.", key));
+	public Node<E> insert(E data) {
+		if (data == null)
+			throw new NullPointerException("Data must not be null.");
+		if (root == null)
+			setRoot(data);
 
-		final Node<E> parent = hot;
-		if (key > parent.getKey())
-			return insertRC(parent, key, data);
-		else if (key < parent.getKey())
-			return insertLC(parent, key, data);
-		else
-			return null;// 暂不考虑重复数值情况。
+		search(data);
+		//当插入节点的值与根节点相同时，此时hot为null
+		Node<E> parent = (hot == null) ? root : hot;
+
+		if (data.compareTo(parent.getData()) > 0) {
+			return insertRC(parent, data);
+		} else {
+			return insertLC(parent, data);
+		}
 	}
 
 	@Override
-	public void remove(int key) {
-		remove(search(key));
+	public void remove(E data) {
+		remove(search(data));
 	}
 
 	protected void remove(Node<E> node) {
+		if (root == null)
+			throw new NullPointerException("Root must not be null.");
 		if (node == null)
-			throw new NullPointerException("Node not found.");
+			throw new NullPointerException("Node must not be null.");
 		if (node.getParent() == null) {
 			// 移除根节点
 			size = 0;
@@ -129,8 +136,8 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 			Node<E> succ = succ(node);
 			hot = succ.getParent();
 			if (SHOW_LOG) {
-				System.out.println("node:" + node.getKey());
-				System.out.println("succ:" + succ.getKey());
+				System.out.println("node:" + node.getData());
+				System.out.println("succ:" + succ.getData());
 			}
 			swap(node, succ);
 			node = succ;
@@ -196,12 +203,8 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 			System.out.println("node1:" + node1.toString());
 			System.out.println("node2:" + node2.toString());
 		}
-		int tmpKey = node1.getKey();
 		E tmpData = node1.getData();
-
-		node1.setKey(node2.getKey());
 		node1.setData(node2.getData());
-		node2.setKey(tmpKey);
 		node2.setData(tmpData);
 
 		if (SHOW_LOG) {
@@ -219,15 +222,17 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	 *            数值
 	 * @return 新节点
 	 */
-	private Node<E> insertLC(Node<E> parent, int key, E data) {
+	public Node<E> insertLC(Node<E> parent, E data) {
+		if (root == null)
+			throw new NullPointerException("Root must not be null.");
 		Node<E> child;
 		if (parent.getlChild() != null) {
 			final Node<E> cNode = parent.getlChild();
 			final Node<E> lChild = cNode.getlChild();
 			final Node<E> rChild = cNode.getrChild();
-			child = adapter.buildNode(key, data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
+			child = adapter.buildNode(data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
 		} else
-			child = adapter.buildNode(key, data, parent, null, null, 0, parent.getDepth() + 1);
+			child = adapter.buildNode(data, parent, null, null, 0, parent.getDepth() + 1);
 
 		if (SHOW_LOG)
 			System.out.println("insertLC:" + child.toString());
@@ -247,15 +252,17 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	 *            数值
 	 * @return 新节点
 	 */
-	private Node<E> insertRC(Node<E> parent, int key, E data) {
+	public Node<E> insertRC(Node<E> parent, E data) {
+		if (root == null)
+			throw new NullPointerException("Root must not be null.");
 		Node<E> child;
 		if (parent.getrChild() != null) {
 			final Node<E> cNode = parent.getrChild();
 			final Node<E> lChild = cNode.getlChild();
 			final Node<E> rChild = cNode.getrChild();
-			child = adapter.buildNode(key, data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
+			child = adapter.buildNode(data, parent, lChild, rChild, cNode.getHeight(), cNode.getDepth());
 		} else
-			child = adapter.buildNode(key, data, parent, null, null, 0, parent.getDepth() + 1);
+			child = adapter.buildNode(data, parent, null, null, 0, parent.getDepth() + 1);
 
 		if (SHOW_LOG)
 			System.out.println("insertRC:" + child.toString());
@@ -272,8 +279,8 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
-	public static BinarySearchTree<Object> random(int size) {
-		BinarySearchTree<Object> newBST = null;
+	public static BinarySearchTree<Integer> random(int size) {
+		BinarySearchTree<Integer> newBST = null;
 		List<Integer> sequence = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			sequence.add(i + 1);
@@ -281,13 +288,12 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 		// 产生乱数序列
 		Collections.shuffle(sequence);
 		System.out.print(sequence.get(0) + " ");
-		newBST = new BinarySearchTreeImpl<Object>(sequence.get(0), null);
+		newBST = new BinarySearchTreeImpl<Integer>(sequence.get(0));
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
-			newBST.insert(sequence.get(i), null);
+			newBST.insert(sequence.get(i));
 		}
 		System.out.print("\n");
-
 		return newBST;
 	}
 
@@ -537,7 +543,8 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	protected int getBalanceFactor(Node<E> node) {
 		int lHeight = (node.getlChild() == null) ? -1 : node.getlChild().getHeight();
 		int rHeight = (node.getrChild() == null) ? -1 : node.getrChild().getHeight();
-//		System.out.println(String.format("L:%d, R:%s", lHeight, node.getrChild().toString()));
+		// System.out.println(String.format("L:%d, R:%s", lHeight,
+		// node.getrChild().toString()));
 		return lHeight - rHeight;
 	}
 
@@ -549,30 +556,6 @@ class BinarySearchTreeImpl<E> extends MyBinaryTree<E> implements BinarySearchTre
 	 */
 	protected boolean isBalanced(Node<E> node) {
 		return Math.abs(getBalanceFactor(node)) <= 1;
-	}
-
-	/**
-	 * Binary Tree only
-	 */
-	@Override
-	public final Node<E> setRoot(E data) {
-		throw new UnsupportedOperationException("setRoot(E data)");
-	}
-
-	/**
-	 * Binary Tree only
-	 */
-	@Override
-	public final Node<E> insertLC(Node<E> parent, E data) {
-		throw new UnsupportedOperationException("insertLC(Node<E> parent, E data)");
-	}
-
-	/**
-	 * Binary Tree only
-	 */
-	@Override
-	public final Node<E> insertRC(Node<E> parent, E data) {
-		throw new UnsupportedOperationException("insertRC(Node<E> parent, E data)");
 	}
 
 	/**

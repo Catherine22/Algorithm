@@ -2,26 +2,26 @@ package com.catherine.trees;
 
 import com.catherine.trees.nodes.Node;
 
-public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
+public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTree<E>, RedBlackBST<E> {
 	private RedBlackBSTImpl<E> rbTree;
 
-	public MyRedBlackBST(int key, E root) {
-		rbTree = new RedBlackBSTImpl<E>(key, root);
+	public MyRedBlackBST(E root) {
+		rbTree = new RedBlackBSTImpl<E>(root);
 	}
 
 	@Override
-	public Node<E> search(int key) {
-		return rbTree.search(key);
+	public Node<E> search(E data) {
+		return rbTree.search(data);
 	}
 
 	@Override
-	public Node<E> insert(int key, E data) {
-		return rbTree.insertAndBalance(key, data);
+	public Node<E> insert(E data) {
+		return rbTree.insertAndBalance(data);
 	}
 
 	@Override
-	public void remove(int key) {
-		rbTree.removeAndBalance(key);
+	public void remove(E data) {
+		rbTree.removeAndBalance(data);
 	}
 
 	@Override

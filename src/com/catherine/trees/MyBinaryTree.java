@@ -18,7 +18,7 @@ import com.catherine.utils.TrackLog;
  *
  * @param <E>
  */
-public class MyBinaryTree<E> implements BinaryTree<E> {
+public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree<E> {
 	protected final static boolean SHOW_LOG = false;
 	protected NodeAdapter<E> adapter;
 	protected transient int size = 0;
@@ -248,22 +248,30 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 
 	@Override
 	public void removeRCCompletely(Node<E> parent) {
-		if (parent.getrChild() != null)
+		if (parent == null) // throw new NullPointerException("Parent must not
+							// be null");
+			return;
+		if (parent.getrChild() != null) {
 			size -= size(parent.getrChild());
-		parent.setrChild(null);
-		int height = (parent.getlChild() != null) ? parent.getlChild().getHeight() + 1 : 0;
-		parent.setHeight(height);
-		updateAboveHeight(parent);
+			parent.setrChild(null);
+			int height = (parent.getlChild() != null) ? parent.getlChild().getHeight() + 1 : 0;
+			parent.setHeight(height);
+			updateAboveHeight(parent);
+		}
 	}
 
 	@Override
 	public void removeLCCompletely(Node<E> parent) {
-		if (parent.getlChild() != null)
+		if (parent == null)// throw new NullPointerException("Parent must not be
+							// null");
+			return;
+		if (parent.getlChild() != null) {
 			size -= size(parent.getlChild());
-		parent.setlChild(null);
-		int height = (parent.getrChild() != null) ? parent.getrChild().getHeight() + 1 : 0;
-		parent.setHeight(height);
-		updateAboveHeight(parent);
+			parent.setlChild(null);
+			int height = (parent.getrChild() != null) ? parent.getrChild().getHeight() + 1 : 0;
+			parent.setHeight(height);
+			updateAboveHeight(parent);
+		}
 	}
 
 	/**

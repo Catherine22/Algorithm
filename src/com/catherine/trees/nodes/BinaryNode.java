@@ -105,23 +105,7 @@ public class BinaryNode<E> implements Node<E> {
 
 	@Override
 	public String getInfo() {
-		if (data != null)
-			return data + " ";
-		else
-			return "null ";
-
-	}
-
-	@Override
-	public int getKey() {
-		// do nothing
-		return 0;
-	}
-
-	@Override
-	public void setKey(int key) {
-		// do nothing
-
+		return (data == null) ? "null" : data.toString();
 	}
 
 	@Override

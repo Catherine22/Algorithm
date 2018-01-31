@@ -15,12 +15,12 @@ import com.catherine.trees.nodes.Node;
  * @author Catherine
  *
  */
-public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E> {
+public class MyBinarySearchTree<E extends Comparable<? super E>> implements BinaryTree<E>, BinarySearchTree<E> {
 
 	private BinarySearchTreeImpl<E> bst;
 
-	public MyBinarySearchTree(int key, E root) {
-		bst = new BinarySearchTreeImpl<E>(key, root);
+	public MyBinarySearchTree(E root) {
+		bst = new BinarySearchTreeImpl<>(root);
 	}
 
 	@Override
@@ -114,18 +114,18 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	}
 
 	@Override
-	public Node<E> search(int key) {
-		return bst.search(key);
+	public Node<E> search(E data) {
+		return bst.search(data);
 	}
 
 	@Override
-	public Node<E> insert(int key, E data) {
-		return bst.insert(key, data);
+	public Node<E> insert(E data) {
+		return bst.insert(data);
 	}
 
 	@Override
-	public void remove(int key) {
-		bst.remove(key);
+	public void remove(E data) {
+		bst.remove(data);
 	}
 
 	/**
@@ -134,8 +134,8 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
-	public static BinarySearchTree<Object> random(int size) {
-		BinarySearchTree<Object> newBST = null;
+	public static BinarySearchTree<Integer> random(int size) {
+		BinarySearchTree<Integer> newBST = null;
 		List<Integer> sequence = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			sequence.add(i + 1);
@@ -143,10 +143,10 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 		// 产生乱数序列
 		Collections.shuffle(sequence);
 		System.out.print(sequence.get(0) + " ");
-		newBST = new MyBinarySearchTree<Object>(sequence.get(0), null);
+		newBST = new MyBinarySearchTree<Integer>(sequence.get(0));
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
-			newBST.insert(sequence.get(i), null);
+			newBST.insert(sequence.get(i));
 		}
 		System.out.print("\n");
 
@@ -177,13 +177,14 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	public void isAVLTree(Callback callback) {
 		bst.isAVLTree(callback);
 	}
+
 	@Override
-	public void left_rightRotate(Node<E> node){
+	public void left_rightRotate(Node<E> node) {
 		bst.left_rightRotate(node);
 	}
-	
+
 	@Override
-	public void right_leftRotate(Node<E> node){
+	public void right_leftRotate(Node<E> node) {
 		bst.right_leftRotate(node);
 	}
 }

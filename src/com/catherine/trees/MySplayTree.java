@@ -12,12 +12,12 @@ import com.catherine.trees.nodes.Node;
  * 
  * @author Catherine
  */
-public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
+public class MySplayTree<E extends Comparable<? super E>> implements BinarySearchTree<E>, BinaryTree<E> {
 
 	private BinarySearchTreeImpl<E> spTree;
 
-	public MySplayTree(int key, E root) {
-		spTree = new BinarySearchTreeImpl<E>(key, root);
+	public MySplayTree(E root) {
+		spTree = new BinarySearchTreeImpl<E>(root);
 	}
 
 	/**
@@ -93,8 +93,8 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 * @return 命中节点或<code>null<code>
 	 */
 	@Override
-	public Node<E> search(int key) {
-		return search(key, true);
+	public Node<E> search(E data) {
+		return search(data, true);
 	}
 
 	/**
@@ -105,8 +105,8 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 *            用双层旋转或是每层旋转
 	 * @return
 	 */
-	public Node<E> search(int key, boolean efficient) {
-		Node<E> result = spTree.search(key);
+	public Node<E> search(E data, boolean efficient) {
+		Node<E> result = spTree.search(data);
 		if (efficient) {
 			if (result == null)
 				splayEfficiently(spTree.hot);// 找不到就让最后访问的节点变成根节点
@@ -127,8 +127,8 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
 	 */
 	@Override
-	public Node<E> insert(int key, E data) {
-		return search(spTree.insert(key, data).getKey());
+	public Node<E> insert(E data) {
+		return search(spTree.insert(data).getData());
 	}
 
 	/**
@@ -137,9 +137,9 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
 	 */
 	@Override
-	public void remove(int key) {
-		spTree.remove(key);
-		search(key);
+	public void remove(E data) {
+		spTree.remove(data);
+		search(data);
 	}
 
 	@Override
