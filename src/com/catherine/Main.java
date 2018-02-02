@@ -699,12 +699,14 @@ public class Main {
 		Random random = new Random();
 		int root = 100 + random.nextInt(300);
 		final MyAVLTree<Integer> myAVLTree1 = new MyAVLTree<Integer>(root);
+		final MyAVLTree<Integer> myAVLTree2 = new MyAVLTree<Integer>(root);
 		int SIZE = 1 + random.nextInt(15);
 		int[] history = new int[SIZE];
 		history[0] = root;
 		for (int i = 1; i < SIZE; i++) {
 			history[i] = 100 + random.nextInt(300);
 			myAVLTree1.insert(history[i]);
+			myAVLTree2.insertAndBalance(history[i]);
 			random = new Random();
 		}
 
@@ -714,10 +716,10 @@ public class Main {
 				System.out.println("size:" + myAVLTree1.size());
 				myAVLTree1.traverseIn();// 中序一定是小到大排
 				myAVLTree1.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
+				System.out.println("Is myAVLTree1 an AVL tree? " + result);
 
-				System.out.println("\n\ninsertAndBalance 34");
-				myAVLTree1.insertAndBalance(34);
+				System.out.println("\n\ninsertAndBalance 9999");
+				myAVLTree1.insertAndBalance(9999);
 				myAVLTree1.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
@@ -729,104 +731,21 @@ public class Main {
 			}
 		});
 
-		final MyAVLTree<Integer> myAVLTree2 = new MyAVLTree<Integer>(9);
-		myAVLTree2.insert(1);
-		myAVLTree2.insert(10);
-		myAVLTree2.insert(5);
-		myAVLTree2.insert(0);
-		myAVLTree2.insert(11);
-		myAVLTree2.insert(-1);
-		myAVLTree2.insert(2);
-		myAVLTree2.insert(6);
 		myAVLTree2.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
+				System.out.println("size:" + myAVLTree2.size());
+				myAVLTree2.traverseIn();// 中序一定是小到大排
 				myAVLTree2.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree2.removeAndBalance(10);
+				System.out.println("\n\nIs myAVLTree2 an AVL tree? " + result);
+
+				System.out.println("\n\ninsertAndBalance 9999");
+				myAVLTree2.insertAndBalance(9999);
 				myAVLTree2.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
+						myAVLTree2.traverseIn();// 中序一定是小到大排
 						myAVLTree2.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-
-		final MyAVLTree<Integer> myAVLTree3 = new MyAVLTree<Integer>(44);
-		myAVLTree3.insert(17);
-		myAVLTree3.insert(78);
-		myAVLTree3.insert(32);
-		myAVLTree3.insert(50);
-		myAVLTree3.insert(88);
-		myAVLTree3.insert(48);
-		myAVLTree3.insert(62);
-		myAVLTree3.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree3.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree3.removeAndBalance(32);
-				myAVLTree3.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree3.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-
-		final MyAVLTree<Integer> myAVLTree4 = new MyAVLTree<Integer>(50);
-		myAVLTree4.insert(25);
-		myAVLTree4.insert(75);
-		myAVLTree4.insert(10);
-		myAVLTree4.insert(30);
-		myAVLTree4.insert(60);
-		myAVLTree4.insert(80);
-		myAVLTree4.insert(5);
-		myAVLTree4.insert(15);
-		myAVLTree4.insert(27);
-		myAVLTree4.insert(51);
-		myAVLTree4.insert(1);
-		myAVLTree4.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree4.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree4.removeAndBalance(80);
-				myAVLTree4.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree4.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-
-		final MyAVLTree<Integer> myAVLTree5 = new MyAVLTree<Integer>(50);
-		myAVLTree5.insert(25);
-		myAVLTree5.insert(75);
-		myAVLTree5.insert(10);
-		myAVLTree5.insert(30);
-		myAVLTree5.insert(60);
-		myAVLTree5.insert(5);
-		myAVLTree5.insert(15);
-		myAVLTree5.insert(27);
-		myAVLTree5.insert(55);
-		myAVLTree5.insert(1);
-		myAVLTree5.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree5.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree5.insertAndBalance(80);
-				myAVLTree5.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree5.traverseLevel();
 						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
