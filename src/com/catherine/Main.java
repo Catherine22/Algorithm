@@ -102,7 +102,7 @@ public class Main {
 		// testStack();
 		// testDirectedGraph();
 		// testBinaryTree();
-		testBST();
+		// testBST();
 		// testAVLTree();
 		// testRedBlackBST();
 		// testSplayTree();
@@ -696,23 +696,32 @@ public class Main {
 	}
 
 	public static void testAVLTree() {
-		final MyAVLTree<Integer> myAVLTree1 = new MyAVLTree<Integer>(20);
-		myAVLTree1.insert(10);
-		myAVLTree1.insert(30);
-		myAVLTree1.insert(5);
-		myAVLTree1.insert(25);
-		myAVLTree1.insert(40);
-		myAVLTree1.insert(35);
-		myAVLTree1.insert(45);
+		Random random = new Random();
+		int root = 100 + random.nextInt(300);
+		final MyAVLTree<Integer> myAVLTree1 = new MyAVLTree<Integer>(root);
+		int SIZE = 1 + random.nextInt(15);
+		int[] history = new int[SIZE];
+		history[0] = root;
+		for (int i = 1; i < SIZE; i++) {
+			history[i] = 100 + random.nextInt(300);
+			myAVLTree1.insert(history[i]);
+			random = new Random();
+		}
+
 		myAVLTree1.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
+				System.out.println("size:" + myAVLTree1.size());
+				myAVLTree1.traverseIn();// 中序一定是小到大排
 				myAVLTree1.traverseLevel();
 				System.out.println("Is that an AVL tree? " + result);
+
+				System.out.println("\n\ninsertAndBalance 34");
 				myAVLTree1.insertAndBalance(34);
 				myAVLTree1.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
+						myAVLTree1.traverseIn();// 中序一定是小到大排
 						myAVLTree1.traverseLevel();
 						System.out.println("Is that still an AVL tree? " + result);
 					}
@@ -841,12 +850,6 @@ public class Main {
 		System.out.println("size:" + mBST.size());
 		mBST.traverseIn();// 中序一定是小到大排
 		mBST.traverseLevel();
-
-		for (int i = 0; i < history.length; i++) {
-			System.out.print(history[i] + " ");
-
-		}
-		System.out.print("\n");
 
 		// removeLCCompletely
 		int p = 0 + random.nextInt(history.length);

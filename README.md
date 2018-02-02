@@ -81,7 +81,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 ### Binary Tree
 ![tree][1]
-  - It's a special case of Graph.
+  - This is a special case of Graph.
   - Performance
 
 |    | vector | list | tree |
@@ -90,7 +90,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 | insert / remove | X | O | O |
 
 
-  - Imaginary Tree is sort of List<List>
+  - Imaginary Tree as List<List>
   - Tree traversal (Pre-order, in-order and post-order)
   - [MyBinaryTree]
 
@@ -99,7 +99,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   > - Depth-first search (DFS) in recursion and non-recursion ways<br>
   > - Find out the successor of any node with in-order traversal.<br>
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
-  > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
+  > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and even though both of them take O(n)**
 
 
 ### Binary Search Tree (BST)
@@ -107,10 +107,10 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - In this case, I assumed that no duplicated keys in the BST. Every operation based on this scenario.
   - [MyBinarySearchTree]
 
-  > It extends [MyBinaryTree]. The only difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
+  > BST extends [MyBinaryTree]. It sorts the whole tree by keys and you are able to assign null or duplicated keys.<br><br>
   > - [MyBinaryTree] implements BinaryTree the interface <br>
   > - [BinarySearchTreeImpl] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
-  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
+  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl] though. In order to hide some public [MyBinaryTree] methods which are not supported by BST.<br>
 
 ### AVL Tree
   - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
