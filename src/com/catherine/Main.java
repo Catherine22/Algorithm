@@ -84,11 +84,7 @@ public class Main {
 	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
 			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
 	private static int[] input2 = new int[] { 38, 29, 28, 11, 4, 5, 2 };
-	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
-	private static int[] input4 = null;
-	private static int[] input5 = new int[] { 1 };
 	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
-	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
 		// compareStringSorting();
@@ -106,9 +102,9 @@ public class Main {
 		// testAVLTree();
 		// testRedBlackBST();
 		// testSplayTree();
-		testBTree();
+		// testBTree();
 		// testPQ();
-		// testLeftistHeaps();
+		 testLeftistHeaps();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -339,32 +335,39 @@ public class Main {
 
 	public static void testPQ() {
 		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>();
-		pq.insert("Cooper");
-		pq.insert("Barbarian");
-		pq.insert("Alan");
-		pq.insert("Zed");
-		pq.insert("Jonas");
-		pq.insert("Julianne");
-		pq.insert("Priscilla");
-		pq.insert("Shawn");
+		Random random = new Random();
+		int SIZE = 1 + random.nextInt(15);
+		int TEXT_LEN = 5;
+		StringBuilder sBuilder = new StringBuilder();
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			pq.insert(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
 
 		printIterator(pq.iterator());
 		pq.printTree();
 
+		System.out.println("\nDelet max");
 		pq.delMax();
 		printIterator(pq.iterator());
 		pq.printTree();
 
 		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>();
 		List<String> list = new ArrayList<>();
-		list.add("Cooper");
-		list.add("Barbarian");
-		list.add("Alan");
-		list.add("Zed");
-		list.add("Jonas");
-		list.add("Julianne");
-		list.add("Priscilla");
-		list.add("Shawn");
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			list.add(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
+		System.out.println("\nheapify");
 		pq2.heapify(list);
 		printIterator(pq2.iterator());
 		pq2.printTree();
