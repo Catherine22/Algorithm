@@ -53,7 +53,7 @@ import com.catherine.trees.nodes.BNode;
  *
  */
 public class MyBTree<E extends Comparable<? super E>> implements BTree<E> {
-	private final static boolean SHOW_LOG = true;
+	private final static boolean SHOW_LOG = false;
 	// print details of loading to memory
 	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = true;
 	/**
@@ -277,13 +277,16 @@ public class MyBTree<E extends Comparable<? super E>> implements BTree<E> {
 		} else {
 			// 找出后继key（位于右节点）
 			BNode<E> succ = target.getChild().get(pos + 1);
-			if (SHOW_LOG)
-				System.out.println("目标节点:" + target.getKey() + "\n后继节点:" + succ.getKey());
-			target.getKey().set(pos, succ.getKey().get(0));
-			succ.getKey().remove(0);
-			if (succ.getKey() != null)
-				solveUnderflow(succ);
-			else
+			if (succ.getKey() != null) {
+				if (SHOW_LOG)
+					System.out.println("目标节点:" + target.getKey() + "\n后继节点:" + succ.getKey());
+				target.getKey().set(pos, succ.getKey().get(0));
+				succ.getKey().remove(0);
+				if (succ.getKey() != null)
+					solveUnderflow(succ);
+				else
+					succ = null;
+			} else
 				succ = null;
 		}
 		return true;

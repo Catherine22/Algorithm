@@ -389,12 +389,12 @@ public class Main {
 		System.out.println(String.format("\nGenerate a B-tree, m=%d, size=%d", m, SIZE));
 		System.out.println(myBTree.toString());
 		int r = 0 + random.nextInt(SIZE - 1);
-		System.out.println("remove history[" + r + "]:" + history[r]);
+		System.out.println("\nremove history[" + r + "]:" + history[r]);
 		myBTree.remove(history[r]);
 		System.out.println(myBTree.toString());
 
 		r = 0 + random.nextInt(SIZE - 1);
-		System.out.println("remove history[" + r + "]:" + history[r]);
+		System.out.println("\nremove history[" + r + "]:" + history[r]);
 		myBTree.remove(history[r]);
 		System.out.println(myBTree.toString());
 
