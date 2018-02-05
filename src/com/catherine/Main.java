@@ -106,7 +106,7 @@ public class Main {
 		// testAVLTree();
 		// testRedBlackBST();
 		// testSplayTree();
-		// testBTree();
+		testBTree();
 		// testPQ();
 		// testLeftistHeaps();
 		// testHash();
@@ -371,34 +371,31 @@ public class Main {
 	}
 
 	public static void testBTree() {
-		MyBTree<String> myBTree = new MyBTree<>(5, 528);
-		// myBTree.printInfo();
-		myBTree.insert(192, null);
-		myBTree.insert(268, null);
-		myBTree.insert(703, null);
-		myBTree.insert(850, null);
+		Random random = new Random();
+		int root = 0 + random.nextInt(1000);
+		int m = 2 + random.nextInt(10);
+		MyBTree<Integer> myBTree = new MyBTree<>(m, root);
+		myBTree.printInfo();
 
-		myBTree.insert(57, null);
-		myBTree.insert(152, null);
-		myBTree.insert(249, null);
-		myBTree.insert(266, null);
-		myBTree.insert(315, null);
-		myBTree.insert(423, null);
-		myBTree.insert(468, null);
-		myBTree.insert(484, null);
-		myBTree.insert(619, null);
-		myBTree.insert(644, null);
-		myBTree.insert(758, null);
-		myBTree.insert(771, null);
-		myBTree.insert(865, null);
-		myBTree.insert(882, null);
-		myBTree.insert(936, null);
-		myBTree.insert(984, null);
-		// System.out.println(myBTree.toString());
-		myBTree.remove(249);
+		int SIZE = 1 + random.nextInt(20);
+		int[] history = new int[SIZE];
+		history[0] = root;
+		for (int i = 1; i < SIZE; i++) {
+			history[i] = 0 + random.nextInt(1000);
+			myBTree.insert(history[i]);
+			random = new Random();
+		}
+
+		System.out.println(String.format("\nGenerate a B-tree, m=%d, size=%d", m, SIZE));
+		System.out.println(myBTree.toString());
+		int r = 0 + random.nextInt(SIZE - 1);
+		System.out.println("remove history[" + r + "]:" + history[r]);
+		myBTree.remove(history[r]);
 		System.out.println(myBTree.toString());
 
-		myBTree.remove(619);
+		r = 0 + random.nextInt(SIZE - 1);
+		System.out.println("remove history[" + r + "]:" + history[r]);
+		myBTree.remove(history[r]);
 		System.out.println(myBTree.toString());
 
 	}

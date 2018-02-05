@@ -52,9 +52,10 @@ import com.catherine.trees.nodes.BNode;
  * @author Catherine
  *
  */
-public class MyBTree<E> implements BTree<E> {
+public class MyBTree<E extends Comparable<? super E>> implements BTree<E> {
 	private final static boolean SHOW_LOG = true;
-	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = false;
+	// print details of loading to memory
+	private final static boolean SKIP_LOADING_TO_MAIN_MEMORY = true;
 	/**
 	 * 关键码总数
 	 */
@@ -74,26 +75,18 @@ public class MyBTree<E> implements BTree<E> {
 	private BNode<E> root;
 
 	public MyBTree(int order) {
-		this(order, 0);
+		this(order, null);
 	}
 
-	public MyBTree(int order, int rootKey) {
-		this(order, rootKey, null);
-	}
-
-	public MyBTree(int order, int rootKey, E rootValue) {
+	public MyBTree(int order, E rootKey) {
 		this.order = (order < 2) ? 2 : order;
 
 		root = new BNode<E>();
 		root.setParent(null);
 
-		List<Integer> rootKeys = new ArrayList<>();
+		List<E> rootKeys = new ArrayList<>();
 		rootKeys.add(rootKey); // 只有一个关键码
 		root.setKey(rootKeys);
-
-		List<E> rootValues = new ArrayList<>();
-		rootValues.add(rootValue); // 只有一个关键码
-		root.setValue(rootValues);
 
 		List<BNode<E>> child = new ArrayList<>();
 		child.add(0, null);// 左孩子
@@ -200,18 +193,17 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public BNode<E> search(int key) {
-		checkElementIndex(key);
+	public BNode<E> search(E key) {
 		return search(root, key);
 	}
 
-	private BNode<E> search(BNode<E> target, int key) {
+	private BNode<E> search(BNode<E> target, E key) {
 		BNode<E> header = target;
 		int rank = 0;
 		while (rank < header.getKey().size()) {
-			if (header.getKey().get(rank) < key)
+			if (header.getKey().get(rank).compareTo(key) < 0)
 				rank++;
-			else if (header.getKey().get(rank) == key)
+			else if (header.getKey().get(rank).compareTo(key) == 0)
 				return header;// 成功，返回关键码等于key的节点
 			else
 				break;
@@ -233,11 +225,11 @@ public class MyBTree<E> implements BTree<E> {
 	 * @param key
 	 * @return
 	 */
-	private int searchPosi(BNode<E> target, int key) {
+	private int searchPosi(BNode<E> target, E key) {
 		BNode<E> header = target;
 		int rank = 0;
 		while (rank < header.getKey().size()) {
-			if (header.getKey().get(rank) < key)
+			if (header.getKey().get(rank).compareTo(key) < 0)
 				rank++;
 			else
 				return rank - 1;
@@ -246,13 +238,12 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public boolean insert(int key, E value) {
+	public boolean insert(E key) {
 		if (search(key) != null)
 			return false;// 已经存在关键码，直接返回。
 
 		int pos = searchPosi(hot, key);
 		hot.getKey().add(pos + 1, key);
-		hot.getValue().add(pos + 1, value);
 		hot.getChild().add(pos + 2, null);// 因为关键码向量(x)与孩子向量(o)的位置应对齐
 		size++;
 		solveOverflow(hot);// 若发生上溢，做分裂处理
@@ -260,14 +251,14 @@ public class MyBTree<E> implements BTree<E> {
 	}
 
 	@Override
-	public boolean remove(int key) {
+	public boolean remove(E key) {
 		BNode<E> target = search(key);
 		if (target == null)
 			return false;// 不存在关键码，直接返回。
 
 		int pos = 0;// 找出key位于节点位置
 		while (pos < target.getKey().size()) {
-			if (target.getKey().get(pos) == key)
+			if (target.getKey().get(pos).compareTo(key) == 0)
 				break;
 
 			pos++;
@@ -279,7 +270,6 @@ public class MyBTree<E> implements BTree<E> {
 
 			// 当前节点为叶节点，直接移除
 			target.getKey().remove(pos);
-			target.getValue().remove(pos);
 			if (target.getKey() != null)
 				solveUnderflow(target);
 			else
@@ -290,9 +280,7 @@ public class MyBTree<E> implements BTree<E> {
 			if (SHOW_LOG)
 				System.out.println("目标节点:" + target.getKey() + "\n后继节点:" + succ.getKey());
 			target.getKey().set(pos, succ.getKey().get(0));
-			target.getValue().set(pos, succ.getValue().get(0));
 			succ.getKey().remove(0);
-			succ.getValue().remove(0);
 			if (succ.getKey() != null)
 				solveUnderflow(succ);
 			else
@@ -312,18 +300,15 @@ public class MyBTree<E> implements BTree<E> {
 		int median = (int) Math.ceil(node.getKey().size() / 2);// 取中位数（无条件进位）为分界
 		// k0~k(median-1), k(median), k(median+1)~k(m-1)
 		// 将 k(median)上升一层，并将刚才左右两组关键码分裂成k(median)的左右孩子。
-		int key = node.getKey().get(median);
-		E value = node.getValue().get(median);
+		E key = node.getKey().get(median);
 
 		// key范围分别是k0~k(median-1)和k(median+1)~k(size-1)
 		// 节点的孩子范围分别是k0~k(median)和k(median+1)~k(size-1)
 
 		// 分裂后的左孩子
-		List<Integer> lKeys = new ArrayList<>();
-		List<E> lValues = new ArrayList<>();
+		List<E> lKeys = new ArrayList<>();
 		for (int i = 0; i < median; i++) {
 			lKeys.add(node.getKey().get(i));
-			lValues.add(node.getValue().get(i));
 		}
 		BNode<E> lChild = new BNode<E>();
 		List<BNode<E>> lChildren = new ArrayList<>();
@@ -333,15 +318,12 @@ public class MyBTree<E> implements BTree<E> {
 				node.getChild().get(i).setParent(lChild);
 		}
 		lChild.setKey(lKeys);
-		lChild.setValue(lValues);
 		lChild.setChild(lChildren);
 
 		// 分裂后的右孩子
-		List<Integer> rKeys = new ArrayList<>();
-		List<E> rValues = new ArrayList<>();
+		List<E> rKeys = new ArrayList<>();
 		for (int i = median + 1; i < node.getKey().size(); i++) {
 			rKeys.add(node.getKey().get(i));
-			rValues.add(node.getValue().get(i));
 		}
 		BNode<E> rChild = new BNode<E>();
 		List<BNode<E>> rChildren = new ArrayList<>();
@@ -351,7 +333,6 @@ public class MyBTree<E> implements BTree<E> {
 				node.getChild().get(i).setParent(rChild);
 		}
 		rChild.setKey(rKeys);
-		rChild.setValue(rValues);
 		rChild.setChild(rChildren);
 
 		if (SHOW_LOG) {
@@ -362,7 +343,6 @@ public class MyBTree<E> implements BTree<E> {
 
 		// 移除节点
 		node.getKey().remove(median);
-		node.getValue().remove(median);
 
 		// 当上溢发生在根节点时，指定k(median)为新的根节点，并且具有两分支
 		if (node.getParent() == null) {
@@ -371,9 +351,7 @@ public class MyBTree<E> implements BTree<E> {
 
 			// insert
 			root.getKey().clear();
-			root.getValue().clear();
 			root.getKey().add(key);
-			root.getValue().add(value);
 
 			root.getChild().clear();
 			root.getChild().add(lChild);
@@ -387,7 +365,6 @@ public class MyBTree<E> implements BTree<E> {
 			hot = node.getParent();
 			int pos = searchPosi(hot, key);
 			hot.getKey().add(pos + 1, key);
-			hot.getValue().add(pos + 1, value);
 			hot.getChild().set(pos + 1, lChild);
 			hot.getChild().add(pos + 2, rChild);
 
@@ -456,7 +433,7 @@ public class MyBTree<E> implements BTree<E> {
 						int i = 0;// 父节点的key位置
 						// 找出父节点的key位置
 						while (i < parent.getKey().size() && !stopLoop) {
-							if (parent.getKey().get(i) > bro.getKey().get(bro.getKey().size() - 1))
+							if (parent.getKey().get(i).compareTo(bro.getKey().get(bro.getKey().size() - 1)) > 0)
 								stopLoop = true;
 							else
 								i++;
@@ -465,17 +442,12 @@ public class MyBTree<E> implements BTree<E> {
 						if (SHOW_LOG)
 							System.out.println("合并（左兄弟所有key+一个父key+目标节点所有key）");
 						// 合并（左兄弟所有key+一个父key+目标节点所有key）
-						List<Integer> compositeKeys = bro.getKey();
+						List<E> compositeKeys = bro.getKey();
 						compositeKeys.add(parent.getKey().get(i));
 						compositeKeys.addAll(node.getKey());
 
-						List<E> compositeValues = bro.getValue();
-						compositeValues.add(parent.getValue().get(i));
-						compositeValues.addAll(node.getValue());
-
 						parent.getChild().remove(node);
 						parent.getKey().remove(i);
-						parent.getValue().remove(i);
 
 						if (!isListEmpty(node.getChild()))
 							bro.getChild().addAll(node.getChild());
@@ -494,7 +466,7 @@ public class MyBTree<E> implements BTree<E> {
 						int i = 0;// 父节点的key位置
 						// 找出父节点的key位置
 						while (i >= 0 && !stopLoop) {
-							if (parent.getKey().get(i) < bro.getKey().get(bro.getKey().size() - 1))
+							if (parent.getKey().get(i).compareTo(bro.getKey().get(bro.getKey().size() - 1)) < 0)
 								stopLoop = true;
 							else
 								i--;
@@ -503,17 +475,12 @@ public class MyBTree<E> implements BTree<E> {
 						if (SHOW_LOG)
 							System.out.println("合并（目标节点所有key+一个父key+右兄弟所有key）");
 						// 合并（目标节点所有key+一个父key+右兄弟所有key）
-						List<Integer> compositeKeys = node.getKey();
+						List<E> compositeKeys = node.getKey();
 						compositeKeys.add(parent.getKey().get(i));
 						compositeKeys.addAll(bro.getKey());
 
-						List<E> compositeValues = node.getValue();
-						compositeValues.add(parent.getValue().get(i));
-						compositeValues.addAll(bro.getValue());
-
 						parent.getChild().remove(bro);
 						parent.getKey().remove(i);
-						parent.getValue().remove(i);
 
 						if (!isListEmpty(bro.getChild()))
 							node.getChild().addAll(bro.getChild());
@@ -555,27 +522,19 @@ public class MyBTree<E> implements BTree<E> {
 			int header = 0;// 父节点的key位置
 			// 找出父节点的key位置
 			while (header < parent.getKey().size() && !stopLoop) {
-				if (parent.getKey().get(header) > bro.getKey().get(bro.getKey().size() - 1))
+				if (parent.getKey().get(header).compareTo(bro.getKey().get(bro.getKey().size() - 1)) > 0)
 					stopLoop = true;
 				else
 					header++;
 			}
 			// 旋转
-			List<Integer> nodeKeys = node.getKey();
+			List<E> nodeKeys = node.getKey();
 			nodeKeys.add(0, parent.getKey().get(header));
-			List<Integer> broKeys = bro.getKey();
-			List<Integer> parentKeys = parent.getKey();
+			List<E> broKeys = bro.getKey();
+			List<E> parentKeys = parent.getKey();
 			parentKeys.remove(header);
 			parentKeys.add(header, broKeys.get(broKeys.size() - 1));
 			broKeys.remove(broKeys.size() - 1);
-
-			List<E> nodeValues = node.getValue();
-			nodeValues.add(0, parent.getValue().get(header));
-			List<E> broValues = bro.getValue();
-			List<E> parentValues = parent.getValue();
-			parentValues.remove(header);
-			parentValues.add(header, broValues.get(broValues.size() - 1));
-			broValues.remove(broValues.size() - 1);
 		} else {
 			if (SHOW_LOG)
 				System.out.println("Rotating counterclockwise");
@@ -583,28 +542,19 @@ public class MyBTree<E> implements BTree<E> {
 			int header = parent.getKey().size() - 1;
 			// 找出父节点的key位置
 			while (header >= 0 && !stopLoop) {
-				if (parent.getKey().get(header) < bro.getKey().get(bro.getKey().size() - 1))
+				if (parent.getKey().get(header).compareTo(bro.getKey().get(bro.getKey().size() - 1)) < 0)
 					stopLoop = true;
 				else
 					header--;
 			}
 			// 旋转
-			List<Integer> nodeKeys = node.getKey();
+			List<E> nodeKeys = node.getKey();
 			nodeKeys.add(parent.getKey().get(header));
-			List<Integer> broKeys = bro.getKey();
-			List<Integer> parentKeys = parent.getKey();
+			List<E> broKeys = bro.getKey();
+			List<E> parentKeys = parent.getKey();
 			parentKeys.remove(header);
 			parentKeys.add(header, broKeys.get(0));
 			broKeys.remove(0);
-			
-
-			List<E> nodeValues = node.getValue();
-			nodeValues.add(parent.getValue().get(header));
-			List<E> broValues = bro.getValue();
-			List<E> parentValues = parent.getValue();
-			parentValues.remove(header);
-			parentValues.add(header, broValues.get(0));
-			broValues.remove(0);
 		}
 		return true;
 	}
@@ -693,7 +643,7 @@ public class MyBTree<E> implements BTree<E> {
 					log.append("[] ");
 				} else {
 					log.append("[");
-					for (int k : header.getKey())
+					for (E k : header.getKey())
 						log.append(String.format("%d, ", k));
 					runKeys += header.getKey().size();
 					log.delete(log.length() - 2, log.length());

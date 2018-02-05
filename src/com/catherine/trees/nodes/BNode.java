@@ -26,13 +26,9 @@ import java.util.List;
 public class BNode<E> implements Cloneable {
 	private BNode<E> parent;
 	/**
-	 * 关键码向量位置（不重复）
+	 * 关键码向量
 	 */
-	private List<Integer> key;
-	/**
-	 * 关键码向量位置存的值
-	 */
-	private List<E> value;
+	private List<E> key;
 	/**
 	 * 孩子向量（其总长度比关键码向量多一）
 	 */
@@ -46,20 +42,12 @@ public class BNode<E> implements Cloneable {
 		this.parent = parent;
 	}
 
-	public List<Integer> getKey() {
+	public List<E> getKey() {
 		return key;
 	}
 
-	public List<E> getValue() {
-		return value;
-	}
-
-	public void setKey(List<Integer> key) {
+	public void setKey(List<E> key) {
 		this.key = key;
-	}
-
-	public void setValue(List<E> value) {
-		this.value = value;
 	}
 
 	public List<BNode<E>> getChild() {
@@ -77,9 +65,7 @@ public class BNode<E> implements Cloneable {
 		if (parent != null)
 			tmp.parent = (BNode<E>) this.parent.clone();
 		if (key != null)
-			tmp.key = (List<Integer>) ((ArrayList<Integer>) this.key).clone();
-		if (value != null)
-			tmp.value = (List<E>) ((ArrayList<E>) this.value).clone();
+			tmp.key = (List<E>) ((ArrayList<E>) this.key).clone();
 		if (child != null)
 			tmp.child = (List<BNode<E>>) ((ArrayList<BNode<E>>) this.child).clone();
 		return tmp;
