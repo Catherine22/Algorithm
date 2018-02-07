@@ -20,7 +20,7 @@ import com.catherine.utils.Others;
  * @author Catherine
  *
  */
-class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree<E> implements BinarySearchTree<E> {
+public class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree<E> implements BinarySearchTree<E> {
 	private final static boolean SHOW_LOG = false;
 
 	/**
@@ -135,7 +135,7 @@ class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree
 	}
 
 	@Override
-	public Node<E> insert(E data) {
+	public Node<E> add(E data) {
 		if (data == null)
 			throw new NullPointerException("Data must not be null.");
 		if (root == null)
@@ -332,7 +332,7 @@ class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree
 		newBST = new BinarySearchTreeImpl<Integer>(sequence.get(0));
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
-			newBST.insert(sequence.get(i));
+			newBST.add(sequence.get(i));
 		}
 		System.out.print("\n");
 		return newBST;

@@ -1,7 +1,7 @@
 package com.catherine.sort;
 
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
-import com.catherine.priority_queue.PriorityQueueImpl;
+import com.catherine.priority_queue.PriorityQueueVectorImpl;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 
@@ -12,7 +12,7 @@ import com.catherine.utils.TrackLog;
  *
  * @param <T>
  * @see SelectionSort SelectionSort
- * @see com.catherine.priority_queue.PriorityQueueImpl PriorityQueueImpl
+ * @see com.catherine.priority_queue.PriorityQueueVectorImpl PriorityQueueVectorImpl
  */
 public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
@@ -76,7 +76,7 @@ public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 		T[] input = a.clone();
 
-		PriorityQueueImpl<T> pq = new PriorityQueueImpl<>();
+		PriorityQueueVectorImpl<T> pq = new PriorityQueueVectorImpl<>();
 		pq.heapify(input);
 		pq.toArray(input);
 
@@ -111,7 +111,7 @@ public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 	 *            滤范围至第n个元素
 	 * @return 指定区间的最大值（根节点）
 	 */
-	private T swapAndPercolateDown(PriorityQueueImpl<T> pq, int n) {
+	private T swapAndPercolateDown(PriorityQueueVectorImpl<T> pq, int n) {
 		if (pq.size() == 0)
 			return null;
 		if (pq.size() == 1) {

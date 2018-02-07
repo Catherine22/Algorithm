@@ -11,7 +11,7 @@ public interface RedBlackBST<E extends Comparable<? super E>> {
 	 */
 	public Node<E> search(E data);
 
-	public Node<E> insert(E data);
+	public Node<E> add(E data);
 
 	public void remove(E data);
 

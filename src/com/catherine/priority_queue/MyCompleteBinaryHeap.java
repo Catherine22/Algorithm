@@ -16,14 +16,14 @@ import java.util.Spliterator;
  *
  * @param <T>
  */
-public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements PriorityQueue<T> {
-	private PriorityQueueImpl<T> priorityQueueImpl;
+public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements PriorityQueueVector<T> {
+	private PriorityQueueVectorImpl<T> priorityQueueImpl;
 
 	public MyCompleteBinaryHeap() {
-		priorityQueueImpl = new PriorityQueueImpl<>();
+		priorityQueueImpl = new PriorityQueueVectorImpl<>();
 	}
 
-	public PriorityQueue<T> getPriorityQueue() {
+	public PriorityQueueVector<T> getPriorityQueue() {
 		return priorityQueueImpl;
 	}
 
@@ -76,7 +76,7 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements Pr
 	}
 
 	@Override
-	public void merge(PriorityQueue<T> heap) {
+	public void merge(PriorityQueueVector<T> heap) {
 		priorityQueueImpl.merge(heap);
 	}
 

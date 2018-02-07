@@ -14,7 +14,7 @@ import java.util.Vector;
  *
  * @param <T>
  */
-public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueue<T> {
+public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueueVector<T> {
 	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
@@ -444,10 +444,10 @@ public class PriorityQueueImpl<T extends Comparable<? super T>> extends Vector<T
 		heapify(list, list.size() - 1, list.size() - 1);
 	}
 
-	public void merge(PriorityQueue<T> heap) {
+	public void merge(PriorityQueueVector<T> heap) {
 		if (heap == null || heap.size() == 0)
 			return;
-		PriorityQueueImpl<T> tmp = (PriorityQueueImpl<T>) ((PriorityQueueImpl<T>) heap).clone();
+		PriorityQueueVectorImpl<T> tmp = (PriorityQueueVectorImpl<T>) ((PriorityQueueVectorImpl<T>) heap).clone();
 
 		// 方法1-挨个合并
 		// if (size() > tmp.size()) {

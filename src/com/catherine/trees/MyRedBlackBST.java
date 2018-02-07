@@ -15,7 +15,7 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 	}
 
 	@Override
-	public Node<E> insert(E data) {
+	public Node<E> add(E data) {
 		return rbTree.insertAndBalance(data);
 	}
 

@@ -17,7 +17,7 @@ import java.util.List;
  * @param <T>
  * @see MyCompleteBinaryHeap 完全二叉堆
  */
-public interface PriorityQueue<T> {
+public interface PriorityQueueVector<T> {
 
 	/**
 	 * 插入词条（Entry）并上滤。
@@ -127,7 +127,7 @@ public interface PriorityQueue<T> {
 	 * @see com.catherine.priority_queue.LeftistHeap 左式堆
 	 * @param heap
 	 */
-	public void merge(PriorityQueue<T> heap);
+	public void merge(PriorityQueueVector<T> heap);
 
 	int size();
 

@@ -124,8 +124,8 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	}
 
 	@Override
-	public Node<E> insert(E data) {
-		return bst.insert(data);
+	public Node<E> add(E data) {
+		return bst.add(data);
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 		newBST = new MyBinarySearchTree<Integer>(sequence.get(0));
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
-			newBST.insert(sequence.get(i));
+			newBST.add(sequence.get(i));
 		}
 		System.out.print("\n");
 

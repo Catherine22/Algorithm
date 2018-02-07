@@ -405,36 +405,36 @@ public class Main {
 
 	public static void testSplayTree() {
 		MySplayTree<Integer> mySplayTree1 = new MySplayTree<Integer>(641);
-		mySplayTree1.insert(468);
-		mySplayTree1.insert(777);
-		mySplayTree1.insert(448);
-		mySplayTree1.insert(507);
-		mySplayTree1.insert(743);
-		mySplayTree1.insert(21);
-		mySplayTree1.insert(486);
-		mySplayTree1.insert(527);
-		mySplayTree1.insert(1);
-		mySplayTree1.insert(285);
-		mySplayTree1.insert(495);
-		mySplayTree1.insert(69);
-		mySplayTree1.insert(333);
-		mySplayTree1.insert(266);
-		mySplayTree1.insert(400);
+		mySplayTree1.add(468);
+		mySplayTree1.add(777);
+		mySplayTree1.add(448);
+		mySplayTree1.add(507);
+		mySplayTree1.add(743);
+		mySplayTree1.add(21);
+		mySplayTree1.add(486);
+		mySplayTree1.add(527);
+		mySplayTree1.add(1);
+		mySplayTree1.add(285);
+		mySplayTree1.add(495);
+		mySplayTree1.add(69);
+		mySplayTree1.add(333);
+		mySplayTree1.add(266);
+		mySplayTree1.add(400);
 		mySplayTree1.traverseLevel();
 		mySplayTree1.search(333);
 		mySplayTree1.traverseLevel();
 
 		// the worst case
 		MySplayTree<Integer> mySplayTree2 = new MySplayTree<Integer>(90);
-		mySplayTree2.insert(80);
-		mySplayTree2.insert(70);
-		mySplayTree2.insert(60);
-		mySplayTree2.insert(50);
-		mySplayTree2.insert(40);
-		mySplayTree2.insert(30);
-		mySplayTree2.insert(20);
-		mySplayTree2.insert(10);
-		mySplayTree2.insert(0);
+		mySplayTree2.add(80);
+		mySplayTree2.add(70);
+		mySplayTree2.add(60);
+		mySplayTree2.add(50);
+		mySplayTree2.add(40);
+		mySplayTree2.add(30);
+		mySplayTree2.add(20);
+		mySplayTree2.add(10);
+		mySplayTree2.add(0);
 
 		// System.out.println("Searching with ordinary rotation in the worst
 		// case");
@@ -452,8 +452,8 @@ public class Main {
 		// mySplayTree2.traverseLevel();
 		// }
 
-		// insert
-		mySplayTree2.insert(15);
+		// add
+		mySplayTree2.add(15);
 		mySplayTree2.traverseLevel();
 
 		// delete
@@ -668,30 +668,30 @@ public class Main {
 	public static void testRedBlackBST() {
 		// 1
 		// MyRedBlackBST<Integer> rbTree1 = new MyRedBlackBST<Integer>(20);
-		// rbTree1.insert(10);
-		// rbTree1.insert(30);
-		// rbTree1.insert(15);
+		// rbTree1.add(10);
+		// rbTree1.add(30);
+		// rbTree1.add(15);
 		// rbTree1.traverseLevel();
 
 		// 2
 		// MyRedBlackBST<Integer> rbTree2 = new MyRedBlackBST<Integer>(40);
-		// rbTree2.insert(30);
+		// rbTree2.add(30);
 		// rbTree2.traverseLevel();
-		// rbTree2.insert(50);
+		// rbTree2.add(50);
 		// rbTree2.traverseLevel();
-		// rbTree2.insert(45);
+		// rbTree2.add(45);
 		// rbTree2.traverseLevel();
-		// rbTree2.insert(35);
+		// rbTree2.add(35);
 		// rbTree2.traverseLevel();
 		// //3
 		MyRedBlackBST<Integer> rbTree3 = new MyRedBlackBST<Integer>(40);
-		rbTree3.insert(30);
+		rbTree3.add(30);
 		rbTree3.traverseLevel();
-		rbTree3.insert(50);
+		rbTree3.add(50);
 		rbTree3.traverseLevel();
-		rbTree3.insert(45);
+		rbTree3.add(45);
 		rbTree3.traverseLevel();
-		rbTree3.insert(25);
+		rbTree3.add(25);
 		rbTree3.traverseLevel();
 	}
 
@@ -705,7 +705,7 @@ public class Main {
 		history[0] = root;
 		for (int i = 1; i < SIZE; i++) {
 			history[i] = 100 + random.nextInt(300);
-			myAVLTree1.insert(history[i]);
+			myAVLTree1.add(history[i]);
 			myAVLTree2.insertAndBalance(history[i]);
 			random = new Random();
 		}
@@ -762,7 +762,7 @@ public class Main {
 		history[0] = root;
 		for (int i = 1; i < SIZE; i++) {
 			history[i] = (char) ('A' + random.nextInt(26));
-			mBST.insert(history[i]);
+			mBST.add(history[i]);
 			random = new Random();
 		}
 

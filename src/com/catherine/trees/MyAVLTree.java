@@ -28,8 +28,8 @@ public class MyAVLTree<E extends Comparable<? super E>> extends BinarySearchTree
 	 * 所有祖先节点都會失衡<br>
 	 */
 	@Override
-	public Node<E> insert(E data) {
-		return super.insert(data);
+	public Node<E> add(E data) {
+		return super.add(data);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class MyAVLTree<E extends Comparable<? super E>> extends BinarySearchTree
 	 * @param ins
 	 */
 	public void insertAndBalance(E data) {
-		final Node<E> newNode = super.insert(data);
+		final Node<E> newNode = super.add(data);
 		Node<E> ancestor = newNode.getParent();
 
 		Node<E> target = ancestor;

@@ -144,8 +144,8 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
 	 */
 	@Override
-	public Node<E> insert(E data) {
-		return search(spTree.insert(data).getData());
+	public Node<E> add(E data) {
+		return search(spTree.add(data).getData());
 	}
 
 	/**

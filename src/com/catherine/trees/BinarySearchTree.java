@@ -31,7 +31,7 @@ public interface BinarySearchTree<E> {
 	 * @param data
 	 *            插入节点的key
 	 */
-	public Node<E> insert(E data);
+	public Node<E> add(E data);
 
 	/**
 	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>

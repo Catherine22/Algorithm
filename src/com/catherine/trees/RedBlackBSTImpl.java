@@ -110,7 +110,7 @@ public class RedBlackBSTImpl<E extends Comparable<? super E>> extends BinarySear
 	 * @return
 	 */
 	public Node<E> insertAndBalance(E data) {
-		final Node<E> newNode = super.insert(data);
+		final Node<E> newNode = super.add(data);
 		Node<E> ancestor = newNode.getParent();
 
 		Node<E> target = ancestor;
