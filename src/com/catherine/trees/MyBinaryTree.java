@@ -644,4 +644,10 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			traversePost(node.getrChild());
 		System.out.print(node.getInfo());
 	}
+
+	@Override
+	public void clear() {
+		root = null;
+		size = 0;
+	}
 }

@@ -48,6 +48,7 @@ import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.priority_queue.LeftistHeap;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
+import com.catherine.priority_queue.MyCompleteBinaryHeap.Structure;
 import com.catherine.sort.BaseSort;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.HeapSort;
@@ -103,8 +104,9 @@ public class Main {
 		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
-		// testPQ();
-		 testLeftistHeaps();
+		// testPQVector();
+		 testPQBinTree();
+		// testLeftistHeaps();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -286,8 +288,8 @@ public class Main {
 	}
 
 	public static void testLeftistHeaps() {
-		MyCompleteBinaryHeap<Integer> pq1 = new MyCompleteBinaryHeap<>();
-		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>();
+		MyCompleteBinaryHeap<Integer> pq1 = new MyCompleteBinaryHeap<>(Structure.BINARY_TREE, 99);
+		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(Structure.BINARY_TREE, 999);
 
 		Random random = new Random();
 		int SIZE1 = 0 + random.nextInt(15);
@@ -322,7 +324,7 @@ public class Main {
 		}
 
 		// merge
-		pq1.merge(pq2.getPriorityQueue());
+		pq1.merge(pq2.getPriorityQueueBinTree());
 		printArray(String.format("merge %s and %s", "pq1", "pq2"), pq1.toArray());
 		pq1.printTree();
 		Integer[] a3 = new Integer[pq1.size()];
@@ -333,7 +335,56 @@ public class Main {
 		// pq2"), a3));
 	}
 
-	public static void testPQ() {
+	public static void testPQBinTree() {
+		Random random = new Random();
+		int SIZE = 1 + random.nextInt(15);
+		int TEXT_LEN = 5;
+		StringBuilder sBuilder = new StringBuilder();
+
+		// root
+		for (int j = 0; j < TEXT_LEN; j++) {
+			sBuilder.append((char) ('A' + random.nextInt(26)));
+		}
+		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
+		sBuilder.delete(0, TEXT_LEN);
+		random = new Random();
+
+		// random elements
+		for (int i = 1; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			pq.insert(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
+
+		printIterator(pq.iterator());
+		pq.printTree();
+
+		System.out.println("\nDelet max");
+		pq.delMax();
+		printIterator(pq.iterator());
+		pq.printTree();
+
+		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>(sBuilder.toString());
+		List<String> list = new ArrayList<>();
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 1; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			list.add(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
+		System.out.println("\nheapify");
+		pq2.heapify(list);
+		printIterator(pq2.iterator());
+		pq2.printTree();
+	}
+
+	public static void testPQVector() {
 		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>();
 		Random random = new Random();
 		int SIZE = 1 + random.nextInt(15);

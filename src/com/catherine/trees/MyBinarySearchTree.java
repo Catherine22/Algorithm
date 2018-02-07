@@ -197,4 +197,9 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	public void right_leftRotate(Node<E> node) {
 		bst.right_leftRotate(node);
 	}
+
+	@Override
+	public void clear() {
+		bst.clear();
+	}
 }

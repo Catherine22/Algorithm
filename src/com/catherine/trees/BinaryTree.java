@@ -34,6 +34,11 @@ public interface BinaryTree<E> {
 	public int size(Node<E> node);
 
 	/**
+	 * 移除全部节点
+	 */
+	public void clear();
+
+	/**
 	 * 节点高度定义：<br>
 	 * 1. 只有单一节点：0<br>
 	 * 2. 无节点，也就是空树：-1<br>

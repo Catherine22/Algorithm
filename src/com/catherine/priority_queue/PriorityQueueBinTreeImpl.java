@@ -353,6 +353,28 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 		}
 	}
 
+	@Override
+	public T get(int index) {
+		Stack<Node<T>> bin = new Stack<>();
+		Node<T> node = root;
+		T res = null;
+		int countdown = index;
+
+		while ((countdown > 0) && (node != null || bin.size() > 0)) {
+			while (node != null) {
+				bin.push(node);
+				node = node.getlChild();
+			}
+			if (!bin.isEmpty()) {
+				node = bin.pop();
+				res = node.getData();
+				node = node.getrChild();
+				countdown--;
+			}
+		}
+		return res;
+	}
+
 	protected void swap(Node<T> i, Node<T> p) {
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("swap %s, %s", i.toString(), p.toString()));

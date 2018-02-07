@@ -296,4 +296,9 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 
 	}
 
+	@Override
+	public void clear() {
+		spTree.clear();
+	}
+
 }

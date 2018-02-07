@@ -133,4 +133,6 @@ public interface PriorityQueueBinTree<T> {
 
 	int size();
 
+	T get(int position);
+
 }

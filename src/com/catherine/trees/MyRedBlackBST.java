@@ -123,4 +123,9 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		rbTree.clear();		
+	}
+
 }
