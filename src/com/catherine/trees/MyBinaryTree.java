@@ -3,6 +3,7 @@ package com.catherine.trees;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.logging.Level;
 
 import com.catherine.data_type.MyLinkedList;
 import com.catherine.trees.nodes.Node;
@@ -693,37 +694,54 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		}
 	}
 
-	public Object clone() {
-		MyBinaryTree<E> clone = null;
-		// 以阶层重新填充clone
-		if (root != null) {
+	enum Tag {
+		LEVEL, ROOT, LEFT, RIGHT
+	}
 
-			Queue<Node<E>> parent = new LinkedList<>();
-			Queue<Node<E>> siblings = new LinkedList<>();
+	public Object clone() {
+		// clone用
+		Queue<Tag> flags = new LinkedList<>();
+		Queue<Node<E>> history = new LinkedList<>();
+		// 走访用
+		int level = 0;
+		Queue<Node<E>> parent = new LinkedList<>();
+		Queue<Node<E>> siblings = new LinkedList<>();
+		// 以阶层重新填充clone，首先阶层走访，记录各节点的值与位置
+		if (root != null) {
 			Node<E> node = root;
 			parent.offer(node);
-			int level = 0;
 			boolean isRight = false;
 			while (node != null || !parent.isEmpty()) {
 				// System.out.print("level " + level++ + ",\t");
 				System.out.print("level " + level++ + ",\n");
-
+				flags.offer(Tag.LEVEL);
 				while (!parent.isEmpty()) {
 					node = parent.poll();
-
 					if (node == null) {
+						if (isRight)
+							flags.offer(Tag.RIGHT);
+						else
+							flags.offer(Tag.LEFT);
+						history.offer(null);
 						isRight = !isRight;
 					} else if (node == root) {
-						clone = new MyBinaryTree<>(node.getData());
+						flags.offer(Tag.ROOT);
+						history.offer(root);
 						System.out.println("build root " + node.getData());
 						isRight = false;
 					} else {
 						if (isRight) {
-							clone.insertRC(node.getParent(), node.getData()).getParent();
+							flags.offer(Tag.RIGHT);
+							history.offer(node);
+							// clone.insertRC(node.getParent(),
+							// node.getData()).getParent();
 							System.out
 									.println("insert R child " + node.getData() + " to " + node.getParent().getData());
 						} else {
-							clone.insertLC(node.getParent(), node.getData()).getParent();
+							flags.offer(Tag.LEFT);
+							history.offer(node);
+							// clone.insertLC(node.getParent(),
+							// node.getData()).getParent();
 							System.out
 									.println("insert L child " + node.getData() + " to " + node.getParent().getData());
 						}
@@ -762,6 +780,58 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			}
 		}
 
+		System.out.println("\nclone!!");
+		// System.out.println(history.toString());
+		// System.out.println(flags.toString());
+
+		level = 0;
+		Node<E> head = null;
+		MyBinaryTree<E> clone = null;
+		parent.clear();
+		siblings.clear();
+		while (history.size() > 0) {
+			System.out.print("level " + level++ + ",\n");
+			while (flags.peek() != Tag.LEVEL) {
+				if (flags.peek() == Tag.ROOT) {
+					clone = new MyBinaryTree<>(history.poll().getData());
+					head = clone.root;
+				} else if (flags.peek() == Tag.LEFT) {
+					if (history.peek() == null) {
+						System.out.println("null");
+						history.poll();
+					} else {
+						System.out.println("add L:" + siblings.peek().getData());
+						siblings.offer(clone.insertLC(head, history.poll().getData()));
+					}
+				} else if (flags.peek() == Tag.RIGHT) {
+					if (history.peek() == null) {
+						System.out.println("null");
+						history.poll();
+					} else {
+						System.out.println("add R:" + siblings.peek().getData());
+						siblings.offer(clone.insertRC(head, history.poll().getData()));
+					}
+					head = parent.poll();
+				}
+				flags.poll();
+			}
+
+			int countdown = siblings.size();
+			for (Node<E> n : siblings) {
+				parent.offer(n);
+
+				if (n == null)
+					countdown--;
+			}
+
+			siblings.clear();
+			head = parent.poll();
+			if (countdown == 0)
+				break;
+
+			flags.poll();
+		}
+		// clone.traverseLevel();
 		return clone;
 	}
 
