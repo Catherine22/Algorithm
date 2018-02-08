@@ -301,4 +301,13 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 		spTree.clear();
 	}
 
+	@Override
+	public void copyInto(Object[] anArray) {
+		spTree.copyInto(anArray);
+	}
+
+	@Override
+	public Object clone() {
+		return spTree.clone();
+	}
 }

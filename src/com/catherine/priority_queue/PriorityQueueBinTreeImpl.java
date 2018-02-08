@@ -64,7 +64,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	 * @param n
 	 * @return
 	 */
-	private Node<T> getLastNode() {
+	public Node<T> getLastNode() {
 		Node<T> t = root;
 		Node<T> h = root;
 		if (size == 0)

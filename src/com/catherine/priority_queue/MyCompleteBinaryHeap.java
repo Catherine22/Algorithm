@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Spliterator;
-import java.util.Stack;
 
 import com.catherine.trees.nodes.Node;
 
@@ -183,16 +182,15 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			priorityQueueVectorImpl.copyInto(anArray);
 		} else {
-			// TODO
+			priorityQueueBinTreeImpl.copyInto(anArray);
 		}
 	}
 
 	public synchronized void trimToSize() {
-		if (structure == Structure.VECTOR) {
-			priorityQueueVectorImpl.trimToSize();
-		} else {
-			// TODO
-		}
+		// if (structure != Structure.VECTOR)
+		// throw new IllegalAccessException("VECTOR Structure only");
+		priorityQueueVectorImpl.trimToSize();
+
 	}
 
 	public synchronized boolean isEmpty() {
@@ -261,8 +259,7 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.lastElement();
 		} else {
-			// TODO
-			return null;
+			return priorityQueueBinTreeImpl.getLastNode().getData();
 		}
 	}
 

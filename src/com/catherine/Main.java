@@ -98,14 +98,14 @@ public class Main {
 		// testLinkedList();
 		// testStack();
 		// testDirectedGraph();
-		// testBinaryTree();
+		testBinaryTree();
 		// testBST();
 		// testAVLTree();
 		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
 		// testPQVector();
-		 testPQBinTree();
+		// testPQBinTree();
 		// testLeftistHeaps();
 		// testHash();
 		// testCryptography();
@@ -862,11 +862,6 @@ public class Main {
 		mBT.insertRC(rc, "E");
 		mBT.setLC(rclc, "F");
 
-		// for (int i = 0; i < 500; i++) {
-		// Node<String> node = mBT.insertRC(rclc, "G");
-		// rclc = node;
-		// }
-
 		System.out.println("H:" + mBT.getHeight());
 		// mBT.traversePre();
 		// mBT.traversePreNR1();
@@ -877,6 +872,10 @@ public class Main {
 		// mBT.traversePostNR1();
 		// mBT.traversePostNR2();
 		mBT.traverseLevel();
+
+		System.out.println("\nclone");
+		MyBinaryTree<String> clone = (MyBinaryTree<String>) mBT.clone();
+//		clone.traverseLevel();
 	}
 
 	public static void testDirectedGraph() {

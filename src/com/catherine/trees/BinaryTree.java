@@ -144,4 +144,18 @@ public interface BinaryTree<E> {
 	 * 后序遍历（左-右-中）
 	 */
 	public void traversePost();
+
+	/**
+	 * 这边以中序遍历的方式转成数组<br>
+	 * 
+	 * @param anArray
+	 */
+	public void copyInto(Object[] anArray);
+
+	/**
+	 * 拷贝此树并回传副本
+	 * 
+	 * @return 副本
+	 */
+	public Object clone();
 }

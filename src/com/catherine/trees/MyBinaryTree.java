@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.catherine.data_type.MyLinkedList;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
@@ -25,6 +26,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 	protected Node<E> root;
 
 	protected MyBinaryTree() {
+		adapter = new NodeAdapter<>();
+		adapter.setType(Nodes.STANDARD);
 	}
 
 	public MyBinaryTree(E root) {
@@ -324,28 +327,48 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		Node<E> node = root;
 		parent.offer(node);
 		int level = 0;
-
+		boolean isRight = false;
 		while (node != null || !parent.isEmpty()) {
 			System.out.print("level " + level++ + ",\t");
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
-				System.out.print(node.getInfo());
+				if (node == root) {
+					isRight = false;
+				} else {
+					isRight = !isRight;
+				}
 
-				if (node.getlChild() != null)
-					siblings.offer(node.getlChild());
+				if (node != null) {
+					System.out.print(node.getInfo());
 
-				if (node.getrChild() != null)
-					siblings.offer(node.getrChild());
+					if (node.getlChild() != null)
+						siblings.offer(node.getlChild());
+					else
+						siblings.offer(null);
+
+					if (node.getrChild() != null)
+						siblings.offer(node.getrChild());
+					else
+						siblings.offer(null);
+				}
+
 			}
 
-			for (Node<E> n : siblings)
+			int countdown = siblings.size();
+			for (Node<E> n : siblings) {
 				parent.offer(n);
+
+				if (n == null)
+					countdown--;
+			}
 
 			siblings.clear();
 			node = null;
-
 			System.out.print("\n");
+
+			if (countdown == 0)
+				break;
 		}
 	}
 
@@ -650,4 +673,96 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		root = null;
 		size = 0;
 	}
+
+	public synchronized void copyInto(Object[] anArray) {
+		Stack<Node<E>> bin = new Stack<>();
+		Node<E> node = root;
+		anArray = new Object[size];
+		int h = 0;
+
+		while (node != null || bin.size() > 0) {
+			while (node != null) {
+				bin.push(node);
+				node = node.getlChild();
+			}
+			if (!bin.isEmpty()) {
+				node = bin.pop();
+				anArray[h] = node.getData();
+				node = node.getrChild();
+			}
+		}
+	}
+
+	public Object clone() {
+		MyBinaryTree<E> clone = null;
+		// 以阶层重新填充clone
+		if (root != null) {
+
+			Queue<Node<E>> parent = new LinkedList<>();
+			Queue<Node<E>> siblings = new LinkedList<>();
+			Node<E> node = root;
+			parent.offer(node);
+			int level = 0;
+			boolean isRight = false;
+			while (node != null || !parent.isEmpty()) {
+				// System.out.print("level " + level++ + ",\t");
+				System.out.print("level " + level++ + ",\n");
+
+				while (!parent.isEmpty()) {
+					node = parent.poll();
+
+					if (node == null) {
+						isRight = !isRight;
+					} else if (node == root) {
+						clone = new MyBinaryTree<>(node.getData());
+						System.out.println("build root " + node.getData());
+						isRight = false;
+					} else {
+						if (isRight) {
+							clone.insertRC(node.getParent(), node.getData()).getParent();
+							System.out
+									.println("insert R child " + node.getData() + " to " + node.getParent().getData());
+						} else {
+							clone.insertLC(node.getParent(), node.getData()).getParent();
+							System.out
+									.println("insert L child " + node.getData() + " to " + node.getParent().getData());
+						}
+						isRight = !isRight;
+					}
+
+					if (node != null) {
+						// System.out.print(node.getInfo());
+
+						if (node.getlChild() != null)
+							siblings.offer(node.getlChild());
+						else
+							siblings.offer(null);
+
+						if (node.getrChild() != null)
+							siblings.offer(node.getrChild());
+						else
+							siblings.offer(null);
+					}
+
+				}
+
+				int countdown = siblings.size();
+				for (Node<E> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				node = null;
+
+				if (countdown == 0)
+					break;
+			}
+		}
+
+		return clone;
+	}
+
 }

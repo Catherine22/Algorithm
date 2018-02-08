@@ -144,7 +144,7 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 			throw new IllegalArgumentException("Size must be more than 0");
 		if (to <= from)
 			throw new IllegalArgumentException("Error range");
-		
+
 		BinarySearchTree<Integer> newBST = null;
 		List<Integer> sequence = new ArrayList<>();
 		for (int i = from; i < to; i++) {
@@ -201,5 +201,15 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	@Override
 	public void clear() {
 		bst.clear();
+	}
+
+	@Override
+	public void copyInto(Object[] anArray) {
+		bst.copyInto(anArray);
+	}
+
+	@Override
+	public Object clone() {
+		return bst.clone();
 	}
 }

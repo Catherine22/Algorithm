@@ -125,7 +125,16 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 
 	@Override
 	public void clear() {
-		rbTree.clear();		
+		rbTree.clear();
 	}
 
+	@Override
+	public void copyInto(Object[] anArray) {
+		rbTree.copyInto(anArray);
+	}
+
+	@Override
+	public Object clone() {
+		return rbTree.clone();
+	}
 }
