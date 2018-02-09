@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Spliterator;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -166,7 +167,7 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			priorityQueueVectorImpl.printTree();
 		} else {
-			priorityQueueBinTreeImpl.traverseLevel();
+			priorityQueueBinTreeImpl.traversal(Order.LEVEL);
 		}
 	}
 

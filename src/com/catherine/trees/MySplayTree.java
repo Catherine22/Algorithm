@@ -1,5 +1,6 @@
 package com.catherine.trees;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -199,31 +200,18 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 		spTree.removeLCCompletely(parent);
 	}
 
+	public void traversal(Order order) {
+		spTree.traversal(order);
+	}
+
 	@Override
 	public void traverseLevel() {
 		spTree.traverseLevel();
 	}
 
 	@Override
-	public void traversePreNR1() {
-		spTree.traversePreNR1();
-	}
-
-	@Override
-	public void traversePreNR2() {
-		spTree.traversePreNR2();
-
-	}
-
-	@Override
 	public void traversePre() {
 		spTree.traversePre();
-
-	}
-
-	@Override
-	public void traverseInNR() {
-		spTree.traverseInNR();
 
 	}
 
@@ -234,26 +222,29 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 	}
 
 	@Override
-	public Node<E> succ(Node<E> node) {
-		return spTree.succ(node);
-	}
-
-	@Override
-	public void traversePostNR1() {
-		spTree.traversePostNR1();
-
-	}
-
-	@Override
-	public void traversePostNR2() {
-		spTree.traversePostNR2();
-
-	}
-
-	@Override
 	public void traversePost() {
 		spTree.traversePost();
 
+	}
+
+	@Override
+	public void traversePre(Node<E> node) {
+		spTree.traversePre(node);		
+	}
+
+	@Override
+	public void traverseIn(Node<E> node) {
+		spTree.traverseIn(node);		
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		spTree.traversePost(node);		
+	}
+
+	@Override
+	public Node<E> succ(Node<E> node) {
+		return spTree.succ(node);
 	}
 
 	@Override

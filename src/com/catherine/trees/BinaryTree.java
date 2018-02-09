@@ -1,5 +1,8 @@
 package com.catherine.trees;
 
+import java.util.Collections;
+
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 public interface BinaryTree<E> {
@@ -75,46 +78,50 @@ public interface BinaryTree<E> {
 	public void removeLCCompletely(Node<E> parent);
 
 	/**
+	 * 遍历
+	 * 
+	 * @param order
+	 *            阶层、先序、中序、后序
+	 */
+	public void traversal(Order order);
+
+	/**
 	 * 以阶层遍历
 	 */
 	public void traverseLevel();
 
 	/**
-	 * 使用迭代而非递归<br>
-	 * 先序遍历（中-左-右）
-	 */
-	public void traversePreNR1();
-
-	/**
-	 * 使用迭代而非递归<br>
-	 * 先序遍历（中-左-右）<br>
-	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。<br>
-	 * <br>
-	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
-	 */
-	public void traversePreNR2();
-
-	/**
-	 * 递归<br>
 	 * 先序遍历（中-左-右）
 	 */
 	public void traversePre();
 
 	/**
-	 * 使用迭代而非递归<br>
-	 * 中序遍历（左-中-右）<br>
-	 * 每个左侧节点就是一条链，由最左下的节点开始遍历右子树。 <br>
-	 * <br>
-	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
-	 * 
-	 */
-	public void traverseInNR();
-
-	/**
-	 * 递归<br>
 	 * 中序遍历（左-中-右）
 	 */
 	public void traverseIn();
+
+	/**
+	 * 后序遍历（左-右-中）<br>
+	 */
+	public void traversePost();
+
+	/**
+	 * 递归<br>
+	 * 从任意节点开始先序遍历（中-左-右）
+	 */
+	public void traversePre(Node<E> node);
+
+	/**
+	 * 递归<br>
+	 * 从任意节点开始中序遍历（左-中-右）
+	 */
+	public void traverseIn(Node<E> node);
+
+	/**
+	 * 递归<br>
+	 * 从任意节点开始后序遍历（左-右-中）<br>
+	 */
+	public void traversePost(Node<E> node);
 
 	/**
 	 * 返回当前节点在中序意义下的直接后继。
@@ -126,26 +133,6 @@ public interface BinaryTree<E> {
 	public Node<E> succ(Node<E> node);
 
 	/**
-	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）<br>
-	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
-	 */
-	public void traversePostNR1();
-
-	/**
-	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）<br>
-	 * 双栈法
-	 */
-	public void traversePostNR2();
-
-	/**
-	 * 递归<br>
-	 * 后序遍历（左-右-中）
-	 */
-	public void traversePost();
-
-	/**
 	 * 这边以中序遍历的方式转成数组<br>
 	 * 
 	 * @param anArray
@@ -153,7 +140,7 @@ public interface BinaryTree<E> {
 	public void copyInto(Object[] anArray);
 
 	/**
-	 * 拷贝此树并回传副本
+	 * 拷贝此树并回传副本，两次阶层走访填充clone
 	 * 
 	 * @return 副本
 	 */

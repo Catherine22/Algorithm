@@ -1,5 +1,6 @@
 package com.catherine.trees;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTree<E>, RedBlackBST<E> {
@@ -65,20 +66,13 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 	}
 
 	@Override
+	public void traversal(Order order) {
+		rbTree.traversal(order);
+	}
+
+	@Override
 	public void traverseLevel() {
 		rbTree.traverseLevel();
-	}
-
-	@Override
-	public void traversePreNR1() {
-		rbTree.traversePreNR1();
-
-	}
-
-	@Override
-	public void traversePreNR2() {
-		rbTree.traversePreNR2();
-
 	}
 
 	@Override
@@ -88,34 +82,34 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 	}
 
 	@Override
-	public void traverseInNR() {
-		rbTree.traverseInNR();
-	}
-
-	@Override
 	public void traverseIn() {
 		rbTree.traverseIn();
 
 	}
 
 	@Override
-	public Node<E> succ(Node<E> node) {
-		return rbTree.succ(node);
-	}
-
-	@Override
-	public void traversePostNR1() {
-		rbTree.traversePostNR1();
-	}
-
-	@Override
-	public void traversePostNR2() {
-		rbTree.traversePostNR2();
-	}
-
-	@Override
 	public void traversePost() {
 		rbTree.traversePost();
+	}
+
+	@Override
+	public void traversePre(Node<E> node) {
+		rbTree.traversePre(node);
+	}
+
+	@Override
+	public void traverseIn(Node<E> node) {
+		rbTree.traverseIn(node);
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		rbTree.traversePost(node);
+	}
+
+	@Override
+	public Node<E> succ(Node<E> node) {
+		return rbTree.succ(node);
 	}
 
 	@Override

@@ -63,6 +63,7 @@ import com.catherine.trees.MyBinarySearchTree;
 import com.catherine.trees.MyBinaryTree;
 import com.catherine.trees.MyRedBlackBST;
 import com.catherine.trees.MySplayTree;
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
@@ -863,19 +864,25 @@ public class Main {
 		mBT.setLC(rclc, "F");
 
 		System.out.println("H:" + mBT.getHeight());
-		// mBT.traversePre();
-		// mBT.traversePreNR1();
-		// mBT.traversePreNR2();
-		// mBT.traverseIn();
-		// mBT.traverseInNR();
-		// mBT.traversePost();
-		// mBT.traversePostNR1();
-		// mBT.traversePostNR2();
+		String[] strings = new String[mBT.size()];
+		System.out.println("Level traversal");
 		mBT.traverseLevel();
+		System.out.println("Pre-order traversal");
+		mBT.traversePre();
+		System.out.println("In-order traversal");
+		mBT.traverseIn();
+		System.out.println("Post-order traversal");
+		mBT.traversePost();
 
 		System.out.println("\nclone");
 		MyBinaryTree<String> clone = (MyBinaryTree<String>) mBT.clone();
 		clone.traverseLevel();
+		clone.copyInto(Order.PRE_ORDER_RECURSION, strings);
+		printArray("copyInto", strings);
+		clone.copyInto(Order.IN_ORDER_RECURSION, strings);
+		printArray("copyInto", strings);
+		clone.copyInto(Order.POST_ORDER_RECURSION, strings);
+		printArray("copyInto", strings);
 	}
 
 	public static void testDirectedGraph() {

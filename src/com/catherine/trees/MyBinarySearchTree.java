@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -64,18 +65,13 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	}
 
 	@Override
+	public void traversal(Order order) {
+		bst.traversal(order);
+	}
+
+	@Override
 	public void traverseLevel() {
 		bst.traverseLevel();
-	}
-
-	@Override
-	public void traversePreNR1() {
-		bst.traversePreNR1();
-	}
-
-	@Override
-	public void traversePreNR2() {
-		bst.traversePreNR2();
 	}
 
 	@Override
@@ -84,33 +80,33 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	}
 
 	@Override
-	public void traverseInNR() {
-		bst.traverseInNR();
-	}
-
-	@Override
 	public void traverseIn() {
 		bst.traverseIn();
 	}
 
 	@Override
-	public Node<E> succ(Node<E> node) {
-		return bst.succ(node);
-	}
-
-	@Override
-	public void traversePostNR1() {
-		bst.traversePostNR1();
-	}
-
-	@Override
-	public void traversePostNR2() {
-		bst.traversePostNR2();
-	}
-
-	@Override
 	public void traversePost() {
 		bst.traversePost();
+	}
+
+	@Override
+	public void traversePre(Node<E> node) {
+		bst.traversePre(node);
+	}
+
+	@Override
+	public void traverseIn(Node<E> node) {
+		bst.traverseIn(node);
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		bst.traversePost(node);
+	}
+
+	@Override
+	public Node<E> succ(Node<E> node) {
+		return bst.succ(node);
 	}
 
 	@Override
