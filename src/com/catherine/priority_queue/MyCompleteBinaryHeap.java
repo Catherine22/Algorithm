@@ -56,11 +56,9 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 	@Override
 	public void insert(T e) {
 		if (structure == Structure.VECTOR) {
-			priorityQueueVectorImpl.add(e);
-			percolateUp(e);
+			priorityQueueVectorImpl.insert(e);
 		} else {
-			priorityQueueBinTreeImpl.add(e);
-			percolateUp(e);
+			priorityQueueBinTreeImpl.insert(e);
 		}
 	}
 
@@ -83,16 +81,16 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 	}
 
 	@Override
-	public void percolateDown(T n, T i) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public void percolateDown(T n, T i) throws IllegalAccessException {
+		if (structure != Structure.VECTOR)
+			throw new IllegalAccessException("VECTOR Structure only");
 		priorityQueueVectorImpl.percolateDown(n, i);
 	}
 
 	@Override
-	public void percolateUp(T i) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public void percolateUp(T i) throws IllegalAccessException {
+		if (structure != Structure.VECTOR)
+			throw new IllegalAccessException("VECTOR Structure only");
 		priorityQueueVectorImpl.percolateUp(i);
 	}
 
@@ -179,7 +177,7 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		}
 	}
 
-	public synchronized void copyInto(Object[] anArray) {
+	public void copyInto(Object[] anArray) {
 		if (structure == Structure.VECTOR) {
 			priorityQueueVectorImpl.copyInto(anArray);
 		} else {
@@ -187,14 +185,14 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		}
 	}
 
-	public synchronized void trimToSize() {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public synchronized void trimToSize() throws IllegalAccessException {
+		if (structure != Structure.VECTOR)
+			throw new IllegalAccessException("VECTOR Structure only");
 		priorityQueueVectorImpl.trimToSize();
 
 	}
 
-	public synchronized boolean isEmpty() {
+	public boolean isEmpty() {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.isEmpty();
 		} else {
@@ -203,52 +201,63 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 	}
 
 	public int indexOf(Object o) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.indexOf(o);
 		} else {
-			return -1;
+			return indexOf(o, priorityQueueBinTreeImpl.size());
 		}
 	}
 
-	public synchronized int indexOf(Object o, int index) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public int indexOf(Object o, int index) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.indexOf(o, index);
 		} else {
-			return -1;
+			Object[] anArray = new Object[priorityQueueBinTreeImpl.size()];
+			priorityQueueBinTreeImpl.copyInto(anArray);
+			while (index >= 0) {
+				if (anArray[index] == o)
+					break;
+				else
+					index--;
+			}
+			return index;
 		}
 	}
 
-	public synchronized int lastIndexOf(Object o) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public int lastIndexOf(Object o) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.lastIndexOf(o);
 		} else {
-			return -1;
+			return lastIndexOf(o, 0);
 		}
 	}
 
-	public synchronized int lastIndexOf(Object o, int index) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public int lastIndexOf(Object o, int index) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.lastIndexOf(o, index);
 		} else {
-			return -1;
+			Object[] anArray = new Object[priorityQueueBinTreeImpl.size()];
+			priorityQueueBinTreeImpl.copyInto(anArray);
+			int head = priorityQueueBinTreeImpl.size();
+			while (head >= index) {
+				if (anArray[head] == o)
+					break;
+				else
+					index--;
+			}
+			return (head < index) ? -1 : head;
 		}
 	}
 
-	public synchronized T elementAt(int index) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("VECTOR Structure only");
+	public Object elementAt(int index) {
+		if (index < 0 || index >= size())
+			throw new ArrayIndexOutOfBoundsException("Index must be from 0 to size-1");
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.elementAt(index);
 		} else {
-			return null;
+			Object[] anArray = new Object[priorityQueueBinTreeImpl.size()];
+			priorityQueueBinTreeImpl.copyInto(anArray);
+			return anArray[index];
 		}
 	}
 
@@ -268,30 +277,27 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.clone();
 		} else {
-			// TODO
-			return null;
+			return priorityQueueBinTreeImpl.clone();
 		}
 	}
 
-	public synchronized Object[] toArray() {
+	public Object[] toArray() {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.toArray();
 		} else {
-			// TODO
-			return null;
+			return priorityQueueBinTreeImpl.toArray();
 		}
 	}
 
-	public synchronized T[] toArray(T[] a) {
+	public T[] toArray(T[] a) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.toArray(a);
 		} else {
-			// TODO
-			return null;
+			return priorityQueueBinTreeImpl.toArray(a);
 		}
 	}
 
-	public synchronized T get(int index) {
+	public T get(int index) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.get(index);
 		} else {
@@ -307,7 +313,7 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		}
 	}
 
-	public synchronized String toString() {
+	public String toString() {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.toString();
 		} else {
@@ -315,43 +321,35 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		}
 	}
 
-	public synchronized List<T> subList(int fromIndex, int toIndex) {
+	public List<T> subList(int fromIndex, int toIndex) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.subList(fromIndex, toIndex);
 		} else {
-			// TODO
-			return null;
-			// return priorityQueueBinTreeImpl.subList(fromIndex, toIndex);
+			return priorityQueueBinTreeImpl.subList(fromIndex, toIndex);
 		}
 	}
 
-	public synchronized ListIterator<T> listIterator(int index) {
+	public ListIterator<T> listIterator(int index) {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.listIterator(index);
 		} else {
-			// TODO
-			return null;
-			// return priorityQueueBinTreeImpl.listIterator(index);
+			return priorityQueueBinTreeImpl.listIterator(index);
 		}
 	}
 
-	public synchronized ListIterator<T> listIterator() {
+	public ListIterator<T> listIterator() {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.listIterator();
 		} else {
-			// TODO
-			return null;
-			// return priorityQueueBinTreeImpl.listIterator();
+			return priorityQueueBinTreeImpl.listIterator();
 		}
 	}
 
-	public synchronized Iterator<T> iterator() {
+	public Iterator<T> iterator() {
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.iterator();
 		} else {
-			// TODO
-			return null;
-			// return priorityQueueBinTreeImpl.iterator();
+			return priorityQueueBinTreeImpl.iterator();
 		}
 	}
 
@@ -359,30 +357,28 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.spliterator();
 		} else {
-			// TODO
-			return null;
-			// return priorityQueueBinTreeImpl.spliterator();
+			return priorityQueueBinTreeImpl.spliterator();
 		}
 	}
 
 	@Override
-	public void percolateDown(Node<T> n, Node<T> i) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("BINARY_TREE Structure only");
+	public void percolateDown(Node<T> n, Node<T> i) throws IllegalAccessException {
+		if (structure != Structure.BINARY_TREE)
+			throw new IllegalAccessException("BINARY_TREE Structure only");
 		priorityQueueBinTreeImpl.percolateDown(n, i);
 	}
 
 	@Override
-	public void percolateUp(Node<T> i) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("BINARY_TREE Structure only");
+	public void percolateUp(Node<T> i) throws IllegalAccessException {
+		if (structure != Structure.BINARY_TREE)
+			throw new IllegalAccessException("BINARY_TREE Structure only");
 		priorityQueueBinTreeImpl.percolateUp(i);
 	}
 
 	@Override
-	public void merge(PriorityQueueBinTree<T> heap) {
-		// if (structure != Structure.VECTOR)
-		// throw new IllegalAccessException("BINARY_TREE Structure only");
+	public void merge(PriorityQueueBinTree<T> heap) throws IllegalAccessException {
+		if (structure != Structure.BINARY_TREE)
+			throw new IllegalAccessException("BINARY_TREE Structure only");
 		priorityQueueBinTreeImpl.merge(heap);
 	}
 }

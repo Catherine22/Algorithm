@@ -3,6 +3,7 @@ package com.catherine.priority_queue;
 import java.util.List;
 import java.util.Stack;
 
+import com.catherine.priority_queue.MyCompleteBinaryHeap.Structure;
 import com.catherine.trees.BinarySearchTreeImpl;
 import com.catherine.trees.nodes.Node;
 
@@ -41,7 +42,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	}
 
 	@Override
-	public T delMax() {
+	public synchronized T delMax() {
 		if (size == 0)
 			return null;
 		if (size == 1) {
@@ -158,7 +159,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	// }
 
 	@Override
-	public void percolateDown(Node<T> n, Node<T> i) {
+	public synchronized void percolateDown(Node<T> n, Node<T> i) {
 		// beginning---这边逻辑等同于getChild(i)
 		Node<T> c = null;
 		Node<T> rc = i.getrChild();
@@ -262,7 +263,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	}
 
 	@Override
-	public void percolateUp(Node<T> i) {
+	public synchronized void percolateUp(Node<T> i) {
 		Node<T> basePos = i;
 		Node<T> parentPos = (basePos == null) ? null : basePos.getParent();
 		if (parentPos == null)
@@ -311,7 +312,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	 * @param i
 	 */
 	@Deprecated
-	public void percolateUpOriginal(Node<T> i) {
+	public synchronized void percolateUpOriginal(Node<T> i) {
 		Node<T> p = i.getParent();
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("percolateUp %s, %s", (i == null ? "null" : i), (p == null ? "null" : p)));
@@ -333,7 +334,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	 * @param i
 	 */
 	@Deprecated
-	public void percolateDownOriginal(Node<T> n, Node<T> i) {
+	public synchronized void percolateDownOriginal(Node<T> n, Node<T> i) {
 		Node<T> cp = getLargerChild(i);
 
 		if (cp == null)
@@ -354,7 +355,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	}
 
 	@Override
-	public T get(int index) {
+	public synchronized T get(int index) {
 		Stack<Node<T>> bin = new Stack<>();
 		Node<T> node = root;
 		T res = null;
@@ -375,7 +376,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 		return res;
 	}
 
-	protected void swap(Node<T> i, Node<T> p) {
+	protected synchronized void swap(Node<T> i, Node<T> p) {
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("swap %s, %s", i.toString(), p.toString()));
 		T tmp = i.getData();
@@ -409,7 +410,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 		heapify(list, list.size() - 1, list.size() - 1);
 	}
 
-	public void merge(PriorityQueueBinTree<T> heap) {
+	public synchronized void merge(PriorityQueueBinTree<T> heap) {
 		if (heap == null || heap.size() == 0)
 			return;
 		PriorityQueueBinTreeImpl<T> tmp = new PriorityQueueBinTreeImpl<>(heap.getMax());
@@ -641,7 +642,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 	 * @param n
 	 *            最后滤到哪里
 	 */
-	private void merge(Node<T> target, Node<T> n) {
+	private synchronized void merge(Node<T> target, Node<T> n) {
 		if (target == null || isRighterThan(n, target))
 			return;
 

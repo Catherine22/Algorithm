@@ -1,5 +1,10 @@
 package com.catherine.trees;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+
 import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
@@ -130,5 +135,39 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 	@Override
 	public Object clone() {
 		return rbTree.clone();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return rbTree.toArray();
+	}
+
+	@Override
+	public E[] toArray(E[] e) {
+		return rbTree.toArray(e);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		return rbTree.subList(fromIndex, toIndex);
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return rbTree.listIterator();
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return rbTree.listIterator(index);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return rbTree.iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return rbTree.spliterator();
 	}
 }

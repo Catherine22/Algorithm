@@ -1,6 +1,9 @@
 package com.catherine.trees;
 
-import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
 
 import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
@@ -145,4 +148,32 @@ public interface BinaryTree<E> {
 	 * @return 副本
 	 */
 	public Object clone();
+
+	/**
+	 * 这边以中序遍历的方式转成数组<br>
+	 * 
+	 * @return
+	 */
+	public Object[] toArray();
+
+	/**
+	 * 这边以中序遍历的方式转成数组<br>
+	 * 
+	 * @return
+	 */
+	public E[] toArray(E[] a);
+
+	public List<E> subList(int fromIndex, int toIndex);
+
+	// try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator();
+
+	// try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator(int index);
+
+	// try to iterator binary tree with binary tree iterator
+	public Iterator<E> iterator();
+
+	// try to spliterator binary tree with binary tree iterator
+	public Spliterator<E> spliterator();
 }

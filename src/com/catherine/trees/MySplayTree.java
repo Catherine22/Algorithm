@@ -1,5 +1,10 @@
 package com.catherine.trees;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+
 import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
@@ -229,17 +234,17 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 
 	@Override
 	public void traversePre(Node<E> node) {
-		spTree.traversePre(node);		
+		spTree.traversePre(node);
 	}
 
 	@Override
 	public void traverseIn(Node<E> node) {
-		spTree.traverseIn(node);		
+		spTree.traverseIn(node);
 	}
 
 	@Override
 	public void traversePost(Node<E> node) {
-		spTree.traversePost(node);		
+		spTree.traversePost(node);
 	}
 
 	@Override
@@ -300,5 +305,39 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 	@Override
 	public Object clone() {
 		return spTree.clone();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return spTree.toArray();
+	}
+
+	@Override
+	public E[] toArray(E[] e) {
+		return spTree.toArray(e);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		return spTree.subList(fromIndex, toIndex);
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return spTree.listIterator();
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return spTree.listIterator(index);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return spTree.iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return spTree.spliterator();
 	}
 }

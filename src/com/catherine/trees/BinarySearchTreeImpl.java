@@ -135,7 +135,7 @@ public class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBin
 	}
 
 	@Override
-	public Node<E> add(E data) {
+	public synchronized Node<E> add(E data) {
 		if (data == null)
 			throw new NullPointerException("Data must not be null.");
 		if (root == null)

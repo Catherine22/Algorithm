@@ -58,8 +58,9 @@ public interface PriorityQueueBinTree<T> {
 	 * 
 	 * @param n
 	 * @param i
+	 * @throws IllegalAccessException
 	 */
-	void percolateDown(Node<T> n, Node<T> i);
+	void percolateDown(Node<T> n, Node<T> i) throws IllegalAccessException;
 
 	/**
 	 * 上滤<br>
@@ -70,8 +71,9 @@ public interface PriorityQueueBinTree<T> {
 	 * 再将初始节点指定给当前位置。一共需要两次赋值，所以=log(n)+2。<br>
 	 * 
 	 * @param i
+	 * @throws IllegalAccessException
 	 */
-	void percolateUp(Node<T> i);
+	void percolateUp(Node<T> i) throws IllegalAccessException;
 
 	/**
 	 * 传入一段可排序的集合，使之成为优先级队列。<br>
@@ -128,11 +130,12 @@ public interface PriorityQueueBinTree<T> {
 	 * 
 	 * @see com.catherine.priority_queue.LeftistHeap 左式堆
 	 * @param heap
+	 * @throws IllegalAccessException
 	 */
-	public void merge(PriorityQueueBinTree<T> heap);
+	public void merge(PriorityQueueBinTree<T> heap) throws IllegalAccessException;
 
-	int size();
+	public int size();
 
-	T get(int position);
+	public T get(int position);
 
 }

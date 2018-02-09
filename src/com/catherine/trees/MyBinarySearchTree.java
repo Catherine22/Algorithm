@@ -2,7 +2,10 @@ package com.catherine.trees;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
 
 import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
@@ -207,5 +210,39 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	@Override
 	public Object clone() {
 		return bst.clone();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return bst.toArray();
+	}
+
+	@Override
+	public E[] toArray(E[] e) {
+		return bst.toArray(e);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		return bst.subList(fromIndex, toIndex);
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return bst.listIterator();
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return bst.listIterator(index);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return bst.iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return bst.spliterator();
 	}
 }

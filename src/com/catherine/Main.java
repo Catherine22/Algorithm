@@ -99,14 +99,14 @@ public class Main {
 		// testLinkedList();
 		// testStack();
 		// testDirectedGraph();
-		testBinaryTree();
+		// testBinaryTree();
 		// testBST();
 		// testAVLTree();
 		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
 		// testPQVector();
-		// testPQBinTree();
+		testPQBinTree();
 		// testLeftistHeaps();
 		// testHash();
 		// testCryptography();
@@ -325,15 +325,19 @@ public class Main {
 		}
 
 		// merge
-		pq1.merge(pq2.getPriorityQueueBinTree());
-		printArray(String.format("merge %s and %s", "pq1", "pq2"), pq1.toArray());
-		pq1.printTree();
-		Integer[] a3 = new Integer[pq1.size()];
-		pq1.toArray(a3);
-		//
-		// if (!Arrays.deepEquals(a1, a3))
-		// throw new Error(getString(String.format("merge array (%s)", "pq1,
-		// pq2"), a3));
+		try {
+			pq1.merge(pq2.getPriorityQueueBinTree());
+			printArray(String.format("merge %s and %s", "pq1", "pq2"), pq1.toArray());
+			pq1.printTree();
+			Integer[] a3 = new Integer[pq1.size()];
+			pq1.toArray(a3);
+			//
+			// if (!Arrays.deepEquals(a1, a3))
+			// throw new Error(getString(String.format("merge array (%s)", "pq1,
+			// pq2"), a3));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void testPQBinTree() {

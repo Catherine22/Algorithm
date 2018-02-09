@@ -1,8 +1,14 @@
 package com.catherine.trees;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Queue;
+import java.util.Spliterator;
 import java.util.Stack;
 
 import com.catherine.Main;
@@ -58,7 +64,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		return (size == 0);
 	}
 
@@ -1015,4 +1021,48 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		return clone;
 	}
 
+	@Override
+	public synchronized Object[] toArray() {
+		Object[] anArray = new Object[size];
+		copyInto(Order.IN_ORDER, anArray);
+		return anArray;
+
+	}
+
+	@Override
+	public synchronized E[] toArray(E[] e) {
+		copyInto(Order.IN_ORDER, e);
+		return e;
+	}
+
+	@Override
+	public synchronized List<E> subList(int fromIndex, int toIndex) {
+		if (toIndex >= fromIndex || fromIndex < 0 || toIndex > size)
+			throw new IllegalArgumentException("Range error");
+		Object[] anArray = new Object[size];
+		copyInto(Order.IN_ORDER, anArray);
+		List<E> collection = new ArrayList<>();
+		for (int i = fromIndex; i < toIndex; i++)
+			collection.add((E) anArray[i]);
+		return collection;
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator() {
+		return subList(0, size).listIterator();
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator(int index) {
+		return subList(0, size).listIterator(index);
+	}
+
+	@Override
+	public synchronized Iterator<E> iterator() {
+		return subList(0, size).iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return subList(0, size).spliterator();
+	}
 }

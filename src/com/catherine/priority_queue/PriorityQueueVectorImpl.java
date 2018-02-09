@@ -14,7 +14,8 @@ import java.util.Vector;
  *
  * @param <T>
  */
-public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Vector<T> implements PriorityQueueVector<T> {
+public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Vector<T>
+		implements PriorityQueueVector<T> {
 	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
@@ -36,7 +37,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 	}
 
 	@Override
-	public T delMax() {
+	public synchronized T delMax() {
 		if (size() == 0)
 			return null;
 		if (size() == 1) {
@@ -214,7 +215,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 	}
 
 	@Override
-	public void percolateDown(T n, T i) {
+	public synchronized void percolateDown(T n, T i) {
 		// beginning---这边逻辑等同于getChild(i)
 		T c = null;
 		T rc = getRChild(i);
@@ -233,18 +234,6 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 		T base = i;
 		int limit = getPos(n);
 		int childPos = getPos(c);
-
-		// TODO
-		// System.out.println("percolateDown:" + basePos + "->" + limit);
-		// System.out.print("percolateDown raw[");
-		// for (int x = 0; x < size(); x++) {
-		// System.out.print(toArray()[x]);
-		// if (x != size() - 1)
-		// System.out.print(", ");
-		// }
-		// System.out.println("]");
-		// System.out.println("RAW");
-		// printTree();
 
 		// 表示刚好第n个词条为右孩子，此时将指定孩子改为左孩子
 		if (childPos - 1 == limit && c == rc) {
@@ -304,21 +293,10 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 			// basePos));
 			set(basePos, base);
 		}
-
-		// TODO
-		// System.out.print("percolateDown new[");
-		// for (int x = 0; x < size(); x++) {
-		// System.out.print(toArray()[x]);
-		// if (x != size() - 1)
-		// System.out.print(", ");
-		// }
-		// System.out.println("]");
-		// System.out.println("NEW");
-		// printTree();
 	}
 
 	@Override
-	public void percolateUp(T i) {
+	public synchronized void percolateUp(T i) {
 		int basePos = getPos(i);
 		int parentPos = (basePos < 1) ? -1 : ((basePos - 1) >> 1);
 		if (parentPos == -1)
@@ -367,7 +345,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 	 * @param i
 	 */
 	@Deprecated
-	public void percolateUpOriginal(T i) {
+	public synchronized void percolateUpOriginal(T i) {
 		T p = getParent(i);
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("percolateUp %s, %s", (i == null ? "null" : i), (p == null ? "null" : p)));
@@ -389,7 +367,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 	 * @param i
 	 */
 	@Deprecated
-	public void percolateDownOriginal(T n, T i) {
+	public synchronized void percolateDownOriginal(T n, T i) {
 		int cp = getChildPos(i);
 
 		if (cp == -1)
@@ -409,7 +387,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 		}
 	}
 
-	private void swap(T i, T p) {
+	private synchronized void swap(T i, T p) {
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("swap %s, %s", i.toString(), p.toString()));
 		int p1 = getPos(i);
@@ -444,7 +422,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 		heapify(list, list.size() - 1, list.size() - 1);
 	}
 
-	public void merge(PriorityQueueVector<T> heap) {
+	public synchronized void merge(PriorityQueueVector<T> heap) {
 		if (heap == null || heap.size() == 0)
 			return;
 		PriorityQueueVectorImpl<T> tmp = (PriorityQueueVectorImpl<T>) ((PriorityQueueVectorImpl<T>) heap).clone();
@@ -559,7 +537,7 @@ public class PriorityQueueVectorImpl<T extends Comparable<? super T>> extends Ve
 	 * @param n
 	 *            最后滤到哪里
 	 */
-	private void merge(int target, int n) {
+	private synchronized void merge(int target, int n) {
 		if (target < 0 || n < target)
 			return;
 
