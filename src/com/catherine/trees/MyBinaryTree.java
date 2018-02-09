@@ -698,6 +698,11 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		LEVEL, ROOT, LEFT, RIGHT
 	}
 
+	/**
+	 * 两次阶层走访填充clone
+	 * 
+	 * @return
+	 */
 	public Object clone() {
 		// clone用
 		Queue<Tag> flags = new LinkedList<>();
@@ -712,8 +717,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			parent.offer(node);
 			boolean isRight = false;
 			while (node != null || !parent.isEmpty()) {
-				// System.out.print("level " + level++ + ",\t");
-				System.out.print("level " + level++ + ",\n");
+				// System.out.print("\nlevel " + level++ + ",\t");
 				flags.offer(Tag.LEVEL);
 				while (!parent.isEmpty()) {
 					node = parent.poll();
@@ -727,23 +731,21 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 					} else if (node == root) {
 						flags.offer(Tag.ROOT);
 						history.offer(root);
-						System.out.println("build root " + node.getData());
+						// System.out.println("build root " + node.getData());
 						isRight = false;
 					} else {
 						if (isRight) {
 							flags.offer(Tag.RIGHT);
 							history.offer(node);
-							// clone.insertRC(node.getParent(),
-							// node.getData()).getParent();
-							System.out
-									.println("insert R child " + node.getData() + " to " + node.getParent().getData());
+							// System.out.println("insert R child " +
+							// node.getData() + " to " +
+							// node.getParent().getData());
 						} else {
 							flags.offer(Tag.LEFT);
 							history.offer(node);
-							// clone.insertLC(node.getParent(),
-							// node.getData()).getParent();
-							System.out
-									.println("insert L child " + node.getData() + " to " + node.getParent().getData());
+							// System.out.println("insert L child " +
+							// node.getData() + " to " +
+							// node.getParent().getData());
 						}
 						isRight = !isRight;
 					}
@@ -780,58 +782,68 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			}
 		}
 
-		System.out.println("\nclone!!");
-		// System.out.println(history.toString());
-		// System.out.println(flags.toString());
+		// 把刚才收集的节点导入clone里
 
 		level = 0;
 		Node<E> head = null;
-		MyBinaryTree<E> clone = null;
+		// 简单说，parent存储当前要处理的节点（第n层），siblings存下次要处理的节点（第n+1层）
 		parent.clear();
 		siblings.clear();
-		while (history.size() > 0) {
-			System.out.print("level " + level++ + ",\n");
-			while (flags.peek() != Tag.LEVEL) {
-				if (flags.peek() == Tag.ROOT) {
-					clone = new MyBinaryTree<>(history.poll().getData());
-					head = clone.root;
-				} else if (flags.peek() == Tag.LEFT) {
-					if (history.peek() == null) {
-						System.out.println("null");
-						history.poll();
-					} else {
-						System.out.println("add L:" + siblings.peek().getData());
-						siblings.offer(clone.insertLC(head, history.poll().getData()));
-					}
-				} else if (flags.peek() == Tag.RIGHT) {
-					if (history.peek() == null) {
-						System.out.println("null");
-						history.poll();
-					} else {
-						System.out.println("add R:" + siblings.peek().getData());
-						siblings.offer(clone.insertRC(head, history.poll().getData()));
-					}
-					head = parent.poll();
+
+		// 先处理根节点
+		// flags.peek() == Tag.LEVEL
+		// System.out.print("level " + level++ + ",\t");
+		flags.poll();
+		// flags.peek() == Tag.ROOT
+		MyBinaryTree<E> clone = new MyBinaryTree<>(history.poll().getData());
+		parent.add(clone.root);
+		siblings.add(clone.root);
+		head = parent.poll();
+		// System.out.print("add Root:" + head.getData());
+		flags.poll();
+
+		while (true) {
+			if (flags.peek() == Tag.LEFT) {
+				if (history.peek() == null) {
+					// System.out.print("null" + ",\t");
+					history.poll();
+				} else {
+					// System.out.print("add L:" + history.peek().getData() +
+					// ",\t");
+					siblings.offer(clone.insertLC(head, history.poll().getData()));
 				}
-				flags.poll();
+			} else if (flags.peek() == Tag.RIGHT) {
+				if (history.peek() == null) {
+					// System.out.print("null" + ",\t");
+					history.poll();
+				} else {
+					// System.out.print("add R:" + history.peek().getData() +
+					// ",\t");
+					siblings.offer(clone.insertRC(head, history.poll().getData()));
+				}
+				head = parent.poll();
+			} else {// level
+				// System.out.print("\nlevel " + level++ + ",\t");
+				int countdown = siblings.size();
+				for (Node<E> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				head = parent.poll();
+				if (countdown == 0)
+					break;
 			}
-
-			int countdown = siblings.size();
-			for (Node<E> n : siblings) {
-				parent.offer(n);
-
-				if (n == null)
-					countdown--;
-			}
-
-			siblings.clear();
-			head = parent.poll();
-			if (countdown == 0)
-				break;
-
 			flags.poll();
 		}
-		// clone.traverseLevel();
+
+		flags.clear();
+		history.clear();
+		parent.clear();
+		siblings.clear();
 		return clone;
 	}
 

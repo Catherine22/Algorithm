@@ -875,7 +875,7 @@ public class Main {
 
 		System.out.println("\nclone");
 		MyBinaryTree<String> clone = (MyBinaryTree<String>) mBT.clone();
-//		clone.traverseLevel();
+		clone.traverseLevel();
 	}
 
 	public static void testDirectedGraph() {
