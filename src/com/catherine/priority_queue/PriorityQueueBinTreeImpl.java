@@ -1,10 +1,12 @@
 package com.catherine.priority_queue;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
-import com.catherine.priority_queue.MyCompleteBinaryHeap.Structure;
-import com.catherine.trees.BinarySearchTreeImpl;
+import com.catherine.trees.MyBinaryTree;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -20,7 +22,7 @@ import com.catherine.trees.nodes.Node;
  * @see PriorityQueueVectorImpl
  * @param <T>
  */
-public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends BinarySearchTreeImpl<T>
+public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends MyBinaryTree<T>
 		implements PriorityQueueBinTree<T> {
 	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
@@ -30,10 +32,68 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 		super(root);
 	}
 
+	private Node<T> add(Node<T> parent, T t) {
+		if (parent == null && root != null)
+			return null;
+		else if (parent == null && root == null) {
+			setRoot(t);
+			return root;
+		} else {
+			if (parent.getlChild() == null)
+				return insertLC(parent, t);
+			else if (parent.getrChild() == null)
+				return insertRC(parent, t);
+			else {
+				return insertLC(parent, t);
+			}
+		}
+	}
+
+	private void remove(Node<T> node) {
+		if (node == null || root == null)
+			return;
+		if (node == root) {
+			root = null;
+			return;
+		}
+
+		if (node.getlChild() == null && node.getrChild() == null) {
+			if (node.getParent().getlChild() == node)
+				node.getParent().setlChild(null);
+			else
+				node.getParent().setrChild(null);
+		} else if (node.getlChild() != null && node.getrChild() == null) {
+			if (node.getParent().getlChild() == node) {
+				node.getlChild().setParent(node.getParent());
+				node.getParent().setlChild(node.getlChild());
+			} else {
+				node.getlChild().setParent(node.getParent());
+				node.getParent().setrChild(node.getlChild());
+			}
+		} else if (node.getlChild() == null && node.getrChild() != null) {
+			if (node.getParent().getlChild() == node) {
+				node.getrChild().setParent(node.getParent());
+				node.getParent().setlChild(node.getrChild());
+			} else {
+				node.getrChild().setParent(node.getParent());
+				node.getParent().setrChild(node.getrChild());
+			}
+		} else {
+			Node<T> cNode = (node.getlChild().getData().compareTo(node.getrChild().getData()) > 0) ? node.getlChild()
+					: node.getrChild();
+			if (node.getParent().getlChild() == node) {
+				cNode.setParent(node.getParent());
+				node.getParent().setlChild(cNode);
+			} else {
+				cNode.setParent(node.getParent());
+				node.getParent().setrChild(cNode);
+			}
+		}
+	}
+
 	@Override
 	public void insert(T t) {
-		add(t);
-		percolateUp(searchLast(t));
+		percolateUp(add(findLastNode(), t));
 	}
 
 	@Override
@@ -51,37 +111,12 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 			return tmp;
 		}
 
-		Node<T> lNode = getLastNode();
-		root.setData(lNode.getData());
-		remove(lNode);
-		percolateDown(getLastNode(), root);
-
+		Node<T> lastNode = findLastNode();
+		root.setData(lastNode.getData());
+		remove(lastNode);
+		lastNode = findLastNode();
+		percolateDown(lastNode, root);
 		return root.getData();
-	}
-
-	/**
-	 * 返回最后一个孩子
-	 * 
-	 * @param n
-	 * @return
-	 */
-	public Node<T> getLastNode() {
-		Node<T> t = root;
-		Node<T> h = root;
-		if (size == 0)
-			return null;
-
-		while (t.getlChild() != null || t.getrChild() != null) {
-			if (t.getlChild() == null)
-				h = t.getrChild();
-
-			if (t.getrChild() == null)
-				h = t.getlChild();
-
-			t = h;
-		}
-
-		return h;
 	}
 
 	/**
@@ -139,24 +174,64 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 		return (n2Pos > n1Pos);
 	}
 
-	// /**
-	// * 返回该节点在向量里的位置
-	// *
-	// * @param e
-	// * @return
-	// */
-	// private int getPos(T t) {
-	// int pos = -1;
-	// int count = 0;
-	// while (count < size()) {
-	// if (get(count) == t) {
-	// pos = count;
-	// break;
-	// }
-	// count++;
-	// }
-	// return pos;
-	// }
+	private Node<T> findLastNode() {
+		Node<T> lastNode = null;
+		if (root == null)
+			return lastNode;
+
+		// 阶层走访，返回最后一个
+		Queue<Node<T>> parent = new LinkedList<>();
+		Queue<Node<T>> siblings = new LinkedList<>();
+		Node<T> node = root;
+		parent.offer(node);
+		int level = 0;
+		boolean isRight = false;
+		while (node != null || !parent.isEmpty()) {
+			// System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				node = parent.poll();
+				if (node == root) {
+					isRight = false;
+				} else {
+					isRight = !isRight;
+				}
+
+				if (node != null) {
+					lastNode = node;
+					// System.out.print(node.getInfo());
+
+					if (node.getlChild() != null)
+						siblings.offer(node.getlChild());
+					else
+						siblings.offer(null);
+
+					if (node.getrChild() != null)
+						siblings.offer(node.getrChild());
+					else
+						siblings.offer(null);
+				}
+
+			}
+
+			int countdown = siblings.size();
+			for (Node<T> n : siblings) {
+				parent.offer(n);
+
+				if (n == null)
+					countdown--;
+			}
+
+			siblings.clear();
+			node = null;
+			// System.out.print("\n");
+
+			if (countdown == 0)
+				break;
+		}
+
+		return lastNode;
+	}
 
 	@Override
 	public synchronized void percolateDown(Node<T> n, Node<T> i) {
@@ -443,13 +518,13 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 				}
 				if (!bin.isEmpty()) {
 					node = bin.pop();
-					add(node.getData());
+					add(findLastNode(), node.getData());
 					node = node.getrChild();
 				}
 			}
 
-			Node<T> target = getLastNode();
-			Node<T> n = getLastNode();
+			Node<T> target = findLastNode();
+			Node<T> n = target;
 			int countdown = size - 1;
 			while (target != null) {
 				merge(target, n);
@@ -483,12 +558,12 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 				}
 				if (!bin.isEmpty()) {
 					node = bin.pop();
-					tmp.add(node.getData());
+					tmp.add(findLastNode(), node.getData());
 					node = node.getrChild();
 				}
 			}
 
-			Node<T> n = getLastNode();
+			Node<T> n = findLastNode();
 			Stack<Node<T>> traverseIns = new Stack<>();
 			bin = new Stack<>();
 			node = root;
@@ -511,6 +586,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 
 			root = tmp.getRoot();
 		}
+		size += heap.size();
 	}
 
 	/**
@@ -534,7 +610,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 
 		// 方法2
 		for (T t : array) {
-			add(t);
+			add(findLastNode(), t);
 		}
 
 		Stack<Node<T>> traverseIns = new Stack<>();
@@ -596,7 +672,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 
 		// 方法2
 		for (T t : list) {
-			add(t);
+			add(findLastNode(), t);
 		}
 
 		Stack<Node<T>> traverseIns = new Stack<>();
@@ -669,6 +745,181 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends B
 
 			merge(parentPos, n);
 		}
+	}
+
+	@Override
+	public PriorityQueueBinTreeImpl<T> clone() {
+		// clone用
+		Queue<Tag> flags = new LinkedList<>();
+		Queue<Node<T>> history = new LinkedList<>();
+		// 打印Log用
+		int level = 0;
+		Queue<Node<T>> parent = new LinkedList<>();
+		Queue<Node<T>> siblings = new LinkedList<>();
+		// 以阶层重新填充clone，首先阶层走访，记录各节点的值与位置
+		if (root != null) {
+			Node<T> node = root;
+			parent.offer(node);
+			boolean isRight = false;
+			while (node != null || !parent.isEmpty()) {
+				// System.out.print("\nlevel " + level++ + ",\t");
+				flags.offer(Tag.LEVEL);
+				while (!parent.isEmpty()) {
+					node = parent.poll();
+					if (node == null) {
+						if (isRight)
+							flags.offer(Tag.RIGHT);
+						else
+							flags.offer(Tag.LEFT);
+						history.offer(null);
+						isRight = !isRight;
+					} else if (node == root) {
+						flags.offer(Tag.ROOT);
+						history.offer(root);
+						// System.out.println("build root " + node.getData());
+						isRight = false;
+					} else {
+						if (isRight) {
+							flags.offer(Tag.RIGHT);
+							history.offer(node);
+							// System.out.println("insert R child " +
+							// node.getData() + " to " +
+							// node.getParent().getData());
+						} else {
+							flags.offer(Tag.LEFT);
+							history.offer(node);
+							// System.out.println("insert L child " +
+							// node.getData() + " to " +
+							// node.getParent().getData());
+						}
+						isRight = !isRight;
+					}
+
+					if (node != null) {
+						// System.out.print(node.getInfo());
+
+						if (node.getlChild() != null)
+							siblings.offer(node.getlChild());
+						else
+							siblings.offer(null);
+
+						if (node.getrChild() != null)
+							siblings.offer(node.getrChild());
+						else
+							siblings.offer(null);
+					}
+
+				}
+
+				int countdown = siblings.size();
+				for (Node<T> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				node = null;
+
+				if (countdown == 0)
+					break;
+			}
+		}
+
+		// 把刚才收集的节点导入clone里
+
+		level = 0;
+		Node<T> head = null;
+		// 简单说，parent存储当前要处理的节点（第n层），siblings存下次要处理的节点（第n+1层）
+		parent.clear();
+		siblings.clear();
+
+		// 先处理根节点
+		// flags.peek() == Tag.LEVEL
+		// System.out.print("level " + level++ + ",\t");
+		flags.poll();
+		// flags.peek() == Tag.ROOT
+		PriorityQueueBinTreeImpl<T> clone = new PriorityQueueBinTreeImpl<>(history.poll().getData());
+		parent.add(clone.root);
+		siblings.add(clone.root);
+		head = parent.poll();
+		// System.out.print("add Root:" + head.getData());
+		flags.poll();
+
+		while (true) {
+			if (flags.peek() == Tag.LEFT) {
+				if (history.peek() == null) {
+					// System.out.print("null" + ",\t");
+					history.poll();
+				} else {
+					// System.out.print("add L:" + history.peek().getData() +
+					// ",\t");
+					siblings.offer(clone.insertLC(head, history.poll().getData()));
+				}
+			} else if (flags.peek() == Tag.RIGHT) {
+				if (history.peek() == null) {
+					// System.out.print("null" + ",\t");
+					history.poll();
+				} else {
+					// System.out.print("add R:" + history.peek().getData() +
+					// ",\t");
+					siblings.offer(clone.insertRC(head, history.poll().getData()));
+				}
+				head = parent.poll();
+			} else {// level
+				// System.out.print("\nlevel " + level++ + ",\t");
+				int countdown = siblings.size();
+				for (Node<T> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				head = parent.poll();
+				if (countdown == 0)
+					break;
+			}
+			flags.poll();
+		}
+
+		flags.clear();
+		history.clear();
+		parent.clear();
+		siblings.clear();
+		return clone;
+	}
+
+	public T[] toArray(T[] a) {
+		copyInto(a);
+		return a;
+	}
+
+	@Override
+	public void copyInto(Object[] a) {
+		if (a == null || a.length < size)
+			throw new IndexOutOfBoundsException("Array size must be the same as size or larger as well.");
+
+		PriorityQueueBinTreeImpl<T> clone = clone();
+		a[0] = clone.getMax();
+		for (int i = 1; i < clone.size - 1; i++) {
+			a[i] = clone.delMax();
+		}
+	}
+
+	@Override
+	public List<T> subList(int fromIndex, int toIndex) {
+		if (toIndex <= fromIndex || fromIndex < 0 || toIndex > size)
+			throw new IllegalArgumentException("Range error");
+		PriorityQueueBinTreeImpl<T> clone = clone();
+		List<T> list = new ArrayList<>();
+		list.add(clone.getMax());
+		while (clone.size > 1) {
+			list.add(clone.delMax());
+		}
+		return list.subList(fromIndex, toIndex);
 	}
 
 }

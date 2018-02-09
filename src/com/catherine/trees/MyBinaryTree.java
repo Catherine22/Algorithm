@@ -1,8 +1,6 @@
 package com.catherine.trees;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.Queue;
 import java.util.Spliterator;
 import java.util.Stack;
 
-import com.catherine.Main;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
@@ -872,12 +869,12 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		return head;
 	}
 
-	private enum Tag {
+	protected enum Tag {
 		LEVEL, ROOT, LEFT, RIGHT
 	}
 
 	@Override
-	public Object clone() {
+	public MyBinaryTree<E> clone() {
 		// clone用
 		Queue<Tag> flags = new LinkedList<>();
 		Queue<Node<E>> history = new LinkedList<>();
@@ -1037,7 +1034,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 	@Override
 	public synchronized List<E> subList(int fromIndex, int toIndex) {
-		if (toIndex >= fromIndex || fromIndex < 0 || toIndex > size)
+		if (toIndex <= fromIndex || fromIndex < 0 || toIndex > size)
 			throw new IllegalArgumentException("Range error");
 		Object[] anArray = new Object[size];
 		copyInto(Order.IN_ORDER, anArray);

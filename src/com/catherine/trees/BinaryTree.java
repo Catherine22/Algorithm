@@ -165,15 +165,15 @@ public interface BinaryTree<E> {
 
 	public List<E> subList(int fromIndex, int toIndex);
 
-	// try to listIterator binary tree with binary tree iterator
+	//TODO try to listIterator binary tree with binary tree iterator
 	public ListIterator<E> listIterator();
 
-	// try to listIterator binary tree with binary tree iterator
+	//TODO try to listIterator binary tree with binary tree iterator
 	public ListIterator<E> listIterator(int index);
 
-	// try to iterator binary tree with binary tree iterator
+	//TODO try to iterator binary tree with binary tree iterator
 	public Iterator<E> iterator();
 
-	// try to spliterator binary tree with binary tree iterator
+	//TODO try to spliterator binary tree with binary tree iterator
 	public Spliterator<E> spliterator();
 }

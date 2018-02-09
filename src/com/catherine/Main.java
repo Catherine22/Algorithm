@@ -345,12 +345,14 @@ public class Main {
 		int SIZE = 1 + random.nextInt(15);
 		int TEXT_LEN = 5;
 		StringBuilder sBuilder = new StringBuilder();
+		String[] raw = new String[SIZE];
 
 		// root
 		for (int j = 0; j < TEXT_LEN; j++) {
 			sBuilder.append((char) ('A' + random.nextInt(26)));
 		}
 		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
+		raw[0] = sBuilder.toString();
 		sBuilder.delete(0, TEXT_LEN);
 		random = new Random();
 
@@ -360,33 +362,35 @@ public class Main {
 				sBuilder.append((char) ('A' + random.nextInt(26)));
 			}
 			pq.insert(sBuilder.toString());
+			raw[i] = sBuilder.toString();
 			sBuilder.delete(0, TEXT_LEN);
 			random = new Random();
 		}
-
-		printIterator(pq.iterator());
+		printArray("raw data", raw);
 		pq.printTree();
-
-		System.out.println("\nDelet max");
-		pq.delMax();
 		printIterator(pq.iterator());
-		pq.printTree();
 
-		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>(sBuilder.toString());
-		List<String> list = new ArrayList<>();
-		SIZE = 1 + random.nextInt(15);
-		for (int i = 1; i < SIZE; i++) {
-			for (int j = 0; j < TEXT_LEN; j++) {
-				sBuilder.append((char) ('A' + random.nextInt(26)));
-			}
-			list.add(sBuilder.toString());
-			sBuilder.delete(0, TEXT_LEN);
-			random = new Random();
-		}
-		System.out.println("\nheapify");
-		pq2.heapify(list);
-		printIterator(pq2.iterator());
-		pq2.printTree();
+		// System.out.println("\nDelet max");
+		// pq.delMax();
+		// printIterator(pq.iterator());
+		// pq.printTree();
+		//
+		// MyCompleteBinaryHeap<String> pq2 = new
+		// MyCompleteBinaryHeap<>(sBuilder.toString());
+		// List<String> list = new ArrayList<>();
+		// SIZE = 1 + random.nextInt(15);
+		// for (int i = 1; i < SIZE; i++) {
+		// for (int j = 0; j < TEXT_LEN; j++) {
+		// sBuilder.append((char) ('A' + random.nextInt(26)));
+		// }
+		// list.add(sBuilder.toString());
+		// sBuilder.delete(0, TEXT_LEN);
+		// random = new Random();
+		// }
+		// System.out.println("\nheapify");
+		// pq2.heapify(list);
+		// printIterator(pq2.iterator());
+		// pq2.printTree();
 	}
 
 	public static void testPQVector() {

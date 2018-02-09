@@ -20,7 +20,8 @@ import com.catherine.utils.Others;
  * @author Catherine
  *
  */
-public class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree<E> implements BinarySearchTree<E> {
+public class BinarySearchTreeImpl<E extends Comparable<? super E>> extends MyBinaryTree<E>
+		implements BinarySearchTree<E> {
 	private final static boolean SHOW_LOG = false;
 
 	/**

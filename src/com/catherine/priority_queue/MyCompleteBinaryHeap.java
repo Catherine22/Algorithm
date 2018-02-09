@@ -1,5 +1,6 @@
 package com.catherine.priority_queue;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -137,30 +138,6 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		priorityQueueVectorImpl.merge(heap);
 	}
 
-	public T getParent(T e) {
-		if (structure == Structure.VECTOR) {
-			return priorityQueueVectorImpl.getParent(e);
-		} else {
-			return priorityQueueBinTreeImpl.search(e).getParent().getData();
-		}
-	}
-
-	public T getLChild(T e) {
-		if (structure == Structure.VECTOR) {
-			return priorityQueueVectorImpl.getLChild(e);
-		} else {
-			return priorityQueueBinTreeImpl.search(e).getlChild().getData();
-		}
-	}
-
-	public T getRChild(T e) {
-		if (structure == Structure.VECTOR) {
-			return priorityQueueVectorImpl.getRChild(e);
-		} else {
-			return priorityQueueBinTreeImpl.search(e).getrChild().getData();
-		}
-	}
-
 	public void printTree() {
 		if (structure == Structure.VECTOR) {
 			priorityQueueVectorImpl.printTree();
@@ -269,7 +246,12 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			return priorityQueueVectorImpl.lastElement();
 		} else {
-			return priorityQueueBinTreeImpl.getLastNode().getData();
+			List<T> list = priorityQueueBinTreeImpl.subList(0, priorityQueueBinTreeImpl.size());
+			for (int i = 0; i < list.size() - 1; i++) {
+				if (list.get(i).compareTo(list.get(i + 1)) > 0)
+					list.set(0, list.get(i + 1));
+			}
+			return list.get(0);
 		}
 	}
 
