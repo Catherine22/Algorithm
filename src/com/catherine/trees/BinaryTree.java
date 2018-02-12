@@ -157,23 +157,64 @@ public interface BinaryTree<E> {
 	public Object[] toArray();
 
 	/**
+	 * 自定义走访方式转成数组
+	 * 
+	 * @param order
+	 * @return
+	 */
+	public Object[] toArray(Order order);
+
+	/**
 	 * 这边以中序遍历的方式转成数组<br>
 	 * 
 	 * @return
 	 */
 	public E[] toArray(E[] a);
 
+	/**
+	 * 自定义走访方式转成数组数组<br>
+	 * 
+	 * @param a
+	 * @param order
+	 * @return
+	 */
+	public E[] toArray(E[] a, Order order);
+
+	/**
+	 * 这边以中序遍历的方式转成list<br>
+	 * 
+	 * @return
+	 */
 	public List<E> subList(int fromIndex, int toIndex);
 
-	//TODO try to listIterator binary tree with binary tree iterator
+	/**
+	 * 这边以自定义遍历的方式转成list<br>
+	 * 
+	 * @return
+	 */
+	public List<E> subList(int fromIndex, int toIndex, Order order);
+
+	// TODO try to listIterator binary tree with binary tree iterator
 	public ListIterator<E> listIterator();
 
-	//TODO try to listIterator binary tree with binary tree iterator
+	// TODO try to listIterator binary tree with binary tree iterator
 	public ListIterator<E> listIterator(int index);
 
-	//TODO try to iterator binary tree with binary tree iterator
+	// TODO try to iterator binary tree with binary tree iterator
 	public Iterator<E> iterator();
 
-	//TODO try to spliterator binary tree with binary tree iterator
+	// TODO try to spliterator binary tree with binary tree iterator
 	public Spliterator<E> spliterator();
+
+	// TODO try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator(Order order);
+
+	// TODO try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator(int index, Order order);
+
+	// TODO try to iterator binary tree with binary tree iterator
+	public Iterator<E> iterator(Order order);
+
+	// TODO try to spliterator binary tree with binary tree iterator
+	public Spliterator<E> spliterator(Order order);
 }

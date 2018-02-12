@@ -245,4 +245,39 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	public Spliterator<E> spliterator() {
 		return bst.spliterator();
 	}
+
+	@Override
+	public Object[] toArray(Order order) {
+		return bst.toArray(order);
+	}
+
+	@Override
+	public E[] toArray(E[] a, Order order) {
+		return bst.toArray(a, order);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex, Order order) {
+		return bst.subList(fromIndex, toIndex, order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(Order order) {
+		return bst.listIterator(order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index, Order order) {
+		return bst.listIterator(index, order);
+	}
+
+	@Override
+	public Iterator<E> iterator(Order order) {
+		return bst.iterator(order);
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return bst.spliterator(order);
+	}
 }

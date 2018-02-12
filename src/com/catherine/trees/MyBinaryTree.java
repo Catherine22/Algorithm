@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.Spliterator;
 import java.util.Stack;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
@@ -1020,24 +1021,27 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 	@Override
 	public synchronized Object[] toArray() {
-		Object[] anArray = new Object[size];
-		copyInto(Order.IN_ORDER, anArray);
-		return anArray;
+		return toArray(Order.IN_ORDER);
 
 	}
 
 	@Override
 	public synchronized E[] toArray(E[] e) {
-		copyInto(Order.IN_ORDER, e);
-		return e;
+		return toArray(e, Order.IN_ORDER);
+	}
+
+	// 中序走訪迭代
+	@Override
+	public synchronized List<E> subList(int fromIndex, int toIndex) {
+		return subList(fromIndex, toIndex, Order.IN_ORDER);
 	}
 
 	@Override
-	public synchronized List<E> subList(int fromIndex, int toIndex) {
+	public synchronized List<E> subList(int fromIndex, int toIndex, Order order) {
 		if (toIndex <= fromIndex || fromIndex < 0 || toIndex > size)
 			throw new IllegalArgumentException("Range error");
 		Object[] anArray = new Object[size];
-		copyInto(Order.IN_ORDER, anArray);
+		copyInto(order, anArray);
 		List<E> collection = new ArrayList<>();
 		for (int i = fromIndex; i < toIndex; i++)
 			collection.add((E) anArray[i]);
@@ -1061,5 +1065,39 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 	public Spliterator<E> spliterator() {
 		return subList(0, size).spliterator();
+	}
+
+	@Override
+	public synchronized Object[] toArray(Order order) {
+		Object[] anArray = new Object[size];
+		copyInto(order, anArray);
+		return anArray;
+
+	}
+
+	@Override
+	public synchronized E[] toArray(E[] e, Order order) {
+		copyInto(order, e);
+		return e;
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator(Order order) {
+		return subList(0, size, order).listIterator();
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator(int index, Order order) {
+		return subList(0, size, order).listIterator(index);
+	}
+
+	@Override
+	public synchronized Iterator<E> iterator(Order order) {
+		return subList(0, size, order).iterator();
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return subList(0, size, order).spliterator();
 	}
 }

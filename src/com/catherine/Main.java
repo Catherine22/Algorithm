@@ -352,6 +352,7 @@ public class Main {
 			sBuilder.append((char) ('A' + random.nextInt(26)));
 		}
 		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
+
 		raw[0] = sBuilder.toString();
 		sBuilder.delete(0, TEXT_LEN);
 		random = new Random();

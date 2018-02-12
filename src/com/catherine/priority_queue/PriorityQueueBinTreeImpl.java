@@ -1,6 +1,5 @@
 package com.catherine.priority_queue;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -30,6 +29,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 	public PriorityQueueBinTreeImpl(T root) {
 		super(root);
+		System.out.println("set root:" + root);
 	}
 
 	private Node<T> add(Node<T> parent, T t) {
@@ -39,13 +39,18 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			setRoot(t);
 			return root;
 		} else {
-			if (parent.getlChild() == null)
-				return insertLC(parent, t);
-			else if (parent.getrChild() == null)
-				return insertRC(parent, t);
-			else {
+			if (parent.getlChild() == null) {
+				System.out.println("add " + t + "\tas lChild of " + parent.getData());
 				return insertLC(parent, t);
 			}
+
+			if (parent.getrChild() == null) {
+				System.out.println("add " + t + "\tas rChild of " + parent.getData());
+				return insertRC(parent, t);
+			}
+
+			System.out.println("add " + t + "\tas llChild of " + parent.getData());
+			return insertLC(parent, t);
 		}
 	}
 
@@ -174,12 +179,25 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		return (n2Pos > n1Pos);
 	}
 
+	/**
+	 * 返回最上层且最右边没有缺少孩子的节点，比如：<br>
+	 * ___1 <br>
+	 * __2 3 <br>
+	 * 4 5 6 <br>
+	 * 返回3（因为3少了个右孩子）<br>
+	 * ___1 <br>
+	 * __2 3 <br>
+	 * 返回2
+	 * 
+	 * 
+	 * 
+	 * @return
+	 */
 	private Node<T> findLastNode() {
-		Node<T> lastNode = null;
 		if (root == null)
-			return lastNode;
+			return null;
 
-		// 阶层走访，返回最后一个
+		// 阶层走访
 		Queue<Node<T>> parent = new LinkedList<>();
 		Queue<Node<T>> siblings = new LinkedList<>();
 		Node<T> node = root;
@@ -187,7 +205,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		int level = 0;
 		boolean isRight = false;
 		while (node != null || !parent.isEmpty()) {
-			// System.out.print("level " + level++ + ",\t");
+//			System.out.print("level " + level++ + ",\t");
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
@@ -198,8 +216,12 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 				}
 
 				if (node != null) {
-					lastNode = node;
-					// System.out.print(node.getInfo());
+
+//					System.out.print(node.getInfo());
+					if (node.getlChild() == null || node.getrChild() == null) {
+//						System.out.print(" return\n");
+						return node;
+					}
 
 					if (node.getlChild() != null)
 						siblings.offer(node.getlChild());
@@ -224,13 +246,12 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 			siblings.clear();
 			node = null;
-			// System.out.print("\n");
+//			System.out.print("\n");
 
 			if (countdown == 0)
 				break;
 		}
-
-		return lastNode;
+		return null;
 	}
 
 	@Override
@@ -339,6 +360,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 	@Override
 	public synchronized void percolateUp(Node<T> i) {
+		System.out.println("percolateUp " + "node:" + i);
 		Node<T> basePos = i;
 		Node<T> parentPos = (basePos == null) ? null : basePos.getParent();
 		if (parentPos == null)
@@ -908,18 +930,4 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			a[i] = clone.delMax();
 		}
 	}
-
-	@Override
-	public List<T> subList(int fromIndex, int toIndex) {
-		if (toIndex <= fromIndex || fromIndex < 0 || toIndex > size)
-			throw new IllegalArgumentException("Range error");
-		PriorityQueueBinTreeImpl<T> clone = clone();
-		List<T> list = new ArrayList<>();
-		list.add(clone.getMax());
-		while (clone.size > 1) {
-			list.add(clone.delMax());
-		}
-		return list.subList(fromIndex, toIndex);
-	}
-
 }

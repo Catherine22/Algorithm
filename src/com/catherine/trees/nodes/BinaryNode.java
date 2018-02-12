@@ -34,13 +34,11 @@ public class BinaryNode<E> implements Node<E> {
 	@Override
 	public String toString() {
 		if (parent != null)
-			return String.format(
-					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-					data, data, height, depth, parent.data);
+			return String.format("{\"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}", data,
+					height, depth, parent.data);
 		else
-			return String.format(
-					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-					data, data, height, depth, "null parent");
+			return String.format("{\"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}", data,
+					height, depth, "null parent");
 	}
 
 	@Override

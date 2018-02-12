@@ -170,4 +170,39 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 	public Spliterator<E> spliterator() {
 		return rbTree.spliterator();
 	}
+
+	@Override
+	public Object[] toArray(Order order) {
+		return rbTree.toArray(order);
+	}
+
+	@Override
+	public E[] toArray(E[] a, Order order) {
+		return rbTree.toArray(a, order);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex, Order order) {
+		return rbTree.subList(fromIndex, toIndex, order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(Order order) {
+		return rbTree.listIterator(order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index, Order order) {
+		return rbTree.listIterator(index, order);
+	}
+
+	@Override
+	public Iterator<E> iterator(Order order) {
+		return rbTree.iterator(order);
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return rbTree.spliterator(order);
+	}
 }
