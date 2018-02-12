@@ -29,7 +29,6 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 	public PriorityQueueBinTreeImpl(T root) {
 		super(root);
-		System.out.println("set root:" + root);
 	}
 
 	private Node<T> add(Node<T> parent, T t) {
@@ -39,17 +38,12 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			setRoot(t);
 			return root;
 		} else {
-			if (parent.getlChild() == null) {
-				System.out.println("add " + t + "\tas lChild of " + parent.getData());
+			if (parent.getlChild() == null)
 				return insertLC(parent, t);
-			}
 
-			if (parent.getrChild() == null) {
-				System.out.println("add " + t + "\tas rChild of " + parent.getData());
+			if (parent.getrChild() == null)
 				return insertRC(parent, t);
-			}
 
-			System.out.println("add " + t + "\tas llChild of " + parent.getData());
 			return insertLC(parent, t);
 		}
 	}
@@ -57,6 +51,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 	private void remove(Node<T> node) {
 		if (node == null || root == null)
 			return;
+		size--;
 		if (node == root) {
 			root = null;
 			return;
@@ -94,6 +89,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 				node.getParent().setrChild(cNode);
 			}
 		}
+		node = null;
 	}
 
 	@Override
@@ -205,7 +201,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		int level = 0;
 		boolean isRight = false;
 		while (node != null || !parent.isEmpty()) {
-//			System.out.print("level " + level++ + ",\t");
+			// System.out.print("level " + level++ + ",\t");
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
@@ -217,9 +213,9 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 				if (node != null) {
 
-//					System.out.print(node.getInfo());
+					// System.out.print(node.getInfo());
 					if (node.getlChild() == null || node.getrChild() == null) {
-//						System.out.print(" return\n");
+						// System.out.print(" return\n");
 						return node;
 					}
 
@@ -246,7 +242,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 			siblings.clear();
 			node = null;
-//			System.out.print("\n");
+			// System.out.print("\n");
 
 			if (countdown == 0)
 				break;
@@ -625,51 +621,22 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		if (array == null || array.length == 0)
 			return;
 
+		remove(root);
+
 		// 方法1
 		// for (T t : array) {
 		// insert(t);
 		// }
 
 		// 方法2
+		// 用stack记录阶层走访，再一一合并
 		for (T t : array) {
-			add(findLastNode(), t);
+			insert(t);
 		}
 
-		Stack<Node<T>> traverseIns = new Stack<>();
-		Stack<Node<T>> bin = new Stack<>();
-		Node<T> node = root;
-		Node<T> iNode = null;
-
-		while ((target > 0) && (node != null || bin.size() > 0)) {
-			while (node != null) {
-				bin.push(node);
-				node = node.getlChild();
-			}
-			if (!bin.isEmpty()) {
-				node = bin.pop();
-				traverseIns.add(node);
-				target--;
-				node = node.getrChild();
-			}
-
+		while (target > 0) {
+			merge(target--, n);
 		}
-
-		while ((n > 0) && (node != null || bin.size() > 0)) {
-			while (node != null) {
-				bin.push(node);
-				node = node.getlChild();
-			}
-			if (!bin.isEmpty()) {
-				node = bin.pop();
-				iNode = node;
-				n--;
-				node = node.getrChild();
-			}
-
-		}
-
-		while (!traverseIns.isEmpty())
-			merge(traverseIns.pop(), iNode);
 
 	}
 
@@ -687,51 +654,22 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		if (list == null || list.size() == 0)
 			return;
 
+		remove(root);
+
 		// 方法1
 		// for (T t : list) {
 		// insert(t);
 		// }
 
 		// 方法2
+		// 用stack记录阶层走访，再一一合并
 		for (T t : list) {
-			add(findLastNode(), t);
+			insert(t);
 		}
 
-		Stack<Node<T>> traverseIns = new Stack<>();
-		Stack<Node<T>> bin = new Stack<>();
-		Node<T> node = root;
-		Node<T> iNode = null;
-
-		while ((target > 0) && (node != null || bin.size() > 0)) {
-			while (node != null) {
-				bin.push(node);
-				node = node.getlChild();
-			}
-			if (!bin.isEmpty()) {
-				node = bin.pop();
-				traverseIns.add(node);
-				target--;
-				node = node.getrChild();
-			}
-
+		while (target > 0) {
+			merge(target--, n);
 		}
-
-		while ((n > 0) && (node != null || bin.size() > 0)) {
-			while (node != null) {
-				bin.push(node);
-				node = node.getlChild();
-			}
-			if (!bin.isEmpty()) {
-				node = bin.pop();
-				iNode = node;
-				n--;
-				node = node.getrChild();
-			}
-
-		}
-
-		while (!traverseIns.isEmpty())
-			merge(traverseIns.pop(), iNode);
 	}
 
 	/**

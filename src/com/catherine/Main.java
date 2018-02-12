@@ -369,16 +369,20 @@ public class Main {
 		}
 		printArray("raw data", raw);
 		pq.printTree();
-		printIterator(pq.iterator());
 
-		// System.out.println("\nDelet max");
-		// pq.delMax();
-		// printIterator(pq.iterator());
-		// pq.printTree();
-		//
+		System.out.println("\nDelete max");
+		pq.delMax();
+		pq.printTree();
+
+		// test2
+		// sBuilder.delete(0, TEXT_LEN);
+		// for (int j = 0; j < TEXT_LEN; j++) {
+		// sBuilder.append((char) ('A' + random.nextInt(26)));
+		// }
+		List<String> list = new ArrayList<>();
+		// list.add(sBuilder.toString());
 		// MyCompleteBinaryHeap<String> pq2 = new
 		// MyCompleteBinaryHeap<>(sBuilder.toString());
-		// List<String> list = new ArrayList<>();
 		// SIZE = 1 + random.nextInt(15);
 		// for (int i = 1; i < SIZE; i++) {
 		// for (int j = 0; j < TEXT_LEN; j++) {
@@ -388,10 +392,19 @@ public class Main {
 		// sBuilder.delete(0, TEXT_LEN);
 		// random = new Random();
 		// }
-		// System.out.println("\nheapify");
-		// pq2.heapify(list);
-		// printIterator(pq2.iterator());
-		// pq2.printTree();
+
+		// TODO
+		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>("JOFVP");
+		list.add("JOFVP");
+		list.add("JOFVPEGNCZ");
+		list.add("EGNCZTMKOF");
+		list.add("TMKOFFKXDZ");
+
+		printList("raw data", list);
+		System.out.println("\nheapify");
+		//TODO
+		pq2.heapify(list);
+		pq2.printTree();
 	}
 
 	public static void testPQVector() {
@@ -412,7 +425,7 @@ public class Main {
 		printIterator(pq.iterator());
 		pq.printTree();
 
-		System.out.println("\nDelet max");
+		System.out.println("\nDelete max");
 		pq.delMax();
 		printIterator(pq.iterator());
 		pq.printTree();
