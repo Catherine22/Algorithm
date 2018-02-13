@@ -192,10 +192,10 @@ This time, we build a priority queue based on Binary Tree ([PriorityQueueBinTree
 
 ![Leftist Heap][16]   
 ![Leftist Heap][17]   
-Merge two heaps (A, B. |A| = m >= n = |B|):
-    1. A.insert(B.delMax()) = O(m * log(m+n))
-    2. Robert Floyd's algorithm = O(m+n)
-    3. Leftist Heap = O(log(n))
+Merge two heaps (A, B. |A| = m >= n = |B|):   
+1. A.insert(B.delMax()) = O(m * log(m+n))
+2. Robert Floyd's algorithm = O(m+n)
+3. Leftist Heap = O(log(n))
 
 - Demo [LeftistHeap]
 
