@@ -9,7 +9,7 @@ import com.catherine.trees.nodes.RedBlackBSTNode.Color;
  *
  * @param <E>
  */
-public class NodeAdapter<E> implements Node<E> {
+public class NodeAdapter<E> implements Node<E>, Cloneable {
 	private Nodes type;
 	private Node<E> aNode;
 
@@ -128,6 +128,15 @@ public class NodeAdapter<E> implements Node<E> {
 	@Override
 	public String getInfo() {
 		return aNode.getInfo();
+	}
+
+	/**
+	 * 拷贝此节点并回传副本
+	 * 
+	 * @return 副本
+	 */
+	public Node<E> clone() {
+		return aNode.clone();
 	}
 
 }

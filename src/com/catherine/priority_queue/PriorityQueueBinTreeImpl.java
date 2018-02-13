@@ -1,12 +1,9 @@
 package com.catherine.priority_queue;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
-
 import com.catherine.trees.MyBinaryTree;
 import com.catherine.trees.nodes.Node;
 
@@ -91,6 +88,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 				node.getParent().setrChild(cNode);
 			}
 		}
+		updateAboveHeight(node.getParent());
 		node = null;
 	}
 
@@ -114,31 +112,13 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			return tmp;
 		}
 
-		Node<T> lastNode = findLastNode();
-		root.setData(lastNode.getData());
-		remove(lastNode);
-		lastNode = findLastNode();
-		percolateDown(lastNode, root);
+		Node<T> bottom = findbottom();
+		root.setData(bottom.getData());
+		remove(bottom);
+		bottom = findbottom();
+
+		percolateDown(root, bottom);
 		return root.getData();
-	}
-
-	/**
-	 * 返回较大或唯一的孩子
-	 * 
-	 * @param n
-	 * @return
-	 */
-	private Node<T> getLargerChild(Node<T> n) {
-		if (n.getrChild() == null && n.getlChild() == null)
-			return null;
-
-		if (n.getrChild() == null)
-			return n.getlChild();
-
-		if (n.getlChild() == null)
-			return n.getrChild();
-
-		return ((n.getrChild().getData()).compareTo(n.getlChild().getData()) > 0) ? n.getrChild() : n.getlChild();
 	}
 
 	/**
@@ -175,6 +155,18 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		}
 
 		return (n2Pos > n1Pos);
+	}
+
+	/**
+	 * 返回最下层最右边的节点
+	 * 
+	 * @return
+	 */
+	private Node<T> findbottom() {
+		if (root == null)
+			return null;
+		Stack<Node<T>> stack = traverse();
+		return stack.pop();
 	}
 
 	/**
@@ -254,106 +246,45 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 	@Override
 	public synchronized void percolateDown(Node<T> n, Node<T> i) {
-		// beginning---这边逻辑等同于getChild(i)
-		Node<T> c = null;
-		Node<T> rc = i.getrChild();
-		Node<T> lc = i.getlChild();
-		if (rc == null)
-			c = lc;
-		else {
-			c = ((lc != null) && (rc.getData()).compareTo(lc.getData()) > 0) ? rc : lc;
-		}
-		// end---这边逻辑等同于getChild(i)
-
-		if (c == null)
+		if (n == null || getChild(n) == null || n == i)
 			return;
 
-		Node<T> basePos = i;
-		T base = i.getData();
-		Node<T> limit = n;
-		Node<T> childPos = c;
+		Stack<Node<T>> track = traverse();
+		int limit = track.indexOf(i);
+		if (limit < 0)
+			throw new NullPointerException("i is not found.");
 
-		// TODO
-		// System.out.println("percolateDown:" + basePos + "->" + limit);
-		// System.out.print("percolateDown raw[");
-		// for (int x = 0; x < size(); x++) {
-		// System.out.print(toArray()[x]);
-		// if (x != size() - 1)
-		// System.out.print(", ");
-		// }
-		// System.out.println("]");
-		// System.out.println("RAW");
-		// printTree();
-
-		// 表示刚好第n个词条为右孩子，此时将指定孩子改为左孩子
-		if (childPos.getParent().getlChild() == limit && c == rc) {
-			c = lc;
-			childPos = childPos.getParent().getlChild();
-		}
-
-		if (isRighterThan(childPos, limit) || childPos == null)
-			return;
-
-		if (SHOW_DEBUG_LOG)
-			System.out
-					.println(String.format("percolateDown %s, %s", (i == null ? "null" : i), (c == null ? "null" : c)));
-
-		boolean swap = false;
-		// 指定节点和其孩子比较，一旦有交换就进行下一轮比较，让原孩子成为新指针，与其孩子比较
-		while (!isRighterThan(childPos, limit) && (c.getData()).compareTo(base) > 0) {
-			swap = true;
-			// if (SHOW_DEBUG_LOG)
-			// System.out.println(String.format("assign %s to %d", c.toString(),
-			// basePos));
-			basePos.setData(c.getData());
-
-			// 找出孩子
-			Node<T> rp, lp;
-			rp = childPos.getrChild();
-			lp = childPos.getlChild();
-
-			if ((isRighterThan(rp, limit) || rp == null) && (isRighterThan(lp, limit) || lp == null)) {
-				// 没孩子
-				basePos = childPos;
-				break;
-			} else if (isRighterThan(rp, limit) || rp == null) {
-				// 没右孩子
-				childPos = lp;
-			} else if (isRighterThan(lp, limit) || lp == null) {
-				// 没左孩子
-				childPos = rp;
+		T base = n.getData();
+		Node<T> head = getChild(n);
+		while (head != null && track.indexOf(head) <= limit) {
+			if (head.getData().compareTo(base) > 0) {
+				head.getParent().setData(head.getData());
+				if (getChild(head) != null) {
+					head = getChild(head);
+				} else
+					break;
 			} else {
-				// 挑大的孩子
-				childPos = (rp.getData().compareTo(lp.getData()) > 0) ? rp : lp;
+				head = head.getParent();
+				break;
 			}
-			c = childPos;
-
-			// 找出父亲
-			basePos = childPos;
-			i.setData(base);
-			// if (SHOW_DEBUG_LOG)
-			// System.out.println(
-			// String.format("basePos:%d, target:%s, childPos:%d, child:%s",
-			// basePos, i, childPos, c));
 		}
 
-		if (swap) {
-			// if (SHOW_DEBUG_LOG)
-			// System.out.println(String.format("fill %s in %d", base,
-			// basePos));
-			basePos.setData(base);
-		}
+		head.setData(base);
+	}
 
-		// TODO
-		// System.out.print("percolateDown new[");
-		// for (int x = 0; x < size(); x++) {
-		// System.out.print(toArray()[x]);
-		// if (x != size() - 1)
-		// System.out.print(", ");
-		// }
-		// System.out.println("]");
-		// System.out.println("NEW");
-		// printTree();
+	// 找出较大或唯一的孩子
+	private Node<T> getChild(Node<T> n) {
+		if (n.getlChild() == null) {
+			if (n.getrChild() == null)
+				return null;
+			else
+				return n.getrChild();
+		} else {
+			if (n.getrChild() == null)
+				return n.getlChild();
+			else
+				return (n.getlChild().getData().compareTo(n.getrChild().getData()) > 0) ? n.getlChild() : n.getrChild();
+		}
 	}
 
 	@Override
@@ -430,7 +361,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 	 */
 	@Deprecated
 	public synchronized void percolateDownOriginal(Node<T> n, Node<T> i) {
-		Node<T> cp = getLargerChild(i);
+		Node<T> cp = getChild(i);
 
 		if (cp == null)
 			return;
@@ -713,7 +644,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		}
 	}
 
-	//阶层走访
+	// 阶层走访
 	private Stack<Node<T>> traverse() {
 		Stack<Node<T>> stack = new Stack<>();
 		Queue<Node<T>> parent = new LinkedList<>();
@@ -723,7 +654,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		int level = 0;
 		boolean isRight = false;
 		while (node != null || !parent.isEmpty()) {
-//			System.out.print("level " + level++ + ",\t");
+			// System.out.print("level " + level++ + ",\t");
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
@@ -735,7 +666,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 				if (node != null) {
 					stack.push(node);
-//					System.out.print(node.getInfo() + " ");
+					// System.out.print(node.getInfo() + " ");
 
 					if (node.getlChild() != null)
 						siblings.offer(node.getlChild());
@@ -760,7 +691,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 			siblings.clear();
 			node = null;
-//			System.out.print("\n");
+			// System.out.print("\n");
 
 			if (countdown == 0)
 				break;
@@ -845,6 +776,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 				if (countdown == 0)
 					break;
+
 			}
 		}
 

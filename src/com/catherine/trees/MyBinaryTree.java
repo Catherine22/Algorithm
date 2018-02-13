@@ -388,6 +388,11 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 	@Override
 	public Collection<E> traversal(Order order) {
+		if (size == 0) {
+			System.out.println("Size == 0");
+			return null;
+		}
+		
 		List<E> collection = new LinkedList<>();
 
 		if (order == Order.LEVEL) {

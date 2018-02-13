@@ -345,54 +345,53 @@ public class Main {
 		int SIZE = 1 + random.nextInt(15);
 		int TEXT_LEN = 5;
 		StringBuilder sBuilder = new StringBuilder();
-		String[] raw = new String[SIZE];
-
-		// root
-		for (int j = 0; j < TEXT_LEN; j++) {
-			sBuilder.append((char) ('A' + random.nextInt(26)));
-		}
-		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
-
-		raw[0] = sBuilder.toString();
-		sBuilder.delete(0, TEXT_LEN);
-		random = new Random();
-
-		// random elements
-		for (int i = 1; i < SIZE; i++) {
-			for (int j = 0; j < TEXT_LEN; j++) {
-				sBuilder.append((char) ('A' + random.nextInt(26)));
-			}
-			pq.insert(sBuilder.toString());
-			raw[i] = sBuilder.toString();
-			sBuilder.delete(0, TEXT_LEN);
-			random = new Random();
-		}
-		printArray("raw data", raw);
-		pq.printTree();
-
-		System.out.println("\nDelete max");
-		pq.delMax();
-		pq.printTree();
+		// String[] raw = new String[SIZE];
+		//
+		// // root
+		// for (int j = 0; j < TEXT_LEN; j++) {
+		// sBuilder.append((char) ('A' + random.nextInt(26)));
+		// }
+		// MyCompleteBinaryHeap<String> pq = new
+		// MyCompleteBinaryHeap<>(sBuilder.toString());
+		//
+		// raw[0] = sBuilder.toString();
+		// sBuilder.delete(0, TEXT_LEN);
+		// random = new Random();
+		//
+		// // random elements
+		// for (int i = 1; i < SIZE; i++) {
+		// for (int j = 0; j < TEXT_LEN; j++) {
+		// sBuilder.append((char) ('A' + random.nextInt(26)));
+		// }
+		// pq.insert(sBuilder.toString());
+		// raw[i] = sBuilder.toString();
+		// sBuilder.delete(0, TEXT_LEN);
+		// random = new Random();
+		// }
+		// printArray("raw data", raw);
+		// pq.printTree();
+		//
+		// System.out.println("\nDelete max");
+		// pq.delMax();
+		// pq.printTree();
 
 		// test2
-		sBuilder.delete(0, TEXT_LEN);
-		for (int j = 0; j < TEXT_LEN; j++) {
-			sBuilder.append((char) ('A' + random.nextInt(26)));
-		}
-		List<String> list = new ArrayList<>();
-		list.add(sBuilder.toString());
-		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>(sBuilder.toString());
+		List<Integer> list = new ArrayList<>();
+		list.add(random.nextInt(1000));
+		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(list.get(0));
 		SIZE = 1 + random.nextInt(15);
 		for (int i = 1; i < SIZE; i++) {
-			for (int j = 0; j < TEXT_LEN; j++) {
-				sBuilder.append((char) ('A' + random.nextInt(26)));
-			}
-			list.add(sBuilder.toString());
-			sBuilder.delete(0, TEXT_LEN);
+			list.add(random.nextInt(1000));
 			random = new Random();
 		}
 
+		printList("raw data", list);
+
 		pq2.heapify(list);
+		pq2.printTree();
+
+		System.out.println("\ndelete max");
+		pq2.delMax();
 		pq2.printTree();
 	}
 
