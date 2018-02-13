@@ -1,5 +1,7 @@
 package com.catherine.priority_queue;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -634,8 +636,10 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			insert(t);
 		}
 
-		while (target > 0) {
-			merge(target--, n);
+		Stack<Node<T>> stack = traverse();
+		Node<T> nNode = stack.get(n);
+		while (!stack.isEmpty()) {
+			merge(stack.pop(), nNode);
 		}
 
 	}
@@ -667,8 +671,10 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			insert(t);
 		}
 
-		while (target > 0) {
-			merge(target--, n);
+		Stack<Node<T>> stack = traverse();
+		Node<T> nNode = stack.get(n);
+		while (!stack.isEmpty()) {
+			merge(stack.pop(), nNode);
 		}
 	}
 
@@ -705,6 +711,61 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 			merge(parentPos, n);
 		}
+	}
+
+	//阶层走访
+	private Stack<Node<T>> traverse() {
+		Stack<Node<T>> stack = new Stack<>();
+		Queue<Node<T>> parent = new LinkedList<>();
+		Queue<Node<T>> siblings = new LinkedList<>();
+		Node<T> node = root;
+		parent.offer(node);
+		int level = 0;
+		boolean isRight = false;
+		while (node != null || !parent.isEmpty()) {
+//			System.out.print("level " + level++ + ",\t");
+
+			while (!parent.isEmpty()) {
+				node = parent.poll();
+				if (node == root) {
+					isRight = false;
+				} else {
+					isRight = !isRight;
+				}
+
+				if (node != null) {
+					stack.push(node);
+//					System.out.print(node.getInfo() + " ");
+
+					if (node.getlChild() != null)
+						siblings.offer(node.getlChild());
+					else
+						siblings.offer(null);
+
+					if (node.getrChild() != null)
+						siblings.offer(node.getrChild());
+					else
+						siblings.offer(null);
+				}
+
+			}
+
+			int countdown = siblings.size();
+			for (Node<T> n : siblings) {
+				parent.offer(n);
+
+				if (n == null)
+					countdown--;
+			}
+
+			siblings.clear();
+			node = null;
+//			System.out.print("\n");
+
+			if (countdown == 0)
+				break;
+		}
+		return stack;
 	}
 
 	@Override

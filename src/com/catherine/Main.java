@@ -375,34 +375,23 @@ public class Main {
 		pq.printTree();
 
 		// test2
-		// sBuilder.delete(0, TEXT_LEN);
-		// for (int j = 0; j < TEXT_LEN; j++) {
-		// sBuilder.append((char) ('A' + random.nextInt(26)));
-		// }
+		sBuilder.delete(0, TEXT_LEN);
+		for (int j = 0; j < TEXT_LEN; j++) {
+			sBuilder.append((char) ('A' + random.nextInt(26)));
+		}
 		List<String> list = new ArrayList<>();
-		// list.add(sBuilder.toString());
-		// MyCompleteBinaryHeap<String> pq2 = new
-		// MyCompleteBinaryHeap<>(sBuilder.toString());
-		// SIZE = 1 + random.nextInt(15);
-		// for (int i = 1; i < SIZE; i++) {
-		// for (int j = 0; j < TEXT_LEN; j++) {
-		// sBuilder.append((char) ('A' + random.nextInt(26)));
-		// }
-		// list.add(sBuilder.toString());
-		// sBuilder.delete(0, TEXT_LEN);
-		// random = new Random();
-		// }
+		list.add(sBuilder.toString());
+		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>(sBuilder.toString());
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 1; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			list.add(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
 
-		// TODO
-		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>("JOFVP");
-		list.add("JOFVP");
-		list.add("JOFVPEGNCZ");
-		list.add("EGNCZTMKOF");
-		list.add("TMKOFFKXDZ");
-
-		printList("raw data", list);
-		System.out.println("\nheapify");
-		//TODO
 		pq2.heapify(list);
 		pq2.printTree();
 	}

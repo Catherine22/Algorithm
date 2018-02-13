@@ -1,5 +1,6 @@
 package com.catherine.trees;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -205,30 +206,30 @@ public class MySplayTree<E extends Comparable<? super E>> implements BinarySearc
 		spTree.removeLCCompletely(parent);
 	}
 
-	public void traversal(Order order) {
-		spTree.traversal(order);
+	public Collection<E> traversal(Order order) {
+		return spTree.traversal(order);
 	}
 
 	@Override
-	public void traverseLevel() {
-		spTree.traverseLevel();
+	public Collection<E> traverseLevel() {
+		return spTree.traverseLevel();
 	}
 
 	@Override
-	public void traversePre() {
-		spTree.traversePre();
-
-	}
-
-	@Override
-	public void traverseIn() {
-		spTree.traverseIn();
+	public Collection<E> traversePre() {
+		return spTree.traversePre();
 
 	}
 
 	@Override
-	public void traversePost() {
-		spTree.traversePost();
+	public Collection<E> traverseIn() {
+		return spTree.traverseIn();
+
+	}
+
+	@Override
+	public Collection<E> traversePost() {
+		return spTree.traversePost();
 
 	}
 

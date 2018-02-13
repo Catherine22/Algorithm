@@ -1,6 +1,7 @@
 package com.catherine.trees;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -386,7 +387,9 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 	}
 
 	@Override
-	public void traversal(Order order) {
+	public Collection<E> traversal(Order order) {
+		List<E> collection = new LinkedList<>();
+
 		if (order == Order.LEVEL) {
 			Queue<Node<E>> parent = new LinkedList<>();
 			Queue<Node<E>> siblings = new LinkedList<>();
@@ -406,6 +409,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 					}
 
 					if (node != null) {
+						collection.add(node.getData());
 						System.out.print(node.getInfo() + " ");
 
 						if (node.getlChild() != null)
@@ -436,11 +440,13 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				if (countdown == 0)
 					break;
 			}
+			return collection;
 		} else if (order == Order.PRE_ORDER) {
 			Stack<Node<E>> bin = new Stack<>();
 			bin.push(root);
 			while (!bin.isEmpty()) {
 				Node<E> node = bin.pop();
+				collection.add(node.getData());
 				System.out.print(node.getInfo() + " ");
 
 				if (node.getrChild() != null)
@@ -450,6 +456,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 					bin.push(node.getlChild());
 			}
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.PRE_ORDER_FAST) {
 			Stack<Node<E>> bin = new Stack<>();
 			Node<E> node = root;
@@ -457,6 +464,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			while (node != null || !bin.isEmpty()) {
 				// 遍历一排的所有左节点
 				while (node != null) {
+					collection.add(node.getData());
 					System.out.print(node.getInfo() + " ");
 					bin.push(node);// 弹出打印过的没用节点
 					node = node.getlChild();
@@ -469,9 +477,11 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				}
 			}
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.PRE_ORDER_RECURSION) {
-			traversePre(root);
+			traversePre(collection, root);
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.IN_ORDER) {
 			Stack<Node<E>> bin = new Stack<>();
 			Node<E> node = root;
@@ -483,14 +493,17 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				}
 				if (!bin.isEmpty()) {
 					node = bin.pop();
+					collection.add(node.getData());
 					System.out.print(node.getInfo() + " ");
 					node = node.getrChild();
 				}
 			}
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.IN_ORDER_RECURSION) {
-			traverseIn(root);
+			traverseIn(collection, root);
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.POST_ORDER) {
 			Stack<Node<E>> bin = new Stack<>();
 			Node<E> node = root;
@@ -506,6 +519,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 				// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
 				if (node.getrChild() == null || node.getrChild() == lastLC) {
+					collection.add(node.getData());
 					System.out.print(node.getInfo() + " ");
 					lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() ==
 									// lastLC
@@ -515,6 +529,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 					node = node.getrChild();
 			}
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.POST_ORDER_STACK) {
 			Stack<Node<E>> lBin = new Stack<>();
 			Stack<Node<E>> rBin = new Stack<>();
@@ -533,37 +548,67 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			}
 
 			while (!rBin.isEmpty()) {
+				collection.add(rBin.peek().getData());
 				System.out.print(rBin.peek().getInfo());
 				rBin.pop();
 			}
 
 			System.out.println("\n");
+			return collection;
 		} else if (order == Order.POST_ORDER_RECURSION) {
-			traversePost(root);
+			traversePost(collection, root);
 			System.out.println("\n");
+			return collection;
 		} else {// default
-			traversal(Order.LEVEL);
+			return traversal(Order.LEVEL);
 		}
 	}
 
 	@Override
-	public void traverseLevel() {
-		traversal(Order.LEVEL);
+	public Collection<E> traverseLevel() {
+		return traversal(Order.LEVEL);
 	}
 
 	@Override
-	public void traversePre() {
-		traversal(Order.PRE_ORDER_FAST);
+	public Collection<E> traversePre() {
+		return traversal(Order.PRE_ORDER_FAST);
 	}
 
 	@Override
-	public void traversePost() {
-		traversal(Order.POST_ORDER_STACK);
+	public Collection<E> traversePost() {
+		return traversal(Order.POST_ORDER_STACK);
 	}
 
 	@Override
-	public void traverseIn() {
-		traversal(Order.IN_ORDER_RECURSION);
+	public Collection<E> traverseIn() {
+		return traversal(Order.IN_ORDER_RECURSION);
+	}
+
+	private void traverseIn(Collection<E> collection, Node<E> node) {
+		if (node.getlChild() != null)
+			traverseIn(node.getlChild());
+		collection.add(node.getData());
+		System.out.print(node.getInfo() + " ");
+		if (node.getrChild() != null)
+			traverseIn(node.getrChild());
+	}
+
+	private void traversePost(Collection<E> collection, Node<E> node) {
+		if (node.getlChild() != null)
+			traversePost(node.getlChild());
+		if (node.getrChild() != null)
+			traversePost(node.getrChild());
+		collection.add(node.getData());
+		System.out.print(node.getInfo() + " ");
+	}
+
+	private void traversePre(Collection<E> collection, Node<E> node) {
+		collection.add(node.getData());
+		System.out.print(node.getInfo() + " ");
+		if (node.getlChild() != null)
+			traversePre(node.getlChild());
+		if (node.getrChild() != null)
+			traversePre(node.getrChild());
 	}
 
 	@Override

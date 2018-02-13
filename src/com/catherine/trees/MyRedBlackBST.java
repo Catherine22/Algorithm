@@ -1,5 +1,6 @@
 package com.catherine.trees;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -71,30 +72,30 @@ public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTre
 	}
 
 	@Override
-	public void traversal(Order order) {
-		rbTree.traversal(order);
+	public Collection<E> traversal(Order order) {
+		return rbTree.traversal(order);
 	}
 
 	@Override
-	public void traverseLevel() {
-		rbTree.traverseLevel();
+	public Collection<E> traverseLevel() {
+		return rbTree.traverseLevel();
 	}
 
 	@Override
-	public void traversePre() {
-		rbTree.traversePre();
-
-	}
-
-	@Override
-	public void traverseIn() {
-		rbTree.traverseIn();
+	public Collection<E> traversePre() {
+		return rbTree.traversePre();
 
 	}
 
 	@Override
-	public void traversePost() {
-		rbTree.traversePost();
+	public Collection<E> traverseIn() {
+		return rbTree.traverseIn();
+
+	}
+
+	@Override
+	public Collection<E> traversePost() {
+		return rbTree.traversePost();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.catherine.trees;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -68,28 +69,28 @@ public class MyBinarySearchTree<E extends Comparable<? super E>> implements Bina
 	}
 
 	@Override
-	public void traversal(Order order) {
-		bst.traversal(order);
+	public Collection<E> traversal(Order order) {
+		return bst.traversal(order);
 	}
 
 	@Override
-	public void traverseLevel() {
-		bst.traverseLevel();
+	public Collection<E> traverseLevel() {
+		return bst.traverseLevel();
 	}
 
 	@Override
-	public void traversePre() {
-		bst.traversePre();
+	public Collection<E> traversePre() {
+		return bst.traversePre();
 	}
 
 	@Override
-	public void traverseIn() {
-		bst.traverseIn();
+	public Collection<E> traverseIn() {
+		return bst.traverseIn();
 	}
 
 	@Override
-	public void traversePost() {
-		bst.traversePost();
+	public Collection<E> traversePost() {
+		return bst.traversePost();
 	}
 
 	@Override

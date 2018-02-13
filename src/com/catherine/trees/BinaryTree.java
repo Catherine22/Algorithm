@@ -1,5 +1,6 @@
 package com.catherine.trees;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -86,27 +87,27 @@ public interface BinaryTree<E> {
 	 * @param order
 	 *            阶层、先序、中序、后序
 	 */
-	public void traversal(Order order);
+	public Collection<E> traversal(Order order);
 
 	/**
 	 * 以阶层遍历
 	 */
-	public void traverseLevel();
+	public Collection<E> traverseLevel();
 
 	/**
 	 * 先序遍历（中-左-右）
 	 */
-	public void traversePre();
+	public Collection<E> traversePre();
 
 	/**
 	 * 中序遍历（左-中-右）
 	 */
-	public void traverseIn();
+	public Collection<E> traverseIn();
 
 	/**
 	 * 后序遍历（左-右-中）<br>
 	 */
-	public void traversePost();
+	public Collection<E> traversePost();
 
 	/**
 	 * 递归<br>
