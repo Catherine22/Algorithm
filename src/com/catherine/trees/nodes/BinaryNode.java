@@ -7,7 +7,7 @@ package com.catherine.trees.nodes;
  *
  * @param <E>
  */
-public class BinaryNode<E> implements Node<E>, Cloneable {
+public class BinaryNode<E> implements Node<E> {
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 	 */
@@ -103,7 +103,12 @@ public class BinaryNode<E> implements Node<E>, Cloneable {
 
 	@Override
 	public String getInfo() {
-		return (data == null) ? "null" : data.toString();
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append((data == null) ? "null" : data.toString());
+		sBuilder.append("(p:");
+		sBuilder.append((parent == null) ? "null" : parent.getData());
+		sBuilder.append(')');
+		return sBuilder.toString();
 	}
 
 	@Override
@@ -124,15 +129,4 @@ public class BinaryNode<E> implements Node<E>, Cloneable {
 
 	}
 
-	/**
-	 * 拷贝此节点并回传副本
-	 * 
-	 * @return 副本
-	 */
-	public Node<E> clone() {
-		Node<E> clone = new BinaryNode<E>(data, (parent == null) ? null : (BinaryNode<E>) parent.clone(),
-				(lChild == null) ? null : (BinaryNode<E>) lChild.clone(),
-				(rChild == null) ? null : (BinaryNode<E>) rChild.clone(), height, depth);
-		return clone;
-	}
 }

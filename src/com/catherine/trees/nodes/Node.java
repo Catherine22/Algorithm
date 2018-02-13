@@ -34,6 +34,4 @@ public interface Node<E> {
 	public boolean isRed();
 
 	public void setColor(Color color);
-	
-	public Node<E> clone();
 }

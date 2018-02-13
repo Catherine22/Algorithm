@@ -289,7 +289,8 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 
 	@Override
 	public synchronized void percolateUp(Node<T> i) {
-		System.out.println("percolateUp " + "node:" + i);
+		if (SHOW_DEBUG_LOG)
+			System.out.println("percolateUp " + "node:" + i);
 		Node<T> basePos = i;
 		Node<T> parentPos = (basePos == null) ? null : basePos.getParent();
 		if (parentPos == null)
@@ -402,12 +403,19 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		return res;
 	}
 
+	/**
+	 * 交换值而非引用
+	 * 
+	 * @param i
+	 * @param p
+	 */
 	protected synchronized void swap(Node<T> i, Node<T> p) {
 		if (SHOW_DEBUG_LOG)
 			System.out.println(String.format("swap %s, %s", i.toString(), p.toString()));
 		T tmp = i.getData();
 		i.setData(p.getData());
 		p.setData(tmp);
+
 	}
 
 	@Override
@@ -860,5 +868,13 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		for (int i = 1; i < clone.size - 1; i++) {
 			a[i] = clone.delMax();
 		}
+	}
+	
+	public void printTree() {
+		if (size() == 1) {
+			System.out.println("level1: " + get(0));
+			return;
+		}
+		traversal(Order.LEVEL);
 	}
 }

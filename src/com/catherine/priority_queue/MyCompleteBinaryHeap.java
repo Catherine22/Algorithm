@@ -1,6 +1,5 @@
 package com.catherine.priority_queue;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -142,7 +141,7 @@ public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
 		if (structure == Structure.VECTOR) {
 			priorityQueueVectorImpl.printTree();
 		} else {
-			priorityQueueBinTreeImpl.traversal(Order.LEVEL);
+			priorityQueueBinTreeImpl.printTree();
 		}
 	}
 

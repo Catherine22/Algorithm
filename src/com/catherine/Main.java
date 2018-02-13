@@ -18,6 +18,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +50,7 @@ import com.catherine.graphs.DirectedGraph.Vertex;
 import com.catherine.priority_queue.LeftistHeap;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
 import com.catherine.priority_queue.MyCompleteBinaryHeap.Structure;
+import com.catherine.priority_queue.PriorityQueueBinTreeImpl;
 import com.catherine.sort.BaseSort;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.HeapSort;
@@ -106,8 +108,8 @@ public class Main {
 		// testSplayTree();
 		// testBTree();
 		// testPQVector();
-		testPQBinTree();
-		// testLeftistHeaps();
+		// testPQBinTree();
+		testLeftistHeaps();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -289,55 +291,38 @@ public class Main {
 	}
 
 	public static void testLeftistHeaps() {
-		MyCompleteBinaryHeap<Integer> pq1 = new MyCompleteBinaryHeap<>(Structure.BINARY_TREE, 99);
-		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(Structure.BINARY_TREE, 999);
-
 		Random random = new Random();
-		int SIZE1 = 0 + random.nextInt(15);
-		int SIZE2 = 0 + random.nextInt(5);
-		int MIN_INT = 0 + random.nextInt(10);
-		int MAX_INT = 10000;
+		int SIZE = 1 + random.nextInt(15);
+		List<Integer> list = new ArrayList<>();
+		PriorityQueueBinTreeImpl<Integer> a = new PriorityQueueBinTreeImpl<>(0);
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+		
+		a.heapify(list);
+		System.out.println("a:");
+		printList("raw data1", list);
+		a.traverseLevel();
 
-		// Generate a random priority queue
-		random = new Random();
-		for (int i = 0; i < SIZE1; i++) {
-			pq1.insert(MIN_INT + random.nextInt(MAX_INT));
+		list.clear();
+		PriorityQueueBinTreeImpl<Integer> b = new PriorityQueueBinTreeImpl<>(0);
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
 			random = new Random();
 		}
 
-		printArray(String.format("%s:", "pq1"), pq1.toArray());
-		// pq1.printTree();
+		b.heapify(list);
+		System.out.println("b:");
+		printList("raw data2", list);
+		b.printTree();
 
-		// Generate a random priority queue
-		for (int i = 0; i < SIZE2; i++) {
-			pq2.insert(MIN_INT + random.nextInt(MAX_INT));
-			random = new Random();
-		}
-
-		printArray(String.format("%s:", "pq2"), pq2.toArray());
-		// pq2.printTree();
-		Integer[] raw = new Integer[pq2.size()];
-		pq2.toArray(raw);
-
-		MyCompleteBinaryHeap<Integer> pq3 = new MyCompleteBinaryHeap<>();
-		for (int i = 0; i < pq1.size(); i++) {
-			pq3.insert(pq1.get(i));
-		}
-
-		// merge
-		try {
-			pq1.merge(pq2.getPriorityQueueBinTree());
-			printArray(String.format("merge %s and %s", "pq1", "pq2"), pq1.toArray());
-			pq1.printTree();
-			Integer[] a3 = new Integer[pq1.size()];
-			pq1.toArray(a3);
-			//
-			// if (!Arrays.deepEquals(a1, a3))
-			// throw new Error(getString(String.format("merge array (%s)", "pq1,
-			// pq2"), a3));
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		System.out.println(String.format("merge a(%d) and b(%d)", a.size(), b.size()));
+		LeftistHeap<Integer> lh = new LeftistHeap<>(0);
+		Node<Integer> mixture = lh.merge(a.getRoot(), b.getRoot());
+		// a.printTree();
+		lh.printTree(mixture);
 	}
 
 	public static void testPQBinTree() {
@@ -345,41 +330,39 @@ public class Main {
 		int SIZE = 1 + random.nextInt(15);
 		int TEXT_LEN = 5;
 		StringBuilder sBuilder = new StringBuilder();
-		// String[] raw = new String[SIZE];
-		//
-		// // root
-		// for (int j = 0; j < TEXT_LEN; j++) {
-		// sBuilder.append((char) ('A' + random.nextInt(26)));
-		// }
-		// MyCompleteBinaryHeap<String> pq = new
-		// MyCompleteBinaryHeap<>(sBuilder.toString());
-		//
-		// raw[0] = sBuilder.toString();
-		// sBuilder.delete(0, TEXT_LEN);
-		// random = new Random();
-		//
-		// // random elements
-		// for (int i = 1; i < SIZE; i++) {
-		// for (int j = 0; j < TEXT_LEN; j++) {
-		// sBuilder.append((char) ('A' + random.nextInt(26)));
-		// }
-		// pq.insert(sBuilder.toString());
-		// raw[i] = sBuilder.toString();
-		// sBuilder.delete(0, TEXT_LEN);
-		// random = new Random();
-		// }
-		// printArray("raw data", raw);
-		// pq.printTree();
-		//
-		// System.out.println("\nDelete max");
-		// pq.delMax();
-		// pq.printTree();
+		String[] raw = new String[SIZE];
+
+		// root
+		for (int j = 0; j < TEXT_LEN; j++) {
+			sBuilder.append((char) ('A' + random.nextInt(26)));
+		}
+		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
+
+		raw[0] = sBuilder.toString();
+		sBuilder.delete(0, TEXT_LEN);
+		random = new Random();
+
+		// random elements
+		for (int i = 1; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			pq.insert(sBuilder.toString());
+			raw[i] = sBuilder.toString();
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
+		printArray("raw data", raw);
+		pq.printTree();
+
+		System.out.println("\nDelete max");
+		pq.delMax();
+		pq.printTree();
 
 		// test2
 		List<Integer> list = new ArrayList<>();
 		list.add(random.nextInt(1000));
 		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(list.get(0));
-		SIZE = 1 + random.nextInt(15);
 		for (int i = 1; i < SIZE; i++) {
 			list.add(random.nextInt(1000));
 			random = new Random();

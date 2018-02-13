@@ -74,14 +74,14 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Connected Graph - While there is at least one path between every pair of vertices, the graph will be connect. If you wanna find out a path which is able to traversal the whole graph, try to run BFS from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
   - [DirectedGraph]
 
-  > There are two arrays, I stores all vertexes in vertexes[] and another array adjMatrix[][], a two-dimensional Edge<E> array, which is used to copy down edges. For example, if adjMatrix[i][j] is not empty, that means there's an edge from i to j.<br>
+  > There are two arrays - all vertexes would be stored in vertexes[]. adjMatrix[][], a two-dimensional Edge<E> array, which is used to copy down edges. For example, if adjMatrix[i][j] is not empty, that means there's an edge from i to j.<br>
   > Edge<E> is a user-defined class. It contains data, weight and status.
 
 ## Tree
 
 ### Binary Tree
 ![tree][1]
-  - This is a special case of Graph.
+  - A special case of Graph.
   - Performance
 
 |    | vector | list | tree |
@@ -90,7 +90,7 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 | insert / remove | X | O | O |
 
 
-  - Imaginary Tree as List<List>
+  - Imagine Tree is a kind of List<List>
   - Tree traversal (Pre-order, in-order and post-order)
   - [MyBinaryTree]
 
@@ -103,17 +103,14 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
 
 ### Binary Search Tree (BST)
-  - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure through in-order traversal.
-  - In this case, I assumed that no duplicated keys in the BST. Every operation based on this scenario.
+  - BST projection is kind of like a sorted sequence. and You can easily get a sorted data structure via in-order traversal.
   - [MyBinarySearchTree]
 
   > BST extends [MyBinaryTree]. It sorts the whole tree by keys and you are able to assign null or duplicated keys.<br><br>
-  > - [MyBinaryTree] implements BinaryTree the interface <br>
-  > - [BinarySearchTreeImpl] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
-  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl] though. In order to hide some public [MyBinaryTree] methods which are not supported by BST.<br>
+  > Some public methods of [MyBinaryTree] must not be supported by BST so that I created [MyBinarySearchTree] to operate BST.<br>
 
 ### AVL Tree
-  - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
+  - AVL Tree is a balanced BST. The height of left and right children must differ by at most 土 1 (|hl - hr| <= 1)
 
   - **Single rotations**
 
@@ -154,15 +151,15 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - [MyAVLTree]
 
-## Classy tree
+## Classy Tree
 
-### Splay tree
-- Splay tree practices pretty well when recently accessed nodes would be accessed frequently.
-- Splay tree moves the selected node to the root after searching, inserting and removing.
+### Splay Tree
+- Splay Tree practices pretty well when recent accessed nodes would be accessed frequently.
+- Splay Tree moves the selected node to the root after searching, inserting and removing.
 - Splaying the node every two levels (parent and grandparent) makes splaying more efficient then splaying the node every level.
 - [MySplayTree]
 
->If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
+>If you want to find out a node in a linked list, it'll traverse in order from the beginning. That means your target which is in the front of the list would be accessed faster. However, if you want to read the last node, however, it'll take you O(n). That why we move recent accessed nodes to the head of the list, we can access them very quickly.
 
 ### B-Tree
 Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.    
@@ -191,7 +188,7 @@ CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
 
 ### Leftist Heap
 When it comes to merge two heaps, we'd probably think of Floyd's algorithm. But **if those two heaps have been sorted**, Leftist Heap is a nifty solution.   
-This time, we build a priority queue based on binary tree.
+This time, we build a priority queue based on Binary Tree ([PriorityQueueBinTreeImpl]).
 
 ![Leftist Heap][16]   
 ![Leftist Heap][17]   
@@ -200,6 +197,7 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
     2. Robert Floyd's algorithm = O(m+n)
     3. Leftist Heap = O(log(n))
 
+- Demo [LeftistHeap]
 
 ## Dictionary
 
@@ -321,6 +319,8 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
    [FermatQuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
    [PriorityQueueVectorImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java>
+   [PriorityQueueBinTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java>
+   [LeftistHeap]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/LeftistHeap.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

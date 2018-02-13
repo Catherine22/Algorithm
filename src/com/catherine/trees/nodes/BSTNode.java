@@ -7,7 +7,7 @@ package com.catherine.trees.nodes;
  *
  * @param <E>
  */
-public class BSTNode<E> implements Node<E>, Cloneable {
+public class BSTNode<E> implements Node<E> {
 
 	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
@@ -126,17 +126,5 @@ public class BSTNode<E> implements Node<E>, Cloneable {
 	public void setColor(RedBlackBSTNode.Color color) {
 		// do nothing
 
-	}
-
-	/**
-	 * 拷贝此节点并回传副本
-	 * 
-	 * @return 副本
-	 */
-	public Node<E> clone() {
-		Node<E> clone = new BSTNode<E>(data, (parent == null) ? null : (BSTNode<E>) parent.clone(),
-				(lChild == null) ? null : (BSTNode<E>) lChild.clone(),
-				(rChild == null) ? null : (BSTNode<E>) rChild.clone(), height, depth);
-		return clone;
 	}
 }

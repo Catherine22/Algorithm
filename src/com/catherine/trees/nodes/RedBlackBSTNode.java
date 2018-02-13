@@ -7,7 +7,7 @@ package com.catherine.trees.nodes;
  *
  * @param <E>
  */
-public class RedBlackBSTNode<E> implements Node<E>, Cloneable {
+public class RedBlackBSTNode<E> implements Node<E> {
 	public enum Color {
 		RED, BLACK
 	}
@@ -135,19 +135,6 @@ public class RedBlackBSTNode<E> implements Node<E>, Cloneable {
 	@Override
 	public void setColor(Color color) {
 		isBlack = (color == Color.BLACK);
-	}
-
-	/**
-	 * 拷贝此节点并回传副本
-	 * 
-	 * @return 副本
-	 */
-	public Node<E> clone() {
-		Node<E> clone = new RedBlackBSTNode<E>(data, (parent == null) ? null : (RedBlackBSTNode<E>) parent.clone(),
-				(lChild == null) ? null : (RedBlackBSTNode<E>) lChild.clone(),
-				(rChild == null) ? null : (RedBlackBSTNode<E>) rChild.clone(), height, depth);
-		clone.setColor(isBlack ? Color.BLACK : Color.RED);
-		return clone;
 	}
 
 }
