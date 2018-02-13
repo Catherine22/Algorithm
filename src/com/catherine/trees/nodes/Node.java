@@ -3,11 +3,6 @@ package com.catherine.trees.nodes;
 import com.catherine.trees.nodes.RedBlackBSTNode.Color;
 
 public interface Node<E> {
-
-	public int getKey();
-
-	public void setKey(int key);
-
 	public int getHeight();
 
 	public void setHeight(int height);

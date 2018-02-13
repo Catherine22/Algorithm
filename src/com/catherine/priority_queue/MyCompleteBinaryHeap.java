@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Spliterator;
 
+import com.catherine.trees.MyBinaryTree.Order;
+import com.catherine.trees.nodes.Node;
+
 /**
  * 完全二叉堆（逻辑上等同于完全二叉树，物理上以向量实现）<br>
  * 以层次遍历完全二叉树并对应到向量上。<br>
@@ -16,162 +19,347 @@ import java.util.Spliterator;
  *
  * @param <T>
  */
-public class MyCompleteBinaryHeap<T extends Comparable<? super T>> implements PriorityQueue<T> {
-	private PriorityQueueImpl<T> priorityQueueImpl;
+public class MyCompleteBinaryHeap<T extends Comparable<? super T>>
+		implements PriorityQueueVector<T>, PriorityQueueBinTree<T> {
+	private PriorityQueueVectorImpl<T> priorityQueueVectorImpl;
+	private PriorityQueueBinTreeImpl<T> priorityQueueBinTreeImpl;
+	private Structure structure;
+
+	public enum Structure {
+		VECTOR, BINARY_TREE
+	}
 
 	public MyCompleteBinaryHeap() {
-		priorityQueueImpl = new PriorityQueueImpl<>();
+		this(Structure.VECTOR, null);
+	}
+
+	public MyCompleteBinaryHeap(T root) {
+		this(Structure.BINARY_TREE, root);
+	}
+
+	public MyCompleteBinaryHeap(Structure structure, T root) {
+		this.structure = structure;
+		if (structure == Structure.VECTOR)
+			priorityQueueVectorImpl = new PriorityQueueVectorImpl<>();
+		else
+			priorityQueueBinTreeImpl = new PriorityQueueBinTreeImpl<>(root);
+	}
+
+	public PriorityQueueVector<T> getPriorityQueueVector() {
+		return priorityQueueVectorImpl;
+	}
+
+	public PriorityQueueBinTree<T> getPriorityQueueBinTree() {
+		return priorityQueueBinTreeImpl;
 	}
 
 	@Override
 	public void insert(T e) {
-		priorityQueueImpl.add(e);
-		percolateUp(e);
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.insert(e);
+		} else {
+			priorityQueueBinTreeImpl.insert(e);
+		}
 	}
 
 	@Override
 	public T getMax() {
-		return priorityQueueImpl.get(0);
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.getMax();
+		} else {
+			return priorityQueueBinTreeImpl.getMax();
+		}
 	}
 
 	@Override
 	public T delMax() {
-		return priorityQueueImpl.delMax();
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.delMax();
+		} else {
+			return priorityQueueBinTreeImpl.delMax();
+		}
 	}
 
 	@Override
-	public void percolateDown(T n, T i) {
-		priorityQueueImpl.percolateDown(n, i);
+	public void percolateDown(T n, T i) throws IllegalAccessException {
+		if (structure != Structure.VECTOR)
+			throw new IllegalAccessException("VECTOR Structure only");
+		priorityQueueVectorImpl.percolateDown(n, i);
 	}
 
 	@Override
-	public void percolateUp(T i) {
-		priorityQueueImpl.percolateUp(i);
+	public void percolateUp(T i) throws IllegalAccessException {
+		if (structure != Structure.VECTOR)
+			throw new IllegalAccessException("VECTOR Structure only");
+		priorityQueueVectorImpl.percolateUp(i);
 	}
 
 	@Override
 	@Deprecated
 	public void completedlyHeapify(T[] array) {
-		priorityQueueImpl.heapify(array);
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.heapify(array);
+		} else {
+			priorityQueueBinTreeImpl.heapify(array);
+		}
 	}
 
 	@Override
 	@Deprecated
 	public void completedlyHeapify(List<T> list) {
-		priorityQueueImpl.heapify(list);
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.heapify(list);
+		} else {
+			priorityQueueBinTreeImpl.heapify(list);
+		}
 	}
 
 	@Override
 	public void heapify(T[] array) {
-		priorityQueueImpl.heapify(array);
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.heapify(array);
+		} else {
+			priorityQueueBinTreeImpl.heapify(array);
+		}
 	}
 
 	@Override
 	public void heapify(List<T> list) {
-		priorityQueueImpl.heapify(list);
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.heapify(list);
+		} else {
+			priorityQueueBinTreeImpl.heapify(list);
+		}
 	}
 
-	public T getParent(T e) {
-		return priorityQueueImpl.getParent(e);
-	}
-
-	public T getLChild(T e) {
-		return priorityQueueImpl.getLChild(e);
-	}
-
-	public T getRChild(T e) {
-		return priorityQueueImpl.getRChild(e);
+	@Override
+	public void merge(PriorityQueueVector<T> heap) {
+		priorityQueueVectorImpl.merge(heap);
 	}
 
 	public void printTree() {
-		priorityQueueImpl.printTree();
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.printTree();
+		} else {
+			priorityQueueBinTreeImpl.printTree();
+		}
 	}
 
 	public int size() {
-		return priorityQueueImpl.size();
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.size();
+		} else {
+			return priorityQueueBinTreeImpl.size();
+		}
 	}
 
-	public synchronized void copyInto(Object[] anArray) {
-		priorityQueueImpl.copyInto(anArray);
+	public void copyInto(Object[] anArray) {
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.copyInto(anArray);
+		} else {
+			priorityQueueBinTreeImpl.copyInto(anArray);
+		}
 	}
 
-	public synchronized void trimToSize() {
-		priorityQueueImpl.trimToSize();
+	public synchronized void trimToSize() throws IllegalAccessException {
+		if (structure != Structure.VECTOR)
+			throw new IllegalAccessException("VECTOR Structure only");
+		priorityQueueVectorImpl.trimToSize();
+
 	}
 
-	public synchronized boolean isEmpty() {
-		return priorityQueueImpl.isEmpty();
+	public boolean isEmpty() {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.isEmpty();
+		} else {
+			return priorityQueueBinTreeImpl.isEmpty();
+		}
 	}
 
 	public int indexOf(Object o) {
-		return priorityQueueImpl.indexOf(o);
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.indexOf(o);
+		} else {
+			return indexOf(o, priorityQueueBinTreeImpl.size());
+		}
 	}
 
-	public synchronized int indexOf(Object o, int index) {
-		return priorityQueueImpl.indexOf(o, index);
+	public int indexOf(Object o, int index) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.indexOf(o, index);
+		} else {
+			Object[] anArray = new Object[priorityQueueBinTreeImpl.size()];
+			priorityQueueBinTreeImpl.copyInto(anArray);
+			while (index >= 0) {
+				if (anArray[index] == o)
+					break;
+				else
+					index--;
+			}
+			return index;
+		}
 	}
 
-	public synchronized int lastIndexOf(Object o) {
-		return priorityQueueImpl.lastIndexOf(o);
+	public int lastIndexOf(Object o) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.lastIndexOf(o);
+		} else {
+			return lastIndexOf(o, 0);
+		}
 	}
 
-	public synchronized int lastIndexOf(Object o, int index) {
-		return priorityQueueImpl.lastIndexOf(o, index);
+	public int lastIndexOf(Object o, int index) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.lastIndexOf(o, index);
+		} else {
+			Object[] anArray = new Object[priorityQueueBinTreeImpl.size()];
+			priorityQueueBinTreeImpl.copyInto(anArray);
+			int head = priorityQueueBinTreeImpl.size();
+			while (head >= index) {
+				if (anArray[head] == o)
+					break;
+				else
+					index--;
+			}
+			return (head < index) ? -1 : head;
+		}
 	}
 
-	public synchronized T elementAt(int index) {
-		return priorityQueueImpl.elementAt(index);
+	public Object elementAt(int index) {
+		if (index < 0 || index >= size())
+			throw new ArrayIndexOutOfBoundsException("Index must be from 0 to size-1");
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.elementAt(index);
+		} else {
+			Object[] anArray = new Object[priorityQueueBinTreeImpl.size()];
+			priorityQueueBinTreeImpl.copyInto(anArray);
+			return anArray[index];
+		}
 	}
 
 	public synchronized T firstElement() {
-		return priorityQueueImpl.firstElement();
+		return getMax();
 	}
 
 	public synchronized T lastElement() {
-		return priorityQueueImpl.lastElement();
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.lastElement();
+		} else {
+			List<T> list = priorityQueueBinTreeImpl.subList(0, priorityQueueBinTreeImpl.size());
+			for (int i = 0; i < list.size() - 1; i++) {
+				if (list.get(i).compareTo(list.get(i + 1)) > 0)
+					list.set(0, list.get(i + 1));
+			}
+			return list.get(0);
+		}
 	}
 
 	public synchronized Object clone() {
-		return priorityQueueImpl.clone();
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.clone();
+		} else {
+			return priorityQueueBinTreeImpl.clone();
+		}
 	}
 
-	public synchronized Object[] toArray() {
-		return priorityQueueImpl.toArray();
+	public Object[] toArray() {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.toArray();
+		} else {
+			return priorityQueueBinTreeImpl.toArray();
+		}
 	}
 
-	public synchronized <T> T[] toArray(T[] a) {
-		return priorityQueueImpl.toArray(a);
+	public T[] toArray(T[] a) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.toArray(a);
+		} else {
+			return priorityQueueBinTreeImpl.toArray(a);
+		}
 	}
 
-	public synchronized T get(int index) {
-		return priorityQueueImpl.get(index);
+	public T get(int index) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.get(index);
+		} else {
+			return priorityQueueBinTreeImpl.get(index);
+		}
 	}
 
 	public void clear() {
-		priorityQueueImpl.clear();
+		if (structure == Structure.VECTOR) {
+			priorityQueueVectorImpl.clear();
+		} else {
+			priorityQueueBinTreeImpl.clear();
+		}
 	}
 
-	public synchronized String toString() {
-		return priorityQueueImpl.toString();
+	public String toString() {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.toString();
+		} else {
+			return priorityQueueBinTreeImpl.toString();
+		}
 	}
 
-	public synchronized List<T> subList(int fromIndex, int toIndex) {
-		return priorityQueueImpl.subList(fromIndex, toIndex);
+	public List<T> subList(int fromIndex, int toIndex) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.subList(fromIndex, toIndex);
+		} else {
+			return priorityQueueBinTreeImpl.subList(fromIndex, toIndex);
+		}
 	}
 
-	public synchronized ListIterator<T> listIterator(int index) {
-		return priorityQueueImpl.listIterator(index);
+	public ListIterator<T> listIterator(int index) {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.listIterator(index);
+		} else {
+			return priorityQueueBinTreeImpl.listIterator(index);
+		}
 	}
 
-	public synchronized ListIterator<T> listIterator() {
-		return priorityQueueImpl.listIterator();
+	public ListIterator<T> listIterator() {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.listIterator();
+		} else {
+			return priorityQueueBinTreeImpl.listIterator();
+		}
 	}
 
-	public synchronized Iterator<T> iterator() {
-		return priorityQueueImpl.iterator();
+	public Iterator<T> iterator() {
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.iterator();
+		} else {
+			return priorityQueueBinTreeImpl.iterator();
+		}
 	}
 
 	public Spliterator<T> spliterator() {
-		return priorityQueueImpl.spliterator();
+		if (structure == Structure.VECTOR) {
+			return priorityQueueVectorImpl.spliterator();
+		} else {
+			return priorityQueueBinTreeImpl.spliterator();
+		}
+	}
+
+	@Override
+	public void percolateDown(Node<T> n, Node<T> i) throws IllegalAccessException {
+		if (structure != Structure.BINARY_TREE)
+			throw new IllegalAccessException("BINARY_TREE Structure only");
+		priorityQueueBinTreeImpl.percolateDown(n, i);
+	}
+
+	@Override
+	public void percolateUp(Node<T> i) throws IllegalAccessException {
+		if (structure != Structure.BINARY_TREE)
+			throw new IllegalAccessException("BINARY_TREE Structure only");
+		priorityQueueBinTreeImpl.percolateUp(i);
+	}
+
+	@Override
+	public void merge(PriorityQueueBinTree<T> heap) throws IllegalAccessException {
+		if (structure != Structure.BINARY_TREE)
+			throw new IllegalAccessException("BINARY_TREE Structure only");
+		priorityQueueBinTreeImpl.merge(heap);
 	}
 }

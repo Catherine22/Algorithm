@@ -19,14 +19,15 @@ import com.catherine.trees.nodes.RedBlackBSTNode.Color;
  * @author Catherine
  *
  */
-public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBlackBST<E> {
+public class RedBlackBSTImpl<E extends Comparable<? super E>> extends BinarySearchTreeImpl<E>
+		implements RedBlackBST<E> {
 	private final static boolean SHOW_LOG = true;
 
-	public RedBlackBSTImpl(int key, E root) {
+	public RedBlackBSTImpl(E root) {
 		super();
 		adapter = new NodeAdapter<>();
 		adapter.setType(Nodes.RED_BLACK);
-		setRoot(key, root);
+		setRoot(root);
 	}
 
 	/**
@@ -35,14 +36,13 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * @param 数值
 	 * @return 根节点
 	 */
-	public Node<E> setRoot(int key, E data) {
+	public Node<E> setRoot(E data) {
 		Node<E> n;
 		if (root == null) {
 			size++;
-			n = adapter.buildNode(key, data, null, null, null, 0, 0);
+			n = adapter.buildNode(data, null, null, null, 0, 0);
 		} else
-			n = adapter.buildNode(key, data, null, root.getlChild(), root.getrChild(), root.getHeight(),
-					root.getDepth());
+			n = adapter.buildNode(data, null, root.getlChild(), root.getrChild(), root.getHeight(), root.getDepth());
 		root = n;
 		root.setColor(Color.BLACK);
 		hot = root;
@@ -89,8 +89,8 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * @return
 	 */
 	@Override
-	public Node<E> search(int key) {
-		return super.search(key);
+	public Node<E> search(E data) {
+		return super.search(data);
 	}
 
 	/**
@@ -106,12 +106,11 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * 2. A（祖父） - B（父，左子树） — C （右子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
 	 * Or A（祖父） - B（父，右子树） — C （左子树），插入节点位于C，此时须双旋，变成C（父） — A 和 B<br>
 	 * 
-	 * @param key
 	 * @param data
 	 * @return
 	 */
-	public Node<E> insertAndBalance(int key, E data) {
-		final Node<E> newNode = super.insert(key, data);
+	public Node<E> insertAndBalance(E data) {
+		final Node<E> newNode = super.add(data);
 		Node<E> ancestor = newNode.getParent();
 
 		Node<E> target = ancestor;
@@ -122,7 +121,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 		int count = 1;
 		while (ancestor != null) {
 			if (SHOW_LOG)
-				System.out.println(String.format("key: %d, round %d, ancestor:%d", key, count++, ancestor.getKey()));
+				System.out.println(String.format("key: %d, round %d, ancestor:%d", data, count++, ancestor.getData()));
 
 			// 更新颜色
 			if (ancestor.getParent() != null && uncle != null) {
@@ -148,8 +147,8 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 				if (SHOW_LOG) {
 					String r2 = (isLeftChild) ? "L" : "R";
 					String r3 = (isLeftGrandchild) ? "L" : "R";
-					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
-							child.getKey(), r3));
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getData(), target.getData(), r2,
+							child.getData(), r3));
 				}
 
 				child = null;
@@ -206,7 +205,7 @@ public class RedBlackBSTImpl<E> extends BinarySearchTreeImpl<E> implements RedBl
 	 * 
 	 * @param key
 	 */
-	public void removeAndBalance(int key) {
+	public void removeAndBalance(E data) {
 	}
 
 	/**

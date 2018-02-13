@@ -1,9 +1,14 @@
 package com.catherine.trees;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -15,12 +20,12 @@ import com.catherine.trees.nodes.Node;
  * @author Catherine
  *
  */
-public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E> {
+public class MyBinarySearchTree<E extends Comparable<? super E>> implements BinaryTree<E>, BinarySearchTree<E> {
 
 	private BinarySearchTreeImpl<E> bst;
 
-	public MyBinarySearchTree(int key, E root) {
-		bst = new BinarySearchTreeImpl<E>(key, root);
+	public MyBinarySearchTree(E root) {
+		bst = new BinarySearchTreeImpl<>(root);
 	}
 
 	@Override
@@ -64,33 +69,43 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	}
 
 	@Override
-	public void traverseLevel() {
-		bst.traverseLevel();
+	public Collection<E> traversal(Order order) {
+		return bst.traversal(order);
 	}
 
 	@Override
-	public void traversePreNR1() {
-		bst.traversePreNR1();
+	public Collection<E> traverseLevel() {
+		return bst.traverseLevel();
 	}
 
 	@Override
-	public void traversePreNR2() {
-		bst.traversePreNR2();
+	public Collection<E> traversePre() {
+		return bst.traversePre();
 	}
 
 	@Override
-	public void traversePre() {
-		bst.traversePre();
+	public Collection<E> traverseIn() {
+		return bst.traverseIn();
 	}
 
 	@Override
-	public void traverseInNR() {
-		bst.traverseInNR();
+	public Collection<E> traversePost() {
+		return bst.traversePost();
 	}
 
 	@Override
-	public void traverseIn() {
-		bst.traverseIn();
+	public void traversePre(Node<E> node) {
+		bst.traversePre(node);
+	}
+
+	@Override
+	public void traverseIn(Node<E> node) {
+		bst.traverseIn(node);
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		bst.traversePost(node);
 	}
 
 	@Override
@@ -99,33 +114,23 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	}
 
 	@Override
-	public void traversePostNR1() {
-		bst.traversePostNR1();
+	public Node<E> search(E data) {
+		return bst.search(data);
 	}
 
 	@Override
-	public void traversePostNR2() {
-		bst.traversePostNR2();
+	public Node<E> searchLast(E data) {
+		return bst.searchLast(data);
 	}
 
 	@Override
-	public void traversePost() {
-		bst.traversePost();
+	public Node<E> add(E data) {
+		return bst.add(data);
 	}
 
 	@Override
-	public Node<E> search(int key) {
-		return bst.search(key);
-	}
-
-	@Override
-	public Node<E> insert(int key, E data) {
-		return bst.insert(key, data);
-	}
-
-	@Override
-	public void remove(int key) {
-		bst.remove(key);
+	public void remove(E data) {
+		bst.remove(data);
 	}
 
 	/**
@@ -134,19 +139,24 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	 * 但实际上这些树产生的树的组合只有卡塔兰数——catalan(n)个，生成的树平均高度为开根号n<br>
 	 * 比如取123三个数，在213和231的组合时，产生的二叉搜寻树都是一样的。
 	 */
-	public static BinarySearchTree<Object> random(int size) {
-		BinarySearchTree<Object> newBST = null;
+	public static BinarySearchTree<Integer> random(int size, int from, int to) {
+		if (size <= 0)
+			throw new IllegalArgumentException("Size must be more than 0");
+		if (to <= from)
+			throw new IllegalArgumentException("Error range");
+
+		BinarySearchTree<Integer> newBST = null;
 		List<Integer> sequence = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			sequence.add(i + 1);
+		for (int i = from; i < to; i++) {
+			sequence.add(i);
 		}
 		// 产生乱数序列
 		Collections.shuffle(sequence);
-		System.out.print(sequence.get(0) + " ");
-		newBST = new MyBinarySearchTree<Object>(sequence.get(0), null);
+		System.out.print("Random BST -> " + sequence.get(0) + " ");
+		newBST = new MyBinarySearchTree<Integer>(sequence.get(0));
 		for (int i = 1; i < size; i++) {
 			System.out.print(sequence.get(i) + " ");
-			newBST.insert(sequence.get(i), null);
+			newBST.add(sequence.get(i));
 		}
 		System.out.print("\n");
 
@@ -177,13 +187,98 @@ public class MyBinarySearchTree<E> implements BinaryTree<E>, BinarySearchTree<E>
 	public void isAVLTree(Callback callback) {
 		bst.isAVLTree(callback);
 	}
+
 	@Override
-	public void left_rightRotate(Node<E> node){
+	public void left_rightRotate(Node<E> node) {
 		bst.left_rightRotate(node);
 	}
-	
+
 	@Override
-	public void right_leftRotate(Node<E> node){
+	public void right_leftRotate(Node<E> node) {
 		bst.right_leftRotate(node);
+	}
+
+	@Override
+	public void clear() {
+		bst.clear();
+	}
+
+	@Override
+	public void copyInto(Object[] anArray) {
+		bst.copyInto(anArray);
+	}
+
+	@Override
+	public Object clone() {
+		return bst.clone();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return bst.toArray();
+	}
+
+	@Override
+	public E[] toArray(E[] e) {
+		return bst.toArray(e);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		return bst.subList(fromIndex, toIndex);
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return bst.listIterator();
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return bst.listIterator(index);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return bst.iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return bst.spliterator();
+	}
+
+	@Override
+	public Object[] toArray(Order order) {
+		return bst.toArray(order);
+	}
+
+	@Override
+	public E[] toArray(E[] a, Order order) {
+		return bst.toArray(a, order);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex, Order order) {
+		return bst.subList(fromIndex, toIndex, order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(Order order) {
+		return bst.listIterator(order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index, Order order) {
+		return bst.listIterator(index, order);
+	}
+
+	@Override
+	public Iterator<E> iterator(Order order) {
+		return bst.iterator(order);
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return bst.spliterator(order);
 	}
 }

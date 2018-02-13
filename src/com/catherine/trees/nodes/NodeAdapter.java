@@ -21,18 +21,10 @@ public class NodeAdapter<E> implements Node<E> {
 		if (type == Nodes.STANDARD)
 			aNode = new BinaryNode<E>(data, (BinaryNode<E>) parent, (BinaryNode<E>) lChild, (BinaryNode<E>) rChild,
 					height, depth);
-		return aNode;
-	}
-
-	public Node<E> buildNode(int key, E data, Node<E> parent, Node<E> lChild, Node<E> rChild, int height, int depth) {
-		if (type == Nodes.STANDARD)
-			aNode = new BinaryNode<E>(data, (BinaryNode<E>) parent, (BinaryNode<E>) lChild, (BinaryNode<E>) rChild,
-					height, depth);
 		else if (type == Nodes.BST)
-			aNode = new BSTNode<E>(key, data, (BSTNode<E>) parent, (BSTNode<E>) lChild, (BSTNode<E>) rChild, height,
-					depth);
+			aNode = new BSTNode<E>(data, (BSTNode<E>) parent, (BSTNode<E>) lChild, (BSTNode<E>) rChild, height, depth);
 		else if (type == Nodes.RED_BLACK)
-			aNode = new RedBlackBSTNode<E>(key, data, (RedBlackBSTNode<E>) parent, (RedBlackBSTNode<E>) lChild,
+			aNode = new RedBlackBSTNode<E>(data, (RedBlackBSTNode<E>) parent, (RedBlackBSTNode<E>) lChild,
 					(RedBlackBSTNode<E>) rChild, height, depth);
 
 		return aNode;
@@ -40,29 +32,6 @@ public class NodeAdapter<E> implements Node<E> {
 
 	public Nodes getType() {
 		return type;
-	}
-
-	@Override
-	public int getKey() {
-		if (type == Nodes.BST) {
-			BSTNode<E> node = (BSTNode<E>) aNode;
-			return node.getKey();
-		} else if (type == Nodes.RED_BLACK) {
-			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
-			return node.getKey();
-		} else
-			return -1;
-	}
-
-	@Override
-	public void setKey(int key) {
-		if (type == Nodes.BST) {
-			BSTNode<E> node = (BSTNode<E>) aNode;
-			node.setKey(key);
-		} else if (type == Nodes.RED_BLACK) {
-			RedBlackBSTNode<E> node = (RedBlackBSTNode<E>) aNode;
-			node.setKey(key);
-		}
 	}
 
 	@Override

@@ -1,5 +1,12 @@
 package com.catherine.trees;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -12,12 +19,12 @@ import com.catherine.trees.nodes.Node;
  * 
  * @author Catherine
  */
-public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
+public class MySplayTree<E extends Comparable<? super E>> implements BinarySearchTree<E>, BinaryTree<E> {
 
 	private BinarySearchTreeImpl<E> spTree;
 
-	public MySplayTree(int key, E root) {
-		spTree = new BinarySearchTreeImpl<E>(key, root);
+	public MySplayTree(E root) {
+		spTree = new BinarySearchTreeImpl<E>(root);
 	}
 
 	/**
@@ -93,20 +100,25 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 * @return 命中节点或<code>null<code>
 	 */
 	@Override
-	public Node<E> search(int key) {
-		return search(key, true);
+	public Node<E> search(E data) {
+		return search(data, true);
+	}
+
+	@Override
+	public Node<E> searchLast(E data) {
+		return searchLast(data, true);
 	}
 
 	/**
-	 * 同{@link #search(int)}
+	 * 同{@link #search(data)}
 	 * 
 	 * @param key
 	 * @param efficient
 	 *            用双层旋转或是每层旋转
 	 * @return
 	 */
-	public Node<E> search(int key, boolean efficient) {
-		Node<E> result = spTree.search(key);
+	public Node<E> search(E data, boolean efficient) {
+		Node<E> result = spTree.search(data);
 		if (efficient) {
 			if (result == null)
 				splayEfficiently(spTree.hot);// 找不到就让最后访问的节点变成根节点
@@ -122,13 +134,25 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	}
 
 	/**
+	 * 同{@link #searchLast(data)}
+	 * 
+	 * @param key
+	 * @param efficient
+	 *            用双层旋转或是每层旋转
+	 * @return
+	 */
+	public Node<E> searchLast(E data, boolean efficient) {
+		return null;
+	}
+
+	/**
 	 * 理论上是做一次BST的插入，再将新插入节点旋转至根节点。<br>
 	 * 在此有个便捷做法，先运行BST的插入操作，再用SplayTree（{@link #search(int)}）的搜寻操作 （因为
 	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
 	 */
 	@Override
-	public Node<E> insert(int key, E data) {
-		return search(spTree.insert(key, data).getKey());
+	public Node<E> add(E data) {
+		return search(spTree.add(data).getData());
 	}
 
 	/**
@@ -137,9 +161,9 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 	 * {@link #search(int)}已经集成{@link #splayEfficiently(Node)}）。
 	 */
 	@Override
-	public void remove(int key) {
-		spTree.remove(key);
-		search(key);
+	public void remove(E data) {
+		spTree.remove(data);
+		search(data);
 	}
 
 	@Override
@@ -182,61 +206,51 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 		spTree.removeLCCompletely(parent);
 	}
 
-	@Override
-	public void traverseLevel() {
-		spTree.traverseLevel();
+	public Collection<E> traversal(Order order) {
+		return spTree.traversal(order);
 	}
 
 	@Override
-	public void traversePreNR1() {
-		spTree.traversePreNR1();
+	public Collection<E> traverseLevel() {
+		return spTree.traverseLevel();
 	}
 
 	@Override
-	public void traversePreNR2() {
-		spTree.traversePreNR2();
-
-	}
-
-	@Override
-	public void traversePre() {
-		spTree.traversePre();
+	public Collection<E> traversePre() {
+		return spTree.traversePre();
 
 	}
 
 	@Override
-	public void traverseInNR() {
-		spTree.traverseInNR();
+	public Collection<E> traverseIn() {
+		return spTree.traverseIn();
 
 	}
 
 	@Override
-	public void traverseIn() {
-		spTree.traverseIn();
+	public Collection<E> traversePost() {
+		return spTree.traversePost();
 
+	}
+
+	@Override
+	public void traversePre(Node<E> node) {
+		spTree.traversePre(node);
+	}
+
+	@Override
+	public void traverseIn(Node<E> node) {
+		spTree.traverseIn(node);
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		spTree.traversePost(node);
 	}
 
 	@Override
 	public Node<E> succ(Node<E> node) {
 		return spTree.succ(node);
-	}
-
-	@Override
-	public void traversePostNR1() {
-		spTree.traversePostNR1();
-
-	}
-
-	@Override
-	public void traversePostNR2() {
-		spTree.traversePostNR2();
-
-	}
-
-	@Override
-	public void traversePost() {
-		spTree.traversePost();
-
 	}
 
 	@Override
@@ -279,4 +293,87 @@ public class MySplayTree<E> implements BinarySearchTree<E>, BinaryTree<E> {
 
 	}
 
+	@Override
+	public void clear() {
+		spTree.clear();
+	}
+
+	@Override
+	public void copyInto(Object[] anArray) {
+		spTree.copyInto(anArray);
+	}
+
+	@Override
+	public Object clone() {
+		return spTree.clone();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return spTree.toArray();
+	}
+
+	@Override
+	public E[] toArray(E[] e) {
+		return spTree.toArray(e);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		return spTree.subList(fromIndex, toIndex);
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return spTree.listIterator();
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return spTree.listIterator(index);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return spTree.iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return spTree.spliterator();
+	}
+
+	@Override
+	public Object[] toArray(Order order) {
+		return spTree.toArray(order);
+	}
+
+	@Override
+	public E[] toArray(E[] a, Order order) {
+		return spTree.toArray(a, order);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex, Order order) {
+		return spTree.subList(fromIndex, toIndex, order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(Order order) {
+		return spTree.listIterator(order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index, Order order) {
+		return spTree.listIterator(index, order);
+	}
+
+	@Override
+	public Iterator<E> iterator(Order order) {
+		return spTree.iterator(order);
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return spTree.spliterator(order);
+	}
 }

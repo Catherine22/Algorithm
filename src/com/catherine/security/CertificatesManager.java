@@ -29,6 +29,7 @@ import com.catherine.security.certificate_extensions.OIDMap;
  *
  */
 public class CertificatesManager {
+
 	/**
 	 * X.509是数字证书的规范，X.509只能携带公钥信息。<br>
 	 * 另外还有PKCS#7和12包含更多的一些信息。PKCS#12由于可包含私钥信息，而且文件本身还可通过密码保护，所以更适合信息交换。<br>
@@ -108,22 +109,21 @@ public class CertificatesManager {
 	}
 
 	/**
-     * PEM格式字串转X509证书
-     * <p>
-     * -----BEGIN CERTIFICATE-----
-     * xxx
-     * -----END CERTIFICATE-----
-     *
-     * @param pem
-     * @return
-     * @throws CertificateException
-     * @throws FileNotFoundException
-     */
-	public static X509Certificate getX509Certificate(String pem)
-			throws CertificateException, FileNotFoundException {
-		CertificateFactory cf = CertificateFactory.getInstance("X.509");       
-		String newString = pem.replaceAll("-----BEGIN CERTIFICATE-----", "").replaceAll("-----END CERTIFICATE-----", "");
-		return (X509Certificate) cf.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(newString)));
+	 * PEM格式字串转X509证书
+	 * <p>
+	 * -----BEGIN CERTIFICATE----- xxx -----END CERTIFICATE-----
+	 *
+	 * @param pem
+	 * @return
+	 * @throws CertificateException
+	 * @throws FileNotFoundException
+	 */
+	public static X509Certificate getX509Certificate(String pem) throws CertificateException, FileNotFoundException {
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		String newString = pem.replaceAll("-----BEGIN CERTIFICATE-----", "").replaceAll("-----END CERTIFICATE-----",
+				"");
+		return (X509Certificate) cf
+				.generateCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(newString)));
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class CertificatesManager {
 		CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 		return (X509Certificate) certificateFactory.generateCertificate(url.openStream());
 	}
-
+	
 	/**
 	 * 验证证书<br>
 	 * 1. 首先检查期限 <br>
@@ -172,8 +172,8 @@ public class CertificatesManager {
 			cert.checkValidity();// Certificate is active for current date
 
 			// 2. Is the issuing CA a trusted CA?
-            Map<String, String> issuerDN = refactorDN(cert.getIssuerDN().getName());
-            if (!issuerDN.getOrDefault("CN", "").trim().equals(KeySet.TRUSTED_CA.trim())) {
+			Map<String, String> issuerDN = refactorDN(cert.getIssuerDN().getName());
+			if (!issuerDN.getOrDefault("CN", "").trim().equals(KeySet.TRUSTED_CA.trim())) {
 				System.out.println("This certificate published by a untrusted CA.");
 				return false;
 			}
@@ -183,7 +183,7 @@ public class CertificatesManager {
 			cert.verify(rootCert.getPublicKey());
 
 			// 4. Does the domain name in the server’s certificate match the
-			// domain name of the server itself?
+			// domain name of the server itself? (Alternative names)
 			CertificateExtensionsHelper coarseGrainedExtensions = new CertificateExtensionsHelper(cert);
 
 			if (!coarseGrainedExtensions.getDNSNames().contains(KeySet.TRUSTED_SSL_HOSTNAME))
@@ -225,10 +225,10 @@ public class CertificatesManager {
 			String pair = pairs[i];
 			String[] keyValue = pair.split("=");
 			if (keyValue.length > 1) {
-                map.put(keyValue[0], keyValue[1]);
-            } else {
-                map.put(keyValue[0], "");
-            }
+				map.put(keyValue[0], keyValue[1]);
+			} else {
+				map.put(keyValue[0], "");
+			}
 		}
 		return map;
 	}

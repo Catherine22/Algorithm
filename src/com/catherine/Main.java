@@ -18,6 +18,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +47,10 @@ import com.catherine.dictionary.functions.SelectingDigits;
 import com.catherine.dictionary.functions.XORFold;
 import com.catherine.graphs.DirectedGraph;
 import com.catherine.graphs.DirectedGraph.Vertex;
+import com.catherine.priority_queue.LeftistHeap;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
+import com.catherine.priority_queue.MyCompleteBinaryHeap.Structure;
+import com.catherine.priority_queue.PriorityQueueBinTreeImpl;
 import com.catherine.sort.BaseSort;
 import com.catherine.sort.BubbleSort;
 import com.catherine.sort.HeapSort;
@@ -61,6 +65,7 @@ import com.catherine.trees.MyBinarySearchTree;
 import com.catherine.trees.MyBinaryTree;
 import com.catherine.trees.MyRedBlackBST;
 import com.catherine.trees.MySplayTree;
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 import com.catherine.turing_machine.TuringMachine;
 import com.catherine.utils.Analysis;
@@ -83,16 +88,11 @@ public class Main {
 	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
 			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
 	private static int[] input2 = new int[] { 38, 29, 28, 11, 4, 5, 2 };
-	private static int[] input3 = new int[] { 5, 11, 13, 15, 28, 29, 38 };
-	private static int[] input4 = null;
-	private static int[] input5 = new int[] { 1 };
 	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
-	private static int[] input7 = new int[] { 23, 24, 25, 26, 29, 4, 2 };
 
 	public static void main(String[] args) {
-		compareStringSorting();
-		compareIntSorting();
-
+		// compareStringSorting();
+		// compareIntSorting();
 		// testHailstone();
 		// testTuringMachine();
 		// testSequence();
@@ -107,7 +107,9 @@ public class Main {
 		// testRedBlackBST();
 		// testSplayTree();
 		// testBTree();
-		// testPQ();
+		// testPQVector();
+		// testPQBinTree();
+		testLeftistHeaps();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -288,108 +290,200 @@ public class Main {
 				raxorfF.getStudent());
 	}
 
-	public static void testPQ() {
+	public static void testLeftistHeaps() {
+		Random random = new Random();
+		int SIZE = 1 + random.nextInt(15);
+		List<Integer> list = new ArrayList<>();
+		PriorityQueueBinTreeImpl<Integer> a = new PriorityQueueBinTreeImpl<>(0);
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+		
+		a.heapify(list);
+		System.out.println("a:");
+		printList("raw data1", list);
+		a.traverseLevel();
+
+		list.clear();
+		PriorityQueueBinTreeImpl<Integer> b = new PriorityQueueBinTreeImpl<>(0);
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+
+		b.heapify(list);
+		System.out.println("b:");
+		printList("raw data2", list);
+		b.printTree();
+
+		System.out.println(String.format("merge a(%d) and b(%d)", a.size(), b.size()));
+		LeftistHeap<Integer> lh = new LeftistHeap<>(0);
+		Node<Integer> mixture = lh.merge(a.getRoot(), b.getRoot());
+		// a.printTree();
+		lh.printTree(mixture);
+	}
+
+	public static void testPQBinTree() {
+		Random random = new Random();
+		int SIZE = 1 + random.nextInt(15);
+		int TEXT_LEN = 5;
+		StringBuilder sBuilder = new StringBuilder();
+		String[] raw = new String[SIZE];
+
+		// root
+		for (int j = 0; j < TEXT_LEN; j++) {
+			sBuilder.append((char) ('A' + random.nextInt(26)));
+		}
+		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
+
+		raw[0] = sBuilder.toString();
+		sBuilder.delete(0, TEXT_LEN);
+		random = new Random();
+
+		// random elements
+		for (int i = 1; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			pq.insert(sBuilder.toString());
+			raw[i] = sBuilder.toString();
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
+		printArray("raw data", raw);
+		pq.printTree();
+
+		System.out.println("\nDelete max");
+		pq.delMax();
+		pq.printTree();
+
+		// test2
+		List<Integer> list = new ArrayList<>();
+		list.add(random.nextInt(1000));
+		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(list.get(0));
+		for (int i = 1; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+
+		printList("raw data", list);
+
+		pq2.heapify(list);
+		pq2.printTree();
+
+		System.out.println("\ndelete max");
+		pq2.delMax();
+		pq2.printTree();
+	}
+
+	public static void testPQVector() {
 		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>();
-		pq.insert("Cooper");
-		pq.insert("Barbarian");
-		pq.insert("Alan");
-		pq.insert("Zed");
-		pq.insert("Jonas");
-		pq.insert("Julianne");
-		pq.insert("Priscilla");
-		pq.insert("Shawn");
+		Random random = new Random();
+		int SIZE = 1 + random.nextInt(15);
+		int TEXT_LEN = 5;
+		StringBuilder sBuilder = new StringBuilder();
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			pq.insert(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
 
 		printIterator(pq.iterator());
 		pq.printTree();
 
+		System.out.println("\nDelete max");
 		pq.delMax();
 		printIterator(pq.iterator());
 		pq.printTree();
 
 		MyCompleteBinaryHeap<String> pq2 = new MyCompleteBinaryHeap<>();
 		List<String> list = new ArrayList<>();
-		list.add("Cooper");
-		list.add("Barbarian");
-		list.add("Alan");
-		list.add("Zed");
-		list.add("Jonas");
-		list.add("Julianne");
-		list.add("Priscilla");
-		list.add("Shawn");
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < TEXT_LEN; j++) {
+				sBuilder.append((char) ('A' + random.nextInt(26)));
+			}
+			list.add(sBuilder.toString());
+			sBuilder.delete(0, TEXT_LEN);
+			random = new Random();
+		}
+		System.out.println("\nheapify");
 		pq2.heapify(list);
 		printIterator(pq2.iterator());
 		pq2.printTree();
 	}
 
 	public static void testBTree() {
-		MyBTree<String> myBTree = new MyBTree<>(5, 528);
-		// myBTree.printInfo();
-		myBTree.insert(192, null);
-		myBTree.insert(268, null);
-		myBTree.insert(703, null);
-		myBTree.insert(850, null);
+		Random random = new Random();
+		int root = 0 + random.nextInt(1000);
+		int m = 2 + random.nextInt(10);
+		MyBTree<Integer> myBTree = new MyBTree<>(m, root);
+		myBTree.printInfo();
 
-		myBTree.insert(57, null);
-		myBTree.insert(152, null);
-		myBTree.insert(249, null);
-		myBTree.insert(266, null);
-		myBTree.insert(315, null);
-		myBTree.insert(423, null);
-		myBTree.insert(468, null);
-		myBTree.insert(484, null);
-		myBTree.insert(619, null);
-		myBTree.insert(644, null);
-		myBTree.insert(758, null);
-		myBTree.insert(771, null);
-		myBTree.insert(865, null);
-		myBTree.insert(882, null);
-		myBTree.insert(936, null);
-		myBTree.insert(984, null);
-		// System.out.println(myBTree.toString());
-		myBTree.remove(249);
+		int SIZE = 1 + random.nextInt(20);
+		int[] history = new int[SIZE];
+		history[0] = root;
+		for (int i = 1; i < SIZE; i++) {
+			history[i] = 0 + random.nextInt(1000);
+			myBTree.insert(history[i]);
+			random = new Random();
+		}
+
+		System.out.println(String.format("\nGenerate a B-tree, m=%d, size=%d", m, SIZE));
+		System.out.println(myBTree.toString());
+		int r = 0 + random.nextInt(SIZE - 1);
+		System.out.println("\nremove history[" + r + "]:" + history[r]);
+		myBTree.remove(history[r]);
 		System.out.println(myBTree.toString());
 
-		myBTree.remove(619);
+		r = 0 + random.nextInt(SIZE - 1);
+		System.out.println("\nremove history[" + r + "]:" + history[r]);
+		myBTree.remove(history[r]);
 		System.out.println(myBTree.toString());
 
 	}
 
 	public static void testSplayTree() {
-		MySplayTree<String> mySplayTree1 = new MySplayTree<String>(641, null);
-		mySplayTree1.insert(468, null);
-		mySplayTree1.insert(777, null);
-		mySplayTree1.insert(448, null);
-		mySplayTree1.insert(507, null);
-		mySplayTree1.insert(743, null);
-		mySplayTree1.insert(21, null);
-		mySplayTree1.insert(486, null);
-		mySplayTree1.insert(527, null);
-		mySplayTree1.insert(1, null);
-		mySplayTree1.insert(285, null);
-		mySplayTree1.insert(495, null);
-		mySplayTree1.insert(69, null);
-		mySplayTree1.insert(333, null);
-		mySplayTree1.insert(266, null);
-		mySplayTree1.insert(400, null);
+		MySplayTree<Integer> mySplayTree1 = new MySplayTree<Integer>(641);
+		mySplayTree1.add(468);
+		mySplayTree1.add(777);
+		mySplayTree1.add(448);
+		mySplayTree1.add(507);
+		mySplayTree1.add(743);
+		mySplayTree1.add(21);
+		mySplayTree1.add(486);
+		mySplayTree1.add(527);
+		mySplayTree1.add(1);
+		mySplayTree1.add(285);
+		mySplayTree1.add(495);
+		mySplayTree1.add(69);
+		mySplayTree1.add(333);
+		mySplayTree1.add(266);
+		mySplayTree1.add(400);
 		mySplayTree1.traverseLevel();
 		mySplayTree1.search(333);
 		mySplayTree1.traverseLevel();
 
 		// the worst case
-		MySplayTree<String> mySplayTree2 = new MySplayTree<String>(90, null);
-		mySplayTree2.insert(80, null);
-		mySplayTree2.insert(70, null);
-		mySplayTree2.insert(60, null);
-		mySplayTree2.insert(50, null);
-		mySplayTree2.insert(40, null);
-		mySplayTree2.insert(30, null);
-		mySplayTree2.insert(20, null);
-		mySplayTree2.insert(10, null);
-		mySplayTree2.insert(0, null);
+		MySplayTree<Integer> mySplayTree2 = new MySplayTree<Integer>(90);
+		mySplayTree2.add(80);
+		mySplayTree2.add(70);
+		mySplayTree2.add(60);
+		mySplayTree2.add(50);
+		mySplayTree2.add(40);
+		mySplayTree2.add(30);
+		mySplayTree2.add(20);
+		mySplayTree2.add(10);
+		mySplayTree2.add(0);
 
 		// System.out.println("Searching with ordinary rotation in the worst
 		// case");
-		// for (int i = 0; i < 100; i+=10) {
+		// for (int i = 0; i < 100; i += 10) {
 		// System.out.println(String.format("rotate %d", i));
 		// mySplayTree2.search(i, false);
 		// mySplayTree2.traverseLevel();
@@ -397,14 +491,14 @@ public class Main {
 		// System.out.println("");
 		// System.out.println("Searching with efficient rotation in the worst
 		// case");
-		// for (int i = 0; i < 100; i+=10) {
+		// for (int i = 0; i < 100; i += 10) {
 		// System.out.println(String.format("rotate %d", i));
 		// mySplayTree2.search(i);
 		// mySplayTree2.traverseLevel();
 		// }
 
-		// insert
-		mySplayTree2.insert(15, null);
+		// add
+		mySplayTree2.add(15);
 		mySplayTree2.traverseLevel();
 
 		// delete
@@ -618,54 +712,63 @@ public class Main {
 
 	public static void testRedBlackBST() {
 		// 1
-		// MyRedBlackBST<String> rbTree1 = new MyRedBlackBST<String>(20, null);
-		// rbTree1.insert(10, null);
-		// rbTree2.traverseLevel();
-		// rbTree1.insert(30, null);
-		// rbTree2.traverseLevel();
-		// rbTree1.insert(15, null);
+		// MyRedBlackBST<Integer> rbTree1 = new MyRedBlackBST<Integer>(20);
+		// rbTree1.add(10);
+		// rbTree1.add(30);
+		// rbTree1.add(15);
 		// rbTree1.traverseLevel();
 
 		// 2
-		// MyRedBlackBST<String> rbTree2 = new MyRedBlackBST<String>(40, null);
-		// rbTree2.insert(30, null);
+		// MyRedBlackBST<Integer> rbTree2 = new MyRedBlackBST<Integer>(40);
+		// rbTree2.add(30);
 		// rbTree2.traverseLevel();
-		// rbTree2.insert(50, null);
+		// rbTree2.add(50);
 		// rbTree2.traverseLevel();
-		// rbTree2.insert(45, null);
+		// rbTree2.add(45);
 		// rbTree2.traverseLevel();
-		// rbTree2.insert(35, null);
+		// rbTree2.add(35);
 		// rbTree2.traverseLevel();
 		// //3
-		MyRedBlackBST<String> rbTree3 = new MyRedBlackBST<String>(40, null);
-		rbTree3.insert(30, null);
+		MyRedBlackBST<Integer> rbTree3 = new MyRedBlackBST<Integer>(40);
+		rbTree3.add(30);
 		rbTree3.traverseLevel();
-		rbTree3.insert(50, null);
+		rbTree3.add(50);
 		rbTree3.traverseLevel();
-		rbTree3.insert(45, null);
+		rbTree3.add(45);
 		rbTree3.traverseLevel();
-		rbTree3.insert(25, null);
+		rbTree3.add(25);
 		rbTree3.traverseLevel();
 	}
 
 	public static void testAVLTree() {
-		final MyAVLTree<String> myAVLTree1 = new MyAVLTree<String>(20, null);
-		myAVLTree1.insert(10, null);
-		myAVLTree1.insert(30, null);
-		myAVLTree1.insert(5, null);
-		myAVLTree1.insert(25, null);
-		myAVLTree1.insert(40, null);
-		myAVLTree1.insert(35, null);
-		myAVLTree1.insert(45, null);
+		Random random = new Random();
+		int root = 100 + random.nextInt(300);
+		final MyAVLTree<Integer> myAVLTree1 = new MyAVLTree<Integer>(root);
+		final MyAVLTree<Integer> myAVLTree2 = new MyAVLTree<Integer>(root);
+		int SIZE = 1 + random.nextInt(15);
+		int[] history = new int[SIZE];
+		history[0] = root;
+		for (int i = 1; i < SIZE; i++) {
+			history[i] = 100 + random.nextInt(300);
+			myAVLTree1.add(history[i]);
+			myAVLTree2.insertAndBalance(history[i]);
+			random = new Random();
+		}
+
 		myAVLTree1.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
+				System.out.println("size:" + myAVLTree1.size());
+				myAVLTree1.traverseIn();// 中序一定是小到大排
 				myAVLTree1.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree1.insertAndBalance(34, null);
+				System.out.println("Is myAVLTree1 an AVL tree? " + result);
+
+				System.out.println("\n\ninsertAndBalance 9999");
+				myAVLTree1.insertAndBalance(9999);
 				myAVLTree1.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
+						myAVLTree1.traverseIn();// 中序一定是小到大排
 						myAVLTree1.traverseLevel();
 						System.out.println("Is that still an AVL tree? " + result);
 					}
@@ -673,104 +776,21 @@ public class Main {
 			}
 		});
 
-		final MyAVLTree<String> myAVLTree2 = new MyAVLTree<String>(9, null);
-		myAVLTree2.insert(1, null);
-		myAVLTree2.insert(10, null);
-		myAVLTree2.insert(5, null);
-		myAVLTree2.insert(0, null);
-		myAVLTree2.insert(11, null);
-		myAVLTree2.insert(-1, null);
-		myAVLTree2.insert(2, null);
-		myAVLTree2.insert(6, null);
 		myAVLTree2.isAVLTree(new Callback() {
 			@Override
 			public void onResponse(boolean result) {
+				System.out.println("size:" + myAVLTree2.size());
+				myAVLTree2.traverseIn();// 中序一定是小到大排
 				myAVLTree2.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree2.removeAndBalance(10);
+				System.out.println("\n\nIs myAVLTree2 an AVL tree? " + result);
+
+				System.out.println("\n\ninsertAndBalance 9999");
+				myAVLTree2.insertAndBalance(9999);
 				myAVLTree2.isAVLTree(new Callback() {
 					@Override
 					public void onResponse(boolean result) {
+						myAVLTree2.traverseIn();// 中序一定是小到大排
 						myAVLTree2.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-
-		final MyAVLTree<String> myAVLTree3 = new MyAVLTree<String>(44, null);
-		myAVLTree3.insert(17, null);
-		myAVLTree3.insert(78, null);
-		myAVLTree3.insert(32, null);
-		myAVLTree3.insert(50, null);
-		myAVLTree3.insert(88, null);
-		myAVLTree3.insert(48, null);
-		myAVLTree3.insert(62, null);
-		myAVLTree3.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree3.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree3.removeAndBalance(32);
-				myAVLTree3.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree3.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-
-		final MyAVLTree<String> myAVLTree4 = new MyAVLTree<String>(50, null);
-		myAVLTree4.insert(25, null);
-		myAVLTree4.insert(75, null);
-		myAVLTree4.insert(10, null);
-		myAVLTree4.insert(30, null);
-		myAVLTree4.insert(60, null);
-		myAVLTree4.insert(80, null);
-		myAVLTree4.insert(5, null);
-		myAVLTree4.insert(15, null);
-		myAVLTree4.insert(27, null);
-		myAVLTree4.insert(55, null);
-		myAVLTree4.insert(1, null);
-		myAVLTree4.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree4.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree4.removeAndBalance(80);
-				myAVLTree4.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree4.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
-					}
-				});
-			}
-		});
-
-		final MyAVLTree<String> myAVLTree5 = new MyAVLTree<String>(50, null);
-		myAVLTree5.insert(25, null);
-		myAVLTree5.insert(75, null);
-		myAVLTree5.insert(10, null);
-		myAVLTree5.insert(30, null);
-		myAVLTree5.insert(60, null);
-		myAVLTree5.insert(5, null);
-		myAVLTree5.insert(15, null);
-		myAVLTree5.insert(27, null);
-		myAVLTree5.insert(55, null);
-		myAVLTree5.insert(1, null);
-		myAVLTree5.isAVLTree(new Callback() {
-			@Override
-			public void onResponse(boolean result) {
-				myAVLTree5.traverseLevel();
-				System.out.println("Is that an AVL tree? " + result);
-				myAVLTree5.insertAndBalance(80, null);
-				myAVLTree5.isAVLTree(new Callback() {
-					@Override
-					public void onResponse(boolean result) {
-						myAVLTree5.traverseLevel();
 						System.out.println("Is that still an AVL tree? " + result);
 					}
 				});
@@ -779,36 +799,56 @@ public class Main {
 	}
 
 	public static void testBST() {
-		MyBinarySearchTree<String> mBST = new MyBinarySearchTree<>(50, "R");
-		mBST.insert(20, "二十");
-		mBST.insert(80, "");
-		mBST.insert(10, "");
-		mBST.insert(30, "");
-		mBST.insert(70, "");
-		mBST.insert(90, "");
-		mBST.insert(35, "");
-		mBST.insert(25, "");
-		mBST.insert(65, "");
-		// mBST.removeRCCompletely(mBST.search(80));
-		// mBST.removeLCCompletely(mBST.search(80));
-		// mBST.remove(20);
-		mBST.traverseIn();// 中序一定是小到大排
-		mBST.traverseLevel();
-		mBST.zig(mBST.search(80));
-		mBST.traverseIn();// 中序一定是小到大排
-		mBST.traverseLevel();
-		// System.out.println(mBST.succ(mBST.search(20)));
+		Random random = new Random();
+		char root = (char) ('A' + random.nextInt(26));
+		MyBinarySearchTree<Character> mBST = new MyBinarySearchTree<>(root);
+		int SIZE = 1 + random.nextInt(15);
+		char[] history = new char[SIZE];
+		history[0] = root;
+		for (int i = 1; i < SIZE; i++) {
+			history[i] = (char) ('A' + random.nextInt(26));
+			mBST.add(history[i]);
+			random = new Random();
+		}
 
-		// System.out.println(mBST.search(25));
-		// System.out.println(mBST.size());
-		// MyBinarySearchTree<Object> randomBST = (MyBinarySearchTree<Object>)
-		// MyBinarySearchTree.random(5);
-		// randomBST.traverseLevel();
-		// System.out.println("Is this BST full? " + randomBST.isFull());
+		System.out.println("size:" + mBST.size());
+		mBST.traverseIn();// 中序一定是小到大排
+		mBST.traverseLevel();
+
+		// removeLCCompletely
+		int p = 0 + random.nextInt(history.length);
+		Node<Character> n1 = mBST.search(history[p]);
+		System.out.println("\n\nremoveLCCompletely:" + n1.getData());
+		mBST.removeLCCompletely(n1);
+		mBST.removeRCCompletely(mBST.search('%'));
+		mBST.traverseIn();// 中序一定是小到大排
+		mBST.traverseLevel();
+
+		// remove
+		p = 0 + random.nextInt(history.length);
+		Node<Character> n2 = mBST.search(history[p]);
+		if (n2 != null) {
+			System.out.println("\n\nremove:" + n2.getData());
+			mBST.remove(n2.getData());
+			mBST.traverseIn();// 中序一定是小到大排
+			mBST.traverseLevel();
+		}
+
+		// search
+		p = 0 + random.nextInt(history.length);
+		System.out.println("\n\nsearch:" + history[p]);
+		System.out.println(mBST.search(history[p]));
+
+		// Generate a random BST
+		System.out.println("\n\nrandom BST");
+		MyBinarySearchTree<Integer> randomBST = (MyBinarySearchTree<Integer>) MyBinarySearchTree.random(5, 100, 300);
+		System.out.println("Is this BST full? " + randomBST.isFull());
+		randomBST.traverseIn();// 中序一定是小到大排
+		randomBST.traverseLevel();
 	}
 
 	public static void testBinaryTree() {
-		MyBinaryTree<String> mBT = new MyBinaryTree<String>("R");
+		MyBinaryTree<String> mBT = new MyBinaryTree<>("R");
 		Node<String> lc = mBT.insertLC(mBT.getRoot(), "A");
 		mBT.insertRC(lc, "C");
 		Node<String> rc = mBT.insertRC(mBT.getRoot(), "B");
@@ -816,21 +856,26 @@ public class Main {
 		mBT.insertRC(rc, "E");
 		mBT.setLC(rclc, "F");
 
-		for (int i = 0; i < 500; i++) {
-			Node<String> node = mBT.insertRC(rclc, "G");
-			rclc = node;
-		}
-
 		System.out.println("H:" + mBT.getHeight());
-		mBT.traversePre();
-		mBT.traversePreNR1();
-		mBT.traversePreNR2();
-		mBT.traverseIn();
-		mBT.traverseInNR();
-		mBT.traversePost();
-		mBT.traversePostNR1();
-		mBT.traversePostNR2();
+		String[] strings = new String[mBT.size()];
+		System.out.println("Level traversal");
 		mBT.traverseLevel();
+		System.out.println("Pre-order traversal");
+		mBT.traversePre();
+		System.out.println("In-order traversal");
+		mBT.traverseIn();
+		System.out.println("Post-order traversal");
+		mBT.traversePost();
+
+		System.out.println("\nclone");
+		MyBinaryTree<String> clone = (MyBinaryTree<String>) mBT.clone();
+		clone.traverseLevel();
+		clone.copyInto(Order.PRE_ORDER_RECURSION, strings);
+		printArray("copyInto", strings);
+		clone.copyInto(Order.IN_ORDER_RECURSION, strings);
+		printArray("copyInto", strings);
+		clone.copyInto(Order.POST_ORDER_RECURSION, strings);
+		printArray("copyInto", strings);
 	}
 
 	public static void testDirectedGraph() {

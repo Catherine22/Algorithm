@@ -74,14 +74,14 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
   - Connected Graph - While there is at least one path between every pair of vertices, the graph will be connect. If you wanna find out a path which is able to traversal the whole graph, try to run BFS from every vertex and make sure the status of each vertex is VISITED. See more in ``` public Vertex<E> bfs(){...} ```
   - [DirectedGraph]
 
-  > There are two arrays, I stores all vertexes in vertexes[] and another array adjMatrix[][], a two-dimensional Edge<E> array, which is used to copy down edges. For example, if adjMatrix[i][j] is not empty, that means there's an edge from i to j.<br>
+  > There are two arrays - all vertexes would be stored in vertexes[]. adjMatrix[][], a two-dimensional Edge<E> array, which is used to copy down edges. For example, if adjMatrix[i][j] is not empty, that means there's an edge from i to j.<br>
   > Edge<E> is a user-defined class. It contains data, weight and status.
 
 ## Tree
 
 ### Binary Tree
 ![tree][1]
-  - It's a special case of Graph.
+  - A special case of Graph.
   - Performance
 
 |    | vector | list | tree |
@@ -90,30 +90,27 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 | insert / remove | X | O | O |
 
 
-  - Imaginary Tree is sort of List<List>
+  - Imagine Tree is a kind of List<List>
   - Tree traversal (Pre-order, in-order and post-order)
   - [MyBinaryTree]
 
   > - Insert / remove nodes or subtrees <br>
   > - Calculate the height of subtrees <br>
   > - Depth-first search (DFS) in recursion and non-recursion ways<br>
-  > - Find out the successor of any node by in-order traversal.<br>
+  > - Find out the successor of any node with in-order traversal.<br>
   > **Speed: traversePreNR2() > traversePreNR1() > traversePre() <br>
-  > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and both takes O(n)**
+  > It's incredible that running a nested loop (traversePreNR2) is faster than recursion and even though both of them take O(n)**
 
 
 ### Binary Search Tree (BST)
-  - A BST projection is kind of like a sorted sequence, you can easily get a sorted data structure by in-order traversal.
-  - In this case, I assumed that no duplicated keys in the BST. Every operation based on this scenario.
+  - BST projection is kind of like a sorted sequence. and You can easily get a sorted data structure via in-order traversal.
   - [MyBinarySearchTree]
 
-  > It extends [MyBinaryTree]. The only one difference between the node ([BNode]) of MyBinaryTree and the node ([BSTNode]) of  MyBinarySearchTree is key, which means you sort the whole tree by keys and you are able to assign null or duplicated values. It's a key-value pair. Or you can just remove value if you don't need it.<br><br>
-  > - [MyBinaryTree] implements BinaryTree the interface <br>
-  > - [BinarySearchTreeImpl] implements BinarySearchTree the interface and extends [MyBinaryTree]<br>
-  > If you want to operate BST, you have to create [MyBinarySearchTree] instead of [BinarySearchTreeImpl], however. Because I want to hide some public methods which are not supported for BST are built by [MyBinaryTree] <br>
+  > BST extends [MyBinaryTree]. It sorts the whole tree by keys and you are able to assign null or duplicated keys.<br><br>
+  > Some public methods of [MyBinaryTree] must not be supported by BST so that I created [MyBinarySearchTree] to operate BST.<br>
 
 ### AVL Tree
-  - An AVL tree is a balanced binary search tree. For every node, the heights of left and right children of every node differs by at most 土 1 (|hl - hr| <= 1)
+  - AVL Tree is a balanced BST. The height of left and right children must differ by at most 土 1 (|hl - hr| <= 1)
 
   - **Single rotations**
 
@@ -154,15 +151,15 @@ Traversal - to simplify Graph and make it looks like a sequence. It's a powerful
 
   - [MyAVLTree]
 
-## Classy tree
+## Classy Tree
 
-### Splay tree
-- Splay tree practices pretty well when recently accessed nodes would be accessed frequently.
-- Splay tree moves the selected node to the root after searching, inserting and removing.
+### Splay Tree
+- Splay Tree practices pretty well when recent accessed nodes would be accessed frequently.
+- Splay Tree moves the selected node to the root after searching, inserting and removing.
 - Splaying the node every two levels (parent and grandparent) makes splaying more efficient then splaying the node every level.
 - [MySplayTree]
 
->If you want to find out a node in a linked list, it would traverse in order from the beginning. It means that your target  which is in the front of the list would be accessed faster, but if you want to read the last node, however. You have to wait O(n). So what if we move the recently accessed node to the head of the list, we can access the node very quickly. That's what Splay tree does.
+>If you want to find out a node in a linked list, it'll traverse in order from the beginning. That means your target which is in the front of the list would be accessed faster. However, if you want to read the last node, however, it'll take you O(n). That why we move recent accessed nodes to the head of the list, we can access them very quickly.
 
 ### B-Tree
 Every node contains more than two keys and branches, it seems like a binary tree merges some of its nodes into a super node and that's why B-tree looks flatter and wider.    
@@ -175,7 +172,7 @@ Every node contains more than two keys and branches, it seems like a binary tree
 - [MyBTree]
 
 ## Priority Queue
-You could build a priority queue by Vector, List or Tree. Tree (BBST) is the most efficient data structure of all while we are talking about insertion and searching for the max element. But BBST has a lot of functions we don't use in a priority queue. We want to find a plain data structure as efficient as BBST. That is - Complete binary heap, a nifty structure to implement Priority Queue.
+You could build a priority queue with Vector, List or Tree. Tree (BBST) is the most efficient data structure of all while we are talking about insertion and searching for the max element. But BBST has a lot of functions we don't use in a priority queue. We want to find a plain data structure as efficient as BBST. That is - Complete binary heap, a nifty structure to implement Priority Queue.
 
 - Call-by-priority
 - E.g. Huffman Coding, Scan-Line Filling
@@ -183,9 +180,24 @@ You could build a priority queue by Vector, List or Tree. Tree (BBST) is the mos
 ### CompleteBinaryHeap
 ![Complete Binary Heap][15]   
 CompleteBinaryHeap is Basically a vector but looks like a complete binary tree.
-- [PriorityQueueImpl]
+- [PriorityQueueVectorImpl]
 - Percolate up and down
-- Heapify (Robert Floyd's algorithm)
+- Heapify
+    1. Insert elements of the collection one by one
+    2. Robert Floyd's algorithm
+
+### Leftist Heap
+When it comes to merge two heaps, we'd probably think of Floyd's algorithm. But **if those two heaps have been sorted**, Leftist Heap is a nifty solution.   
+This time, we build a priority queue based on Binary Tree ([PriorityQueueBinTreeImpl]).
+
+![Leftist Heap][16]   
+![Leftist Heap][17]   
+Merge two heaps (A, B. |A| = m >= n = |B|):
+    1. A.insert(B.delMax()) = O(m * log(m+n))
+    2. Robert Floyd's algorithm = O(m+n)
+    3. Leftist Heap = O(log(n))
+
+- Demo [LeftistHeap]
 
 ## Dictionary
 
@@ -194,14 +206,14 @@ As I mentioned, we've learned four types of structures - Call-by-rank(Vector), c
 Let's say there are 100M telephones and 25K telephone numbers and you're going to design a data structure to save and search them.  If you loop the data to find out a number, it'll take only O(1). But there are so many telephones and your accurate performance would be 25K/100M = 0.025%. It sucks. The point is there are too many redundant space(telephones). To optimize the space usage is what bucket array or hash table does.
 
 > Some hashing examples in [HashFunctions]:
-> 1. Hashing by remainder
-> 2. Hashing by MAD
-> 3. Hashing by selecting digits
-> 4. Hashing by median of square numbers
-> 5. Hashing by folding
-> 6. Hashing by rotation + folding
-> 7. Hashing by folding + XOR
-> 8. Hashing by rotation + folding + XOR
+> 1. remainder
+> 2. MAD
+> 3. selecting digits
+> 4. median of square numbers
+> 5. folding
+> 6. rotation + folding
+> 7. folding + XOR
+> 8. rotation + folding + XOR
 
 **Collisions**
 
@@ -234,8 +246,8 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
 | ---- | ---- |
 | [KeystoreManager] | 1. Generate a secret key or a keyPair. <br> 2. Put or get the secret key/keyPair from a keyStore. |
 | [MessageDigestKit] | Verify files with its message digest or signature. |
-| [CipherKit] | Encrypt or decrypt messages by the secret key/keyPair. |
-| [CertificatesManager] | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data by OID. <br> 3. Validate a certificate. |
+| [CipherKit] | Encrypt or decrypt messages with the secret key/keyPair. |
+| [CertificatesManager] | 1. Analyse and retrieve data such like certificate extensions, the signature and so on from a certificate. <br> 2. Get data with OID. <br> 3. Validate a certificate. |
 | [JwsHelper] | 1. Split JWS into 3 parts and decode them. <br> 2. Take Android SafetyNet attestation JWS for example, it validates its certificates and JWS signature. <br> 3. Here is [SecuritySample] an Android sample integrated attestation APIs and JWS validation. |
 
  >Follow these steps:
@@ -306,7 +318,9 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [LinearProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/LinearProbing.java>
    [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
    [FermatQuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
-   [PriorityQueueImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueImpl.java>
+   [PriorityQueueVectorImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java>
+   [PriorityQueueBinTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java>
+   [LeftistHeap]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/LeftistHeap.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -333,3 +347,5 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [13]: https://github.com/Catherine22/Algorithms/blob/master/res/quadratic_probing.png
   [14]: https://github.com/Catherine22/Algorithms/blob/master/res/Fermat_s_theorem.png
   [15]: https://github.com/Catherine22/Algorithms/blob/master/res/complete_binary_heap.png
+  [16]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_1.png
+  [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png

@@ -1,14 +1,19 @@
 package com.catherine.trees;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Queue;
+import java.util.Spliterator;
 import java.util.Stack;
 
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
-import com.catherine.utils.Analysis;
-import com.catherine.utils.TrackLog;
 
 /**
  * 
@@ -18,13 +23,15 @@ import com.catherine.utils.TrackLog;
  *
  * @param <E>
  */
-public class MyBinaryTree<E> implements BinaryTree<E> {
+public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree<E> {
 	protected final static boolean SHOW_LOG = false;
 	protected NodeAdapter<E> adapter;
 	protected transient int size = 0;
 	protected Node<E> root;
 
 	protected MyBinaryTree() {
+		adapter = new NodeAdapter<>();
+		adapter.setType(Nodes.STANDARD);
 	}
 
 	public MyBinaryTree(E root) {
@@ -56,7 +63,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		return (size == 0);
 	}
 
@@ -164,7 +171,7 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 
 			while (!parent.isEmpty()) {
 				node = parent.poll();
-				// System.out.print(node.getInfo());
+				// System.out.print(node.getInfo() + " ");
 
 				if (node.getlChild() != null)
 					siblings.offer(node.getlChild());
@@ -248,22 +255,30 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 
 	@Override
 	public void removeRCCompletely(Node<E> parent) {
-		if (parent.getrChild() != null)
+		if (parent == null) // throw new NullPointerException("Parent must not
+							// be null");
+			return;
+		if (parent.getrChild() != null) {
 			size -= size(parent.getrChild());
-		parent.setrChild(null);
-		int height = (parent.getlChild() != null) ? parent.getlChild().getHeight() + 1 : 0;
-		parent.setHeight(height);
-		updateAboveHeight(parent);
+			parent.setrChild(null);
+			int height = (parent.getlChild() != null) ? parent.getlChild().getHeight() + 1 : 0;
+			parent.setHeight(height);
+			updateAboveHeight(parent);
+		}
 	}
 
 	@Override
 	public void removeLCCompletely(Node<E> parent) {
-		if (parent.getlChild() != null)
+		if (parent == null)// throw new NullPointerException("Parent must not be
+							// null");
+			return;
+		if (parent.getlChild() != null) {
 			size -= size(parent.getlChild());
-		parent.setlChild(null);
-		int height = (parent.getrChild() != null) ? parent.getrChild().getHeight() + 1 : 0;
-		parent.setHeight(height);
-		updateAboveHeight(parent);
+			parent.setlChild(null);
+			int height = (parent.getrChild() != null) ? parent.getrChild().getHeight() + 1 : 0;
+			parent.setHeight(height);
+			updateAboveHeight(parent);
+		}
 	}
 
 	/**
@@ -306,122 +321,295 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 		return o;
 	}
 
+	/**
+	 * 走访树的方式
+	 * 
+	 * @author Catherine
+	 *
+	 */
+	public enum Order {
+		/**
+		 * 以阶层遍历
+		 */
+		LEVEL,
+		/**
+		 * 使用迭代而非递归<br>
+		 * 先序遍历（中-左-右）
+		 */
+		PRE_ORDER,
+		/**
+		 * 使用迭代而非递归<br>
+		 * 先序遍历（中-左-右）<br>
+		 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。<br>
+		 * <br>
+		 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，
+		 * 其实还比递归快。
+		 */
+		PRE_ORDER_FAST,
+
+		/**
+		 * 递归<br>
+		 * 先序遍历（中-左-右）
+		 */
+		PRE_ORDER_RECURSION,
+		/**
+		 * 使用迭代而非递归<br>
+		 * 中序遍历（左-中-右）<br>
+		 * 每个左侧节点就是一条链，由最左下的节点开始遍历右子树。 <br>
+		 * <br>
+		 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，
+		 * 其实还比递归快。
+		 * 
+		 */
+		IN_ORDER,
+		/**
+		 * 递归<br>
+		 * 中序遍历（左-中-右）
+		 */
+		IN_ORDER_RECURSION,
+		/**
+		 * 使用迭代而非递归<br>
+		 * 后序遍历（左-右-中）<br>
+		 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
+		 */
+		POST_ORDER,
+		/**
+		 * 使用迭代而非递归<br>
+		 * 后序遍历（左-右-中）<br>
+		 * 双栈法
+		 */
+		POST_ORDER_STACK,
+		/**
+		 * 递归<br>
+		 * 后序遍历（左-右-中）
+		 */
+		POST_ORDER_RECURSION;
+	}
+
 	@Override
-	public void traverseLevel() {
-		if (root == null)
-			throw new NullPointerException("null root!");
+	public Collection<E> traversal(Order order) {
+		if (size == 0) {
+			System.out.println("Size == 0");
+			return null;
+		}
+		
+		List<E> collection = new LinkedList<>();
 
-		Queue<Node<E>> parent = new LinkedList<>();
-		Queue<Node<E>> siblings = new LinkedList<>();
-		Node<E> node = root;
-		parent.offer(node);
-		int level = 0;
+		if (order == Order.LEVEL) {
+			Queue<Node<E>> parent = new LinkedList<>();
+			Queue<Node<E>> siblings = new LinkedList<>();
+			Node<E> node = root;
+			parent.offer(node);
+			int level = 0;
+			boolean isRight = false;
+			while (node != null || !parent.isEmpty()) {
+				System.out.print("level " + level++ + ",\t");
 
-		while (node != null || !parent.isEmpty()) {
-			System.out.print("level " + level++ + ",\t");
+				while (!parent.isEmpty()) {
+					node = parent.poll();
+					if (node == root) {
+						isRight = false;
+					} else {
+						isRight = !isRight;
+					}
 
-			while (!parent.isEmpty()) {
-				node = parent.poll();
-				System.out.print(node.getInfo());
+					if (node != null) {
+						collection.add(node.getData());
+						System.out.print(node.getInfo() + " ");
 
-				if (node.getlChild() != null)
-					siblings.offer(node.getlChild());
+						if (node.getlChild() != null)
+							siblings.offer(node.getlChild());
+						else
+							siblings.offer(null);
+
+						if (node.getrChild() != null)
+							siblings.offer(node.getrChild());
+						else
+							siblings.offer(null);
+					}
+
+				}
+
+				int countdown = siblings.size();
+				for (Node<E> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				node = null;
+				System.out.print("\n");
+
+				if (countdown == 0)
+					break;
+			}
+			return collection;
+		} else if (order == Order.PRE_ORDER) {
+			Stack<Node<E>> bin = new Stack<>();
+			bin.push(root);
+			while (!bin.isEmpty()) {
+				Node<E> node = bin.pop();
+				collection.add(node.getData());
+				System.out.print(node.getInfo() + " ");
 
 				if (node.getrChild() != null)
-					siblings.offer(node.getrChild());
+					bin.push(node.getrChild());
+
+				if (node.getlChild() != null)
+					bin.push(node.getlChild());
+			}
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.PRE_ORDER_FAST) {
+			Stack<Node<E>> bin = new Stack<>();
+			Node<E> node = root;
+
+			while (node != null || !bin.isEmpty()) {
+				// 遍历一排的所有左节点
+				while (node != null) {
+					collection.add(node.getData());
+					System.out.print(node.getInfo() + " ");
+					bin.push(node);// 弹出打印过的没用节点
+					node = node.getlChild();
+				}
+
+				// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
+				if (bin.size() > 0) {
+					node = bin.pop();
+					node = node.getrChild();
+				}
+			}
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.PRE_ORDER_RECURSION) {
+			traversePre(collection, root);
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.IN_ORDER) {
+			Stack<Node<E>> bin = new Stack<>();
+			Node<E> node = root;
+
+			while (node != null || bin.size() > 0) {
+				while (node != null) {
+					bin.push(node);
+					node = node.getlChild();
+				}
+				if (!bin.isEmpty()) {
+					node = bin.pop();
+					collection.add(node.getData());
+					System.out.print(node.getInfo() + " ");
+					node = node.getrChild();
+				}
+			}
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.IN_ORDER_RECURSION) {
+			traverseIn(collection, root);
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.POST_ORDER) {
+			Stack<Node<E>> bin = new Stack<>();
+			Node<E> node = root;
+			Node<E> lastLC = null;// 如果该节点有右子树，遍历其右子树之前先暂存该节点。
+
+			while (node != null || bin.size() > 0) {
+				while (node != null) {
+					bin.push(node);
+					node = node.getlChild();
+				}
+
+				node = bin.peek();
+
+				// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
+				if (node.getrChild() == null || node.getrChild() == lastLC) {
+					collection.add(node.getData());
+					System.out.print(node.getInfo() + " ");
+					lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() ==
+									// lastLC
+					bin.pop();// 打印过就从栈里弹出
+					node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
+				} else
+					node = node.getrChild();
+			}
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.POST_ORDER_STACK) {
+			Stack<Node<E>> lBin = new Stack<>();
+			Stack<Node<E>> rBin = new Stack<>();
+			Node<E> node = root;
+			lBin.push(node);
+
+			while (!lBin.isEmpty()) {
+				node = lBin.pop();
+				rBin.push(node);
+
+				if (node.getlChild() != null)
+					lBin.push(node.getlChild());
+
+				if (node.getrChild() != null)
+					lBin.push(node.getrChild());
 			}
 
-			for (Node<E> n : siblings)
-				parent.offer(n);
+			while (!rBin.isEmpty()) {
+				collection.add(rBin.peek().getData());
+				System.out.print(rBin.peek().getInfo());
+				rBin.pop();
+			}
 
-			siblings.clear();
-			node = null;
-
-			System.out.print("\n");
+			System.out.println("\n");
+			return collection;
+		} else if (order == Order.POST_ORDER_RECURSION) {
+			traversePost(collection, root);
+			System.out.println("\n");
+			return collection;
+		} else {// default
+			return traversal(Order.LEVEL);
 		}
 	}
 
 	@Override
-	public void traversePreNR1() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traversePreNR1");
-		Analysis.startTracking(tLog);
-
-		System.out.println("non-recursively pre-order traverse:");
-		Stack<Node<E>> bin = new Stack<>();
-		bin.push(root);
-		while (!bin.isEmpty()) {
-			Node<E> node = bin.pop();
-			System.out.print(node.getInfo());
-
-			if (node.getrChild() != null)
-				bin.push(node.getrChild());
-
-			if (node.getlChild() != null)
-				bin.push(node.getlChild());
-		}
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
+	public Collection<E> traverseLevel() {
+		return traversal(Order.LEVEL);
 	}
 
 	@Override
-	public void traversePreNR2() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traversePreNR2");
-		Analysis.startTracking(tLog);
-
-		System.out.println("non-recursively pre-order traverse:");
-		Stack<Node<E>> bin = new Stack<>();
-		Node<E> node = root;
-
-		while (node != null || !bin.isEmpty()) {
-			// 遍历一排的所有左节点
-			while (node != null) {
-				System.out.print(node.getInfo());
-				bin.push(node);// 弹出打印过的没用节点
-				node = node.getlChild();
-			}
-
-			// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
-			if (bin.size() > 0) {
-				node = bin.pop();
-				node = node.getrChild();
-			}
-		}
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
+	public Collection<E> traversePre() {
+		return traversal(Order.PRE_ORDER_FAST);
 	}
 
 	@Override
-	public void traversePre() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traversePre");
-		Analysis.startTracking(tLog);
-
-		System.out.println("recursively pre-order traverse:");
-		traversePre(root);
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
+	public Collection<E> traversePost() {
+		return traversal(Order.POST_ORDER_STACK);
 	}
 
-	/**
-	 * 递归<br>
-	 * 从任一节点先序遍历（中-左-右）
-	 */
-	public void traversePre(Node<E> node) {
-		System.out.print(node.getInfo());
+	@Override
+	public Collection<E> traverseIn() {
+		return traversal(Order.IN_ORDER_RECURSION);
+	}
+
+	private void traverseIn(Collection<E> collection, Node<E> node) {
+		if (node.getlChild() != null)
+			traverseIn(node.getlChild());
+		collection.add(node.getData());
+		System.out.print(node.getInfo() + " ");
+		if (node.getrChild() != null)
+			traverseIn(node.getrChild());
+	}
+
+	private void traversePost(Collection<E> collection, Node<E> node) {
+		if (node.getlChild() != null)
+			traversePost(node.getlChild());
+		if (node.getrChild() != null)
+			traversePost(node.getrChild());
+		collection.add(node.getData());
+		System.out.print(node.getInfo() + " ");
+	}
+
+	private void traversePre(Collection<E> collection, Node<E> node) {
+		collection.add(node.getData());
+		System.out.print(node.getInfo() + " ");
 		if (node.getlChild() != null)
 			traversePre(node.getlChild());
 		if (node.getrChild() != null)
@@ -429,61 +617,30 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	}
 
 	@Override
-	public void traverseInNR() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traverseInNR");
-		Analysis.startTracking(tLog);
-
-		System.out.println("non-recursively in-order traverse:");
-
-		Stack<Node<E>> bin = new Stack<>();
-		Node<E> node = root;
-
-		while (node != null || bin.size() > 0) {
-			while (node != null) {
-				bin.push(node);
-				node = node.getlChild();
-			}
-			if (!bin.isEmpty()) {
-				node = bin.pop();
-				System.out.print(node.getInfo());
-				node = node.getrChild();
-			}
-		}
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
+	public void traversePre(Node<E> node) {
+		System.out.print(node.getInfo() + " ");
+		if (node.getlChild() != null)
+			traversePre(node.getlChild());
+		if (node.getrChild() != null)
+			traversePre(node.getrChild());
 	}
 
 	@Override
-	public void traverseIn() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traverseIn");
-		Analysis.startTracking(tLog);
-
-		System.out.println("recursively in-order traverse:");
-		traverseIn(root);
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
-	}
-
-	/**
-	 * 递归<br>
-	 * 从任一节点中序遍历（左-中-右）
-	 */
 	public void traverseIn(Node<E> node) {
 		if (node.getlChild() != null)
 			traverseIn(node.getlChild());
-		System.out.print(node.getInfo());
+		System.out.print(node.getInfo() + " ");
 		if (node.getrChild() != null)
 			traverseIn(node.getrChild());
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		if (node.getlChild() != null)
+			traversePost(node.getlChild());
+		if (node.getrChild() != null)
+			traversePost(node.getrChild());
+		System.out.print(node.getInfo() + " ");
 	}
 
 	/**
@@ -538,102 +695,459 @@ public class MyBinaryTree<E> implements BinaryTree<E> {
 	}
 
 	@Override
-	public void traversePostNR1() {
+	public void clear() {
+		root = null;
+		size = 0;
+	}
+
+	public synchronized void copyInto(Order order, Object[] anArray) {
 		if (root == null)
 			throw new NullPointerException("null root!");
+		if (anArray == null || anArray.length < size)
+			throw new ArrayIndexOutOfBoundsException("Array length must be the same as BinaryTree or larger as well.");
 
-		TrackLog tLog = new TrackLog("traversePostNR1");
-		Analysis.startTracking(tLog);
+		int head = 0;
+		if (order == Order.LEVEL) {
+			Queue<Node<E>> parent = new LinkedList<>();
+			Queue<Node<E>> siblings = new LinkedList<>();
+			Node<E> node = root;
+			parent.offer(node);
+			int level = 0;
+			boolean isRight = false;
+			while (node != null || !parent.isEmpty()) {
+				// System.out.print("level " + level++ + ",\t");
 
-		System.out.println("non-recursively post-order traverse:");
-		Stack<Node<E>> bin = new Stack<>();
-		Node<E> node = root;
-		Node<E> lastLC = null;// 如果该节点有右子树，遍历其右子树之前先暂存该节点。
+				while (!parent.isEmpty()) {
+					node = parent.poll();
+					if (node == root) {
+						isRight = false;
+					} else {
+						isRight = !isRight;
+					}
 
-		while (node != null || bin.size() > 0) {
-			while (node != null) {
-				bin.push(node);
-				node = node.getlChild();
+					if (node != null) {
+						anArray[head++] = node.getData();
+						// System.out.print(node.getInfo() + " ");
+
+						if (node.getlChild() != null)
+							siblings.offer(node.getlChild());
+						else
+							siblings.offer(null);
+
+						if (node.getrChild() != null)
+							siblings.offer(node.getrChild());
+						else
+							siblings.offer(null);
+					}
+
+				}
+
+				int countdown = siblings.size();
+				for (Node<E> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				node = null;
+				// System.out.print("\n");
+
+				if (countdown == 0)
+					break;
+			}
+		} else if (order == Order.PRE_ORDER) {
+			Stack<Node<E>> bin = new Stack<>();
+			bin.push(root);
+			while (!bin.isEmpty()) {
+				Node<E> node = bin.pop();
+				anArray[head++] = node.getData();
+				// System.out.print(node.getInfo() + " ");
+
+				if (node.getrChild() != null)
+					bin.push(node.getrChild());
+
+				if (node.getlChild() != null)
+					bin.push(node.getlChild());
+			}
+			// System.out.println("\n");
+		} else if (order == Order.PRE_ORDER_FAST) {
+			Stack<Node<E>> bin = new Stack<>();
+			Node<E> node = root;
+
+			while (node != null || !bin.isEmpty()) {
+				// 遍历一排的所有左节点
+				while (node != null) {
+					anArray[head++] = node.getData();
+					// System.out.print(node.getInfo() + " ");
+					bin.push(node);// 弹出打印过的没用节点
+					node = node.getlChild();
+				}
+
+				// 遍历过左节点后前往最近的右节点，之后再遍历该右节点的整排左节点
+				if (bin.size() > 0) {
+					node = bin.pop();
+					node = node.getrChild();
+				}
+			}
+			// System.out.println("\n");
+		} else if (order == Order.PRE_ORDER_RECURSION) {
+			traversePre(root, anArray, head);
+			// System.out.println("\n");
+		} else if (order == Order.IN_ORDER) {
+			Stack<Node<E>> bin = new Stack<>();
+			Node<E> node = root;
+
+			while (node != null || bin.size() > 0) {
+				while (node != null) {
+					bin.push(node);
+					node = node.getlChild();
+				}
+				if (!bin.isEmpty()) {
+					node = bin.pop();
+					anArray[head++] = node.getData();
+					// System.out.print(node.getInfo() + " ");
+					node = node.getrChild();
+				}
+			}
+			// System.out.println("\n");
+		} else if (order == Order.IN_ORDER_RECURSION) {
+			traverseIn(root, anArray, head);
+			// System.out.println("\n");
+		} else if (order == Order.POST_ORDER) {
+			Stack<Node<E>> bin = new Stack<>();
+			Node<E> node = root;
+			Node<E> lastLC = null;// 如果该节点有右子树，遍历其右子树之前先暂存该节点。
+
+			while (node != null || bin.size() > 0) {
+				while (node != null) {
+					bin.push(node);
+					node = node.getlChild();
+				}
+
+				node = bin.peek();
+
+				// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
+				if (node.getrChild() == null || node.getrChild() == lastLC) {
+					anArray[head++] = node.getData();
+					// System.out.print(node.getInfo() + " ");
+					lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() ==
+									// lastLC
+					bin.pop();// 打印过就从栈里弹出
+					node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
+				} else
+					node = node.getrChild();
+			}
+			// System.out.println("\n");
+		} else if (order == Order.POST_ORDER_STACK) {
+			Stack<Node<E>> lBin = new Stack<>();
+			Stack<Node<E>> rBin = new Stack<>();
+			Node<E> node = root;
+			lBin.push(node);
+
+			while (!lBin.isEmpty()) {
+				node = lBin.pop();
+				rBin.push(node);
+
+				if (node.getlChild() != null)
+					lBin.push(node.getlChild());
+
+				if (node.getrChild() != null)
+					lBin.push(node.getrChild());
 			}
 
-			node = bin.peek();
+			while (!rBin.isEmpty()) {
+				// System.out.print(rBin.peek().getInfo());
+				rBin.pop();
+			}
 
-			// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
-			if (node.getrChild() == null || node.getrChild() == lastLC) {
-				System.out.print(node.getInfo());
-				lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() == lastLC
-				bin.pop();// 打印过就从栈里弹出
-				node = null;// 其实node应为栈中最后一个节点，下一轮会指定bin.peek()
-			} else
-				node = node.getrChild();
+			// System.out.println("\n");
+		} else if (order == Order.POST_ORDER_RECURSION) {
+			traversePost(root, anArray, head);
+			// System.out.println("\n");
+		} else {// default
+			traversal(Order.LEVEL);
 		}
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
 	}
 
-	@Override
-	public void traversePostNR2() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traversePostNR2");
-		Analysis.startTracking(tLog);
-
-		System.out.println("non-recursively post-order traverse:");
-		Stack<Node<E>> lBin = new Stack<>();
-		Stack<Node<E>> rBin = new Stack<>();
-		Node<E> node = root;
-		lBin.push(node);
-
-		while (!lBin.isEmpty()) {
-			node = lBin.pop();
-			rBin.push(node);
-
-			if (node.getlChild() != null)
-				lBin.push(node.getlChild());
-
-			if (node.getrChild() != null)
-				lBin.push(node.getrChild());
-		}
-
-		while (!rBin.isEmpty()) {
-			System.out.print(rBin.peek().getInfo());
-			rBin.pop();
-		}
-
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
-	}
-
-	@Override
-	public void traversePost() {
-		if (root == null)
-			throw new NullPointerException("null root!");
-
-		TrackLog tLog = new TrackLog("traversePost");
-		Analysis.startTracking(tLog);
-
-		System.out.println("post-order traverse:");
-		traversePost(root);
-		System.out.println("\n");
-
-		Analysis.endTracking(tLog);
-		Analysis.printTrack(tLog);
+	public void copyInto(Object[] anArray) {
+		copyInto(Order.IN_ORDER, anArray);
 	}
 
 	/**
+	 * ({@link #copyInto(Object[])}}用)<br>
+	 * 递归<br>
+	 * 从任一节点先序遍历（中-左-右）
+	 */
+	private int traversePre(Node<E> node, Object[] anArray, int head) {
+		// System.out.print("(" + head + ")" + node.getInfo() + " ");
+		anArray[head++] = node.getData();
+		if (node.getlChild() != null)
+			head = traversePre(node.getlChild(), anArray, head++);
+		if (node.getrChild() != null)
+			head = traversePre(node.getrChild(), anArray, head++);
+		return head;
+	}
+
+	/**
+	 * ({@link #copyInto(Object[])}}用)<br>
+	 * 递归<br>
+	 * 从任一节点中序遍历（左-中-右）
+	 */
+	private int traverseIn(Node<E> node, Object[] anArray, int head) {
+		if (node.getlChild() != null)
+			head = traverseIn(node.getlChild(), anArray, head++);
+		// System.out.print("(" + head + ")" + node.getInfo() + " ");
+		anArray[head++] = node.getData();
+		if (node.getrChild() != null)
+			head = traverseIn(node.getrChild(), anArray, head++);
+		return head;
+	}
+
+	/**
+	 * ({@link #copyInto(Object[])}}用)<br>
 	 * 递归<br>
 	 * 从任一节点后序遍历（左-右-中）
 	 */
-	private void traversePost(Node<E> node) {
+	private int traversePost(Node<E> node, Object[] anArray, int head) {
 		if (node.getlChild() != null)
-			traversePost(node.getlChild());
+			head = traversePost(node.getlChild(), anArray, head++);
 		if (node.getrChild() != null)
-			traversePost(node.getrChild());
-		System.out.print(node.getInfo());
+			head = traversePost(node.getrChild(), anArray, head++);
+		// System.out.print("(" + head + ")" + node.getInfo() + " ");
+		anArray[head++] = node.getData();
+		return head;
+	}
+
+	protected enum Tag {
+		LEVEL, ROOT, LEFT, RIGHT
+	}
+
+	@Override
+	public MyBinaryTree<E> clone() {
+		// clone用
+		Queue<Tag> flags = new LinkedList<>();
+		Queue<Node<E>> history = new LinkedList<>();
+		// 打印Log用
+		int level = 0;
+		Queue<Node<E>> parent = new LinkedList<>();
+		Queue<Node<E>> siblings = new LinkedList<>();
+		// 以阶层重新填充clone，首先阶层走访，记录各节点的值与位置
+		if (root != null) {
+			Node<E> node = root;
+			parent.offer(node);
+			boolean isRight = false;
+			while (node != null || !parent.isEmpty()) {
+				// System.out.print("\nlevel " + level++ + ",\t");
+				flags.offer(Tag.LEVEL);
+				while (!parent.isEmpty()) {
+					node = parent.poll();
+					if (node == null) {
+						if (isRight)
+							flags.offer(Tag.RIGHT);
+						else
+							flags.offer(Tag.LEFT);
+						history.offer(null);
+						isRight = !isRight;
+					} else if (node == root) {
+						flags.offer(Tag.ROOT);
+						history.offer(root);
+						// System.out.println("build root " + node.getData());
+						isRight = false;
+					} else {
+						if (isRight) {
+							flags.offer(Tag.RIGHT);
+							history.offer(node);
+							// System.out.println("insert R child " +
+							// node.getData() + " to " +
+							// node.getParent().getData());
+						} else {
+							flags.offer(Tag.LEFT);
+							history.offer(node);
+							// System.out.println("insert L child " +
+							// node.getData() + " to " +
+							// node.getParent().getData());
+						}
+						isRight = !isRight;
+					}
+
+					if (node != null) {
+						// System.out.print(node.getInfo() + " ");
+
+						if (node.getlChild() != null)
+							siblings.offer(node.getlChild());
+						else
+							siblings.offer(null);
+
+						if (node.getrChild() != null)
+							siblings.offer(node.getrChild());
+						else
+							siblings.offer(null);
+					}
+
+				}
+
+				int countdown = siblings.size();
+				for (Node<E> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				node = null;
+
+				if (countdown == 0)
+					break;
+			}
+		}
+
+		// 把刚才收集的节点导入clone里
+
+		level = 0;
+		Node<E> head = null;
+		// 简单说，parent存储当前要处理的节点（第n层），siblings存下次要处理的节点（第n+1层）
+		parent.clear();
+		siblings.clear();
+
+		// 先处理根节点
+		// flags.peek() == Tag.LEVEL
+		// System.out.print("level " + level++ + ",\t");
+		flags.poll();
+		// flags.peek() == Tag.ROOT
+		MyBinaryTree<E> clone = new MyBinaryTree<>(history.poll().getData());
+		parent.add(clone.root);
+		siblings.add(clone.root);
+		head = parent.poll();
+		// System.out.print("add Root:" + head.getData());
+		flags.poll();
+
+		while (true) {
+			if (flags.peek() == Tag.LEFT) {
+				if (history.peek() == null) {
+					// System.out.print("null" + ",\t");
+					history.poll();
+				} else {
+					// System.out.print("add L:" + history.peek().getData() +
+					// ",\t");
+					siblings.offer(clone.insertLC(head, history.poll().getData()));
+				}
+			} else if (flags.peek() == Tag.RIGHT) {
+				if (history.peek() == null) {
+					// System.out.print("null" + ",\t");
+					history.poll();
+				} else {
+					// System.out.print("add R:" + history.peek().getData() +
+					// ",\t");
+					siblings.offer(clone.insertRC(head, history.poll().getData()));
+				}
+				head = parent.poll();
+			} else {// level
+				// System.out.print("\nlevel " + level++ + ",\t");
+				int countdown = siblings.size();
+				for (Node<E> n : siblings) {
+					parent.offer(n);
+
+					if (n == null)
+						countdown--;
+				}
+
+				siblings.clear();
+				head = parent.poll();
+				if (countdown == 0)
+					break;
+			}
+			flags.poll();
+		}
+
+		flags.clear();
+		history.clear();
+		parent.clear();
+		siblings.clear();
+		return clone;
+	}
+
+	@Override
+	public synchronized Object[] toArray() {
+		return toArray(Order.IN_ORDER);
+
+	}
+
+	@Override
+	public synchronized E[] toArray(E[] e) {
+		return toArray(e, Order.IN_ORDER);
+	}
+
+	// 中序走訪迭代
+	@Override
+	public synchronized List<E> subList(int fromIndex, int toIndex) {
+		return subList(fromIndex, toIndex, Order.IN_ORDER);
+	}
+
+	@Override
+	public synchronized List<E> subList(int fromIndex, int toIndex, Order order) {
+		if (toIndex <= fromIndex || fromIndex < 0 || toIndex > size)
+			throw new IllegalArgumentException("Range error");
+		Object[] anArray = new Object[size];
+		copyInto(order, anArray);
+		List<E> collection = new ArrayList<>();
+		for (int i = fromIndex; i < toIndex; i++)
+			collection.add((E) anArray[i]);
+		return collection;
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator() {
+		return subList(0, size).listIterator();
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator(int index) {
+		return subList(0, size).listIterator(index);
+	}
+
+	@Override
+	public synchronized Iterator<E> iterator() {
+		return subList(0, size).iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return subList(0, size).spliterator();
+	}
+
+	@Override
+	public synchronized Object[] toArray(Order order) {
+		Object[] anArray = new Object[size];
+		copyInto(order, anArray);
+		return anArray;
+
+	}
+
+	@Override
+	public synchronized E[] toArray(E[] e, Order order) {
+		copyInto(order, e);
+		return e;
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator(Order order) {
+		return subList(0, size, order).listIterator();
+	}
+
+	@Override
+	public synchronized ListIterator<E> listIterator(int index, Order order) {
+		return subList(0, size, order).listIterator(index);
+	}
+
+	@Override
+	public synchronized Iterator<E> iterator(Order order) {
+		return subList(0, size, order).iterator();
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return subList(0, size, order).spliterator();
 	}
 }

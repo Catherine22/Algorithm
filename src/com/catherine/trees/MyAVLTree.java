@@ -9,11 +9,11 @@ import com.catherine.trees.nodes.Node;
  *
  * @param <E>
  */
-public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
+public class MyAVLTree<E extends Comparable<? super E>> extends BinarySearchTreeImpl<E> {
 	protected final static boolean SHOW_LOG = false;
 
-	public MyAVLTree(int key, E root) {
-		super(key, root);
+	public MyAVLTree(E root) {
+		super(root);
 	}
 
 	/**
@@ -28,8 +28,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 	 * 所有祖先节点都會失衡<br>
 	 */
 	@Override
-	public Node<E> insert(int key, E data) {
-		return super.insert(key, data);
+	public Node<E> add(E data) {
+		return super.add(data);
 	}
 
 	/**
@@ -41,8 +41,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 	 * 
 	 * @param ins
 	 */
-	public void insertAndBalance(int key, E data) {
-		final Node<E> newNode = super.insert(key, data);
+	public void insertAndBalance(E data) {
+		final Node<E> newNode = super.add(data);
 		Node<E> ancestor = newNode.getParent();
 
 		Node<E> target = ancestor;
@@ -52,7 +52,7 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 		int count = 1;
 		while (ancestor != null) {
 			if (SHOW_LOG)
-				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
+				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getData()));
 
 			if (isBalanced(ancestor)) {
 				target = ancestor;
@@ -70,8 +70,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 				if (SHOW_LOG) {
 					String r2 = (isLeftChild) ? "L" : "R";
 					String r3 = (isLeftGrandchild) ? "L" : "R";
-					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
-							child.getKey(), r3));
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getData(), target.getData(), r2,
+							child.getData(), r3));
 				}
 
 				child = null;
@@ -107,8 +107,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 	 * 只有一个父节点会失衡
 	 */
 	@Override
-	public void remove(int key) {
-		super.remove(key);
+	public void remove(E data) {
+		super.remove(data);
 	}
 
 	/**
@@ -130,8 +130,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 	 * 
 	 * @param key
 	 */
-	public void removeAndBalance(int key) {
-		Node<E> tmp = search(key);
+	public void removeAndBalance(E data) {
+		Node<E> tmp = search(data);
 		super.remove(tmp);
 
 		Node<E> ancestor = hot;
@@ -141,7 +141,7 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 		int count = 1;
 		while (ancestor != null) {
 			if (SHOW_LOG)
-				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getKey()));
+				System.out.println(String.format("round %d, ancestor:%d", count++, ancestor.getData()));
 
 			if (isBalanced(ancestor)) {
 				ancestor = ancestor.getParent();
@@ -163,8 +163,8 @@ public class MyAVLTree<E> extends BinarySearchTreeImpl<E> {
 				if (SHOW_LOG) {
 					String r2 = (isLeftChild) ? "L" : "R";
 					String r3 = (isLeftGrandchild) ? "L" : "R";
-					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getKey(), target.getKey(), r2,
-							child.getKey(), r3));
+					System.out.println(String.format("%s -> %s(%s) -> %s(%s)", ancestor.getData(), target.getData(), r2,
+							child.getData(), r3));
 				}
 
 				tmp = null;

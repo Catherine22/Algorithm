@@ -1,27 +1,34 @@
 package com.catherine.trees;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
-public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
+public class MyRedBlackBST<E extends Comparable<? super E>> implements BinaryTree<E>, RedBlackBST<E> {
 	private RedBlackBSTImpl<E> rbTree;
 
-	public MyRedBlackBST(int key, E root) {
-		rbTree = new RedBlackBSTImpl<E>(key, root);
+	public MyRedBlackBST(E root) {
+		rbTree = new RedBlackBSTImpl<E>(root);
 	}
 
 	@Override
-	public Node<E> search(int key) {
-		return rbTree.search(key);
+	public Node<E> search(E data) {
+		return rbTree.search(data);
 	}
 
 	@Override
-	public Node<E> insert(int key, E data) {
-		return rbTree.insertAndBalance(key, data);
+	public Node<E> add(E data) {
+		return rbTree.insertAndBalance(data);
 	}
 
 	@Override
-	public void remove(int key) {
-		rbTree.removeAndBalance(key);
+	public void remove(E data) {
+		rbTree.removeAndBalance(data);
 	}
 
 	@Override
@@ -65,37 +72,45 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 	}
 
 	@Override
-	public void traverseLevel() {
-		rbTree.traverseLevel();
+	public Collection<E> traversal(Order order) {
+		return rbTree.traversal(order);
 	}
 
 	@Override
-	public void traversePreNR1() {
-		rbTree.traversePreNR1();
-
+	public Collection<E> traverseLevel() {
+		return rbTree.traverseLevel();
 	}
 
 	@Override
-	public void traversePreNR2() {
-		rbTree.traversePreNR2();
-
-	}
-
-	@Override
-	public void traversePre() {
-		rbTree.traversePre();
+	public Collection<E> traversePre() {
+		return rbTree.traversePre();
 
 	}
 
 	@Override
-	public void traverseInNR() {
-		rbTree.traverseInNR();
+	public Collection<E> traverseIn() {
+		return rbTree.traverseIn();
+
 	}
 
 	@Override
-	public void traverseIn() {
-		rbTree.traverseIn();
+	public Collection<E> traversePost() {
+		return rbTree.traversePost();
+	}
 
+	@Override
+	public void traversePre(Node<E> node) {
+		rbTree.traversePre(node);
+	}
+
+	@Override
+	public void traverseIn(Node<E> node) {
+		rbTree.traverseIn(node);
+	}
+
+	@Override
+	public void traversePost(Node<E> node) {
+		rbTree.traversePost(node);
 	}
 
 	@Override
@@ -104,23 +119,91 @@ public class MyRedBlackBST<E> implements BinaryTree<E>, RedBlackBST<E> {
 	}
 
 	@Override
-	public void traversePostNR1() {
-		rbTree.traversePostNR1();
-	}
-
-	@Override
-	public void traversePostNR2() {
-		rbTree.traversePostNR2();
-	}
-
-	@Override
-	public void traversePost() {
-		rbTree.traversePost();
-	}
-
-	@Override
 	public MyBTree<E> convertTo24Tree() {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		rbTree.clear();
+	}
+
+	@Override
+	public void copyInto(Object[] anArray) {
+		rbTree.copyInto(anArray);
+	}
+
+	@Override
+	public Object clone() {
+		return rbTree.clone();
+	}
+
+	@Override
+	public Object[] toArray() {
+		return rbTree.toArray();
+	}
+
+	@Override
+	public E[] toArray(E[] e) {
+		return rbTree.toArray(e);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex) {
+		return rbTree.subList(fromIndex, toIndex);
+	}
+
+	@Override
+	public ListIterator<E> listIterator() {
+		return rbTree.listIterator();
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index) {
+		return rbTree.listIterator(index);
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		return rbTree.iterator();
+	}
+
+	public Spliterator<E> spliterator() {
+		return rbTree.spliterator();
+	}
+
+	@Override
+	public Object[] toArray(Order order) {
+		return rbTree.toArray(order);
+	}
+
+	@Override
+	public E[] toArray(E[] a, Order order) {
+		return rbTree.toArray(a, order);
+	}
+
+	@Override
+	public List<E> subList(int fromIndex, int toIndex, Order order) {
+		return rbTree.subList(fromIndex, toIndex, order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(Order order) {
+		return rbTree.listIterator(order);
+	}
+
+	@Override
+	public ListIterator<E> listIterator(int index, Order order) {
+		return rbTree.listIterator(index, order);
+	}
+
+	@Override
+	public Iterator<E> iterator(Order order) {
+		return rbTree.iterator(order);
+	}
+
+	@Override
+	public Spliterator<E> spliterator(Order order) {
+		return rbTree.spliterator(order);
+	}
 }

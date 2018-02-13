@@ -1,5 +1,12 @@
 package com.catherine.trees;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
+
+import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 
 public interface BinaryTree<E> {
@@ -32,6 +39,11 @@ public interface BinaryTree<E> {
 	 * @return 子节点数
 	 */
 	public int size(Node<E> node);
+
+	/**
+	 * 移除全部节点
+	 */
+	public void clear();
 
 	/**
 	 * 节点高度定义：<br>
@@ -70,46 +82,50 @@ public interface BinaryTree<E> {
 	public void removeLCCompletely(Node<E> parent);
 
 	/**
+	 * 遍历
+	 * 
+	 * @param order
+	 *            阶层、先序、中序、后序
+	 */
+	public Collection<E> traversal(Order order);
+
+	/**
 	 * 以阶层遍历
 	 */
-	public void traverseLevel();
+	public Collection<E> traverseLevel();
 
 	/**
-	 * 使用迭代而非递归<br>
 	 * 先序遍历（中-左-右）
 	 */
-	public void traversePreNR1();
+	public Collection<E> traversePre();
 
 	/**
-	 * 使用迭代而非递归<br>
-	 * 先序遍历（中-左-右）<br>
-	 * 从根出发，先遍历所有左节点（斜线路径），再遍历隔壁排直到遍历全部节点。<br>
-	 * <br>
-	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
-	 */
-	public void traversePreNR2();
-
-	/**
-	 * 递归<br>
-	 * 先序遍历（中-左-右）
-	 */
-	public void traversePre();
-
-	/**
-	 * 使用迭代而非递归<br>
-	 * 中序遍历（左-中-右）<br>
-	 * 每个左侧节点就是一条链，由最左下的节点开始遍历右子树。 <br>
-	 * <br>
-	 * 乍一看嵌套两个循环应该是O(n^2)，但是实际上每个节点都只有被push操作一次，也就是其实运行时间还是O(n)，就系数来看，其实还比递归快。
-	 * 
-	 */
-	public void traverseInNR();
-
-	/**
-	 * 递归<br>
 	 * 中序遍历（左-中-右）
 	 */
-	public void traverseIn();
+	public Collection<E> traverseIn();
+
+	/**
+	 * 后序遍历（左-右-中）<br>
+	 */
+	public Collection<E> traversePost();
+
+	/**
+	 * 递归<br>
+	 * 从任意节点开始先序遍历（中-左-右）
+	 */
+	public void traversePre(Node<E> node);
+
+	/**
+	 * 递归<br>
+	 * 从任意节点开始中序遍历（左-中-右）
+	 */
+	public void traverseIn(Node<E> node);
+
+	/**
+	 * 递归<br>
+	 * 从任意节点开始后序遍历（左-右-中）<br>
+	 */
+	public void traversePost(Node<E> node);
 
 	/**
 	 * 返回当前节点在中序意义下的直接后继。
@@ -121,22 +137,85 @@ public interface BinaryTree<E> {
 	public Node<E> succ(Node<E> node);
 
 	/**
-	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）<br>
-	 * 先找到最左下的节点，检查是否有右子树，如果有也要用前面的方法继续找直到没有右子树为止。
+	 * 这边以中序遍历的方式转成数组<br>
+	 * 
+	 * @param anArray
 	 */
-	public void traversePostNR1();
+	public void copyInto(Object[] anArray);
 
 	/**
-	 * 使用迭代而非递归<br>
-	 * 后序遍历（左-右-中）<br>
-	 * 双栈法
+	 * 拷贝此树并回传副本，两次阶层走访填充clone
+	 * 
+	 * @return 副本
 	 */
-	public void traversePostNR2();
+	public Object clone();
 
 	/**
-	 * 递归<br>
-	 * 后序遍历（左-右-中）
+	 * 这边以中序遍历的方式转成数组<br>
+	 * 
+	 * @return
 	 */
-	public void traversePost();
+	public Object[] toArray();
+
+	/**
+	 * 自定义走访方式转成数组
+	 * 
+	 * @param order
+	 * @return
+	 */
+	public Object[] toArray(Order order);
+
+	/**
+	 * 这边以中序遍历的方式转成数组<br>
+	 * 
+	 * @return
+	 */
+	public E[] toArray(E[] a);
+
+	/**
+	 * 自定义走访方式转成数组数组<br>
+	 * 
+	 * @param a
+	 * @param order
+	 * @return
+	 */
+	public E[] toArray(E[] a, Order order);
+
+	/**
+	 * 这边以中序遍历的方式转成list<br>
+	 * 
+	 * @return
+	 */
+	public List<E> subList(int fromIndex, int toIndex);
+
+	/**
+	 * 这边以自定义遍历的方式转成list<br>
+	 * 
+	 * @return
+	 */
+	public List<E> subList(int fromIndex, int toIndex, Order order);
+
+	// TODO try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator();
+
+	// TODO try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator(int index);
+
+	// TODO try to iterator binary tree with binary tree iterator
+	public Iterator<E> iterator();
+
+	// TODO try to spliterator binary tree with binary tree iterator
+	public Spliterator<E> spliterator();
+
+	// TODO try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator(Order order);
+
+	// TODO try to listIterator binary tree with binary tree iterator
+	public ListIterator<E> listIterator(int index, Order order);
+
+	// TODO try to iterator binary tree with binary tree iterator
+	public Iterator<E> iterator(Order order);
+
+	// TODO try to spliterator binary tree with binary tree iterator
+	public Spliterator<E> spliterator(Order order);
 }

@@ -74,7 +74,7 @@ public interface BTree<E> {
 	 * @param key
 	 * @return
 	 */
-	public BNode<E> search(int key);
+	public BNode<E> search(E key);
 
 	/**
 	 * 须考虑插入key后导致的上溢情形。
@@ -83,7 +83,7 @@ public interface BTree<E> {
 	 * @param value
 	 * @return
 	 */
-	public boolean insert(int key, E value);
+	public boolean insert(E key);
 
 	/**
 	 * 删除时希望目标节点是叶节点，如果不是叶节点就和后继（一定会是叶节点）交换位置后再移除。<br>
@@ -92,7 +92,7 @@ public interface BTree<E> {
 	 * @param key
 	 * @return
 	 */
-	public boolean remove(int key);
+	public boolean remove(E key);
 
 	/**
 	 * 上溢：关键码总数超过阶次m-1，即违反B-tree定义<br>

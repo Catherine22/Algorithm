@@ -10,11 +10,6 @@ package com.catherine.trees.nodes;
 public class BSTNode<E> implements Node<E> {
 
 	/**
-	 * key-value, key不重复
-	 */
-	private int key;
-
-	/**
 	 * 节点到叶子的最长长度（由下往上，从最下层孩子出发）
 	 */
 	private int height;
@@ -28,11 +23,10 @@ public class BSTNode<E> implements Node<E> {
 	private BSTNode<E> lChild;
 	private BSTNode<E> rChild;
 
-	public BSTNode(int key, E data, BSTNode<E> parent, BSTNode<E> lChild, BSTNode<E> rChild, int height, int depth) {
+	public BSTNode(E data, BSTNode<E> parent, BSTNode<E> lChild, BSTNode<E> rChild, int height, int depth) {
 		this.data = data;
 		this.depth = depth;
 		this.height = height;
-		this.key = key;
 		this.parent = parent;
 		this.lChild = lChild;
 		this.rChild = rChild;
@@ -40,22 +34,14 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public String toString() {
-		String pkey = (parent != null) ? parent.key + "" : "null parent";
-		String lkey = (lChild != null) ? lChild.key + "" : "null lChild";
-		String rkey = (rChild != null) ? rChild.key + "" : "null rChild";
+		String pkey = (parent != null) ? parent.data + "" : "null parent";
+		String lkey = (lChild != null) ? lChild.data + "" : "null lChild";
+		String rkey = (rChild != null) ? rChild.data + "" : "null rChild";
 
 		return String.format(
-				"{\"key\": \"%d\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
-				key, data, height, depth, pkey, lkey, rkey);
+				"{\"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_key\": \"%s\", \"lChild_key\": \"%s\", \"rChild_key\": \"%s\"}",
+				data, height, depth, pkey, lkey, rkey);
 
-	}
-
-	public int getKey() {
-		return key;
-	}
-
-	public void setKey(int key) {
-		this.key = key;
 	}
 
 	@Override
@@ -120,7 +106,8 @@ public class BSTNode<E> implements Node<E> {
 
 	@Override
 	public String getInfo() {
-		return key + "(" + height + ") ";
+		// data + "(" + height + ") "
+		return String.format("%s(%d)", (data == null) ? "null" : data.toString(), height);
 	}
 
 	@Override

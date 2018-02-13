@@ -34,13 +34,11 @@ public class BinaryNode<E> implements Node<E> {
 	@Override
 	public String toString() {
 		if (parent != null)
-			return String.format(
-					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-					data, data, height, depth, parent.data);
+			return String.format("{\"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}", data,
+					height, depth, parent.data);
 		else
-			return String.format(
-					"{\"data\": \"%s\", \"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}",
-					data, data, height, depth, "null parent");
+			return String.format("{\"data\": \"%s\", \"height\": %d, \"depth\": %d, \"parent_data\": \"%s\"}", data,
+					height, depth, "null parent");
 	}
 
 	@Override
@@ -105,23 +103,12 @@ public class BinaryNode<E> implements Node<E> {
 
 	@Override
 	public String getInfo() {
-		if (data != null)
-			return data + " ";
-		else
-			return "null ";
-
-	}
-
-	@Override
-	public int getKey() {
-		// do nothing
-		return 0;
-	}
-
-	@Override
-	public void setKey(int key) {
-		// do nothing
-
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append((data == null) ? "null" : data.toString());
+		sBuilder.append("(p:");
+		sBuilder.append((parent == null) ? "null" : parent.getData());
+		sBuilder.append(')');
+		return sBuilder.toString();
 	}
 
 	@Override
@@ -141,4 +128,5 @@ public class BinaryNode<E> implements Node<E> {
 		// do nothing
 
 	}
+
 }

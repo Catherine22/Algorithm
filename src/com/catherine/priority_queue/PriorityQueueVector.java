@@ -17,7 +17,7 @@ import java.util.List;
  * @param <T>
  * @see MyCompleteBinaryHeap 完全二叉堆
  */
-public interface PriorityQueue<T> {
+public interface PriorityQueueVector<T> {
 
 	/**
 	 * 插入词条（Entry）并上滤。
@@ -56,8 +56,9 @@ public interface PriorityQueue<T> {
 	 * 
 	 * @param n
 	 * @param i
+	 * @throws IllegalAccessException 
 	 */
-	void percolateDown(T n, T i);
+	void percolateDown(T n, T i) throws IllegalAccessException;
 
 	/**
 	 * 上滤<br>
@@ -68,8 +69,9 @@ public interface PriorityQueue<T> {
 	 * 再将初始节点指定给当前位置。一共需要两次赋值，所以=log(n)+2。<br>
 	 * 
 	 * @param i
+	 * @throws IllegalAccessException 
 	 */
-	void percolateUp(T i);
+	void percolateUp(T i) throws IllegalAccessException;
 
 	/**
 	 * 传入一段可排序的集合，使之成为优先级队列。<br>
@@ -82,7 +84,7 @@ public interface PriorityQueue<T> {
 	 * @param list
 	 *            可排序的集合
 	 */
-	void heapify(List<T> list);
+	public void heapify(List<T> list);
 
 	/**
 	 * 传入一段可排序的集合，使之成为优先级队列。<br>
@@ -95,7 +97,7 @@ public interface PriorityQueue<T> {
 	 * @param array
 	 *            可排序的集合
 	 */
-	void heapify(T[] array);
+	public void heapify(T[] array);
 
 	/**
 	 * 一般来说不必用到这个，直接用{@link #heapify(Object[])}做偏序处理即可。<br>
@@ -117,6 +119,20 @@ public interface PriorityQueue<T> {
 	@Deprecated
 	public void completedlyHeapify(List<T> list);
 
-	int size();
+	/**
+	 * 合并两个堆，有三种实现方式，此处用第二种实现。 <br>
+	 * 堆A与堆B，且 |A| = m >= n = |B| <br>
+	 * 1. 挨个添加 = A.insert(B.delMax()) = O(m * log(m+n)) <br>
+	 * 2. 佛洛依德算法 = O(m+n) <br>
+	 * 3. 左式堆 = O(log(n))<br>
+	 * 
+	 * @see com.catherine.priority_queue.LeftistHeap 左式堆
+	 * @param heap
+	 */
+	public void merge(PriorityQueueVector<T> heap);
+
+	public int size();
+
+	public T get(int position);
 
 }

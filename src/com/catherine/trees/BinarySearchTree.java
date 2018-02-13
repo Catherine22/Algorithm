@@ -11,21 +11,27 @@ public interface BinarySearchTree<E> {
 	 * <br>
 	 * 每比较一次，节点的深度都会下降一层，也就是递归深度不超过树高。<br>
 	 * 
-	 * @param key
+	 * @param data
 	 *            搜寻节点的key
 	 * @return 命中节点或<code>null<code>
 	 */
-	public Node<E> search(int key);
+	public Node<E> search(E data);
 
 	/**
-	 * 先做一次遍历，得到hot，用hot作为父节点插入。 暂不考虑重复数值情况。
+	 * 先做一次遍历，得到hot，考虑数值重复的情况，这边一律返回第一个找到的节点。
 	 * 
-	 * @param key
-	 *            插入节点的key
 	 * @param data
-	 *            插入节点的value
+	 *            插入节点的key
 	 */
-	public Node<E> insert(int key, E data);
+	public Node<E> searchLast(E data);
+
+	/**
+	 * 先做一次遍历（searchLast），得到hot，用hot作为父节点插入，若有重复插入右边。
+	 * 
+	 * @param data
+	 *            插入节点的key
+	 */
+	public Node<E> add(E data);
 
 	/**
 	 * 情况1:欲移除节点只有一个左孩子或右孩子，移除节点后孩子上位，取代原节点。<br>
@@ -33,9 +39,9 @@ public interface BinarySearchTree<E> {
 	 * 情况2先找出目标节点的后继节点{@link #succ(Node)}，两节点交换后就变成情况1（顶多只会有右孩子，因为后继已经是最左边的节点了），
 	 * 比照情况1处理，这边还要再将欲移除节点的父节点设为hot，重新整理树高。
 	 * 
-	 * @param key
+	 * @param data
 	 */
-	public void remove(int key);
+	public void remove(E data);
 
 	/**
 	 * 随机生成产生的树的组合只有卡塔兰数个
