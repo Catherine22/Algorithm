@@ -199,6 +199,13 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
 
 - Demo [LeftistHeap]
 
+## String
+I focused on indexOf(String s) here.
+1. Brute-force algorithm
+2. KMP algorithm
+
+- Demo [StringUtils]
+
 ## Dictionary
 
 ### Hashing
@@ -321,6 +328,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [PriorityQueueVectorImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java>
    [PriorityQueueBinTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java>
    [LeftistHeap]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/LeftistHeap.java>
+   [StringUtils]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/string/StringUtils.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>

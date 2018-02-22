@@ -330,8 +330,11 @@ public class Main {
 		// subStr = "DOIHAXO";
 		System.out.println("\nSubString:\n".concat(subStr));
 
-		int i = StringUtils.indexOf(str, subStr);
-		System.out.println(String.format("\nindexOf:%d", i));
+		int i = StringUtils.indexOfBF(str, subStr);
+		System.out.println(String.format("\nindexOfBF:%d", i));
+
+		i = StringUtils.indexOfKMP(str, subStr);
+		System.out.println(String.format("\nindexOfKMP:%d", i));
 	}
 
 	public static void testLeftistHeaps() {
