@@ -2,6 +2,7 @@ package com.catherine.priority_queue;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import com.catherine.trees.nodes.Node;
@@ -24,10 +25,6 @@ public class LeftistHeap<T extends Comparable<? super T>> extends PriorityQueueB
 	protected final boolean SHOW_DEBUG_LOG = false;
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 5439346124731561315L;
-
-	public LeftistHeap(T root) {
-		super(root);
-	}
 
 	/**
 	 * 任意节点到外部节点到最短距离，同时也代表以t为根节点的最大满子树高度。<br>
@@ -81,8 +78,14 @@ public class LeftistHeap<T extends Comparable<? super T>> extends PriorityQueueB
 		return collection;
 	}
 
+	public Collection<Node<T>> getRChain() {
+		if (root == null)
+			throw new NullPointerException("Root must not be null.");
+		return getRChain(root);
+	}
+
 	/**
-	 * 合并
+	 * 合并(若合并两个堆，传入两堆的根节点)
 	 * 
 	 * @param a
 	 * @param b
@@ -116,7 +119,96 @@ public class LeftistHeap<T extends Comparable<? super T>> extends PriorityQueueB
 			a.setrChild(tmp);
 		}
 
+		if (root != a)
+			updateRefer(a);
 		return a;
+	}
+
+	/**
+	 * 左式堆的插入就是合并。 {@link #merge(Node, Node)}
+	 */
+	public void insert(T a) {
+		if (root == null) {
+			System.out.println("setRoot:" + a);
+			setRoot(a);
+			return;
+		}
+
+		PriorityQueueBinTreeImpl<T> t = new PriorityQueueBinTreeImpl<>(a);
+		Node<T> n = merge(root, t.getRoot());
+		if (n == t.getRoot()) {
+			updateRefer(t);
+		}
+	}
+
+	/**
+	 * 删除该节点，合并其左右孩子。 {@link #merge(Node, Node)}
+	 * 
+	 * @param a
+	 */
+	public void remove(T t) {
+		remove(find(t));
+	}
+
+	/**
+	 * 删除该节点，合并其左右孩子。 {@link #merge(Node, Node)}
+	 * 
+	 * @param a
+	 */
+	public void remove(Node<T> node) {
+		Node<T> lc = node.getlChild();
+		Node<T> rc = node.getrChild();
+		Node<T> p = node.getParent();
+
+		if (lc != null)
+			lc.setParent(null);
+		if (rc != null)
+			rc.setParent(null);
+
+		if (lc == null && rc == null) {
+			if (p == null) {
+				root = null;
+				size = 0;
+			} else {
+				if (node == p.getlChild())
+					p.setlChild(null);
+				else
+					p.setrChild(null);
+			}
+			return;
+		}
+
+		Node<T> n = merge(lc, rc);
+
+		if (p == null)
+			updateRefer(n);
+		else {
+			n.setParent(p);
+			if (node == p.getlChild())
+				p.setlChild(n);
+			else
+				p.setrChild(n);
+		}
+	}
+
+	private void updateRefer(Node<T> newRoot) {
+		List<T> tmp = new LinkedList<>();
+		traverseIn(tmp, newRoot);
+		root = newRoot;
+		root.setParent(null);
+		size = tmp.size();
+		tmp.clear();
+		tmp = null;
+	}
+
+	private void updateRefer(PriorityQueueBinTreeImpl<T> refer) {
+		root = refer.getRoot();
+		root.setParent(null);
+		size = refer.size();
+	}
+
+	public void printTree() {
+		printTree(root);
 	}
 
 	public void printTree(Node<T> a) {

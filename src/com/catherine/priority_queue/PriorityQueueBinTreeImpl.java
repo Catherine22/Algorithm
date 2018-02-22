@@ -26,6 +26,10 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 	/** use serialVersionUID from JDK 1.0.2 for interoperability */
 	private static final long serialVersionUID = 880638399272054759L;
 
+	public PriorityQueueBinTreeImpl() {
+		super();
+	}
+
 	public PriorityQueueBinTreeImpl(T root) {
 		super(root);
 	}
@@ -155,6 +159,19 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 		}
 
 		return (n2Pos > n1Pos);
+	}
+
+	protected Node<T> find(T t) {
+		if (root == null)
+			return null;
+		Stack<Node<T>> stack = traverse();
+		while (stack.size() > 0) {
+			if (t.compareTo(stack.peek().getData()) == 0) {
+				return stack.pop();
+			} else
+				stack.pop();
+		}
+		return null;
 	}
 
 	/**
@@ -869,7 +886,7 @@ public class PriorityQueueBinTreeImpl<T extends Comparable<? super T>> extends M
 			a[i] = clone.delMax();
 		}
 	}
-	
+
 	public void printTree() {
 		if (size() == 1) {
 			System.out.println("level1: " + get(0));
