@@ -1,12 +1,10 @@
 package com.catherine.priority_queue;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import com.catherine.data_type.Search;
 import com.catherine.trees.nodes.Node;
 
 /**
@@ -121,6 +119,8 @@ public class LeftistHeap<T extends Comparable<? super T>> extends PriorityQueueB
 			a.setrChild(tmp);
 		}
 
+		if (root != a)
+			updateRefer(a);
 		return a;
 	}
 
@@ -164,7 +164,7 @@ public class LeftistHeap<T extends Comparable<? super T>> extends PriorityQueueB
 			lc.setParent(null);
 		if (rc != null)
 			rc.setParent(null);
-		
+
 		if (lc == null && rc == null) {
 			if (p == null) {
 				root = null;

@@ -388,10 +388,10 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 	@Override
 	public Collection<E> traversal(Order order) {
 		if (size == 0) {
-			System.out.println("Size == 0");
+			System.err.println("Size == 0");
 			return null;
 		}
-		
+
 		List<E> collection = new LinkedList<>();
 
 		if (order == Order.LEVEL) {
@@ -402,7 +402,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			int level = 0;
 			boolean isRight = false;
 			while (node != null || !parent.isEmpty()) {
-				System.out.print("level " + level++ + ",\t");
+				if (SHOW_LOG)
+					System.out.print("level " + level++ + ",\t");
 
 				while (!parent.isEmpty()) {
 					node = parent.poll();
@@ -414,7 +415,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 					if (node != null) {
 						collection.add(node.getData());
-						System.out.print(node.getInfo() + " ");
+						if (SHOW_LOG)
+							System.out.print(node.getInfo() + " ");
 
 						if (node.getlChild() != null)
 							siblings.offer(node.getlChild());
@@ -439,7 +441,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 				siblings.clear();
 				node = null;
-				System.out.print("\n");
+				if (SHOW_LOG)
+					System.out.print("\n");
 
 				if (countdown == 0)
 					break;
@@ -451,7 +454,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			while (!bin.isEmpty()) {
 				Node<E> node = bin.pop();
 				collection.add(node.getData());
-				System.out.print(node.getInfo() + " ");
+				if (SHOW_LOG)
+					System.out.print(node.getInfo() + " ");
 
 				if (node.getrChild() != null)
 					bin.push(node.getrChild());
@@ -459,7 +463,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				if (node.getlChild() != null)
 					bin.push(node.getlChild());
 			}
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.PRE_ORDER_FAST) {
 			Stack<Node<E>> bin = new Stack<>();
@@ -469,7 +474,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				// 遍历一排的所有左节点
 				while (node != null) {
 					collection.add(node.getData());
-					System.out.print(node.getInfo() + " ");
+					if (SHOW_LOG)
+						System.out.print(node.getInfo() + " ");
 					bin.push(node);// 弹出打印过的没用节点
 					node = node.getlChild();
 				}
@@ -480,11 +486,13 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 					node = node.getrChild();
 				}
 			}
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.PRE_ORDER_RECURSION) {
 			traversePre(collection, root);
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.IN_ORDER) {
 			Stack<Node<E>> bin = new Stack<>();
@@ -502,11 +510,13 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 					node = node.getrChild();
 				}
 			}
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.IN_ORDER_RECURSION) {
 			traverseIn(collection, root);
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.POST_ORDER) {
 			Stack<Node<E>> bin = new Stack<>();
@@ -524,7 +534,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				// 当前节点的右孩子如果为空或者已经被访问，则访问当前节点
 				if (node.getrChild() == null || node.getrChild() == lastLC) {
 					collection.add(node.getData());
-					System.out.print(node.getInfo() + " ");
+					if (SHOW_LOG)
+						System.out.print(node.getInfo() + " ");
 					lastLC = node;// 一旦访问过就要记录，下一轮就会判断到node.getrChild() ==
 									// lastLC
 					bin.pop();// 打印过就从栈里弹出
@@ -532,7 +543,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 				} else
 					node = node.getrChild();
 			}
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.POST_ORDER_STACK) {
 			Stack<Node<E>> lBin = new Stack<>();
@@ -553,15 +565,18 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 			while (!rBin.isEmpty()) {
 				collection.add(rBin.peek().getData());
-				System.out.print(rBin.peek().getInfo());
+				if (SHOW_LOG)
+					System.out.print(rBin.peek().getInfo());
 				rBin.pop();
 			}
 
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else if (order == Order.POST_ORDER_RECURSION) {
 			traversePost(collection, root);
-			System.out.println("\n");
+			if (SHOW_LOG)
+				System.out.println("\n");
 			return collection;
 		} else {// default
 			return traversal(Order.LEVEL);
@@ -592,7 +607,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		if (node.getlChild() != null)
 			traverseIn(node.getlChild());
 		collection.add(node.getData());
-		System.out.print(node.getInfo() + " ");
+		if (SHOW_LOG)
+			System.out.print(node.getInfo() + " ");
 		if (node.getrChild() != null)
 			traverseIn(node.getrChild());
 	}
@@ -608,7 +624,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 	protected void traversePre(Collection<E> collection, Node<E> node) {
 		collection.add(node.getData());
-		System.out.print(node.getInfo() + " ");
+		if (SHOW_LOG)
+			System.out.print(node.getInfo() + " ");
 		if (node.getlChild() != null)
 			traversePre(node.getlChild());
 		if (node.getrChild() != null)
@@ -617,7 +634,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 
 	@Override
 	public void traversePre(Node<E> node) {
-		System.out.print(node.getInfo() + " ");
+		if (SHOW_LOG)
+			System.out.print(node.getInfo() + " ");
 		if (node.getlChild() != null)
 			traversePre(node.getlChild());
 		if (node.getrChild() != null)
@@ -628,7 +646,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 	public void traverseIn(Node<E> node) {
 		if (node.getlChild() != null)
 			traverseIn(node.getlChild());
-		System.out.print(node.getInfo() + " ");
+		if (SHOW_LOG)
+			System.out.print(node.getInfo() + " ");
 		if (node.getrChild() != null)
 			traverseIn(node.getrChild());
 	}
@@ -639,7 +658,8 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			traversePost(node.getlChild());
 		if (node.getrChild() != null)
 			traversePost(node.getrChild());
-		System.out.print(node.getInfo() + " ");
+		if (SHOW_LOG)
+			System.out.print(node.getInfo() + " ");
 	}
 
 	/**

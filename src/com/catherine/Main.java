@@ -296,59 +296,55 @@ public class Main {
 		List<Integer> list = new ArrayList<>();
 
 		// merge
-		// PriorityQueueBinTreeImpl<Integer> a = new
-		// PriorityQueueBinTreeImpl<>(0);
-		// for (int i = 0; i < SIZE; i++) {
-		// list.add(random.nextInt(1000));
-		// random = new Random();
-		// }
-		//
-		// a.heapify(list);
-		// System.out.println("a:");
-		// printList("raw data1", list);
-		// a.traverseLevel();
-		//
-		// list.clear();
-		// PriorityQueueBinTreeImpl<Integer> b = new
-		// PriorityQueueBinTreeImpl<>(0);
-		// SIZE = 1 + random.nextInt(15);
-		// for (int i = 0; i < SIZE; i++) {
-		// list.add(random.nextInt(1000));
-		// random = new Random();
-		// }
-		//
-		// b.heapify(list);
-		// System.out.println("b:");
-		// printList("raw data2", list);
-		// b.printTree();
-		//
-		// System.out.println(String.format("merge a(%d) and b(%d)", a.size(),
-		// b.size()));
-		// LeftistHeap<Integer> lh1 = new LeftistHeap<>();
-		// Node<Integer> mixture = lh1.merge(a.getRoot(), b.getRoot());
-		// // a.printTree();
-		// lh1.printTree(mixture);
-
-		// insert
-		list.clear();
+		PriorityQueueBinTreeImpl<Integer> a = new PriorityQueueBinTreeImpl<>(0);
 		for (int i = 0; i < SIZE; i++) {
 			list.add(random.nextInt(1000));
 			random = new Random();
 		}
-		LeftistHeap<Integer> lh2 = new LeftistHeap<>();
-		for (int i = 0; i < list.size(); i++) {
-			lh2.insert(list.get(i));
-		}
-		System.out.println("merge:");
-		printList("raw data", list);
-		lh2.printTree();
 
-		// delete
-		random = new Random();
-		int pos = 0 + random.nextInt(list.size() - 1);
-		System.out.println("Remove " + list.get(pos));
-		lh2.remove(list.get(pos));
-		lh2.printTree();
+		a.heapify(list);
+		System.out.println("a:");
+		printList("raw data1", list);
+		a.traverseLevel();
+
+		list.clear();
+		PriorityQueueBinTreeImpl<Integer> b = new PriorityQueueBinTreeImpl<>(0);
+		SIZE = 1 + random.nextInt(15);
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+
+		b.heapify(list);
+		System.out.println("b:");
+		printList("raw data2", list);
+		b.printTree();
+
+		System.out.println(String.format("merge a(%d) and b(%d)", a.size(), b.size()));
+		LeftistHeap<Integer> lh1 = new LeftistHeap<>();
+		lh1.merge(a.getRoot(), b.getRoot());
+		lh1.printTree();
+
+		// insert
+		// list.clear();
+		// for (int i = 0; i < SIZE; i++) {
+		// list.add(random.nextInt(1000));
+		// random = new Random();
+		// }
+		// LeftistHeap<Integer> lh2 = new LeftistHeap<>();
+		// for (int i = 0; i < list.size(); i++) {
+		// lh2.insert(list.get(i));
+		// }
+		// System.out.println("merge:");
+		// printList("raw data", list);
+		// lh2.printTree();
+		//
+		// // delete
+		// random = new Random();
+		// int pos = 0 + random.nextInt(list.size() - 1);
+		// System.out.println("Remove " + list.get(pos));
+		// lh2.remove(list.get(pos));
+		// lh2.printTree();
 	}
 
 	public static void testPQBinTree() {
