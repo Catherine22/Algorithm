@@ -58,6 +58,7 @@ import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
+import com.catherine.string.StringUtils;
 import com.catherine.trees.Callback;
 import com.catherine.trees.MyAVLTree;
 import com.catherine.trees.MyBTree;
@@ -109,7 +110,8 @@ public class Main {
 		// testBTree();
 		// testPQVector();
 		// testPQBinTree();
-		testLeftistHeaps();
+		// testLeftistHeaps();
+		testString();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -290,6 +292,48 @@ public class Main {
 				raxorfF.getStudent());
 	}
 
+	public static void testString() {
+		Random random = new Random();
+		int SIZE = 100;
+		int SUB_SIZE = 2;
+
+		String str;
+		String subStr;
+
+		StringBuilder sBuilder = new StringBuilder();
+		for (int i = 0; i < SIZE; i++) {
+			sBuilder.append((char) ('A' + random.nextInt(26)));
+			random = new Random();
+		}
+		str = sBuilder.toString();
+		sBuilder.delete(0, sBuilder.length());
+
+		for (int i = 0; i < SUB_SIZE; i++) {
+			sBuilder.append((char) ('A' + random.nextInt(26)));
+			random = new Random();
+		}
+		subStr = sBuilder.toString();
+		sBuilder.delete(0, sBuilder.length());
+
+		int f = 0;
+		int t = 20;
+		// str =
+		// "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNERBTKJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
+		System.out.println("String:");
+		while (f < str.length()) {
+			// System.out.println(String.format("%d~%d:\t%s", f, t - 1,
+			// str.substring(f, t)));
+			System.out.println(str.substring(f, t));
+			f = t;
+			t += 20;
+		}
+		// subStr = "DOIHAXO";
+		System.out.println("\nSubString:\n".concat(subStr));
+
+		int i = StringUtils.indexOf(str, subStr);
+		System.out.println(String.format("\nindexOf:%d", i));
+	}
+
 	public static void testLeftistHeaps() {
 		Random random = new Random();
 		int SIZE = 1 + random.nextInt(15);
@@ -326,25 +370,25 @@ public class Main {
 		lh1.printTree();
 
 		// insert
-		// list.clear();
-		// for (int i = 0; i < SIZE; i++) {
-		// list.add(random.nextInt(1000));
-		// random = new Random();
-		// }
-		// LeftistHeap<Integer> lh2 = new LeftistHeap<>();
-		// for (int i = 0; i < list.size(); i++) {
-		// lh2.insert(list.get(i));
-		// }
-		// System.out.println("merge:");
-		// printList("raw data", list);
-		// lh2.printTree();
-		//
-		// // delete
-		// random = new Random();
-		// int pos = 0 + random.nextInt(list.size() - 1);
-		// System.out.println("Remove " + list.get(pos));
-		// lh2.remove(list.get(pos));
-		// lh2.printTree();
+		list.clear();
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+		LeftistHeap<Integer> lh2 = new LeftistHeap<>();
+		for (int i = 0; i < list.size(); i++) {
+			lh2.insert(list.get(i));
+		}
+		System.out.println("merge:");
+		printList("raw data", list);
+		lh2.printTree();
+
+		// delete
+		random = new Random();
+		int pos = 0 + random.nextInt(list.size() - 1);
+		System.out.println("Remove " + list.get(pos));
+		lh2.remove(list.get(pos));
+		lh2.printTree();
 	}
 
 	public static void testPQBinTree() {
