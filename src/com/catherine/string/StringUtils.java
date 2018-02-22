@@ -73,7 +73,7 @@ public class StringUtils {
 		if (p.length() == 0)
 			return 0;
 		if (p.length() > s.length())
-			throw new IndexOutOfBoundsException("p must be smaller than s.");
+			throw new IndexOutOfBoundsException("s must not be longer than p.");
 
 		char[] sa = s.toCharArray();
 		char[] pa = p.toCharArray();
@@ -115,7 +115,7 @@ public class StringUtils {
 		if (p.length() == 0)
 			return 0;
 		if (p.length() > s.length())
-			throw new IndexOutOfBoundsException("p must be smaller than s.");
+			throw new IndexOutOfBoundsException("s must not be longer than p.");
 
 		char[] sa = s.toCharArray();
 		char[] pa = p.toCharArray();
