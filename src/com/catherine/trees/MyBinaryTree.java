@@ -10,7 +10,6 @@ import java.util.Queue;
 import java.util.Spliterator;
 import java.util.Stack;
 
-import com.catherine.trees.MyBinaryTree.Order;
 import com.catherine.trees.nodes.Node;
 import com.catherine.trees.nodes.NodeAdapter;
 import com.catherine.trees.nodes.Nodes;
@@ -589,7 +588,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		return traversal(Order.IN_ORDER_RECURSION);
 	}
 
-	private void traverseIn(Collection<E> collection, Node<E> node) {
+	protected void traverseIn(Collection<E> collection, Node<E> node) {
 		if (node.getlChild() != null)
 			traverseIn(node.getlChild());
 		collection.add(node.getData());
@@ -598,7 +597,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 			traverseIn(node.getrChild());
 	}
 
-	private void traversePost(Collection<E> collection, Node<E> node) {
+	protected void traversePost(Collection<E> collection, Node<E> node) {
 		if (node.getlChild() != null)
 			traversePost(node.getlChild());
 		if (node.getrChild() != null)
@@ -607,7 +606,7 @@ public class MyBinaryTree<E extends Comparable<? super E>> implements BinaryTree
 		System.out.print(node.getInfo() + " ");
 	}
 
-	private void traversePre(Collection<E> collection, Node<E> node) {
+	protected void traversePre(Collection<E> collection, Node<E> node) {
 		collection.add(node.getData());
 		System.out.print(node.getInfo() + " ");
 		if (node.getlChild() != null)

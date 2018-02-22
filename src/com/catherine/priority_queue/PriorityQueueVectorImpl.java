@@ -3,6 +3,8 @@ package com.catherine.priority_queue;
 import java.util.List;
 import java.util.Vector;
 
+import com.catherine.trees.nodes.Node;
+
 /**
  * 完全二叉堆（逻辑上等同于完全二叉树，物理上以向量实现）<br>
  * 以层次遍历完全二叉树并对应到向量上。<br>
