@@ -293,43 +293,43 @@ public class Main {
 	}
 
 	public static void testString() {
+		final char[] DNAs = { 'A', 'T', 'C', 'G' };
 		Random random = new Random();
-		int SIZE = 100;
-		int SUB_SIZE = 2;
+		int SIZE = 200;
+		int SUB_SIZE = 4;
 
 		String str;
 		String subStr;
-
 		StringBuilder sBuilder = new StringBuilder();
 		for (int i = 0; i < SIZE; i++) {
-			sBuilder.append((char) ('A' + random.nextInt(26)));
+			sBuilder.append(DNAs[random.nextInt(4)]);
 			random = new Random();
 		}
 		str = sBuilder.toString();
 		sBuilder.delete(0, sBuilder.length());
 
 		for (int i = 0; i < SUB_SIZE; i++) {
-			sBuilder.append((char) ('A' + random.nextInt(26)));
+			sBuilder.append(DNAs[random.nextInt(4)]);
 			random = new Random();
 		}
 		subStr = sBuilder.toString();
 		sBuilder.delete(0, sBuilder.length());
 
-		str = "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNSXODTJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
-//		str = "****chinchillx******chin**chilla************chinchilla**********************************************";
+		// str =
+		// "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNSXODTJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
+		// str =
+		// "****chinchillx******chin**chilla************chinchilla**********************************************";
 		int f = 0;
-		int d = 20;
+		int d = 25;
 		int t = d;
 		System.out.println("String:");
 		while (f < str.length()) {
-			// System.out.println(String.format("%d~%d:\t%s", f, t - 1,
-			// str.substring(f, t)));
 			System.out.println(str.substring(f, t));
 			f = t;
 			t += d;
 		}
-		subStr = "SXODT";
-//		subStr = "chinchilla";
+		// subStr = "SXODT";
+		// subStr = "chinchilla";
 		System.out.println("\nSubString:\n".concat(subStr));
 
 		int i = StringUtils.indexOfBF(str, subStr);

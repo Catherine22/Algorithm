@@ -84,19 +84,16 @@ public class StringUtils {
 
 		char[] sa = s.toCharArray();
 		char[] pa = p.toCharArray();
-		int countDown = pa.length;
-		int last = sa.length - pa.length + 1;
-		for (int i = 0; i < last; i++) {
-			for (int j = 0; j < pa.length; j++) {
-				if (sa[i + j] == pa[j]) {
-					// System.out.println((i + j) + ":" + sa[i + j]);
-					countDown--;
-				} else
-					break;
+
+		int j = 0;// 主指针
+		int t = 0; // 模式串指针
+		while (j < sa.length) {
+			if (sa[j++] == pa[t++]) {
+				if (t >= pa.length)
+					return (j - pa.length);
+			} else {
+				t = 0;
 			}
-			if (countDown == 0)
-				return i;
-			countDown = pa.length;
 		}
 		return -1;
 	}
