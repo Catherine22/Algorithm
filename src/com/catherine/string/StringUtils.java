@@ -87,11 +87,22 @@ public class StringUtils {
 
 		int j = 0;// 主指针
 		int t = 0; // 模式串指针
+		int progress = 0;// j + t
 		while (j < sa.length) {
-			if (sa[j++] == pa[t++]) {
+
+			// if (SHOW_LOG)
+			// System.out.print(j + ":" + sa[j] + ", p[" + t + "]");
+
+			progress = j + t;
+			if ((progress < sa.length) && (sa[progress] == pa[t++])) {
+				// if (SHOW_LOG)
+				// System.out.println(" 匹配");
 				if (t >= pa.length)
-					return (j - pa.length);
+					return j;
 			} else {
+				// if (SHOW_LOG)
+				// System.out.println(" 不匹配");
+				j++;
 				t = 0;
 			}
 		}

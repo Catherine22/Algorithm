@@ -319,6 +319,8 @@ public class Main {
 		// "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNSXODTJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
 		// str =
 		// "****chinchillx******chin**chilla************chinchilla**********************************************";
+		// str =
+		// "CCCGGGCTAGTACTAATATCCGGCGATACGCCTTCGGGGACGAACGTCGGTCGAATCAGATCCAACAAGCGATCTTTGGCAGACCTGTAACAACAGTTTAGATCCGTAGTCGTTCGACGTTAGTCACTACAACAAAAAGTCAAGCTAGCGTGTCTGCTTTTCGAGTGAAAGTATGCGCAGTGGAGTAGGTGATGCTCTGG";
 		int f = 0;
 		int d = 25;
 		int t = d;
@@ -330,6 +332,7 @@ public class Main {
 		}
 		// subStr = "SXODT";
 		// subStr = "chinchilla";
+		// subStr = "CTTC";
 		System.out.println("\nSubString:\n".concat(subStr));
 
 		int i = StringUtils.indexOfBF(str, subStr);
