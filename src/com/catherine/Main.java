@@ -315,19 +315,21 @@ public class Main {
 		subStr = sBuilder.toString();
 		sBuilder.delete(0, sBuilder.length());
 
+		str = "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNSXODTJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
+//		str = "****chinchillx******chin**chilla************chinchilla**********************************************";
 		int f = 0;
-		int t = 20;
-		// str =
-		// "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNERBTKJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
+		int d = 20;
+		int t = d;
 		System.out.println("String:");
 		while (f < str.length()) {
 			// System.out.println(String.format("%d~%d:\t%s", f, t - 1,
 			// str.substring(f, t)));
 			System.out.println(str.substring(f, t));
 			f = t;
-			t += 20;
+			t += d;
 		}
-		// subStr = "DOIHAXO";
+		subStr = "SXODT";
+//		subStr = "chinchilla";
 		System.out.println("\nSubString:\n".concat(subStr));
 
 		int i = StringUtils.indexOfBF(str, subStr);

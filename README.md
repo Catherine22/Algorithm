@@ -200,9 +200,11 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
 - Demo [LeftistHeap]
 
 ## String
-I focused on indexOf(String s) here.
+Let's focus on indexOf(String s) here.
 1. Brute-force algorithm
 2. KMP algorithm
+
+![KMP][18]   
 
 - Demo [StringUtils]
 
@@ -357,3 +359,4 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [15]: https://github.com/Catherine22/Algorithms/blob/master/res/complete_binary_heap.png
   [16]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_1.png
   [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png
+  [18]: https://github.com/Catherine22/Algorithms/blob/master/res/kmp.png
