@@ -4,7 +4,11 @@ import com.catherine.Main;
 
 /**
  * String, 串<br>
- * 这边重点在于如何实现高效的indexOf接口
+ * 这边重点在于如何实现高效的indexOf接口。<br>
+ * 这边探讨效能要分成成功和失败分别讨论。<br>
+ * <br>
+ * 假设寻找失败：比起KMP，蛮力算法最好的情况下只需要O(n)，一旦字符集的规模越来愈高，这样的情况会越来越高。<br>
+ * 也就是KMP适用字符集规模小的情况，因此常见的KMP大抵是用二进制示范。
  * 
  * @author Catherine
  *
@@ -72,7 +76,6 @@ public class StringUtils {
 	 *            母串，或称本文串
 	 * @param p
 	 *            子串，或称模式串
-	 * @deprecated
 	 * @exception IndexOutOfBoundsException
 	 * @return position
 	 */
@@ -142,24 +145,24 @@ public class StringUtils {
 		int t = 0; // 模式串指针
 		while (j < sa.length) {
 
-			// if (SHOW_LOG) {
-			// if (t < 0)
-			// System.out.print(j + ":" + sa[j] + ", p[-1]");
-			// else
-			// System.out.print(j + ":" + sa[j] + ", " + pa[t]);
-			// }
+			if (SHOW_LOG) {
+				if (t < 0)
+					System.out.print(j + ":" + sa[j] + ", p[-1]");
+				else
+					System.out.print(j + ":" + sa[j] + ", " + pa[t]);
+			}
 
 			// i<0，也就是查询表为空集合时，返回-1，此时等同于成功比对。
 			if ((t < 0) || sa[j] == pa[t]) {// 匹配
-				// if (SHOW_LOG)
-				// System.out.println(" 匹配");
+				if (SHOW_LOG)
+					System.out.println(" 匹配");
 				j++;
 				t++;
 				if (t >= pa.length)
 					return (j - pa.length);
 			} else { // 根据查询表找到下一个检查点
-				// if (SHOW_LOG)
-				// System.out.println(" 不匹配");
+				if (SHOW_LOG)
+					System.out.println(" 不匹配");
 				t = kmpTable.next(t);
 			}
 		}
@@ -167,16 +170,28 @@ public class StringUtils {
 	}
 
 	/**
-	 * KMP算法核心——查询表
+	 * KMP算法，最坏情况下不超过O(n)，n为本文串长度。
 	 * 
 	 * @author Catherine
 	 *
 	 */
 	private static class KMPTable {
+		/**
+		 * KMP算法核心——查询表
+		 */
 		private int[] nextTable;
+		/**
+		 * 模式串
+		 */
+		private char[] p;
+
+		public KMPTable(String subString) {
+			advancedBuild(subString);
+		}
 
 		/**
 		 * 建构查询表<br>
+		 * <br>
 		 * 以本文串[...,c,h,i,n,c,h,i,x,...]和模式串[c,h,i,n,c,h,i,l,l,a]为例：<br>
 		 * 查询表为[c(-1),h(0),i(0),n(0),c(0),h(1),i(2),l(3),l(0),a(0)]。<br>
 		 * step1 发现l和x不同:<br>
@@ -197,21 +212,52 @@ public class StringUtils {
 		 * 任意t，next集合需 (0 <= t < j) 或 (模式串[0, t) == 模式串[(j - t), j]) <br>
 		 * 为避免回朔，位移(t-j)应越小越好，t应越大越好。
 		 * 
-		 * @param p
+		 * @param subString
 		 *            子串
 		 */
-		public KMPTable(String subString) {
-			char[] p = subString.toCharArray();
+		@Deprecated
+		private void build(String subString) {
+			p = subString.toCharArray();
 			nextTable = new int[p.length];
 			nextTable[0] = -1;
 
-			int j = 0;// 主指针
-			int t = nextTable[0]; // 模式串指针(p[-1]为通配符，一旦next集合为空，返回-1，其背后意义代表加入秩(index)为-1的哨兵作为通配符，通配符的意思就是一定匹配。)
-			int last = p.length - 1;
-			while (j < last) {
-				if ((t < 0) || p[j] == p[t]) // 匹配
+			int j = 0;// 主指针(0 ~ subString.len-1)
+			int t = nextTable[0]; // 模式串指针(p[-1]为通配符，一旦nextTable集合为空，返回-1，其背后意义代表加入秩(index)为-1的哨兵作为通配符，通配符的意思就是一定匹配，当p[-1]匹配，下一个就是p[0]，就好像p向右移动一步。)
+			while (j < (p.length - 1)) {
+				if (t < 0 || p[j] == p[t]) // 匹配
 					nextTable[++j] = ++t;
 				else // 这边不需要设置终止条件，因为有哨兵
+					t = nextTable[t];
+			}
+			if (SHOW_LOG)
+				Main.printArray("KMP Table", nextTable);
+		}
+
+		/**
+		 * 有时候通过{@link #next(int)}取得的秩对应的值接连都相同，而且这个值是不匹配的，<br>
+		 * 也就是意味着除了第一次比对之外，直到取得不同的值之前，其它次比对都是浪费时间。<br>
+		 * 因此能确保返回的秩对应的值和上次不同，就能改善KMP算法。<br>
+		 * <br>
+		 * 基于{@link #build(String)}微调，建构新的查询表。<br>
+		 * 
+		 * @param subString
+		 * @return
+		 */
+		private void advancedBuild(String subString) {
+			p = subString.toCharArray();
+			nextTable = new int[p.length];
+			nextTable[0] = -1;
+
+			int j = 0;// 主指针(0 ~ subString.len-1)
+			int t = nextTable[0]; // 模式串指针(p[-1]为通配符，一旦nextTable集合为空，返回-1，其背后意义代表加入秩(index)为-1的哨兵作为通配符，通配符的意思就是一定匹配，当p[-1]匹配，下一个就是p[0]，就好像p向右移动一步。)
+			while (j < (p.length - 1)) {
+				System.out.println("j:" + j + "\tt:" + t);
+				if (t < 0 || p[j] == p[t]) { // 匹配
+					++j;
+					++t;
+					// 如果查询表上次位置的值和本次一样，就继续往后找。
+					nextTable[j] = (p[j] == p[t]) ? nextTable[t] : t;
+				} else // 这边不需要设置终止条件，因为有哨兵
 					t = nextTable[t];
 			}
 			if (SHOW_LOG)
@@ -222,13 +268,12 @@ public class StringUtils {
 		 * 根据查询表返回下个查询位置。<br>
 		 * 
 		 * 
-		 * @param p
+		 * @param t
 		 *            当前指标在模式串的位置
 		 * @return
 		 */
-		public int next(int p) {
-			return nextTable[p];
+		public int next(int t) {
+			return nextTable[t];
 		}
-
 	}
 }

@@ -201,12 +201,17 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
 
 ## String
 Let's focus on indexOf(String s) here.
-1. Brute-force algorithm
+1. Brute-force algorithm with only one loop.
 2. KMP algorithm
+
+Let's say you have 2 Strings - "chinch_illx_chinchilla" as s1 and "chinchilla" as s2. You do s1.indexOf(s2).
+You could simply try out indexOf() with Brute-force algorithm. That is, you compare every char in s1 to the 1st char in s2. When they are equal, go on and check the rest chars of s2. However, looping the whole s1 could waste a lot of time and it's sometimes unnecessary. That what KMP do - to decide which char in s1 would be compared in the next round. And that's the most important part of KMP.
 
 ![KMP][18]   
 
 - Demo [StringUtils]
+
+Q: [Why jdk's String.indexof() does not use KMP?]
 
 ## Dictionary
 
@@ -341,6 +346,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [Double red video]:<https://www.youtube.com/watch?v=m9tse9Gr2pE>
    [Red black tree animation]:<https://www.cs.usfca.edu/~galles/visualization/RedBlack.html>
    [Red/Black Trees]:<https://github.com/Catherine22/Algorithms/blob/master/res/L19b_BalancedBST_BTreeRB.pdf>
+   [Why jdk's String.indexof() does not use KMP?]:<https://stackoverflow.com/questions/19543547/why-jdks-string-indexof-does-not-use-kmp>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png

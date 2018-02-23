@@ -317,8 +317,7 @@ public class Main {
 
 		// str =
 		// "RBZJJPAFIIBQWTTJSNQXSNAESXODTXKXACXVHSHEOUXDIWYPWTKGNSXODTJNUXJKLDPTSIYYXESFALUGLBYZPOSYXIVKODOIHAXO";
-		// str =
-		// "****chinchillx******chin**chilla************chinchilla**********************************************";
+		str = "000100001***********chin**chilla************chinchilla**********************************************";
 		// str =
 		// "CCCGGGCTAGTACTAATATCCGGCGATACGCCTTCGGGGACGAACGTCGGTCGAATCAGATCCAACAAGCGATCTTTGGCAGACCTGTAACAACAGTTTAGATCCGTAGTCGTTCGACGTTAGTCACTACAACAAAAAGTCAAGCTAGCGTGTCTGCTTTTCGAGTGAAAGTATGCGCAGTGGAGTAGGTGATGCTCTGG";
 		int f = 0;
@@ -331,7 +330,7 @@ public class Main {
 			t += d;
 		}
 		// subStr = "SXODT";
-		// subStr = "chinchilla";
+		subStr = "00001";
 		// subStr = "CTTC";
 		System.out.println("\nSubString:\n".concat(subStr));
 
