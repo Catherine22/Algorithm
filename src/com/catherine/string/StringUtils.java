@@ -80,7 +80,7 @@ public class StringUtils {
 		if (p.length() == 0)
 			return 0;
 		if (p.length() > s.length())
-			throw new IndexOutOfBoundsException("p must not be longer than s.");
+			throw new IndexOutOfBoundsException("s must not be longer than p.");
 
 		char[] sa = s.toCharArray();
 		char[] pa = p.toCharArray();
@@ -122,7 +122,7 @@ public class StringUtils {
 		if (p.length() == 0)
 			return 0;
 		if (p.length() > s.length())
-			throw new IndexOutOfBoundsException("p must not be longer than s.");
+			throw new IndexOutOfBoundsException("s must not be longer than p.");
 
 		char[] sa = s.toCharArray();
 		char[] pa = p.toCharArray();
@@ -143,15 +143,15 @@ public class StringUtils {
 
 			// i<0，也就是查询表为空集合时，返回-1，此时等同于成功比对。
 			if ((t < 0) || sa[j] == pa[t]) {// 匹配
-//				if (SHOW_LOG)
-//					System.out.println(" 匹配");
+				// if (SHOW_LOG)
+				// System.out.println(" 匹配");
 				j++;
 				t++;
 				if (t >= pa.length)
 					return (j - pa.length);
 			} else { // 根据查询表找到下一个检查点
-//				if (SHOW_LOG)
-//					System.out.println(" 不匹配");
+				// if (SHOW_LOG)
+				// System.out.println(" 不匹配");
 				t = kmpTable.next(t);
 			}
 		}
