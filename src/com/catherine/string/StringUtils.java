@@ -65,7 +65,7 @@ public class StringUtils {
 	 * @return position
 	 */
 	public static int indexOf(String s, String p) {
-		return indexOfKMP(s, p);
+		return indexOfBF(s, p);
 	}
 
 	/**
@@ -166,6 +166,27 @@ public class StringUtils {
 				t = kmpTable.next(t);
 			}
 		}
+		return -1;
+	}
+
+	/**
+	 * 在比对过程中，蛮力算法是一旦母串任意位置的字符和子串第一个相同，就继续向后比对，直到完全一样即返回或是出现异数，母串位置向后推进。<br>
+	 * 大多时候其实都是比对失败的，尤其字符集规模越大，因此Boyer-Moore算法的核心就是加速比对失败的速度。<br>
+	 * 
+	 * 
+	 * @param s
+	 *            母串，或称本文串
+	 * @param p
+	 *            子串，或称模式串
+	 * @exception IndexOutOfBoundsException
+	 * @return position
+	 */
+	public static int indexOfBM(String s, String p) {
+		if (p.length() == 0)
+			return 0;
+		if (p.length() > s.length())
+			throw new IndexOutOfBoundsException("s must not be longer than p.");
+
 		return -1;
 	}
 
@@ -274,6 +295,43 @@ public class StringUtils {
 		 */
 		public int next(int t) {
 			return nextTable[t];
+		}
+	}
+
+	/**
+	 * BM算法表
+	 * 
+	 * @author Catherine
+	 *
+	 */
+	private static class BMTable {
+		/**
+		 * Boyer-Moore算法核心——BC(Bad Character)表
+		 */
+		private int[] bcTable;
+		private int[] gcTable;
+		private final int TABLE_LENGTH = 256; // 与字母表等长
+
+		/**
+		 * 模式串
+		 */
+		private char[] p;
+
+		public BMTable(String subString) {
+			p = subString.toCharArray();
+			build();
+		}
+
+		private void build() {
+			bcTable = new int[TABLE_LENGTH];
+			for (int i = 0; i < TABLE_LENGTH; i++) {
+				// 同KMP，引入哨兵的概念
+				bcTable[i] = -1;
+			}
+
+			for (int j = 0; j < p.length; j++) {
+				bcTable[p[j]] = j;// 刷新p[j]的出现位置。也就是画家算法，后来取代先前。
+			}
 		}
 	}
 }

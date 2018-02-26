@@ -203,6 +203,7 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
 Let's focus on indexOf(String s) here.
 1. Brute-force algorithm with only one loop.
 2. KMP algorithm
+3. Boyer-Moore algorithm
 
 Let's say you have 2 Strings - "chinch_illx_chinchilla" as s1 and "chinchilla" as s2. You do s1.indexOf(s2).
 You could simply try out indexOf() with Brute-force algorithm. That is, you compare every char in s1 to the 1st char in s2. When they are equal, go on and check the rest chars of s2. However, looping the whole s1 could waste a lot of time and it's sometimes unnecessary. That what KMP do - to decide which char in s1 would be compared in the next round. And that's the most important part of KMP.
