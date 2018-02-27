@@ -145,24 +145,24 @@ public class StringUtils {
 		int t = 0; // 模式串指针
 		while (j < sa.length) {
 
-			if (SHOW_LOG) {
-				if (t < 0)
-					System.out.print(j + ":" + sa[j] + ", p[-1]");
-				else
-					System.out.print(j + ":" + sa[j] + ", " + pa[t]);
-			}
+			// if (SHOW_LOG) {
+			// if (t < 0)
+			// System.out.print(j + ":" + sa[j] + ", p[-1]");
+			// else
+			// System.out.print(j + ":" + sa[j] + ", " + pa[t]);
+			// }
 
 			// i<0，也就是查询表为空集合时，返回-1，此时等同于成功比对。
 			if ((t < 0) || sa[j] == pa[t]) {// 匹配
-				if (SHOW_LOG)
-					System.out.println(" 匹配");
+				// if (SHOW_LOG)
+				// System.out.println(" 匹配");
 				j++;
 				t++;
 				if (t >= pa.length)
 					return (j - pa.length);
 			} else { // 根据查询表找到下一个检查点
-				if (SHOW_LOG)
-					System.out.println(" 不匹配");
+				// if (SHOW_LOG)
+				// System.out.println(" 不匹配");
 				t = kmpTable.next(t);
 			}
 		}
@@ -171,8 +171,8 @@ public class StringUtils {
 
 	/**
 	 * 在比对过程中，蛮力算法是一旦母串任意位置的字符和子串第一个相同，就继续向后比对，直到完全一样即返回或是出现异数，母串位置向后推进。<br>
-	 * 大多时候其实都是比对失败的，尤其字符集规模越大，因此Boyer-Moore算法的核心就是加速比对失败的速度。<br>
-	 * 
+	 * 大多时候其实都是比对失败的，尤其字符集规模（好比常见中文字有5000个）越大成功率越小，因此Boyer-
+	 * Moore算法的核心就是加速比对失败的速度。<br>
 	 * 
 	 * @param s
 	 *            母串，或称本文串
@@ -187,6 +187,38 @@ public class StringUtils {
 		if (p.length() > s.length())
 			throw new IndexOutOfBoundsException("s must not be longer than p.");
 
+		char[] sa = s.toCharArray();
+		char[] pa = p.toCharArray();
+
+		// 创建查询表
+		BMTable bmTable = new BMTable(s, p);
+
+		// int j = 0;// 主指针
+		// int t = 0; // 模式串指针
+		// int countDown = 5;
+		// while (j < sa.length && countDown-- > 0) {
+		//
+		// if (SHOW_LOG) {
+		// if (t < 0)
+		// System.out.print(j + ":" + sa[j] + ", p[-1]");
+		// else
+		// System.out.print(j + ":" + sa[j] + ", " + pa[t]);
+		// }
+		//
+		// // i<0，也就是查询表为空集合时，返回-1，此时等同于成功比对。
+		// if ((t < 0) || sa[j] == pa[t]) {// 匹配
+		// if (SHOW_LOG)
+		// System.out.println(" 匹配");
+		// j++;
+		// t++;
+		// if (t >= pa.length)
+		// return (j - pa.length);
+		// } else { // 根据查询表找到下一个检查点
+		// if (SHOW_LOG)
+		// System.out.println(" 不匹配");
+		// t = bmTable.next(t);
+		// }
+		// }
 		return -1;
 	}
 
@@ -272,7 +304,7 @@ public class StringUtils {
 			int j = 0;// 主指针(0 ~ subString.len-1)
 			int t = nextTable[0]; // 模式串指针(p[-1]为通配符，一旦nextTable集合为空，返回-1，其背后意义代表加入秩(index)为-1的哨兵作为通配符，通配符的意思就是一定匹配，当p[-1]匹配，下一个就是p[0]，就好像p向右移动一步。)
 			while (j < (p.length - 1)) {
-				System.out.println("j:" + j + "\tt:" + t);
+				// System.out.println("j:" + j + "\tt:" + t);
 				if (t < 0 || p[j] == p[t]) { // 匹配
 					++j;
 					++t;
@@ -309,29 +341,129 @@ public class StringUtils {
 		 * Boyer-Moore算法核心——BC(Bad Character)表
 		 */
 		private int[] bcTable;
-		private int[] gcTable;
-		private final int TABLE_LENGTH = 256; // 与字母表等长
+		private int[] gsTable;
 
 		/**
 		 * 模式串
 		 */
 		private char[] p;
+		/**
+		 * 本文串
+		 */
+		private char[] main;
 
-		public BMTable(String subString) {
+		public BMTable(String mainString, String subString) {
+			main = mainString.toCharArray();
 			p = subString.toCharArray();
 			build();
 		}
 
+		/**
+		 * 
+		 * 假设位移時，本文串为“道可道非常道名可名非常名”，模式串为“非常名”，比对时由模式串右到左，流程如下：<br>
+		 * 1.‘道’和‘名’比<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 非常名<br>
+		 * <br>
+		 * 2.发现本文串里没有‘道’，位移到从‘道’下一个开始。<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。非常名<br>
+		 * <br>
+		 * 3.‘道’和‘名’比<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。非常名<br>
+		 * <br>
+		 * 4.发现本文串里没有‘道’，位移到从‘道’下一个开始。<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。。。。非常名<br>
+		 * <br>
+		 * 5.‘名’和‘名’比，命中，‘可’和‘常’比，失败<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。。。。非常名<br>
+		 * <br>
+		 * 6.发现本文串里没有‘可’，位移到从‘可’下一个开始。<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。。。。。。非常名<br>
+		 * <br>
+		 * 7.‘常’和‘名’比<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。。。。。。非常名<br>
+		 * <br>
+		 * 8.发现本文串里有‘常’，位移至本文串“常”与模式串该‘常’相对。<br>
+		 * 道可道非常道名可名非常名<br>
+		 * 。。。。。。。。。非常名<br>
+		 * 9. 命中<br>
+		 * <br>
+		 * <br>
+		 * 假设上个在本文串的位置是i，找到相同值在本文串的位置为j（步骤8的‘常’），<br>
+		 * 本文串位移量(shift) = j - 本文串p[0]～p[‘常’]的长度。<br>
+		 * bc['x']（bc表中‘常’的值）存放的就是本文串p[0]～p[‘x’]的长度 = j - shift。
+		 */
 		private void build() {
-			bcTable = new int[TABLE_LENGTH];
-			for (int i = 0; i < TABLE_LENGTH; i++) {
-				// 同KMP，引入哨兵的概念
+			// 长度和字母表一样
+			bcTable = new int[main.length];
+			for (int i = 0; i < bcTable.length; i++) {
+				// 同KMP，引入哨兵的概念（没有候选的情况，用-1作为循环终止条件，结构上就是模式串位移p.length）
 				bcTable[i] = -1;
 			}
 
-			for (int j = 0; j < p.length; j++) {
-				bcTable[p[j]] = j;// 刷新p[j]的出现位置。也就是画家算法，后来取代先前。
+			int i = 0;
+			int shift = -1;
+			while (i < bcTable.length) {
+				System.out.println("\n" + i + ":" + "\t");
+				shift = -1;
+				// bc['x']可能有多个候选，为避免回溯，尽可能让位移少一点，也就是bc['x']尽可能大一点。
+				for (int j = p.length - 1; j >= 0 && (i + j) < bcTable.length; j--) {
+					System.out.print("main[" + (i + j) + "]:" + main[j + i] + " vs " + "p[" + j + "]:" + p[j] + "\t");
+					if (main[i + j] == p[j]) {
+						shift = j;
+						bcTable[i] = j;
+					} else
+						break;
+
+				}
+
+				System.out.println("shift:" + shift);
+				i += (shift > 0) ? shift : p.length;
 			}
+			// System.out.print("main[" + (k + i) + "]:" + main[k + i] + " vs "
+			// + "p[" + k + "]:" + p[k] + "\t");
+
+			// System.out.print("found p[" + shift + "]:" + p[shift] + "\t");
+			// System.out.print("next i:" + i + "\t");
+			// System.out.print("shift:" + shift + "\t");
+			// System.out.println("");
+
+			if (SHOW_LOG)
+				Main.printArray("BC Table", bcTable);
+		}
+
+		private int lastIndexOf(char v, char[] c) {
+			for (int i = c.length - 1; i >= 0; i--) {
+				if (c[i] == v)
+					return i;
+			}
+			return -1;
+		}
+
+		private boolean containOf(char[] c, char e) {
+			for (char i : c) {
+				if (i == e)
+					return true;
+			}
+			return false;
+		}
+
+		/**
+		 * 根据查询表返回下个查询位置。<br>
+		 * 
+		 * 
+		 * @param t
+		 *            当前指标在模式串的位置
+		 * @return
+		 */
+		public int next(int t) {
+			return bcTable[t];
 		}
 	}
 }
