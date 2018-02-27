@@ -417,22 +417,19 @@ public class StringUtils {
 					System.out.print("main[" + (i + j) + "]:" + main[j + i] + " vs " + "p[" + j + "]:" + p[j] + "\t");
 					if (main[i + j] == p[j]) {
 						shift = j;
-						bcTable[i] = j;
-					} else
+						bcTable[i] = shift;
+					} else {
+						if (lastIndexOf(main[i + j], p) >= 0) {
+							shift = 1;
+							bcTable[i] = shift;
+						}
 						break;
-
+					}
 				}
 
 				System.out.println("shift:" + shift);
 				i += (shift > 0) ? shift : p.length;
 			}
-			// System.out.print("main[" + (k + i) + "]:" + main[k + i] + " vs "
-			// + "p[" + k + "]:" + p[k] + "\t");
-
-			// System.out.print("found p[" + shift + "]:" + p[shift] + "\t");
-			// System.out.print("next i:" + i + "\t");
-			// System.out.print("shift:" + shift + "\t");
-			// System.out.println("");
 
 			if (SHOW_LOG)
 				Main.printArray("BC Table", bcTable);
