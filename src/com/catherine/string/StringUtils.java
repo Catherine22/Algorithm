@@ -187,38 +187,22 @@ public class StringUtils {
 		if (p.length() > s.length())
 			throw new IndexOutOfBoundsException("s must not be longer than p.");
 
-		char[] sa = s.toCharArray();
-		char[] pa = p.toCharArray();
-
 		// 创建查询表
 		BMTable bmTable = new BMTable(s, p);
-
-		// int j = 0;// 主指针
-		// int t = 0; // 模式串指针
-		// int countDown = 5;
-		// while (j < sa.length && countDown-- > 0) {
-		//
-		// if (SHOW_LOG) {
-		// if (t < 0)
-		// System.out.print(j + ":" + sa[j] + ", p[-1]");
-		// else
-		// System.out.print(j + ":" + sa[j] + ", " + pa[t]);
-		// }
-		//
-		// // i<0，也就是查询表为空集合时，返回-1，此时等同于成功比对。
-		// if ((t < 0) || sa[j] == pa[t]) {// 匹配
-		// if (SHOW_LOG)
-		// System.out.println(" 匹配");
-		// j++;
-		// t++;
-		// if (t >= pa.length)
-		// return (j - pa.length);
-		// } else { // 根据查询表找到下一个检查点
-		// if (SHOW_LOG)
-		// System.out.println(" 不匹配");
-		// t = bmTable.next(t);
-		// }
-		// }
+		int i = 0;// index
+		int d = 0;// shift
+		while (i < s.length()) {
+			d = bmTable.next(i);
+			switch (d) {
+			case -1:
+				i += p.length();
+				break;
+			case 0:
+				return i;
+			default:
+				i += d;
+			}
+		}
 		return -1;
 	}
 
@@ -410,11 +394,14 @@ public class StringUtils {
 			int i = 0;
 			int shift = -1;
 			while (i < bcTable.length) {
-				System.out.println("\n" + i + ":" + "\t");
+				// if (SHOW_LOG)
+				// System.out.println("\n" + i + ":" + "\t");
 				shift = -1;
 				// bc['x']可能有多个候选，为避免回溯，尽可能让位移少一点，也就是bc['x']尽可能大一点。
 				for (int j = p.length - 1; j >= 0 && (i + j) < bcTable.length; j--) {
-					System.out.print("main[" + (i + j) + "]:" + main[j + i] + " vs " + "p[" + j + "]:" + p[j] + "\t");
+					// if (SHOW_LOG)
+					// System.out.print("main[" + (i + j) + "]:" + main[j + i] +
+					// " vs " + "p[" + j + "]:" + p[j] + "\t");
 					if (main[i + j] == p[j]) {
 						shift = j;
 						bcTable[i] = shift;
@@ -426,8 +413,8 @@ public class StringUtils {
 						break;
 					}
 				}
-
-				System.out.println("shift:" + shift);
+				// if (SHOW_LOG)
+				// System.out.println("shift:" + shift);
 				i += (shift > 0) ? shift : p.length;
 			}
 
@@ -441,14 +428,6 @@ public class StringUtils {
 					return i;
 			}
 			return -1;
-		}
-
-		private boolean containOf(char[] c, char e) {
-			for (char i : c) {
-				if (i == e)
-					return true;
-			}
-			return false;
 		}
 
 		/**

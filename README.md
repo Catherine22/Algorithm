@@ -203,16 +203,29 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
 Let's focus on indexOf(String s) here.
 1. Brute-force algorithm with only one loop.
 2. KMP algorithm
-3. Boyer-Moore algorithm
 
 Let's say you have 2 Strings - "chinch_illx_chinchilla" as s1 and "chinchilla" as s2. You do s1.indexOf(s2).
 You could simply try out indexOf() with Brute-force algorithm. That is, you compare every char in s1 to the 1st char in s2. When they are equal, go on and check the rest chars of s2. However, looping the whole s1 could waste a lot of time and it's sometimes unnecessary. That what KMP do - to decide which char in s1 would be compared in the next round. And that's the most important part of KMP.
 
 ![KMP][18]   
 
-- Demo [StringUtils]
-
 Q: [Why jdk's String.indexof() does not use KMP?]
+
+3. Boyer-Moore algorithm
+
+When there are a large collection say a Chinese article. We know the most common Chinese words are at least 5,000. It's almost failed to find out a specific word. With Boyer-Moore algorithm, skiping sections of the useless text (bad character) to speed up the searching.
+
+![BM][19]
+
+|    | BF | KMP | BM |
+| ---- | ---- | ---- | ---- |
+| average |  |  |  |
+| the worst case |  |  |  |
+| memory buffer |  | Depending on subString | Depending on main String |
+| character kinds of collection |  | small | large |
+| example |  |  |  |
+
+- BF, KMP and BM Demo [StringUtils]
 
 ## Dictionary
 
@@ -367,3 +380,4 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [16]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_1.png
   [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png
   [18]: https://github.com/Catherine22/Algorithms/blob/master/res/kmp.png
+  [19]: https://github.com/Catherine22/Algorithms/blob/master/res/bm.png

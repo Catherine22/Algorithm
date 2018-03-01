@@ -295,8 +295,8 @@ public class Main {
 	public static void testString() {
 		final char[] DNAs = { 'A', 'T', 'C', 'G' };
 		Random random = new Random();
-		int SIZE = 12;//200
-		int SUB_SIZE = 3;//4
+		int SIZE = 200;
+		int SUB_SIZE = 4;
 
 		String str;
 		String subStr;
@@ -315,13 +315,13 @@ public class Main {
 		subStr = sBuilder.toString();
 		sBuilder.delete(0, sBuilder.length());
 
-		str = "道可道非常道名可名非常名";
+		// str = "道可道非常道名可名非常名";
 		// str =
 		// "000100001***********chin**chilla************chinchilla**********************************************";
 		// str =
 		// "CCCGGGCTAGTACTAATATCCGGCGATACGCCTTCGGGGACGAACGTCGGTCGAATCAGATCCAACAAGCGATCTTTGGCAGACCTGTAACAACAGTTTAGATCCGTAGTCGTTCGACGTTAGTCACTACAACAAAAAGTCAAGCTAGCGTGTCTGCTTTTCGAGTGAAAGTATGCGCAGTGGAGTAGGTGATGCTCTGG";
 		int f = 0;
-		int d = 12;//25
+		int d = 25;
 		int t = d;
 		System.out.println("String:");
 		while (f < str.length()) {
@@ -329,7 +329,7 @@ public class Main {
 			f = t;
 			t += d;
 		}
-		subStr = "非常名";
+		// subStr = "非常名";
 		// subStr = "00001";
 		// subStr = "CTTC";
 		System.out.println("\nSubString:\n".concat(subStr));
