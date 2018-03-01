@@ -170,9 +170,11 @@ public class StringUtils {
 	}
 
 	/**
+	 * Boyer Moore - Bad Character<br>
 	 * 在比对过程中，蛮力算法是一旦母串任意位置的字符和子串第一个相同，就继续向后比对，直到完全一样即返回或是出现异数，母串位置向后推进。<br>
 	 * 大多时候其实都是比对失败的，尤其字符集规模（好比常见中文字有5000个）越大成功率越小，因此Boyer-
-	 * Moore算法的核心就是加速比对失败的速度。<br>
+	 * Moore算法之一坏字符表的核心就是加速比对失败的速度。<br>
+	 * 另一种好后缀算法是记录成功的子串，加速找到下一个目标的速度。
 	 * 
 	 * @param s
 	 *            母串，或称本文串
@@ -181,7 +183,7 @@ public class StringUtils {
 	 * @exception IndexOutOfBoundsException
 	 * @return position
 	 */
-	public static int indexOfBM(String s, String p) {
+	public static int indexOfBM_BC(String s, String p) {
 		if (p.length() == 0)
 			return 0;
 		if (p.length() > s.length())
@@ -189,10 +191,11 @@ public class StringUtils {
 
 		// 创建查询表
 		BMTable bmTable = new BMTable(s, p);
+		bmTable.buildBC();
 		int i = 0;// index
 		int d = 0;// shift
 		while (i < s.length()) {
-			d = bmTable.next(i);
+			d = bmTable.nextBC(i);
 			switch (d) {
 			case -1:
 				i += p.length();
@@ -201,6 +204,50 @@ public class StringUtils {
 				return i;
 			default:
 				i += d;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Boyer Moore - Good Suffix<br>
+	 * 在比对过程中，蛮力算法是一旦母串任意位置的字符和子串第一个相同，就继续向后比对，直到完全一样即返回或是出现异数，母串位置向后推进。<br>
+	 * 大多时候其实都是比对失败的，尤其字符集规模（好比常见中文字有5000个）越大成功率越小，因此Boyer-
+	 * Moore算法之一坏字符表的核心就是加速比对失败的速度。<br>
+	 * 另一种好后缀算法是记录成功的子串，加速找到下一个目标的速度。
+	 * 
+	 * @param s
+	 *            母串，或称本文串
+	 * @param p
+	 *            子串，或称模式串
+	 * @exception IndexOutOfBoundsException
+	 * @return position
+	 */
+	public static int indexOfBM_GS(String s, String p) {
+		if (p.length() == 0)
+			return 0;
+		if (p.length() > s.length())
+			throw new IndexOutOfBoundsException("s must not be longer than p.");
+
+		char[] sa = s.toCharArray();
+		char[] pa = p.toCharArray();
+
+		// 创建查询表
+		BMTable bmTable = new BMTable(s, p);
+		bmTable.buildGS();
+		int i = pa.length - 1;// index of main String
+		int j = pa.length - 1;// index of subString
+		while (i >= 0 && i < sa.length) {
+			// System.out.println(sa[i] + " vs " + pa[j]);
+			if (sa[i] == pa[j]) {
+				if (j == 0)
+					return i;
+				i--;
+				j--;
+			} else {
+				// System.out.println("next:" + bmTable.nextGS(j));
+				i += (bmTable.nextGS(j) + pa.length - j - 1);
+				j = pa.length - 1;
 			}
 		}
 		return -1;
@@ -326,7 +373,7 @@ public class StringUtils {
 		 */
 		private int[] bcTable;
 		/**
-		 * 另一种策略——好后缀(Good suffix)
+		 * 另一种策略——好后缀(Good suffix)<br>
 		 */
 		private int[] gsTable;
 
@@ -342,8 +389,6 @@ public class StringUtils {
 		public BMTable(String mainString, String subString) {
 			main = mainString.toCharArray();
 			p = subString.toCharArray();
-			buildBC();
-			buildGS();
 		}
 
 		/**
@@ -387,7 +432,7 @@ public class StringUtils {
 		 * 本文串位移量(shift) = j - 本文串p[0]～p[‘常’]的长度。<br>
 		 * bc['x']（bc表中‘常’的值）存放的就是本文串p[0]～p[‘x’]的长度 = j - shift。
 		 */
-		private void buildBC() {
+		public void buildBC() {
 			// 长度和字母表一样
 			bcTable = new int[main.length];
 			for (int i = 0; i < bcTable.length; i++) {
@@ -449,7 +494,7 @@ public class StringUtils {
 		 * <br>
 		 * 在步骤2，如果没有找到新的好后缀，往右移动好后缀长度，也就是从好后缀后一个开始继续比较。
 		 */
-		private void buildGS() {
+		public void buildGS() {
 			// 长度和模式串一样
 			gsTable = new int[p.length];
 
@@ -461,7 +506,8 @@ public class StringUtils {
 			int j = p.length - 1;// GS表的指针
 			int suffixLen = 0;
 			while (j >= 0 && h < main.length) {
-				System.out.println(p[j] + " vs " + main[h]);
+				// if (SHOW_LOG)
+				// System.out.println(p[j] + " vs " + main[h]);
 				if (p[j] == main[h]) {
 					suffixLen++;
 					h--;
@@ -472,27 +518,30 @@ public class StringUtils {
 						j = p.length - 1;
 						h++;
 					} else {
-						// 检查在main里面有没有相同的前缀
-						int x = p.length + suffixLen;// 主指针
+						// 检查在main里面有没有相同的后缀
+						int x = h + suffixLen + 1;// 主指针
 						int y = p.length - 1; // 模式串指针
 						int lastX = x;
 						boolean found = false;
 						while (x < main.length) {
-							if (SHOW_LOG)
-								System.out.print("找下一个前缀 " + main[x] + "[" + x + "]" + " vs " + p[y] + "[" + y + "]");
+							// if (SHOW_LOG)
+							// System.out.print("找下一个前缀 " + main[x] + "[" + x +
+							// "]" + " vs " + p[y] + "[" + y + "]");
 							if (main[x] == p[y]) {
 								y--;
 								if (y == (p.length - suffixLen - 1)) {
 									found = true;
-									System.out.println(" 匹配 --> 找到main[" + x + "]:" + main[x]);
+									// if (SHOW_LOG)
+									// System.out.println(" 匹配 --> 找到main[" + x
+									// + "]:" + main[x]);
 									break;
 								}
-								if (SHOW_LOG)
-									System.out.println(" 匹配");
+								// if (SHOW_LOG)
+								// System.out.println(" 匹配");
 								x--;
 							} else {
-								if (SHOW_LOG)
-									System.out.println(" 不匹配");
+								// if (SHOW_LOG)
+								// System.out.println(" 不匹配");
 								if (x < lastX)
 									x = lastX;
 								x += suffixLen;
@@ -502,10 +551,9 @@ public class StringUtils {
 						}
 
 						if (!found) {// 找不到
-							gsTable[j] = 1;
-							j = p.length - 1;
-							h++;
-							suffixLen = 0;
+							if (SHOW_LOG)
+								Main.printArray("GS Table", gsTable);
+							return;
 						} else {
 							gsTable[j] = x - h - 1;
 							h = x - 1;
@@ -513,7 +561,7 @@ public class StringUtils {
 					}
 				}
 			}
-
+			// [80, 24, 4, 4]
 			if (SHOW_LOG)
 				Main.printArray("GS Table", gsTable);
 		}
@@ -526,8 +574,20 @@ public class StringUtils {
 		 *            当前指标在模式串的位置
 		 * @return
 		 */
-		public int next(int t) {
+		public int nextBC(int t) {
 			return bcTable[t];
+		}
+
+		/**
+		 * 根据查询表返回该位置的移动距离。<br>
+		 * 
+		 * 
+		 * @param t
+		 *            当前指标在模式串的位置
+		 * @return
+		 */
+		public int nextGS(int t) {
+			return gsTable[t];
 		}
 	}
 }
