@@ -506,8 +506,8 @@ public class StringUtils {
 			int j = p.length - 1;// GS表的指针
 			int suffixLen = 0;
 			while (j >= 0 && h < main.length) {
-				// if (SHOW_LOG)
-				// System.out.println(p[j] + " vs " + main[h]);
+				if (SHOW_LOG)
+					System.out.println(p[j] + " vs " + main[h]);
 				if (p[j] == main[h]) {
 					suffixLen++;
 					h--;
@@ -519,34 +519,34 @@ public class StringUtils {
 						h++;
 					} else {
 						// 检查在main里面有没有相同的后缀
-						int x = h + suffixLen + 1;// 主指针
-						int y = p.length - 1; // 模式串指针
-						int lastX = x;
+						int y = p.length - suffixLen - 1; // 模式串指针
+						int x = h + 1 - y;// 主指针
+						int progress = h + 1;// x+y
 						boolean found = false;
 						while (x < main.length) {
-							// if (SHOW_LOG)
-							// System.out.print("找下一个前缀 " + main[x] + "[" + x +
-							// "]" + " vs " + p[y] + "[" + y + "]");
-							if (main[x] == p[y]) {
-								y--;
-								if (y == (p.length - suffixLen - 1)) {
+							progress = x + y;
+							if (SHOW_LOG)
+								System.out.print("找下一个前缀 main" + "[" + progress + "]:" + main[progress] + " vs sub"
+										+ "[" + y + "]:" + p[y]);
+
+							if ((progress < main.length) && (main[progress] == p[y++])) {
+								if (y >= p.length) {
+									if (SHOW_LOG)
+										System.out.println(" 完全匹配");
+									gsTable[j] = progress - y - 1;
+									h = progress + 1;
+									System.out.println("gsTable[" + j + "]:" + gsTable[j] + "/h:" + h);
 									found = true;
-									// if (SHOW_LOG)
-									// System.out.println(" 匹配 --> 找到main[" + x
-									// + "]:" + main[x]);
 									break;
+								} else {
+									if (SHOW_LOG)
+										System.out.println(" 匹配");
 								}
-								// if (SHOW_LOG)
-								// System.out.println(" 匹配");
-								x--;
 							} else {
-								// if (SHOW_LOG)
-								// System.out.println(" 不匹配");
-								if (x < lastX)
-									x = lastX;
-								x += suffixLen;
-								lastX = x;
-								y = p.length - 1;
+								if (SHOW_LOG)
+									System.out.println(" 不匹配");
+								x++;
+								y = p.length - suffixLen - 1;
 							}
 						}
 
@@ -554,14 +554,11 @@ public class StringUtils {
 							if (SHOW_LOG)
 								Main.printArray("GS Table", gsTable);
 							return;
-						} else {
-							gsTable[j] = x - h - 1;
-							h = x - 1;
 						}
 					}
 				}
 			}
-			// [80, 24, 4, 4]
+			// [15, 8, 11, 1]
 			if (SHOW_LOG)
 				Main.printArray("GS Table", gsTable);
 		}
