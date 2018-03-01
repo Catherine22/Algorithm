@@ -325,6 +325,9 @@ public class StringUtils {
 		 * Boyer-Moore算法核心——BC(Bad Character)表
 		 */
 		private int[] bcTable;
+		/**
+		 * 另一种策略——好后缀(Good suffix)
+		 */
 		private int[] gsTable;
 
 		/**
@@ -339,11 +342,12 @@ public class StringUtils {
 		public BMTable(String mainString, String subString) {
 			main = mainString.toCharArray();
 			p = subString.toCharArray();
-			build();
+			buildBC();
+			buildGS();
 		}
 
 		/**
-		 * 
+		 * 坏字符策略(Bad character)<br>
 		 * 假设位移時，本文串为“道可道非常道名可名非常名”，模式串为“非常名”，比对时由模式串右到左，流程如下：<br>
 		 * 1.‘道’和‘名’比<br>
 		 * 道可道非常道名可名非常名<br>
@@ -383,7 +387,7 @@ public class StringUtils {
 		 * 本文串位移量(shift) = j - 本文串p[0]～p[‘常’]的长度。<br>
 		 * bc['x']（bc表中‘常’的值）存放的就是本文串p[0]～p[‘x’]的长度 = j - shift。
 		 */
-		private void build() {
+		private void buildBC() {
 			// 长度和字母表一样
 			bcTable = new int[main.length];
 			for (int i = 0; i < bcTable.length; i++) {
@@ -431,7 +435,91 @@ public class StringUtils {
 		}
 
 		/**
-		 * 根据查询表返回下个查询位置。<br>
+		 * 好后缀策略(Good suffix)<br>
+		 * 假设位移時，本文串为“XXXXXCATCHHATCHXXXX”，模式串为“CATCHHATCH”，比对时由模式串右到左，流程如下：<br>
+		 * 1.初次比较，发现4次成功比对，也就是ATCH，称之为好后缀。<br>
+		 * 本文：XXXXXCATCHHATCHXXXX<br>
+		 * 模式：CATCHHATCH<br>
+		 * 经验：......ATCH<br>
+		 * <br>
+		 * 2. 直接检查模式串前面有没有刚才找到的好后缀，发现有，直接让新的好后缀对齐刚才的本文串。 <br>
+		 * 本文：XXXXXCATCHHATCHXXXX<br>
+		 * 模式：.....CATCHHATCH<br>
+		 * 3. 成功。<br>
+		 * <br>
+		 * 在步骤2，如果没有找到新的好后缀，往右移动好后缀长度，也就是从好后缀后一个开始继续比较。
+		 */
+		private void buildGS() {
+			// 长度和模式串一样
+			gsTable = new int[p.length];
+
+			for (int i = 0; i < gsTable.length; i++) {
+				gsTable[i] = p.length;
+			}
+
+			int h = p.length - 1;// main String的指针
+			int j = p.length - 1;// GS表的指针
+			int suffixLen = 0;
+			while (j >= 0 && h < main.length) {
+				System.out.println(p[j] + " vs " + main[h]);
+				if (p[j] == main[h]) {
+					suffixLen++;
+					h--;
+					j--;
+				} else {
+					if (suffixLen == 0) {
+						gsTable[j] = 1;
+						j = p.length - 1;
+						h++;
+					} else {
+						// 检查在main里面有没有相同的前缀
+						int x = p.length + suffixLen;// 主指针
+						int y = p.length - 1; // 模式串指针
+						int lastX = x;
+						boolean found = false;
+						while (x < main.length) {
+							if (SHOW_LOG)
+								System.out.print("找下一个前缀 " + main[x] + "[" + x + "]" + " vs " + p[y] + "[" + y + "]");
+							if (main[x] == p[y]) {
+								y--;
+								if (y == (p.length - suffixLen - 1)) {
+									found = true;
+									System.out.println(" 匹配 --> 找到main[" + x + "]:" + main[x]);
+									break;
+								}
+								if (SHOW_LOG)
+									System.out.println(" 匹配");
+								x--;
+							} else {
+								if (SHOW_LOG)
+									System.out.println(" 不匹配");
+								if (x < lastX)
+									x = lastX;
+								x += suffixLen;
+								lastX = x;
+								y = p.length - 1;
+							}
+						}
+
+						if (!found) {// 找不到
+							gsTable[j] = 1;
+							j = p.length - 1;
+							h++;
+							suffixLen = 0;
+						} else {
+							gsTable[j] = x - h - 1;
+							h = x - 1;
+						}
+					}
+				}
+			}
+
+			if (SHOW_LOG)
+				Main.printArray("GS Table", gsTable);
+		}
+
+		/**
+		 * 根据查询表返回该位置的移动距离。<br>
 		 * 
 		 * 
 		 * @param t

@@ -213,17 +213,26 @@ Q: [Why jdk's String.indexof() does not use KMP?]
 
 3. Boyer-Moore algorithm
 
+**Boyer-Moore1 - Bad character**
+
 When there are a large collection say a Chinese article. We know the most common Chinese words are at least 5,000. It's almost failed to find out a specific word. With Boyer-Moore algorithm, skiping sections of the useless text (bad character) to speed up the searching.
 
-![BM][19]
+![Bad character][19]
+
+**Boyer-Moore2 - Good suffix**
+
+Another BM strategy is Good Suffix rule. For example, we have "XXXXXCATCHHATCHXXXX" and you are going to search "CATCHHATCH".
+We keep the good suffix, that is "ATCH" (......ATCH) at the first comparing. Next, we try to find the next "ATCH" in "CATCHHATCH" and you'll see another "ATCH" (.ATCH.....). Now we move the whole subString a little so that "XXXXXCATCHHATCHXXXX" can compare to the second "ATCH".
+
+
+![Good suffix][20]
 
 |    | BF | KMP | BM |
 | ---- | ---- | ---- | ---- |
-| average |  |  |  |
+| average searching time |  |  |  |
 | the worst case |  |  |  |
-| memory buffer |  | Depending on subString | Depending on main String |
-| character kinds of collection |  | small | large |
-| example |  |  |  |
+| memory buffer | no | depending on subString | largest (depending on main String) |
+| character Set (main String) |  | small (DNA nucleobases (A,T,C,G)) | large (a Chinese article, a vocabulary list)|
 
 - BF, KMP and BM Demo [StringUtils]
 
@@ -381,3 +390,4 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png
   [18]: https://github.com/Catherine22/Algorithms/blob/master/res/kmp.png
   [19]: https://github.com/Catherine22/Algorithms/blob/master/res/bm.png
+  [20]: https://github.com/Catherine22/Algorithms/blob/master/res/gs.png
