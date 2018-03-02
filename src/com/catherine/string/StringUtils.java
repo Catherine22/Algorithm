@@ -235,20 +235,32 @@ public class StringUtils {
 		// 创建查询表
 		BMTable bmTable = new BMTable(s, p);
 		bmTable.buildGS();
-		int i = pa.length - 1;// index of main String
+		int i = 0;// index of main String
 		int j = pa.length - 1;// index of subString
-		while (i >= 0 && i < sa.length) {
-			// System.out.println(sa[i] + " vs " + pa[j]);
-			if (sa[i] == pa[j]) {
-				if (j == 0)
-					return i;
-				i--;
-				j--;
-			} else {
-				// System.out.println("next:" + bmTable.nextGS(j));
-				i += (bmTable.nextGS(j) + pa.length - j - 1);
-				j = pa.length - 1;
+		int shift;
+		while (j >= 0) {
+			shift = bmTable.nextGS(j);
+//			System.out.println("shift:" + shift);
+			if (shift == 0)
+				return i;
+			else
+				i += shift;
+//			System.out.println("i:" + i + ":" + sa[i]);
+//			System.out.println("j:" + j + ":" + pa[j]);
+
+			int t = pa.length - 1;
+			while (t >= 0) {
+				if (sa[i + t] == pa[t]) {
+//					System.out.println("main[" + (i + t) + "]:" + sa[i + t] + " vs " + "sub[" + t + "]:" + pa[t] + "\t");
+					t--;
+				} else {
+					j--;
+					break;
+				}
 			}
+			if (t < 0)
+				return i;
+
 		}
 		return -1;
 	}
@@ -498,67 +510,94 @@ public class StringUtils {
 			// 长度和模式串一样
 			gsTable = new int[p.length];
 
-			for (int i = 0; i < gsTable.length; i++) {
-				gsTable[i] = p.length;
-			}
+			int mH = p.length - 1;// main String的指针
+			int mHCache = mH;// main String的指针（绝对递增）
+			int pH = p.length - 1;// 模式串指针
+			int pHTemp = p.length - 1;// 模式串指针，检查最大重复字符串时用
+			int gsH = p.length - 1;// GS表的指针
+			int maxSuffix = 1; // 检查的后缀长度
+			int suffix = 0;// 计算最大重复字符串时用
 
-			int h = p.length - 1;// main String的指针
-			int j = p.length - 1;// GS表的指针
-			int suffixLen = 0;
-			while (j >= 0 && h < main.length) {
-				if (SHOW_LOG)
-					System.out.println(p[j] + " vs " + main[h]);
-				if (p[j] == main[h]) {
-					suffixLen++;
-					h--;
-					j--;
-				} else {
-					if (suffixLen == 0) {
-						gsTable[j] = 1;
-						j = p.length - 1;
-						h++;
-					} else {
-						// 检查在main里面有没有相同的后缀
-						int y = p.length - suffixLen - 1; // 模式串指针
-						int x = h + 1 - y;// 主指针
-						int progress = h + 1;// x+y
-						boolean found = false;
-						while (x < main.length) {
-							progress = x + y;
-							if (SHOW_LOG)
-								System.out.print("找下一个前缀 main" + "[" + progress + "]:" + main[progress] + " vs sub"
-										+ "[" + y + "]:" + p[y]);
+			while (mH < main.length && pH >= 0) {
+				// if (SHOW_LOG)
+				// System.out.print(p[pH] + " vs " + main[mH]);
 
-							if ((progress < main.length) && (main[progress] == p[y++])) {
-								if (y >= p.length) {
-									if (SHOW_LOG)
-										System.out.println(" 完全匹配");
-									gsTable[j] = progress - y - 1;
-									h = progress + 1;
-									System.out.println("gsTable[" + j + "]:" + gsTable[j] + "/h:" + h);
-									found = true;
-									break;
-								} else {
-									if (SHOW_LOG)
-										System.out.println(" 匹配");
-								}
-							} else {
-								if (SHOW_LOG)
-									System.out.println(" 不匹配");
-								x++;
-								y = p.length - suffixLen - 1;
+				if (p[pH] == main[mH]) {
+					// if (SHOW_LOG)
+					// System.out.println(" 匹配");
+					// 找到相同字符
+					suffix++;
+					pH--;
+					mH--;
+					if (suffix == p.length) {
+						// if (SHOW_LOG)
+						// System.out.print(" 完全匹配 ");
+						if (gsH == gsTable.length - 1)
+							gsTable[gsH] = mHCache - p.length + 1;
+						else {
+							gsTable[gsH] = mHCache - p.length;
+							for (int i = gsH + 1; i < gsTable.length; i++) {
+								gsTable[gsH] -= gsTable[i];
 							}
 						}
-
-						if (!found) {// 找不到
-							if (SHOW_LOG)
-								Main.printArray("GS Table", gsTable);
-							return;
+						// System.out.println(String.format("gsTable[%d]:%d",
+						// gsH, gsTable[gsH]));
+						break;
+					}
+				} else {
+					if (mH == mHCache) {
+						// if (SHOW_LOG)
+						// System.out.println(" 重来");
+						// 表示上一个字符不同，模式串重新开始检查
+						mHCache = ++mH;
+						pH = p.length - 1;
+					} else {
+						// 表示上一个字符是相同的，往后检查直到再没相同值或模式串全部相同
+						pHTemp = pH;
+						while (pHTemp >= 0) {
+							if (p[pHTemp--] == main[mH--]) {
+								suffix++;
+							} else
+								break;
 						}
+						// System.out.println(String.format(" %d,%d,%d,%d",
+						// suffix, maxSuffix, mHCache, gsH));
+						if (suffix == p.length) {
+							// if (SHOW_LOG)
+							// System.out.print(" 完全匹配 ");
+							gsTable[gsH] = 0;
+							// System.out.println(String.format("gsTable[%d]:%d",
+							// gsH, gsTable[gsH]));
+							break;
+						} else if (suffix >= maxSuffix) {
+							// if (SHOW_LOG)
+							// System.out.print(" 后缀匹配 ");
+
+							if (gsH == gsTable.length - 1)
+								gsTable[gsH] = mHCache - p.length + 1;
+							else {
+								gsTable[gsH] = mHCache - p.length;
+								for (int i = gsH + 1; i < gsTable.length; i++) {
+									gsTable[gsH] -= gsTable[i];
+								}
+							}
+							// System.out.println(String.format("gsTable[%d]:%d",
+							// gsH, gsTable[gsH]));
+							maxSuffix = gsTable.length - gsH + 1;
+							gsH--;
+						} else {
+							// if (SHOW_LOG)
+							// System.out.println(" skip");
+
+						}
+
+						suffix = 0;
+						mH = ++mHCache;
+						pH = p.length - 1;
 					}
 				}
+
 			}
-			// [15, 8, 11, 1]
 			if (SHOW_LOG)
 				Main.printArray("GS Table", gsTable);
 		}

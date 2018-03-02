@@ -332,7 +332,7 @@ public class Main {
 			t += d;
 		}
 
-		subStr = "CGGT";
+		subStr = "CCTG";
 		// subStr = "非日静也善故静也";
 		// subStr = "00001";
 		// subStr = "CTTC";
