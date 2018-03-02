@@ -58,6 +58,7 @@ import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
 import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
+import com.catherine.string.StringUtils;
 import com.catherine.trees.Callback;
 import com.catherine.trees.MyAVLTree;
 import com.catherine.trees.MyBTree;
@@ -109,7 +110,8 @@ public class Main {
 		// testBTree();
 		// testPQVector();
 		// testPQBinTree();
-		testLeftistHeaps();
+		// testLeftistHeaps();
+		testString();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -290,6 +292,63 @@ public class Main {
 				raxorfF.getStudent());
 	}
 
+	public static void testString() {
+		final char[] DNAs = { 'A', 'T', 'C', 'G' };
+		Random random = new Random();
+		int SIZE = 100;
+		int SUB_SIZE = 4;
+
+		String str;
+		String subStr;
+		StringBuilder sBuilder = new StringBuilder();
+		for (int i = 0; i < SIZE; i++) {
+			sBuilder.append(DNAs[random.nextInt(4)]);
+			random = new Random();
+		}
+		str = sBuilder.toString();
+		sBuilder.delete(0, sBuilder.length());
+
+		for (int i = 0; i < SUB_SIZE; i++) {
+			sBuilder.append(DNAs[random.nextInt(4)]);
+			random = new Random();
+		}
+		subStr = sBuilder.toString();
+		sBuilder.delete(0, sBuilder.length());
+
+		// str = "圣人之静也非日静也善故静也";
+		// str = "道可道非常道名可名非常名";
+		// str =
+		// "000100001***********chin**chilla************chinchilla**********************************************";
+		// str =
+		// "CCCGGGCTAGTACTAATATCCGGCGATACGCCTTCGGGGACGAACGTCGGTCGAATCAGATCCAACAAGCGATCTTTGGCAGACCTGTAACAACAGTTTAGATCCGTAGTCGTTCGACGTTAGTCACTACAACAAAAAGTCAAGCTAGCGTGTCTGCTTTTCGAGTGAAAGTATGCGCAGTGGAGTAGGTGATGCTCTGG";
+		int f = 0;
+		int d = 25;
+		int t = d;
+		System.out.println("String:");
+		while (f < str.length()) {
+			System.out.println(str.substring(f, t));
+			f = t;
+			t += d;
+		}
+
+		// subStr = "非日静也善故静也";
+		// subStr = "00001";
+		// subStr = "CTTC";
+		System.out.println("\nSubString:\n".concat(subStr));
+
+		int i = StringUtils.indexOfBF(str, subStr);
+		System.out.println(String.format("\nindexOfBF:%d", i));
+
+		i = StringUtils.indexOfKMP(str, subStr);
+		System.out.println(String.format("\nindexOfKMP:%d", i));
+
+		i = StringUtils.indexOfBM_BC(str, subStr);
+		System.out.println(String.format("\nindexOfBM_BC:%d", i));
+
+		i = StringUtils.indexOfBM_GS(str, subStr);
+		System.out.println(String.format("\nindexOfBM_GS:%d", i));
+	}
+
 	public static void testLeftistHeaps() {
 		Random random = new Random();
 		int SIZE = 1 + random.nextInt(15);
@@ -326,25 +385,25 @@ public class Main {
 		lh1.printTree();
 
 		// insert
-		// list.clear();
-		// for (int i = 0; i < SIZE; i++) {
-		// list.add(random.nextInt(1000));
-		// random = new Random();
-		// }
-		// LeftistHeap<Integer> lh2 = new LeftistHeap<>();
-		// for (int i = 0; i < list.size(); i++) {
-		// lh2.insert(list.get(i));
-		// }
-		// System.out.println("merge:");
-		// printList("raw data", list);
-		// lh2.printTree();
-		//
-		// // delete
-		// random = new Random();
-		// int pos = 0 + random.nextInt(list.size() - 1);
-		// System.out.println("Remove " + list.get(pos));
-		// lh2.remove(list.get(pos));
-		// lh2.printTree();
+		list.clear();
+		for (int i = 0; i < SIZE; i++) {
+			list.add(random.nextInt(1000));
+			random = new Random();
+		}
+		LeftistHeap<Integer> lh2 = new LeftistHeap<>();
+		for (int i = 0; i < list.size(); i++) {
+			lh2.insert(list.get(i));
+		}
+		System.out.println("merge:");
+		printList("raw data", list);
+		lh2.printTree();
+
+		// delete
+		random = new Random();
+		int pos = 0 + random.nextInt(list.size() - 1);
+		System.out.println("Remove " + list.get(pos));
+		lh2.remove(list.get(pos));
+		lh2.printTree();
 	}
 
 	public static void testPQBinTree() {

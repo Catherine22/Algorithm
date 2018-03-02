@@ -199,6 +199,44 @@ Merge two heaps (A, B. |A| = m >= n = |B|):
 
 - Demo [LeftistHeap]
 
+## String
+Let's focus on indexOf(String s) here.
+1. Brute-force algorithm with only one loop.
+2. KMP algorithm
+
+Let's say you have 2 Strings - "chinch_illx_chinchilla" as s1 and "chinchilla" as s2. You do s1.indexOf(s2).
+You could simply try out indexOf() with Brute-force algorithm. That is, you compare every char in s1 to the 1st char in s2. When they are equal, go on and check the rest chars of s2. However, looping the whole s1 could waste a lot of time and it's sometimes unnecessary. That what KMP do - to decide which char in s1 would be compared in the next round. And that's the most important part of KMP.
+
+> KMP is used for a small (e.g. DNA nucleobases (A,T,C,G)) group of String.
+
+![KMP][18]   
+
+Q: [Why jdk's String.indexof() does not use KMP?]
+
+3. Boyer-Moore algorithm
+
+**Boyer-Moore1 - Bad character**
+
+When there are a large collection say a Chinese article. We know the most common Chinese words are at least 5,000. It's almost failed to find out a specific word. With Boyer-Moore algorithm, skiping sections of the useless text (bad character) to speed up the searching.
+
+![Bad character][19]
+
+**Boyer-Moore2 - Good suffix**
+
+Another BM strategy is Good Suffix rule. For example, we have "XXXXXCATCHHATCHXXXX" and you are going to search "CATCHHATCH".
+We keep the good suffix, that is "ATCH" (......ATCH) at the first comparing. Next, we try to find the next "ATCH" in "CATCHHATCH" and you'll see another "ATCH" (.ATCH.....). Now we move the whole subString a little so that "XXXXXCATCHHATCHXXXX" can compare to the second "ATCH".
+
+![Good suffix][20]
+
+> BM is used for a large (e.g. Chinese articles, a vocabulary list) group of String.
+
+**Comparison**
+
+![comparison][21]   
+
+
+- BF, KMP and BM Demo [StringUtils]
+
 ## Dictionary
 
 ### Hashing
@@ -321,6 +359,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [PriorityQueueVectorImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java>
    [PriorityQueueBinTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java>
    [LeftistHeap]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/LeftistHeap.java>
+   [StringUtils]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/string/StringUtils.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -331,6 +370,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [Double red video]:<https://www.youtube.com/watch?v=m9tse9Gr2pE>
    [Red black tree animation]:<https://www.cs.usfca.edu/~galles/visualization/RedBlack.html>
    [Red/Black Trees]:<https://github.com/Catherine22/Algorithms/blob/master/res/L19b_BalancedBST_BTreeRB.pdf>
+   [Why jdk's String.indexof() does not use KMP?]:<https://stackoverflow.com/questions/19543547/why-jdks-string-indexof-does-not-use-kmp>
 
   [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
   [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
@@ -349,3 +389,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [15]: https://github.com/Catherine22/Algorithms/blob/master/res/complete_binary_heap.png
   [16]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_1.png
   [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png
+  [18]: https://github.com/Catherine22/Algorithms/blob/master/res/kmp.png
+  [19]: https://github.com/Catherine22/Algorithms/blob/master/res/bm.png
+  [20]: https://github.com/Catherine22/Algorithms/blob/master/res/gs.png
+  [21]: https://github.com/Catherine22/Algorithms/blob/master/res/indexOf.png
