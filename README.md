@@ -207,6 +207,8 @@ Let's focus on indexOf(String s) here.
 Let's say you have 2 Strings - "chinch_illx_chinchilla" as s1 and "chinchilla" as s2. You do s1.indexOf(s2).
 You could simply try out indexOf() with Brute-force algorithm. That is, you compare every char in s1 to the 1st char in s2. When they are equal, go on and check the rest chars of s2. However, looping the whole s1 could waste a lot of time and it's sometimes unnecessary. That what KMP do - to decide which char in s1 would be compared in the next round. And that's the most important part of KMP.
 
+> KMP is used for a small (e.g. DNA nucleobases (A,T,C,G)) group of String.
+
 ![KMP][18]   
 
 Q: [Why jdk's String.indexof() does not use KMP?]
@@ -224,15 +226,14 @@ When there are a large collection say a Chinese article. We know the most common
 Another BM strategy is Good Suffix rule. For example, we have "XXXXXCATCHHATCHXXXX" and you are going to search "CATCHHATCH".
 We keep the good suffix, that is "ATCH" (......ATCH) at the first comparing. Next, we try to find the next "ATCH" in "CATCHHATCH" and you'll see another "ATCH" (.ATCH.....). Now we move the whole subString a little so that "XXXXXCATCHHATCHXXXX" can compare to the second "ATCH".
 
-
 ![Good suffix][20]
 
-|    | BF | KMP | BM |
-| ---- | ---- | ---- | ---- |
-| average searching time |  |  |  |
-| the worst case |  |  |  |
-| memory buffer | no | depending on subString | largest (depending on main String) |
-| character Set (main String) |  | small (DNA nucleobases (A,T,C,G)) | large (a Chinese article, a vocabulary list)|
+> BM is used for a large (e.g. Chinese articles, a vocabulary list) group of String.
+
+**Comparison**
+
+![comparison][21]   
+
 
 - BF, KMP and BM Demo [StringUtils]
 
@@ -391,3 +392,4 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   [18]: https://github.com/Catherine22/Algorithms/blob/master/res/kmp.png
   [19]: https://github.com/Catherine22/Algorithms/blob/master/res/bm.png
   [20]: https://github.com/Catherine22/Algorithms/blob/master/res/gs.png
+  [21]: https://github.com/Catherine22/Algorithms/blob/master/res/indexOf.png

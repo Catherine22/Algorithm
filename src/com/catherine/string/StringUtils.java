@@ -14,7 +14,7 @@ import com.catherine.Main;
  *
  */
 public class StringUtils {
-	private final static boolean SHOW_LOG = true;
+	private final static boolean SHOW_LOG = false;
 
 	/**
 	 * 返回前缀，[0, k)
@@ -240,18 +240,16 @@ public class StringUtils {
 		int shift;
 		while (j >= 0) {
 			shift = bmTable.nextGS(j);
-//			System.out.println("shift:" + shift);
-			if (shift == 0)
-				return i;
-			else
-				i += shift;
-//			System.out.println("i:" + i + ":" + sa[i]);
-//			System.out.println("j:" + j + ":" + pa[j]);
+			i += shift;
+			// System.out.println("shift:" + shift);
+			// System.out.println("i:" + i + ":" + sa[i]);
+			// System.out.println("j:" + j + ":" + pa[j]);
 
-			int t = pa.length - 1;
+			int t = j;
 			while (t >= 0) {
 				if (sa[i + t] == pa[t]) {
-//					System.out.println("main[" + (i + t) + "]:" + sa[i + t] + " vs " + "sub[" + t + "]:" + pa[t] + "\t");
+					// System.out.println("main[" + (i + t) + "]:" + sa[i + t] +
+					// " vs " + "sub[" + t + "]:" + pa[t] + "\t");
 					t--;
 				} else {
 					j--;
@@ -325,8 +323,8 @@ public class StringUtils {
 				else // 这边不需要设置终止条件，因为有哨兵
 					t = nextTable[t];
 			}
-			if (SHOW_LOG)
-				Main.printArray("KMP Table", nextTable);
+
+			Main.printArray("KMP Table", nextTable);
 		}
 
 		/**
@@ -356,8 +354,8 @@ public class StringUtils {
 				} else // 这边不需要设置终止条件，因为有哨兵
 					t = nextTable[t];
 			}
-			if (SHOW_LOG)
-				Main.printArray("KMP Table", nextTable);
+
+			Main.printArray("KMP Table", nextTable);
 		}
 
 		/**
@@ -479,8 +477,7 @@ public class StringUtils {
 				i += (shift > 0) ? shift : p.length;
 			}
 
-			if (SHOW_LOG)
-				Main.printArray("BC Table", bcTable);
+			Main.printArray("BC Table", bcTable);
 		}
 
 		private int lastIndexOf(char v, char[] c) {
@@ -519,23 +516,23 @@ public class StringUtils {
 			int suffix = 0;// 计算最大重复字符串时用
 
 			while (mH < main.length && pH >= 0) {
-				// if (SHOW_LOG)
-				// System.out.print(p[pH] + " vs " + main[mH]);
+				if (SHOW_LOG)
+					System.out.print(p[pH] + " vs " + main[mH]);
 
 				if (p[pH] == main[mH]) {
-					// if (SHOW_LOG)
-					// System.out.println(" 匹配");
+					if (SHOW_LOG)
+						System.out.println(" 匹配");
 					// 找到相同字符
 					suffix++;
 					pH--;
 					mH--;
 					if (suffix == p.length) {
-						// if (SHOW_LOG)
-						// System.out.print(" 完全匹配 ");
+						if (SHOW_LOG)
+							System.out.print(" 完全匹配 ");
 						if (gsH == gsTable.length - 1)
 							gsTable[gsH] = mHCache - p.length + 1;
 						else {
-							gsTable[gsH] = mHCache - p.length;
+							gsTable[gsH] = mHCache - p.length + 1;
 							for (int i = gsH + 1; i < gsTable.length; i++) {
 								gsTable[gsH] -= gsTable[i];
 							}
@@ -546,8 +543,8 @@ public class StringUtils {
 					}
 				} else {
 					if (mH == mHCache) {
-						// if (SHOW_LOG)
-						// System.out.println(" 重来");
+						if (SHOW_LOG)
+							System.out.println(" 重来");
 						// 表示上一个字符不同，模式串重新开始检查
 						mHCache = ++mH;
 						pH = p.length - 1;
@@ -563,31 +560,28 @@ public class StringUtils {
 						// System.out.println(String.format(" %d,%d,%d,%d",
 						// suffix, maxSuffix, mHCache, gsH));
 						if (suffix == p.length) {
-							// if (SHOW_LOG)
-							// System.out.print(" 完全匹配 ");
+							if (SHOW_LOG)
+								System.out.print(" 完全匹配 ");
 							gsTable[gsH] = 0;
 							// System.out.println(String.format("gsTable[%d]:%d",
 							// gsH, gsTable[gsH]));
 							break;
 						} else if (suffix >= maxSuffix) {
-							// if (SHOW_LOG)
-							// System.out.print(" 后缀匹配 ");
+							if (SHOW_LOG)
+								System.out.print(" 后缀匹配 ");
 
-							if (gsH == gsTable.length - 1)
-								gsTable[gsH] = mHCache - p.length + 1;
-							else {
-								gsTable[gsH] = mHCache - p.length;
-								for (int i = gsH + 1; i < gsTable.length; i++) {
-									gsTable[gsH] -= gsTable[i];
-								}
+							gsTable[gsH] = mHCache - gsTable.length + 1;
+							for (int i = gsH + 1; i < gsTable.length; i++) {
+								gsTable[gsH] -= gsTable[i];
 							}
+
 							// System.out.println(String.format("gsTable[%d]:%d",
 							// gsH, gsTable[gsH]));
 							maxSuffix = gsTable.length - gsH + 1;
 							gsH--;
 						} else {
-							// if (SHOW_LOG)
-							// System.out.println(" skip");
+							if (SHOW_LOG)
+								System.out.println(" skip");
 
 						}
 
@@ -598,8 +592,8 @@ public class StringUtils {
 				}
 
 			}
-			if (SHOW_LOG)
-				Main.printArray("GS Table", gsTable);
+
+			Main.printArray("GS Table", gsTable);
 		}
 
 		/**

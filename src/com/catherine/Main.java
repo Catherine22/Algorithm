@@ -315,7 +315,6 @@ public class Main {
 		subStr = sBuilder.toString();
 		sBuilder.delete(0, sBuilder.length());
 
-		str = "ATGCTACGAAACAAGTGTCATGGTCGTATATTGAGCGGTCACACGTATGCGACGTCCAACTTCTAGGTAGTGGGGTTCGCCTTTGAGACTAGCCACCCTG";
 		// str = "圣人之静也非日静也善故静也";
 		// str = "道可道非常道名可名非常名";
 		// str =
@@ -332,7 +331,6 @@ public class Main {
 			t += d;
 		}
 
-		subStr = "CCTG";
 		// subStr = "非日静也善故静也";
 		// subStr = "00001";
 		// subStr = "CTTC";
