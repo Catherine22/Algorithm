@@ -7,7 +7,7 @@ trees/Algorithms
 - [Insertion Sort]
 - [Merge Sort]
 - [Heap sort]
-- Quick sort
+- [Quick sort]
 - [Selection sort]
 
 ## Simulating Turing Machine
@@ -327,6 +327,7 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
    [Selection sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SelectionSort.java>
    [Heap sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/HeapSort.java>
+   [Quick sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/QuickSort.java>
    [Stack-sortable permutation]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SortableStackPermutation.java>
    [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
    [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>

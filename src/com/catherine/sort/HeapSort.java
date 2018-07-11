@@ -1,5 +1,6 @@
 package com.catherine.sort;
 
+import com.catherine.Main;
 import com.catherine.priority_queue.MyCompleteBinaryHeap;
 import com.catherine.priority_queue.PriorityQueueVectorImpl;
 import com.catherine.utils.Analysis;
@@ -36,12 +37,21 @@ public class HeapSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		MyCompleteBinaryHeap<T> pq = new MyCompleteBinaryHeap<>();
 		pq.heapify(input);
 
+		//TODO
+//		Main.printArray("HEAPIFY", input);
+
 		// 首先根节点已经坐落[0]，直接从[1]开始
 		input[0] = pq.getMax();
+		//TODO
+//		System.out.print("HEAP: {"+input[0]);
 
 		for (int i = 1; i < input.length; i++) {
 			input[i] = pq.delMax();
+			//TODO
+//			System.out.print(" "+input[i]);
 		}
+		//TODO
+//		System.out.println(" }");
 
 		if (isAscending) {
 			T tmp;

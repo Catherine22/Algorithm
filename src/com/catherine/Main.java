@@ -28,6 +28,7 @@ import java.util.Stack;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
 import com.catherine.data_type.MyArrayList;
 import com.catherine.data_type.MyLinkedList;
 import com.catherine.data_type.Operator;
@@ -56,6 +57,7 @@ import com.catherine.sort.BubbleSort;
 import com.catherine.sort.HeapSort;
 import com.catherine.sort.InsertionSort;
 import com.catherine.sort.MergeSort;
+import com.catherine.sort.QuickSort;
 import com.catherine.sort.SelectionSort;
 import com.catherine.sort.SortableStackPermutation;
 import com.catherine.string.StringUtils;
@@ -86,14 +88,16 @@ import com.catherine.security.jws_object.AttestationResult;
 
 public class Main {
 
-	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4,
-			2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10 };
+	private static int[] input1 = new int[] { 3, 5, 7, 1, 4, 2, 10, 4, -10, 3,
+			5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7, 1, 4, 2, 10, 4, -10, 3, 5, 7,
+			1, 4, 2, 10, 4, -10 };
 	private static int[] input2 = new int[] { 38, 29, 28, 11, 4, 5, 2 };
-	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12, 14, 10 };
+	private static int[] input6 = new int[] { 1, 4, 1, 1, 7, 3, 64, 5, 23, 12,
+			14, 10 };
 
 	public static void main(String[] args) {
 		// compareStringSorting();
-		// compareIntSorting();
+		compareIntSorting();
 		// testHailstone();
 		// testTuringMachine();
 		// testSequence();
@@ -111,7 +115,7 @@ public class Main {
 		// testPQVector();
 		// testPQBinTree();
 		// testLeftistHeaps();
-		testString();
+		// testString();
 		// testHash();
 		// testCryptography();
 		// testJWS();
@@ -119,49 +123,60 @@ public class Main {
 
 	public static void testHash() {
 		CollisionMode doNothing = new CollisionMode.Builder().build();
-		CollisionMode linearProbing = new CollisionMode.Builder().mode(CollisionMode.LINEAR_PROBING).spareBuckets(3)
+		CollisionMode linearProbing = new CollisionMode.Builder()
+				.mode(CollisionMode.LINEAR_PROBING).spareBuckets(3).build();
+		CollisionMode quadraticPobing = new CollisionMode.Builder()
+				.mode(CollisionMode.QUADRATIC_PROBING).spareBuckets(3).mod(31)
 				.build();
-		CollisionMode quadraticPobing = new CollisionMode.Builder().mode(CollisionMode.QUADRATIC_PROBING)
-				.spareBuckets(3).mod(31).build();
-		CollisionMode fermatQuadraticPobing = new CollisionMode.Builder().mode(CollisionMode.FERMAT_QUADRATIC_PROBING)
-				.spareBuckets(3).mod(31).build();
+		CollisionMode fermatQuadraticPobing = new CollisionMode.Builder()
+				.mode(CollisionMode.FERMAT_QUADRATIC_PROBING).spareBuckets(3)
+				.mod(31).build();
 
-		HashingHelper hashingHelper = new HashingHelper("students_raw", doNothing);
+		HashingHelper hashingHelper = new HashingHelper("students_raw",
+				doNothing);
 		hashingHelper.createRandomTable(100, 0.75f, 30, 336, true);
 
 		// Do not fix collisions**************************
 		HashingTemplate remainder = new Remainder(17, doNothing);
 		remainder.hash(hashingHelper.getStudent());
-		remainder.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainder.getTableList(),
+		remainder.analyse(hashingHelper.getTableList(),
+				hashingHelper.getStudent(), remainder.getTableList(),
 				remainder.getStudent());
 
 		Mod mod = new Mod(2, 14, 17, doNothing);
 		mod.hash(hashingHelper.getStudent());
-		mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), mod.getTableList(), mod.getStudent());
+		mod.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				mod.getTableList(), mod.getStudent());
 
 		HashingTemplate sd = new SelectingDigits(doNothing);
 		sd.hash(hashingHelper.getStudent());
-		sd.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), sd.getTableList(), sd.getStudent());
+		sd.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				sd.getTableList(), sd.getStudent());
 
 		MidSquare ms = new MidSquare(doNothing);
 		ms.hash(hashingHelper.getStudent());
-		ms.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), ms.getTableList(), ms.getStudent());
+		ms.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				ms.getTableList(), ms.getStudent());
 
 		Fold fold = new Fold(2, doNothing);
 		fold.hash(hashingHelper.getStudent());
-		fold.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), fold.getTableList(), fold.getStudent());
+		fold.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				fold.getTableList(), fold.getStudent());
 
 		RotateAndFold raf = new RotateAndFold(2, doNothing);
 		raf.hash(hashingHelper.getStudent());
-		raf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raf.getTableList(), raf.getStudent());
+		raf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				raf.getTableList(), raf.getStudent());
 
 		XORFold xorf = new XORFold(2, doNothing);
 		xorf.hash(hashingHelper.getStudent());
-		xorf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), xorf.getTableList(), xorf.getStudent());
+		xorf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				xorf.getTableList(), xorf.getStudent());
 
 		RotateAndXORFold raxorf = new RotateAndXORFold(2, doNothing);
 		raxorf.hash(hashingHelper.getStudent());
-		raxorf.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raxorf.getTableList(),
+		raxorf.analyse(hashingHelper.getTableList(),
+				hashingHelper.getStudent(), raxorf.getTableList(),
 				raxorf.getStudent());
 
 		// Fix collisions (Linear Probing)**************************
@@ -257,38 +272,45 @@ public class Main {
 		// Fix collisions (Fermat Quadratic Probing)**************************
 		Remainder remainderF = new Remainder(17, fermatQuadraticPobing);
 		remainderF.hash(hashingHelper.getStudent());
-		remainderF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), remainderF.getTableList(),
+		remainderF.analyse(hashingHelper.getTableList(),
+				hashingHelper.getStudent(), remainderF.getTableList(),
 				remainderF.getStudent());
 
 		Mod modF = new Mod(2, 14, 17, fermatQuadraticPobing);
 		modF.hash(hashingHelper.getStudent());
-		modF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), modF.getTableList(), modF.getStudent());
+		modF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				modF.getTableList(), modF.getStudent());
 
 		SelectingDigits sdF = new SelectingDigits(fermatQuadraticPobing);
 		sdF.hash(hashingHelper.getStudent());
-		sdF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), sdF.getTableList(), sdF.getStudent());
+		sdF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				sdF.getTableList(), sdF.getStudent());
 
 		MidSquare msF = new MidSquare(fermatQuadraticPobing);
 		msF.hash(hashingHelper.getStudent());
-		msF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), msF.getTableList(), msF.getStudent());
+		msF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				msF.getTableList(), msF.getStudent());
 
 		Fold foldF = new Fold(2, fermatQuadraticPobing);
 		foldF.hash(hashingHelper.getStudent());
-		foldF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), foldF.getTableList(),
-				foldF.getStudent());
+		foldF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				foldF.getTableList(), foldF.getStudent());
 
 		RotateAndFold rafF = new RotateAndFold(2, fermatQuadraticPobing);
 		rafF.hash(hashingHelper.getStudent());
-		rafF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), rafF.getTableList(), rafF.getStudent());
+		rafF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				rafF.getTableList(), rafF.getStudent());
 
 		XORFold xorfF = new XORFold(2, fermatQuadraticPobing);
 		xorfF.hash(hashingHelper.getStudent());
-		xorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), xorfF.getTableList(),
-				xorfF.getStudent());
+		xorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(),
+				xorfF.getTableList(), xorfF.getStudent());
 
-		RotateAndXORFold raxorfF = new RotateAndXORFold(2, fermatQuadraticPobing);
+		RotateAndXORFold raxorfF = new RotateAndXORFold(2,
+				fermatQuadraticPobing);
 		raxorfF.hash(hashingHelper.getStudent());
-		raxorfF.analyse(hashingHelper.getTableList(), hashingHelper.getStudent(), raxorfF.getTableList(),
+		raxorfF.analyse(hashingHelper.getTableList(),
+				hashingHelper.getStudent(), raxorfF.getTableList(),
 				raxorfF.getStudent());
 	}
 
@@ -379,7 +401,8 @@ public class Main {
 		printList("raw data2", list);
 		b.printTree();
 
-		System.out.println(String.format("merge a(%d) and b(%d)", a.size(), b.size()));
+		System.out.println(String.format("merge a(%d) and b(%d)", a.size(),
+				b.size()));
 		LeftistHeap<Integer> lh1 = new LeftistHeap<>();
 		lh1.merge(a.getRoot(), b.getRoot());
 		lh1.printTree();
@@ -417,7 +440,8 @@ public class Main {
 		for (int j = 0; j < TEXT_LEN; j++) {
 			sBuilder.append((char) ('A' + random.nextInt(26)));
 		}
-		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(sBuilder.toString());
+		MyCompleteBinaryHeap<String> pq = new MyCompleteBinaryHeap<>(
+				sBuilder.toString());
 
 		raw[0] = sBuilder.toString();
 		sBuilder.delete(0, TEXT_LEN);
@@ -443,7 +467,8 @@ public class Main {
 		// test2
 		List<Integer> list = new ArrayList<>();
 		list.add(random.nextInt(1000));
-		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(list.get(0));
+		MyCompleteBinaryHeap<Integer> pq2 = new MyCompleteBinaryHeap<>(
+				list.get(0));
 		for (int i = 1; i < SIZE; i++) {
 			list.add(random.nextInt(1000));
 			random = new Random();
@@ -515,7 +540,8 @@ public class Main {
 			random = new Random();
 		}
 
-		System.out.println(String.format("\nGenerate a B-tree, m=%d, size=%d", m, SIZE));
+		System.out.println(String.format("\nGenerate a B-tree, m=%d, size=%d",
+				m, SIZE));
 		System.out.println(myBTree.toString());
 		int r = 0 + random.nextInt(SIZE - 1);
 		System.out.println("\nremove history[" + r + "]:" + history[r]);
@@ -596,12 +622,14 @@ public class Main {
 		try {
 			JwsHelper jwsHelper = new JwsHelper(attestationJws);
 			System.out.println("alg:" + jwsHelper.getAlg());
-			AttestationResult result = new AttestationResult(jwsHelper.getDecodedPayload());
+			AttestationResult result = new AttestationResult(
+					jwsHelper.getDecodedPayload());
 			System.out.println(result);
 
 			List<X509Certificate> certs = jwsHelper.getX5CCertificates();
 
-			X509Certificate rootCert = CertificatesManager.downloadCaIssuersCert(KeySet.GIAG2_URL);
+			X509Certificate rootCert = CertificatesManager
+					.downloadCaIssuersCert(KeySet.GIAG2_URL);
 
 			// Just verify one of the certificates which is belonged to
 			// "attest.android.com" in this case.
@@ -614,7 +642,8 @@ public class Main {
 			}
 
 			// Verify the signature of JWS
-			boolean isJwsSignatureLegal = jwsHelper.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
+			boolean isJwsSignatureLegal = jwsHelper
+					.verifySignature(Algorithm.ALG_SHA256_WITH_RSA);
 			if (isJwsHeaderLegal && isJwsSignatureLegal)
 				System.out.println("Android attestion JWS 通過驗證！");
 			else
@@ -627,7 +656,8 @@ public class Main {
 
 	private static void testCryptography() {
 		try {
-			KeystoreManager.printKeyStoreInfo(KeySet.KEYSTORE_PATH, KeySet.KEYSTORE_TYPE, KeySet.KEYSTORE_PW);
+			KeystoreManager.printKeyStoreInfo(KeySet.KEYSTORE_PATH,
+					KeySet.KEYSTORE_TYPE, KeySet.KEYSTORE_PW);
 
 			TrackLog log1 = new TrackLog("General a single key");
 			Analysis.startTracking(log1);
@@ -653,7 +683,8 @@ public class Main {
 					try {
 						TrackLog log4 = new TrackLog("Decrypt the RSA keyPair");
 						Analysis.startTracking(log4);
-						KeystoreManager.converStringToPublicKey(modulus, exponent);
+						KeystoreManager.converStringToPublicKey(modulus,
+								exponent);
 						Analysis.endTracking(log4);
 						Analysis.printTrack(log4);
 					} catch (ClassNotFoundException e) {
@@ -670,7 +701,8 @@ public class Main {
 				}
 
 				@Override
-				public void onResponse(PrivateKey privateKey, PublicKey publicKey) {
+				public void onResponse(PrivateKey privateKey,
+						PublicKey publicKey) {
 
 				}
 			});
@@ -693,7 +725,8 @@ public class Main {
 			Analysis.endTracking(log7);
 			Analysis.printTrack(log7);
 
-			final TrackLog log8 = new TrackLog("Encrypt a string from the secretKey key");
+			final TrackLog log8 = new TrackLog(
+					"Encrypt a string from the secretKey key");
 			Analysis.startTracking(log8);
 			final Key sKey = KeystoreManager.generateKey();
 			CipherKit.encryptDES(sKey, "Hi there!", new DESCallback() {
@@ -704,9 +737,11 @@ public class Main {
 					Analysis.printTrack(log8);
 
 					try {
-						TrackLog log9 = new TrackLog("Decrypt a string from the secretKey key");
+						TrackLog log9 = new TrackLog(
+								"Decrypt a string from the secretKey key");
 						Analysis.startTracking(log9);
-						System.out.println(CipherKit.decryptDES(sKey, iv, message));
+						System.out.println(CipherKit.decryptDES(sKey, iv,
+								message));
 						Analysis.endTracking(log9);
 						Analysis.printTrack(log9);
 					} catch (InvalidKeyException e) {
@@ -741,31 +776,45 @@ public class Main {
 				}
 
 				@Override
-				public void onResponse(PrivateKey privateKey, PublicKey publicKey) {
+				public void onResponse(PrivateKey privateKey,
+						PublicKey publicKey) {
 
 					try {
-						byte[] signature = MessageDigestKit.signFiles("assets/metals.jpg", Algorithm.ALG_MD5_WITH_RSA,
-								privateKey);
+						byte[] signature = MessageDigestKit.signFiles(
+								"assets/metals.jpg",
+								Algorithm.ALG_MD5_WITH_RSA, privateKey);
 						Analysis.endTracking(log10);
 						Analysis.printTrack(log10);
 
-						TrackLog log11 = new TrackLog("verifing the file with signature ");
+						TrackLog log11 = new TrackLog(
+								"verifing the file with signature ");
 						Analysis.startTracking(log11);
-						boolean islegel = MessageDigestKit.verifyFileSignature(signature, Algorithm.ALG_MD5_WITH_RSA,
+						boolean islegel = MessageDigestKit.verifyFileSignature(
+								signature, Algorithm.ALG_MD5_WITH_RSA,
 								"assets/metals.jpg", publicKey);
 
-						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
-						System.out.println("Signature: Is this file legel? " + islegel);
+						System.out
+								.println("Signature: "
+										+ Base64.getEncoder().encodeToString(
+												signature));
+						System.out.println("Signature: Is this file legel? "
+								+ islegel);
 						Analysis.endTracking(log11);
 						Analysis.printTrack(log11);
 
-						signature = MessageDigestKit.sign(attestationJws.getBytes(), Algorithm.ALG_SHA256_WITH_RSA,
-								privateKey);
-						islegel = MessageDigestKit.verifySignature(signature, Algorithm.ALG_SHA256_WITH_RSA, publicKey,
+						signature = MessageDigestKit.sign(
+								attestationJws.getBytes(),
+								Algorithm.ALG_SHA256_WITH_RSA, privateKey);
+						islegel = MessageDigestKit.verifySignature(signature,
+								Algorithm.ALG_SHA256_WITH_RSA, publicKey,
 								attestationJws.getBytes());
 
-						System.out.println("Signature: " + Base64.getEncoder().encodeToString(signature));
-						System.out.println("Signature: Is this file legel? " + islegel);
+						System.out
+								.println("Signature: "
+										+ Base64.getEncoder().encodeToString(
+												signature));
+						System.out.println("Signature: Is this file legel? "
+								+ islegel);
 					} catch (InvalidKeyException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -782,9 +831,11 @@ public class Main {
 				}
 			});
 
-		} catch (IllegalBlockSizeException | NoSuchPaddingException | BadPaddingException | InvalidKeyException
-				| UnrecoverableKeyException | CertificateException | NoSuchAlgorithmException | KeyStoreException
-				| IOException | InvalidKeySpecException |
+		} catch (IllegalBlockSizeException | NoSuchPaddingException
+				| BadPaddingException | InvalidKeyException
+				| UnrecoverableKeyException | CertificateException
+				| NoSuchAlgorithmException | KeyStoreException | IOException
+				| InvalidKeySpecException |
 
 				ClassNotFoundException e1) {
 			e1.printStackTrace();
@@ -851,7 +902,8 @@ public class Main {
 					public void onResponse(boolean result) {
 						myAVLTree1.traverseIn();// 中序一定是小到大排
 						myAVLTree1.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
+						System.out.println("Is that still an AVL tree? "
+								+ result);
 					}
 				});
 			}
@@ -872,7 +924,8 @@ public class Main {
 					public void onResponse(boolean result) {
 						myAVLTree2.traverseIn();// 中序一定是小到大排
 						myAVLTree2.traverseLevel();
-						System.out.println("Is that still an AVL tree? " + result);
+						System.out.println("Is that still an AVL tree? "
+								+ result);
 					}
 				});
 			}
@@ -922,7 +975,8 @@ public class Main {
 
 		// Generate a random BST
 		System.out.println("\n\nrandom BST");
-		MyBinarySearchTree<Integer> randomBST = (MyBinarySearchTree<Integer>) MyBinarySearchTree.random(5, 100, 300);
+		MyBinarySearchTree<Integer> randomBST = (MyBinarySearchTree<Integer>) MyBinarySearchTree
+				.random(5, 100, 300);
 		System.out.println("Is this BST full? " + randomBST.isFull());
 		randomBST.traverseIn();// 中序一定是小到大排
 		randomBST.traverseLevel();
@@ -1030,8 +1084,8 @@ public class Main {
 		System.out.println(ns.convertDecimalToOthers(33646, 35));
 		System.out.println(Integer.toString(33646, 35));
 		Others other = new Others();
-		boolean b = other.isBracketsCorrect(
-				"(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -Math.pow(((1 - Math.sqrt(5))/2), n))");
+		boolean b = other
+				.isBracketsCorrect("(1/Math.sqrt(5)) * (Math.pow(((1 + Math.sqrt(5))/2), n) -Math.pow(((1 - Math.sqrt(5))/2), n))");
 		System.out.println(b + "");
 		SortableStackPermutation ssp = new SortableStackPermutation();
 		Stack<Integer> oriS = new Stack<>();
@@ -1088,9 +1142,12 @@ public class Main {
 
 	public static void testSearch() {
 		Search search = new Search();
-		System.out.println("binSearch:" + search.binSearch(input6, 1, 0, input6.length - 1));
-		System.out.println("binSearch2:" + search.binSearch2(input6, 1, 0, input6.length - 1));
-		System.out.println("fibSearch:" + search.fibSearch(input6, 1, 0, input6.length - 1));
+		System.out.println("binSearch:"
+				+ search.binSearch(input6, 1, 0, input6.length - 1));
+		System.out.println("binSearch2:"
+				+ search.binSearch2(input6, 1, 0, input6.length - 1));
+		System.out.println("fibSearch:"
+				+ search.fibSearch(input6, 1, 0, input6.length - 1));
 	}
 
 	public static void testSequence() {
@@ -1108,15 +1165,18 @@ public class Main {
 		}));
 
 		printArray("removeDuplicates", sequence.removeDuplicates(input1));
-		printArray("removeDuplicatesAndSort1", sequence.removeDuplicatesAndSort1(input6));
-		printArray("removeDuplicatesAndSort2", sequence.removeDuplicatesAndSort2(input6));
+		printArray("removeDuplicatesAndSort1",
+				sequence.removeDuplicatesAndSort1(input6));
+		printArray("removeDuplicatesAndSort2",
+				sequence.removeDuplicatesAndSort2(input6));
 
 	}
 
 	public static void testTuringMachine() {
 		// Increment on Turing Machine
 		TuringMachine tMachine = new TuringMachine();
-		printArray("TuringMachine", tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
+		printArray("TuringMachine",
+				tMachine.increase(new int[] { 0, 0, 1, 1, 1, 1 }));
 
 		Sequence sequence = new Sequence();
 		// 2 ways to increase the capacity
@@ -1147,7 +1207,8 @@ public class Main {
 		}
 
 		boolean isAscending = (0 + random.nextInt(2)) == 1;
-		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
+		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending"
+				: "Descending"), input);
 
 		BaseSort<String> ms = new MergeSort<>();
 		String[] a1 = ms.sort(input, isAscending);
@@ -1157,40 +1218,47 @@ public class Main {
 		String[] a2 = is.sort(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", is.TAG), a2);
 		if (!Arrays.deepEquals(a1, a2))
-			throw new Error(getString(String.format("Sorted array (%s)", is.TAG), a2));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", is.TAG), a2));
 
 		BubbleSort<String> bs = new BubbleSort<>();
 		String[] a3 = bs.sort(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", bs.TAG), a3);
 		if (!Arrays.deepEquals(a1, a3))
-			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a3));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", bs.TAG), a3));
 
 		String[] a4 = bs.sort2(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", bs.TAG), a4);
 		if (!Arrays.deepEquals(a1, a4))
-			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a4));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", bs.TAG), a4));
 
 		String[] a5 = bs.sort3(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", bs.TAG), a5);
 		if (!Arrays.deepEquals(a1, a5))
-			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a5));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", bs.TAG), a5));
 
 		BaseSort<String> ss = new SelectionSort<>();
 		String[] a6 = ss.sort(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", ss.TAG), a6);
 		if (!Arrays.deepEquals(a1, a6))
-			throw new Error(getString(String.format("Sorted array (%s)", ss.TAG), a6));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", ss.TAG), a6));
 
 		HeapSort<String> hs = new HeapSort<>();
 		String[] a7 = hs.sort(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", hs.TAG), a7);
 		if (!Arrays.deepEquals(a1, a7))
-			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a7));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", hs.TAG), a7));
 
 		String[] a8 = hs.sort2(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", hs.TAG), a8);
 		if (!Arrays.deepEquals(a1, a8))
-			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a8));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", hs.TAG), a8));
 	}
 
 	public static void compareIntSorting() {
@@ -1206,8 +1274,13 @@ public class Main {
 			random = new Random();
 		}
 
-		boolean isAscending = (0 + random.nextInt(2)) == 1;
-		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending" : "Descending"), input);
+		// TODO
+//		Integer[] input = { 6, 3, 8, 1, 5, 9, 8, 4, 5, 7, 2 };
+//		boolean isAscending = true;
+
+		 boolean isAscending = (0 + random.nextInt(2)) == 1;
+		printArray(String.format("(%s) Raw", (isAscending) ? "Ascending"
+				: "Descending"), input);
 
 		BaseSort<Integer> ms = new MergeSort<>();
 		Integer[] a1 = ms.sort(input, isAscending);
@@ -1215,42 +1288,63 @@ public class Main {
 
 		BaseSort<Integer> is = new InsertionSort<>();
 		Integer[] a2 = is.sort(input, isAscending);
-		// printArray(String.format("Sorted array (%s)", is.TAG), a2);
+		printArray(String.format("Sorted array (%s)", is.TAG), a2);
 		if (!Arrays.deepEquals(a1, a2))
-			throw new Error(getString(String.format("Sorted array (%s)", is.TAG), a2));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", is.TAG), a2));
 
 		BubbleSort<Integer> bs = new BubbleSort<>();
 		Integer[] a3 = bs.sort(input, isAscending);
-		// printArray(String.format("Sorted array (%s)", bs.TAG), a3);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a3);
 		if (!Arrays.deepEquals(a1, a3))
-			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a3));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", bs.TAG), a3));
 
 		Integer[] a4 = bs.sort2(input, isAscending);
-		// printArray(String.format("Sorted array (%s)", bs.TAG), a4);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a4);
 		if (!Arrays.deepEquals(a1, a4))
-			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a4));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", bs.TAG), a4));
 
 		Integer[] a5 = bs.sort3(input, isAscending);
-		// printArray(String.format("Sorted array (%s)", bs.TAG), a5);
+		printArray(String.format("Sorted array (%s)", bs.TAG), a5);
 		if (!Arrays.deepEquals(a1, a5))
-			throw new Error(getString(String.format("Sorted array (%s)", bs.TAG), a5));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", bs.TAG), a5));
 
 		BaseSort<Integer> ss = new SelectionSort<>();
 		Integer[] a6 = ss.sort(input, isAscending);
-		// printArray(String.format("Sorted array (%s)", ss.TAG), a6);
+		printArray(String.format("Sorted array (%s)", ss.TAG), a6);
 		if (!Arrays.deepEquals(a1, a6))
-			throw new Error(getString(String.format("Sorted array (%s)", ss.TAG), a6));
+			throw new Error(getString(
+					String.format("Sorted array (%s)", ss.TAG), a6));
 
 		HeapSort<Integer> hs = new HeapSort<>();
-		Integer[] a7 = hs.sort(input, isAscending);
+		// TODO
+		// Integer[] a7 = hs.sort(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", hs.TAG), a7);
-		if (!Arrays.deepEquals(a1, a7))
-			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a7));
+		// if (!Arrays.deepEquals(a1, a7))
+		// throw new Error(getString(
+		// String.format("Sorted array (%s)", hs.TAG), a7));
 
-		Integer[] a8 = hs.sort2(input, isAscending);
+		// Integer[] a8 = hs.sort2(input, isAscending);
 		// printArray(String.format("Sorted array (%s)", hs.TAG), a8);
-		if (!Arrays.deepEquals(a1, a8))
-			throw new Error(getString(String.format("Sorted array (%s)", hs.TAG), a8));
+		// if (!Arrays.deepEquals(a1, a8))
+		// throw new Error(getString(
+		// String.format("Sorted array (%s)", hs.TAG), a8));
+
+		QuickSort<Integer> qs = new QuickSort<Integer>();
+		Integer[] a9 = qs.sort(input, isAscending);
+		printArray(String.format("Sorted array (%s1)", qs.TAG), a9);
+		if (!Arrays.deepEquals(a1, a9))
+			throw new Error(getString(
+					String.format("Sorted array (%s1)", qs.TAG), a9));
+
+		Integer[] a10 = qs.sort2(input, isAscending);
+		printArray(String.format("Sorted array (%s2)", qs.TAG), a10);
+		if (!Arrays.deepEquals(a1, a10))
+			throw new Error(getString(
+					String.format("Sorted array (%s2)", qs.TAG), a10));
 	}
 
 	public static void printIterator(Iterator<?> it) {
@@ -1263,7 +1357,8 @@ public class Main {
 	}
 
 	public synchronized static void printArray(String title, Object[] array) {
-		System.out.println("--------------------------------------------------------");
+		System.out
+				.println("--------------------------------------------------------");
 		if (array == null)
 			System.out.println("null");
 		else {
@@ -1276,11 +1371,13 @@ public class Main {
 					System.out.println("]");
 			}
 		}
-		System.out.println("--------------------------------------------------------");
+		System.out
+				.println("--------------------------------------------------------");
 	}
 
 	public static void printArray(String title, int[] array) {
-		System.out.println("--------------------------------------------------------");
+		System.out
+				.println("--------------------------------------------------------");
 		if (array == null)
 			System.out.println("null");
 		else {
@@ -1293,11 +1390,13 @@ public class Main {
 					System.out.println("]");
 			}
 		}
-		System.out.println("--------------------------------------------------------");
+		System.out
+				.println("--------------------------------------------------------");
 	}
 
 	public static void printList(String title, List<?> list) {
-		System.out.println("--------------------------------------------------------");
+		System.out
+				.println("--------------------------------------------------------");
 		if (list == null)
 			System.out.println("null");
 		else {
@@ -1310,7 +1409,8 @@ public class Main {
 					System.out.println("]");
 			}
 		}
-		System.out.println("--------------------------------------------------------");
+		System.out
+				.println("--------------------------------------------------------");
 	}
 
 	public static String getString(String title, Object[] array) {
