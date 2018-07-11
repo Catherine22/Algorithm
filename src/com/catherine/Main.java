@@ -1275,7 +1275,7 @@ public class Main {
 		}
 
 		// TODO
-//		 Integer[] input = { 6, 3, 8, 2, 5, 9, 4, 5, 1, 7 };
+//		Integer[] input = { 6, 3, 8, 1, 5, 9, 8, 4, 5, 7, 2 };
 //		boolean isAscending = true;
 
 		 boolean isAscending = (0 + random.nextInt(2)) == 1;
@@ -1335,10 +1335,16 @@ public class Main {
 
 		QuickSort<Integer> qs = new QuickSort<Integer>();
 		Integer[] a9 = qs.sort(input, isAscending);
-		printArray(String.format("Sorted array (%s)", qs.TAG), a9);
+		printArray(String.format("Sorted array (%s1)", qs.TAG), a9);
 		if (!Arrays.deepEquals(a1, a9))
 			throw new Error(getString(
-					String.format("Sorted array (%s)", qs.TAG), a9));
+					String.format("Sorted array (%s1)", qs.TAG), a9));
+
+		Integer[] a10 = qs.sort2(input, isAscending);
+		printArray(String.format("Sorted array (%s2)", qs.TAG), a10);
+		if (!Arrays.deepEquals(a1, a10))
+			throw new Error(getString(
+					String.format("Sorted array (%s2)", qs.TAG), a10));
 	}
 
 	public static void printIterator(Iterator<?> it) {
