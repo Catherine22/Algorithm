@@ -65,18 +65,9 @@ public class QuickSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		return input;
 	}
 
-	/**
-	 * 
-	 * @param input
-	 * @param l
-	 * @param r
-	 * @param isAscending
-	 */
 	private void merge(T[] input, int l, int r, boolean isAscending) {
 		if (l < r && l < input.length && r >= 0) {
-			// System.out.println("from " + l + " to " + r);
 			int head = partition(input, l, r, isAscending);
-			// System.out.println("head " + head);
 			merge(input, head + 1, r, isAscending);
 			merge(input, l, head - 1, isAscending);
 		}
@@ -84,9 +75,7 @@ public class QuickSort<T extends Comparable<? super T>> extends BaseSort<T> {
 
 	private void merge2(T[] input, int l, int r, boolean isAscending) {
 		if (l < r && l < input.length && r >= 0) {
-			// System.out.println("from " + l + " to " + r);
 			int head = partition2(input, l, r, isAscending);
-			// System.out.println("head " + head);
 			merge(input, head + 1, r, isAscending);
 			merge(input, l, head - 1, isAscending);
 		}
@@ -202,8 +191,8 @@ public class QuickSort<T extends Comparable<? super T>> extends BaseSort<T> {
 		int head = pivot + 1;
 		int mid = pivot;
 		T temp = null;
-
 		// int c = 0;
+
 		if (isAscending) {
 			while (head <= boundry && mid <= boundry) {
 				if (input[head].compareTo(input[pivot]) <= 0) {
