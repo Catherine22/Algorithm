@@ -117,11 +117,11 @@ public class CipherKit {
 		byte[] msg = message.getBytes(Algorithm.CHARSET); // 待加解密的消息
 		Cipher c1 = Cipher.getInstance(Algorithm.rules.get("DES")); // 创建一个Cipher对象，注意这里用的算法需要和Key的算法匹配
 		c1.init(Cipher.ENCRYPT_MODE, key);
-		byte[] decryptedData = c1.doFinal(msg);
+		byte[] ecryptedData = c1.doFinal(msg);
 		// iv:
 		// 获取本次加密时使用的初始向量。初始向量属于加密算法使用的一组参数。使用不同的加密算法时，需要保存的参数不完全相同。Cipher会提供相应的API
-		// decryptedData: 加密后的数据
-		callback.onResponse(c1.getIV(), decryptedData);
+		// ecryptedData: 加密后的数据
+		callback.onResponse(c1.getIV(), ecryptedData);
 	}
 
 	/**
