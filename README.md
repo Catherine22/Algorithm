@@ -322,45 +322,45 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
   the License.
   ```
 
-   [Merge Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/MergeSort.java>
-   [Insertion Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/InsertionSort.java>
-   [Bubble Sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/BubbleSort.java>
-   [Selection sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SelectionSort.java>
-   [Heap sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/HeapSort.java>
-   [Quick sort]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/QuickSort.java>
-   [Stack-sortable permutation]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/sort/SortableStackPermutation.java>
-   [Sequence]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Sequence.java>
-   [Sequence Searching]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/Search.java>
-   [1 + a positive integer]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/turing_machine/TuringMachine.java>
-   [MyArrayList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyArrayList.java>
-   [MyLinkedList]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/data_type/MyLinkedList.java>
-   [MyBinaryTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBinaryTree.java>
-   [MyBinarySearchTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBinarySearchTree.java>
-   [BinarySearchTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/BinarySearchTreeImpl.java>
-   [MyAVLTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyAVLTree.java>
-   [MySplayTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MySplayTree.java>
-   [BSTNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/nodes/BSTNode.java>
-   [BNode]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/nodes/BNode.java>
-   [NumberSystem]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/NumberSystem.java>
-   [Others]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/utils/Others.java>
-   [DirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/DirectedGraph.java>
-   [UndirectedGraph]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/graphs/UndirectedGraph.java>
-   [KeystoreManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/KeystoreManager.java>
-   [MessageDigestKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/MessageDigestKit.java>
-   [CipherKit]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CipherKit.java>
-   [CertificatesManager]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/CertificatesManager.java>
-   [JwsHelper]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/security/JwsHelper.java>
-   [MyBTree]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyBTree.java>
-   [RedBlackBSTImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/RedBlackBSTImpl.java>
-   [MyRedBlackBST]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/trees/MyRedBlackBST.java>
-   [HashFunctions]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/functions/>
-   [LinearProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/LinearProbing.java>
-   [QuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/QuadraticProbing.java>
-   [FermatQuadraticProbing]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
-   [PriorityQueueVectorImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java>
-   [PriorityQueueBinTreeImpl]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java>
-   [LeftistHeap]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/priority_queue/LeftistHeap.java>
-   [StringUtils]:<https://github.com/Catherine22/Algorithms/blob/master/src/com/catherine/string/StringUtils.java>
+   [Merge Sort]:<Background/src/com/catherine/sort/MergeSort.java>
+   [Insertion Sort]:Background/master/src/com/catherine/sort/InsertionSort.java>
+   [Bubble Sort]:Background/master/src/com/catherine/sort/BubbleSort.java>
+   [Selection sort]:Background/master/src/com/catherine/sort/SelectionSort.java>
+   [Heap sort]:Background/master/src/com/catherine/sort/HeapSort.java>
+   [Quick sort]:Background/master/src/com/catherine/sort/QuickSort.java>
+   [Stack-sortable permutation]:Background/master/src/com/catherine/sort/SortableStackPermutation.java>
+   [Sequence]:Background/master/src/com/catherine/data_type/Sequence.java>
+   [Sequence Searching]:Background/master/src/com/catherine/data_type/Search.java>
+   [1 + a positive integer]:Background/master/src/com/catherine/turing_machine/TuringMachine.java>
+   [MyArrayList]:Background/master/src/com/catherine/data_type/MyArrayList.java>
+   [MyLinkedList]:Background/master/src/com/catherine/data_type/MyLinkedList.java>
+   [MyBinaryTree]:Background/master/src/com/catherine/trees/MyBinaryTree.java>
+   [MyBinarySearchTree]:Background/master/src/com/catherine/trees/MyBinarySearchTree.java>
+   [BinarySearchTreeImpl]:Background/master/src/com/catherine/trees/BinarySearchTreeImpl.java>
+   [MyAVLTree]:Background/master/src/com/catherine/trees/MyAVLTree.java>
+   [MySplayTree]:Background/master/src/com/catherine/trees/MySplayTree.java>
+   [BSTNode]:Background/master/src/com/catherine/trees/nodes/BSTNode.java>
+   [BNode]:Background/master/src/com/catherine/trees/nodes/BNode.java>
+   [NumberSystem]:Background/master/src/com/catherine/utils/NumberSystem.java>
+   [Others]:Background/master/src/com/catherine/utils/Others.java>
+   [DirectedGraph]:Background/master/src/com/catherine/graphs/DirectedGraph.java>
+   [UndirectedGraph]:Background/master/src/com/catherine/graphs/UndirectedGraph.java>
+   [KeystoreManager]:Background/master/src/com/catherine/security/KeystoreManager.java>
+   [MessageDigestKit]:Background/master/src/com/catherine/security/MessageDigestKit.java>
+   [CipherKit]:Background/master/src/com/catherine/security/CipherKit.java>
+   [CertificatesManager]:Background/master/src/com/catherine/security/CertificatesManager.java>
+   [JwsHelper]:Background/master/src/com/catherine/security/JwsHelper.java>
+   [MyBTree]:Background/master/src/com/catherine/trees/MyBTree.java>
+   [RedBlackBSTImpl]:Background/master/src/com/catherine/trees/RedBlackBSTImpl.java>
+   [MyRedBlackBST]:Background/master/src/com/catherine/trees/MyRedBlackBST.java>
+   [HashFunctions]:Background/master/src/com/catherine/dictionary/functions/>
+   [LinearProbing]:Background/master/src/com/catherine/dictionary/LinearProbing.java>
+   [QuadraticProbing]:Background/master/src/com/catherine/dictionary/QuadraticProbing.java>
+   [FermatQuadraticProbing]:Background/master/src/com/catherine/dictionary/FermatQuadraticProbing.java>
+   [PriorityQueueVectorImpl]:Background/master/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java>
+   [PriorityQueueBinTreeImpl]:Background/master/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java>
+   [LeftistHeap]:Background/master/src/com/catherine/priority_queue/LeftistHeap.java>
+   [StringUtils]:Background/master/src/com/catherine/string/StringUtils.java>
 
    [Algorithms, 4th Edition]:<http://algs4.cs.princeton.edu/home/>
    [深入理解Android之Java Security]:<http://blog.csdn.net/innost/article/details/44081147>
@@ -370,27 +370,27 @@ In Fermat Quadratic Probing, when M is a prime number and M = 4x+3 you would get
    [SecuritySample]:<https://github.com/Catherine22/SecuritySample>
    [Double red video]:<https://www.youtube.com/watch?v=m9tse9Gr2pE>
    [Red black tree animation]:<https://www.cs.usfca.edu/~galles/visualization/RedBlack.html>
-   [Red/Black Trees]:<https://github.com/Catherine22/Algorithms/blob/master/res/L19b_BalancedBST_BTreeRB.pdf>
+   [Red/Black Trees]:Background/master/res/L19b_BalancedBST_BTreeRB.pdf>
    [Why jdk's String.indexof() does not use KMP?]:<https://stackoverflow.com/questions/19543547/why-jdks-string-indexof-does-not-use-kmp>
 
-  [1]: https://github.com/Catherine22/Algorithms/blob/master/res/tree.png
-  [2]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_rotation.png
-  [3]: https://github.com/Catherine22/Algorithms/blob/master/res/tree_double_rotation.png
-  [4]: https://github.com/Catherine22/Algorithms/blob/master/res/i_s.png
-  [5]: https://github.com/Catherine22/Algorithms/blob/master/res/i_d.png
-  [6]: https://github.com/Catherine22/Algorithms/blob/master/res/r_s.png
-  [7]: https://github.com/Catherine22/Algorithms/blob/master/res/r_d.png
-  [8]: https://github.com/Catherine22/Algorithms/blob/master/res/b-tree.png
-  [9]: https://github.com/Catherine22/Algorithms/blob/master/res/B_R_BST.png
-  [10]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_1.png.png
-  [11]: https://github.com/Catherine22/Algorithms/blob/master/res/rr1_2.png.png
-  [12]: https://github.com/Catherine22/Algorithms/blob/master/res/rr2.png
-  [13]: https://github.com/Catherine22/Algorithms/blob/master/res/quadratic_probing.png
-  [14]: https://github.com/Catherine22/Algorithms/blob/master/res/Fermat_s_theorem.png
-  [15]: https://github.com/Catherine22/Algorithms/blob/master/res/complete_binary_heap.png
-  [16]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_1.png
-  [17]: https://github.com/Catherine22/Algorithms/blob/master/res/lh_2.png
-  [18]: https://github.com/Catherine22/Algorithms/blob/master/res/kmp.png
-  [19]: https://github.com/Catherine22/Algorithms/blob/master/res/bm.png
-  [20]: https://github.com/Catherine22/Algorithms/blob/master/res/gs.png
-  [21]: https://github.com/Catherine22/Algorithms/blob/master/res/indexOf.png
+  [1]: Background/res/tree.png
+  [2]: Background/res/tree_rotation.png
+  [3]: Background/res/tree_double_rotation.png
+  [4]: Background/res/i_s.png
+  [5]: Background/res/i_d.png
+  [6]: Background/res/r_s.png
+  [7]: Background/res/r_d.png
+  [8]: Background/res/b-tree.png
+  [9]: Background/res/B_R_BST.png
+  [10]: Background/res/rr1_1.png.png
+  [11]: Background/res/rr1_2.png.png
+  [12]: Background/res/rr2.png
+  [13]: Background/res/quadratic_probing.png
+  [14]: Background/res/Fermat_s_theorem.png
+  [15]: Background/res/complete_binary_heap.png
+  [16]: Background/res/lh_1.png
+  [17]: Background/res/lh_2.png
+  [18]: Background/res/kmp.png
+  [19]: Background/res/bm.png
+  [20]: Background/res/gs.png
+  [21]: Background/res/indexOf.png

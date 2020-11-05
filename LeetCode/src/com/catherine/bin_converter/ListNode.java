@@ -1,7 +1,7 @@
 package com.catherine.bin_converter;
 
 /**
- * @author : catherine
+ * @author : Catherine
  * @created : 04/11/2020
  * <p>
  * Definition for singly-linked list.
