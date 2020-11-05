@@ -5,6 +5,7 @@ package com.catherine.bin_converter;
  * @created : 04/11/2020
  * <p>
  * Definition for singly-linked list.
+ * @see Bin2Dec
  */
 public class ListNode {
     int val;

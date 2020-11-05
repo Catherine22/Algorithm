@@ -25,6 +25,8 @@ import java.util.Arrays;
  * 1 <= A.length <= 10000
  * -10000 <= A[i] <= 10000
  * A is sorted in non-decreasing order.
+ * <p>
+ * https://leetcode.com/explore/learn/card/fun-with-arrays/521/introduction/3240/
  */
 public class SortedSquares {
     public int[] sortedSquares(int[] A) {
