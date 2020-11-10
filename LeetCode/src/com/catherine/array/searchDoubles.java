@@ -38,6 +38,8 @@ import java.util.Arrays;
  * <p>
  * 2 <= arr.length <= 500
  * -10^3 <= arr[i] <= 10^3
+ * <p>
+ * https://leetcode.com/explore/learn/card/fun-with-arrays/527/searching-for-items-in-an-array/3250/
  */
 public class searchDoubles {
     public boolean checkIfExist(int[] arr) {
