@@ -41,7 +41,7 @@ import java.util.Arrays;
  * <p>
  * https://leetcode.com/explore/learn/card/fun-with-arrays/527/searching-for-items-in-an-array/3250/
  */
-public class searchDoubles {
+public class SearchDoubles {
     public boolean checkIfExist(int[] arr) {
         Arrays.sort(arr);
         int doubleNum;
