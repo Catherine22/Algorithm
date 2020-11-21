@@ -12,4 +12,15 @@ class ListNode {
         val = x;
         next = null;
     }
+
+    /**
+     * @hidden
+     * @param val
+     * @param next
+     * @see RemoveElements
+     */
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
 }
