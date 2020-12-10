@@ -10,6 +10,8 @@ package com.catherine;
  * @see com.catherine.linked_list.Intersection
  * @see com.catherine.linked_list.Add2Numbers
  * @see com.catherine.linked_list.FlattenMultiLevelList
+ * @see com.catherine.binary_tree.LevelTraversal
+ * @see com.catherine.binary_tree.MaxDepth
  */
 public class Main {
 
