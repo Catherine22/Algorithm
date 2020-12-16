@@ -12,6 +12,7 @@ package com.catherine;
  * @see com.catherine.linked_list.FlattenMultiLevelList
  * @see com.catherine.binary_tree.LevelTraversal
  * @see com.catherine.binary_tree.MaxDepth
+ * @see com.catherine.binary_tree.SymmetricTree
  */
 public class Main {
 
