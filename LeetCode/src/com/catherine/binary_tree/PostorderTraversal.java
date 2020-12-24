@@ -64,7 +64,6 @@ public class PostorderTraversal {
 
 
     private void traverse(TreeNode node) {
-        res.add(node.val);
         if (node.left != null) {
             traverse(node.left);
         }
@@ -72,5 +71,7 @@ public class PostorderTraversal {
         if (node.right != null) {
             traverse(node.right);
         }
+
+        res.add(node.val);
     }
 }
