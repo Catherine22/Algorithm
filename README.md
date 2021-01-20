@@ -344,45 +344,45 @@ License for the specific language governing permissions and limitations under
 the License.
 ```
 
-[merge sort]: Background/src/com/catherine/sort/MergeSort.java
-[insertion sort]: Background/src/com/catherine/sort/InsertionSort.java
-[bubble sort]: Background/src/com/catherine/sort/BubbleSort.java
-[selection sort]: Background/src/com/catherine/sort/SelectionSort.java
-[heap sort]: Background/src/com/catherine/sort/HeapSort.java
-[quick sort]: Background/src/com/catherine/sort/QuickSort.java
-[stack-sortable permutation]: Background/src/com/catherine/sort/SortableStackPermutation.java
-[sequence]: Background/src/com/catherine/data_type/Sequence.java
-[sequence searching]: Background/src/com/catherine/data_type/Search.java
-[1 + a positive integer]: Background/src/com/catherine/turing_machine/TuringMachine.java
-[myarraylist]: Background/src/com/catherine/data_type/MyArrayList.java
-[mylinkedlist]: Background/src/com/catherine/data_type/MyLinkedList.java
-[mybinarytree]: Background/src/com/catherine/trees/MyBinaryTree.java
-[mybinarysearchtree]: Background/src/com/catherine/trees/MyBinarySearchTree.java
-[binarysearchtreeimpl]: Background/src/com/catherine/trees/BinarySearchTreeImpl.java
-[myavltree]: Background/src/com/catherine/trees/MyAVLTree.java
-[mysplaytree]: Background/src/com/catherine/trees/MySplayTree.java
-[bstnode]: Background/src/com/catherine/trees/nodes/BSTNode.java
-[bnode]: Background/src/com/catherine/trees/nodes/BNode.java
-[numbersystem]: Background/src/com/catherine/utils/NumberSystem.java
-[others]: Background/src/com/catherine/utils/Others.java
-[directedgraph]: Background/src/com/catherine/graphs/DirectedGraph.java
-[undirectedgraph]: Background/src/com/catherine/graphs/UndirectedGraph.java
-[keystoremanager]: Background/src/com/catherine/security/KeystoreManager.java
-[messagedigestkit]: Background/src/com/catherine/security/MessageDigestKit.java
-[cipherkit]: Background/src/com/catherine/security/CipherKit.java
-[certificatesmanager]: Background/src/com/catherine/security/CertificatesManager.java
-[jwshelper]: Background/src/com/catherine/security/JwsHelper.java
-[mybtree]: Background/src/com/catherine/trees/MyBTree.java
-[redblackbstimpl]: Background/src/com/catherine/trees/RedBlackBSTImpl.java
-[myredblackbst]: Background/src/com/catherine/trees/MyRedBlackBST.java
-[hashfunctions]: Background/src/com/catherine/dictionary/functions/>
-[linearprobing]: Background/src/com/catherine/dictionary/LinearProbing.java
-[quadraticprobing]: Background/src/com/catherine/dictionary/QuadraticProbing.java
-[fermatquadraticprobing]: Background/src/com/catherine/dictionary/FermatQuadraticProbing.java
-[priorityqueuevectorimpl]: Background/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java
-[priorityqueuebintreeimpl]: Background/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java
-[leftistheap]: Background/src/com/catherine/priority_queue/LeftistHeap.java
-[stringutils]: Background/src/com/catherine/string/StringUtils.java
+[merge sort]: Exercises/src/com/catherine/sort/MergeSort.java
+[insertion sort]: Exercises/src/com/catherine/sort/InsertionSort.java
+[bubble sort]: Exercises/src/com/catherine/sort/BubbleSort.java
+[selection sort]: Exercises/src/com/catherine/sort/SelectionSort.java
+[heap sort]: Exercises/src/com/catherine/sort/HeapSort.java
+[quick sort]: Exercises/src/com/catherine/sort/QuickSort.java
+[stack-sortable permutation]: Exercises/src/com/catherine/sort/SortableStackPermutation.java
+[sequence]: Exercises/src/com/catherine/data_type/Sequence.java
+[sequence searching]: Exercises/src/com/catherine/data_type/Search.java
+[1 + a positive integer]: Exercises/src/com/catherine/turing_machine/TuringMachine.java
+[myarraylist]: Exercises/src/com/catherine/data_type/MyArrayList.java
+[mylinkedlist]: Exercises/src/com/catherine/data_type/MyLinkedList.java
+[mybinarytree]: Exercises/src/com/catherine/trees/MyBinaryTree.java
+[mybinarysearchtree]: Exercises/src/com/catherine/trees/MyBinarySearchTree.java
+[binarysearchtreeimpl]: Exercises/src/com/catherine/trees/BinarySearchTreeImpl.java
+[myavltree]: Exercises/src/com/catherine/trees/MyAVLTree.java
+[mysplaytree]: Exercises/src/com/catherine/trees/MySplayTree.java
+[bstnode]: Exercises/src/com/catherine/trees/nodes/BSTNode.java
+[bnode]: Exercises/src/com/catherine/trees/nodes/BNode.java
+[numbersystem]: Exercises/src/com/catherine/utils/NumberSystem.java
+[others]: Exercises/src/com/catherine/utils/Others.java
+[directedgraph]: Exercises/src/com/catherine/graphs/DirectedGraph.java
+[undirectedgraph]: Exercises/src/com/catherine/graphs/UndirectedGraph.java
+[keystoremanager]: Exercises/src/com/catherine/security/KeystoreManager.java
+[messagedigestkit]: Exercises/src/com/catherine/security/MessageDigestKit.java
+[cipherkit]: Exercises/src/com/catherine/security/CipherKit.java
+[certificatesmanager]: Exercises/src/com/catherine/security/CertificatesManager.java
+[jwshelper]: Exercises/src/com/catherine/security/JwsHelper.java
+[mybtree]: Exercises/src/com/catherine/trees/MyBTree.java
+[redblackbstimpl]: Exercises/src/com/catherine/trees/RedBlackBSTImpl.java
+[myredblackbst]: Exercises/src/com/catherine/trees/MyRedBlackBST.java
+[hashfunctions]: Exercises/src/com/catherine/dictionary/functions/>
+[linearprobing]: Exercises/src/com/catherine/dictionary/LinearProbing.java
+[quadraticprobing]: Exercises/src/com/catherine/dictionary/QuadraticProbing.java
+[fermatquadraticprobing]: Exercises/src/com/catherine/dictionary/FermatQuadraticProbing.java
+[priorityqueuevectorimpl]: Exercises/src/com/catherine/priority_queue/PriorityQueueVectorImpl.java
+[priorityqueuebintreeimpl]: Exercises/src/com/catherine/priority_queue/PriorityQueueBinTreeImpl.java
+[leftistheap]: Exercises/src/com/catherine/priority_queue/LeftistHeap.java
+[stringutils]: Exercises/src/com/catherine/string/StringUtils.java
 [algorithms, 4th edition]: http://algs4.cs.princeton.edu/home/
 [深入理解android之java security]: http://blog.csdn.net/innost/article/details/44081147
 [server authentication during ssl handshake]: https://docs.oracle.com/cd/E19693-01/819-0997/aakhc/index.html
@@ -391,26 +391,26 @@ the License.
 [securitysample]: https://github.com/Catherine22/SecuritySample
 [double red video]: https://www.youtube.com/watch?v=m9tse9Gr2pE
 [red black tree animation]: https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
-[red/black trees]: Background/master/res/L19b_BalancedBST_BTreeRB.pdf>
+[red/black trees]: Exercises/master/res/L19b_BalancedBST_BTreeRB.pdf>
 [why jdk's string.indexof() does not use kmp?]: https://stackoverflow.com/questions/19543547/why-jdks-string-indexof-does-not-use-kmp
-[1]: Background/res/tree.png
-[2]: Background/res/tree_rotation.png
-[3]: Background/res/tree_double_rotation.png
-[4]: Background/res/i_s.png
-[5]: Background/res/i_d.png
-[6]: Background/res/r_s.png
-[7]: Background/res/r_d.png
-[8]: Background/res/b-tree.png
-[9]: Background/res/B_R_BST.png
-[10]: Background/res/rr1_1.png.png
-[11]: Background/res/rr1_2.png.png
-[12]: Background/res/rr2.png
-[13]: Background/res/quadratic_probing.png
-[14]: Background/res/Fermat_s_theorem.png
-[15]: Background/res/complete_binary_heap.png
-[16]: Background/res/lh_1.png
-[17]: Background/res/lh_2.png
-[18]: Background/res/kmp.png
-[19]: Background/res/bm.png
-[20]: Background/res/gs.png
-[21]: Background/res/indexOf.png
+[1]: Exercises/res/tree.png
+[2]: Exercises/res/tree_rotation.png
+[3]: Exercises/res/tree_double_rotation.png
+[4]: Exercises/res/i_s.png
+[5]: Exercises/res/i_d.png
+[6]: Exercises/res/r_s.png
+[7]: Exercises/res/r_d.png
+[8]: Exercises/res/b-tree.png
+[9]: Exercises/res/B_R_BST.png
+[10]: Exercises/res/rr1_1.png.png
+[11]: Exercises/res/rr1_2.png.png
+[12]: Exercises/res/rr2.png
+[13]: Exercises/res/quadratic_probing.png
+[14]: Exercises/res/Fermat_s_theorem.png
+[15]: Exercises/res/complete_binary_heap.png
+[16]: Exercises/res/lh_1.png
+[17]: Exercises/res/lh_2.png
+[18]: Exercises/res/kmp.png
+[19]: Exercises/res/bm.png
+[20]: Exercises/res/gs.png
+[21]: Exercises/res/indexOf.png
