@@ -67,26 +67,6 @@ public class BinaryTree {
         return true;
     }
 
-    private int getChildrenNum(Node root) {
-        Node node = root;
-        int count = 0;
-        if (node == null) {
-            return count;
-        }
-
-        if (node.left != null) {
-            count++;
-            count += getChildrenNum(node.left);
-        }
-
-        if (node.right != null) {
-            count++;
-            count += getChildrenNum(node.right);
-        }
-
-        return count;
-    }
-
     //    Node tree1 = new Node(10);
 //    tree1.left = new Node(5, null, new Node(12));
 //    tree1.right = new Node(20, new Node(3, new Node(9), new Node(18)), new Node(7));
@@ -129,6 +109,26 @@ public class BinaryTree {
     public boolean isPerfectBinaryTree(Node root) {
         Node node = root;
         return isFull(node) && isCompleteBinaryTree(node);
+    }
+
+    private int getChildrenNum(Node root) {
+        Node node = root;
+        int count = 0;
+        if (node == null) {
+            return count;
+        }
+
+        if (node.left != null) {
+            count++;
+            count += getChildrenNum(node.left);
+        }
+
+        if (node.right != null) {
+            count++;
+            count += getChildrenNum(node.right);
+        }
+
+        return count;
     }
 
     private boolean isLeftTree(Node tree, Node subtree) {
