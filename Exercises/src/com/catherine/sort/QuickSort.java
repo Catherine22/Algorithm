@@ -1,6 +1,5 @@
 package com.catherine.sort;
 
-import com.catherine.Main;
 import com.catherine.utils.Analysis;
 import com.catherine.utils.TrackLog;
 

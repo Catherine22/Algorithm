@@ -12,7 +12,7 @@ import com.catherine.utils.TrackLog;
  * <br>
  * memory: 1<br>
  * <br>
- * 相较于Bubble sort，selection sort 减少了元素移动的次数（ 从 n 变成 1），在实际运行中大幅了减少运行时间。<br>
+ * 相较于Bubble sort，selection sort 减少了元素移动的次数（从 n 变成 1），在实际运行中大幅了减少运行时间。<br>
  * 挑出集合中最大（小）值，挪到最后面。<br>
  * <br>
  * selection sort适合用LinkedList实作，因为只要改引用而不是调整整个数组。<br>
